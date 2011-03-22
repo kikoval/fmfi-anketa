@@ -1,7 +1,0 @@
-#_welcome:
-#    resource: "@AcmeDemoBundle/Controller/WelcomeController.php"
-#    type:     annotation
-
-homepage:
-    pattern:  /
-    resource: @FMFIAnketaBundle/Resources/config/routing.yml
