@@ -1,0 +1,23 @@
+homepage:
+    pattern:  /
+    defaults: { _controller: AnketaBundle:Default:index }
+
+# might be moved to separate routing file in case more managing areas are needed
+manage_questions:
+    pattern: /manage/questions/
+    defaults: { _controller: AnketaBundle:ManageQuestions:listQuestions }
+
+list_questions:
+    pattern: /manage/questions/list/
+    defaults: { _controller: AnketaBundle:ManageQuestions:listQuestions }
+
+add_question:
+    pattern: /manage/questions/add/
+    defaults: { _controller: AnketaBundle:ManageQuestions:addQuestion }
+
+view_question:
+    pattern: /manage/questions/{id}
+    defaults: { _controller: AnketaBundle:ManageQuestions:viewQuestion }
+    requirements:
+      id:  \d+
+    

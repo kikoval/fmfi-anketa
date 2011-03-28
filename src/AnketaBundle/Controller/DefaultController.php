@@ -1,6 +1,6 @@
 <?php
 
-namespace FMFI\SVT\AnketaBundle\Controller;
+namespace AnketaBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -8,6 +8,6 @@ class DefaultController extends Controller
 {
     public function indexAction()
     {
-        return $this->render('FMFISVTAnketaBundle:Default:index.html.twig');
+        return $this->render('AnketaBundle:Default:index.html.twig');
     }
 }

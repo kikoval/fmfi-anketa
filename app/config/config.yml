@@ -39,13 +39,12 @@ doctrine:
                 password: %database_password%
                 path:     %kernel.root_dir%/../db/%database_file%
 
-#    orm:
-#        auto_generate_proxy_classes: %kernel.debug%
-#        default_entity_manager: default
-#        entity_managers:
-#            default:
-#                mappings:
-#                    AcmeDemoBundle: ~
+    orm:
+        default_entity_manager: default
+        entity_managers:
+            default:
+                mappings:
+                    AnketaBundle: ~
 
 # Swiftmailer Configuration
 swiftmailer:

@@ -1,3 +1,3 @@
 _homepage:
     pattern:  /
-    resource: "@FMFISVTAnketaBundle/Resources/config/routing.yml"
+    resource: "@AnketaBundle/Resources/config/routing.yml"
