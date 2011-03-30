@@ -32,7 +32,7 @@ Thanatos
 my $tmp_directory = "$directory";
 $tmp_directory =~ s/\//./g;
 
-$COMMAND = "/usr/bin/find $directory | grep -v 'report' | grep -v '.svn'";
+$COMMAND = "/usr/bin/find $directory/src | grep -v 'report' | grep -v '.svn'";
 $COMMAND = "$COMMAND | sed \"s/^$tmp_directory\\/*/root\\//\" ";
 open (INPUT, "$COMMAND | ")
    || die "Cannot run the ".$COMMAND.": $!\n";
