@@ -18,8 +18,8 @@ export PATH=/usr/local/bin:/usr/bin:/bin
 umask 022
 
 SCRIPT_PATH=`dirname $0`
-SCRIPT_PATH=`readlink -f $SCRIPT_PATH`
-cd $SCRIPT_PATH;
+SCRIPT_PATH=`readlink -f "$SCRIPT_PATH"`
+cd "$SCRIPT_PATH";
 
 ## configuration
 MAIL_TESTS_TO="fmfi-anketa-devel@googlegroups.com"
@@ -90,13 +90,27 @@ function print_test_diff {
 
 
 # remove lock at the script end, even in case of fatal failures!
-trap "rm $LOCK_FILE" EXIT
-wait_and_create_lock $LOCK_FILE
+trap "rm '$LOCK_FILE'" EXIT
+wait_and_create_lock "$LOCK_FILE"
 
 # now start intergation - update to latest point
 # (currently we ignore revision info sent by request)
-svn up $SCRIPT_PATH/..
+
+echo "Starting continuous build:"
+date
+
+echo "------------------Clear cache------------------------"
+./clear_cache.sh
+
+echo "Updating svn"
+svn up "$SCRIPT_PATH/.."
 SVN_REVISION=`svn info | grep Revision | sed 's/.* //'`
+
+echo
+echo "Updated. Current status:"
+svn info
+echo
+svn status
 
 echo "-------------------Running tests---------------------";
 ./run_tests.sh

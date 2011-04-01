@@ -10,8 +10,8 @@ ZOZNAM=$(find src | grep '\.php' | grep -v '\.svn' | grep -v 'report' | \
 OUT=$REPORT/class_dependency_graph.dot;
 
 # classy, ktore su velmi pouzivane nechceme zobrazovat
-# "Fajr" nie je pouzivana classa, ale poparsuje sa z @package
-BLACKLIST="Fajr Trace"
+# "AnketaBundle" nie je pouzivana classa, ale poparsuje sa z @package
+BLACKLIST="AnketaBundle"
 
 echo "
 digraph g {
