@@ -11,13 +11,18 @@
          syntaxCheck="false"
          bootstrap="bootstrap.php.cache"
 >
+  <logging>
+    <log type="coverage-html" target="../report/tests/coverage" charset="UTF-8"/>
+    <log type="testdox-html" target="../report/tests/report.html"/>
+    <log type="testdox-text" target="../report/tests/report.txt"/>
+    <log type="tap" target="../report/tests/report.tap"/>
+  </logging>
+
   <testsuites>
-      <testsuite name="Project Test Suite">
-          <directory>../src/*/*Bundle/Tests</directory>
-          <directory>../src/*/Bundle/*Bundle/Tests</directory>
+      <testsuite name="Anketa Test Suite">
+          <directory suffix='.php' >../src/AnketaBundle/Tests</directory>
       </testsuite>
   </testsuites>
-
   <!--
   <php>
       <server name="KERNEL_DIR" value="/path/to/your/app/" />
@@ -28,10 +33,8 @@
       <whitelist>
           <directory>../src</directory>
           <exclude>
-              <directory>../src/*/*Bundle/Resources</directory>
-              <directory>../src/*/*Bundle/Tests</directory>
-              <directory>../src/*/Bundle/*Bundle/Resources</directory>
-              <directory>../src/*/Bundle/*Bundle/Tests</directory>
+              <directory>../src/AnketaBundle/Resources</directory>
+              <directory>../src/AnketaBundle/Tests</directory>
           </exclude>
       </whitelist>
   </filter>
