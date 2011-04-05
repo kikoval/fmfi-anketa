@@ -1,8 +1,7 @@
-{% extends 'AnketaBundle:Default:index.html.twig' %}
-
-{% block body %}
+{% extends 'AnketaBundle::layout.html.twig' %}
+{% block main_content %}
     <h2>Sprava otazok</h2>
-    <a href="{{ path('add_question') }}">Pridat otazku</a> | <a href="{{ path('list_questions') }}">List otazok</a>
+    <a href="{{ path('_addquestion') }}">Pridat otazku</a> | <a href="{{ path('_listquestions') }}">List otazok</a>
     <br /><br />
     {% block content %}
 

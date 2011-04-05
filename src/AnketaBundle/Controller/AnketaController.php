@@ -4,10 +4,10 @@ namespace AnketaBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class DefaultController extends Controller
+class AnketaController extends Controller
 {
     public function indexAction()
     {
-        return $this->render('AnketaBundle:Default:index.html.twig');
+        return $this->render('AnketaBundle:Anketa:index.html.twig');
     }
 }

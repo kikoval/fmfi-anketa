@@ -4,7 +4,7 @@
     Vypisujem vsetky otazky. <br />
     {% for question in questions %}
             <b> {{ question.getId }}: </b>
-            <a href="{{ path('view_question', { 'id': question.getId }) }}">{{ question.getQuestion }}</a><br />
+            <a href="{{ path('_viewquestion', { 'id': question.getId }) }}">{{ question.getQuestion }}</a><br />
             &nbsp; &nbsp; &nbsp; &nbsp; Options: {{ question.getOptions }} <br />
             &nbsp; &nbsp; &nbsp; &nbsp; Eval: {{ question.getEval }} <br />
     {% else %}

@@ -34,7 +34,7 @@ class ManageQuestionsController extends Controller
             $em->persist($question);
             $em->flush();
             // $this->get('session')->setFlash('notice', 'Udalosť pridaná.');
-            return new RedirectResponse($this->generateUrl('view_question',
+            return new RedirectResponse($this->generateUrl('_viewquestion',
                            array('id' => $question->getId())));
         }
 
