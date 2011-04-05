@@ -28,7 +28,7 @@ class AssetFactory
 {
     private $baseDir;
     private $debug;
-    private $defaultOutput;
+    private $output;
     private $workers;
     private $am;
     private $fm;
@@ -36,15 +36,15 @@ class AssetFactory
     /**
      * Constructor.
      *
-     * @param string  $baseDir       Path to the base directory for relative URLs
-     * @param Boolean $debug         Filters prefixed with a "?" will be omitted in debug mode
-     * @param string  $defaultOutput The default output string
+     * @param string  $baseDir Path to the base directory for relative URLs
+     * @param string  $output  The default output string
+     * @param Boolean $debug   Filters prefixed with a "?" will be omitted in debug mode
      */
-    public function __construct($baseDir, $debug = false, $defaultOutput = 'assets/*')
+    public function __construct($baseDir, $debug = false)
     {
         $this->baseDir = rtrim($baseDir, '/').'/';
-        $this->debug = $debug;
-        $this->defaultOutput = $defaultOutput;
+        $this->debug   = $debug;
+        $this->output  = 'assetic/*';
         $this->workers = array();
     }
 
@@ -66,6 +66,16 @@ class AssetFactory
     public function isDebug()
     {
         return $this->debug;
+    }
+
+    /**
+     * Sets the default output string.
+     *
+     * @param string $output The default output string
+     */
+    public function setDefaultOutput($output)
+    {
+        $this->output = $output;
     }
 
     /**
@@ -127,7 +137,7 @@ class AssetFactory
         }
 
         if (!isset($options['output'])) {
-            $options['output'] = $this->defaultOutput;
+            $options['output'] = $this->output;
         }
 
         if (!isset($options['name'])) {
@@ -139,10 +149,12 @@ class AssetFactory
         }
 
         $asset = $this->createAssetCollection();
+        $extensions = array();
 
         // inner assets
         foreach ($inputs as $input) {
             $asset->add($this->parseInput($input));
+            $extensions[pathinfo($input, PATHINFO_EXTENSION)] = true;
         }
 
         // filters
@@ -152,6 +164,11 @@ class AssetFactory
             } elseif (!$options['debug']) {
                 $asset->ensureFilter($this->getFilter(substr($filter, 1)));
             }
+        }
+
+        // append consensus extension if missing
+        if (1 == count($extensions) && !pathinfo($options['output'], PATHINFO_EXTENSION) && $extension = key($extensions)) {
+            $options['output'] .= '.'.$extension;
         }
 
         // output --> target url

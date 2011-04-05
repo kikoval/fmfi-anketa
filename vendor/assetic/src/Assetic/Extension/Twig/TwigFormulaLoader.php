@@ -30,8 +30,12 @@ class TwigFormulaLoader implements FormulaLoaderInterface
 
     public function load(ResourceInterface $resource)
     {
-        $tokens = $this->twig->tokenize($resource->getContent());
-        $nodes  = $this->twig->parse($tokens);
+        try {
+            $tokens = $this->twig->tokenize($resource->getContent());
+            $nodes  = $this->twig->parse($tokens);
+        } catch (\Exception $e) {
+            return array();
+        }
 
         return $this->loadNode($nodes);
     }
@@ -46,12 +50,12 @@ class TwigFormulaLoader implements FormulaLoaderInterface
         $assets = array();
 
         if ($node instanceof AsseticNode) {
-            $assets[$node->getAttribute('asset_name')] = array(
-                $node->getAttribute('source_urls'),
-                $node->getAttribute('filter_names'),
+            $assets[$node->getAttribute('name')] = array(
+                $node->getAttribute('inputs'),
+                $node->getAttribute('filters'),
                 array(
-                    'output' => $node->getAttribute('target_url'),
-                    'name'   => $node->getAttribute('asset_name'),
+                    'output' => $node->getAttribute('output'),
+                    'name'   => $node->getAttribute('name'),
                     'debug'  => $node->getAttribute('debug'),
                 ),
             );

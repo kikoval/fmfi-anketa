@@ -41,8 +41,8 @@ class CacheClearCommand extends Command
 The <info>cache:clear</info> command clears the application cache for a given environment
 and debug mode:
 
-<info>./app/console cache:clear dev</info>
-<info>./app/console cache:clear prod --without-debug</info>
+<info>./app/console cache:clear --env=dev</info>
+<info>./app/console cache:clear --env=prod --without-debug</info>
 EOF
             )
         ;
@@ -98,34 +98,46 @@ EOF
     protected function getTempKernel(KernelInterface $parent, $debug, $warmupDir)
     {
         $parentClass = get_class($parent);
+
+        $namespace = '';
+        if (false !== $pos = strrpos($parentClass, '\\')) {
+            $namespace = substr($parentClass, 0, $pos);
+            $parentClass = substr($parentClass, $pos + 1);
+        }
+
         $rand = uniqid();
         $class = $parentClass.$rand;
         $rootDir = $parent->getRootDir();
         $code = <<<EOF
 <?php
 
-class $class extends $parentClass
+namespace $namespace
 {
-    public function getCacheDir()
+    class $class extends $parentClass
     {
-        return '$warmupDir';
-    }
+        public function getCacheDir()
+        {
+            return '$warmupDir';
+        }
 
-    public function getRootDir()
-    {
-        return '$rootDir';
-    }
+        public function getRootDir()
+        {
+            return '$rootDir';
+        }
 
-    protected function getContainerClass()
-    {
-        return parent::getContainerClass().'__{$rand}__';
+        protected function getContainerClass()
+        {
+            return parent::getContainerClass().'__{$rand}__';
+        }
     }
 }
 EOF;
-        $this->container->get('filesystem')->mkdirs($warmupDir);
+        $this->container->get('filesystem')->mkdir($warmupDir);
         file_put_contents($file = $warmupDir.'/kernel.tmp', $code);
         require_once $file;
         @unlink($file);
+
+        $class = "$namespace\\$class";
 
         return new $class($parent->getEnvironment(), $debug);
     }
