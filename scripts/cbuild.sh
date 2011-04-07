@@ -108,6 +108,8 @@ echo "Updating svn"
 svn up "$TRUNK_PATH"
 SVN_REVISION=`svn info | grep Revision | sed 's/.* //'`
 
+./install_assets.sh
+
 echo
 echo "Updated. Current status:"
 svn info "$TRUNK_PATH"
