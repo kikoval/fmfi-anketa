@@ -11,7 +11,7 @@ html{color:#000;background:#FFF;}body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pr
 
 html, body
 {
-    background-color: #EFEFEF;
+    background-color: white;
 }
 
 body
@@ -279,9 +279,11 @@ input[type=text], input[type=password]
 
 ul#menu
 {
-    float: right;
-    margin-bottom: 20px;
-    padding-left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding-right: 1em;
+    line-height: 2em;
 }
 
 #menu li
@@ -289,4 +291,32 @@ ul#menu
     padding-left: 0;
     margin-right: 10px;
     display: inline;
+}
+
+.header
+{
+    background-color: #DFDFDF;
+    color: black;
+    height: 2em;
+}
+
+#logo {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 2em;
+    padding-left: 1em;
+    line-height: 2em;
+}
+
+.footer {
+    background-color: #DFDFDF;
+    color: black;
+    height: 2em;
+    line-height: 2em;
+    padding-left: 1em;
+}
+
+.main_content {
+    padding: 1em;
 }
