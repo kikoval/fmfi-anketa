@@ -102,15 +102,17 @@ date
 echo "------------------Clear cache------------------------"
 ./clear_cache.sh
 
+
+TRUNK_PATH="$SCRIPT_PATH/.."
 echo "Updating svn"
-svn up "$SCRIPT_PATH/.."
+svn up "$TRUNK_PATH"
 SVN_REVISION=`svn info | grep Revision | sed 's/.* //'`
 
 echo
 echo "Updated. Current status:"
-svn info
+svn info "$TRUNK_PATH"
 echo
-svn status
+svn status "$TRUNK_PATH"
 
 echo "-------------------Running tests---------------------";
 ./run_tests.sh
