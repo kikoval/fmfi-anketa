@@ -12,13 +12,18 @@
  * @author     Janko Hraško <janko@hrasko>
  */
 
-namespace AnketaBundle;
+namespace AnketaBundle\Tests\Controller;
 
-use PHPUnit_Framework_TestCase;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class TemplateTest extends PHPUnit_Framework_TestCase {
-  public function testOk()
-  {
-    $this->assertTrue(0 == 0);
-  }
+class !TODO!ControllerTest extends WebTestCase
+{
+    public function testIndex()
+    {
+        $client = $this->createClient();
+
+        $crawler = $client->request('GET', '/');
+
+        $this->assertTrue($crawler->filter('html:contains("!TODO!")')->count() > 0);
+    }
 }
