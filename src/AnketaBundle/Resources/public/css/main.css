@@ -96,9 +96,9 @@ ol li
     list-style-type: decimal;
 }
 
-ul li
-{
-    list-style-type: none;
+ul li {
+    list-style: square;
+    padding-bottom: 0.3em;
 }
 
 #symfony-header
@@ -319,4 +319,45 @@ ul#menu
 
 .main_content {
     padding: 1em;
+}
+
+#uvod_split {
+    overflow: hidden;
+}
+
+#uvod_right {
+    float: right;
+    width: 250px;
+}
+
+#uvod_left {
+    padding-right: 260px;
+}
+
+.bigbtn_left {
+    background: url("../images/bigbtn-left.png") no-repeat left center;
+    display: block;
+}
+
+.bigbtn_right {
+    background: url("../images/bigbtn-right.png") no-repeat right center;
+    display: block;
+}
+
+.bigbtn_middle {
+    background: url("../images/bigbtn-middle.png") repeat-x center center;
+    display: block;
+}
+
+.bigbtn_in {
+    display: block;
+    height: 106px;
+    line-height: 106px;
+    text-align: center;
+    color: black;
+}
+
+.bigbtn {
+    display: block;
+    font-size: 200%;
 }
