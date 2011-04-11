@@ -2,109 +2,120 @@
 
 namespace AnketaBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 /**
- * @orm:Entity
- * @Table(name="Question",indexes={@index(name="search_idx", columns={"id"})})
+ * @orm:Entity(repositoryClass="AnketaBundle\Entity\Repository\QuestionRepository")
  */
-class Question
-{
+class Question {
+    
     /**
-     * @orm:Id
-     * @orm:Column(type="integer")
-     * @orm:GeneratedValue(strategy="AUTO")
+     * @orm:Id @orm:GeneratedValue @orm:Column(type="integer")
      */
-    protected $id;
+    private $id;
 
     /**
-     * @orm:Column(type="string", length="1024")
-     * @validation:NotBlank
+     * @orm:Column(type="string")
      */
-    protected $question;
+    private $question;
 
     /**
-     * @orm:Column(type="decimal", scale="1", nullable=true)
+     * @orm:Column(type="boolean")
      */
-    protected $eval;
+    private $stars;
 
     /**
-     * @orm:Column(type="string", length="1024", nullable=true)
+     * @orm:OneToMany(targetEntity="Option", mappedBy="question", cascade={"persist", "remove"})
+     *
+     * @var ArrayCollection $options
      */
-    protected $options;
+    private $options;
 
-    public function __construct()
-    {
-        $this->question = '';
-        $this->eval = null;
-        $this->options = null;
+    /**
+     * @orm:ManyToOne(targetEntity="Category", inversedBy="questions")
+     *
+     * @var Category $category
+     */
+    private $category;
+
+    /**
+     * @param String $question
+     */
+    public function __construct($question = '') {
+        $this->options = new ArrayCollection();
+        $this->question = $question;
+        $this->stars = false;
     }
 
-    /**
-     * Get id
-     *
-     * @returns integer $id
-     */
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
     }
 
-    /**
-     * Set question
-     *
-     * @param string $question
-     */
-    public function setQuestion($question)
-    {
-        $this->question = $question;
+    public function setQuestion($value) {
+        $this->question = $value;
     }
 
-    /**
-     * Get question
-     *
-     * @returns string $question
-     */
-    public function getQuestion()
-    {
+    public function getQuestion() {
         return $this->question;
     }
 
     /**
-     * Set eval
-     *
-     * @param int $eval
+     * @param Boolean $stars
      */
-    public function setEval($eval)
-    {
-        $this->eval = $eval;
+    public function setStars($value) {
+        $this->stars = $value;
+    }
+
+    public function getStars() {
+        return $this->stars;
     }
 
     /**
-     * Get eval
-     *
-     * @returns int $eval
+     * @param ArrayCollection $value
      */
-    public function getEval()
-    {
-        return $this->eval;
+    public function setOptions($value) {
+        $this->options = $value;
+        foreach ($value as $option) {
+            $option->setQuestion($this);
+        }
     }
 
     /**
-     * Set options
-     *
-     * @param string $options
+     * @param Option $value
      */
-    public function setOptions($options)
-    {
-        $this->options = $options;
+    public function addOption($value) {
+        $this->options[] = $value;
+        $value->setQuestion($this);
     }
 
     /**
-     * Get options
-     *
-     * @returns string $options
+     * @return ArrayCollection options
      */
-    public function getOptions()
-    {
+    public function getOptions() {
         return $this->options;
+    }
+
+    /**
+     * @param Category $value
+     */
+    public function setCategory($value) {
+        $this->category = $value;
+        $value->addQuestion($this);
+    }
+
+    /**
+     * @return Category the category
+     */
+    public function getCategory() {
+        return $this->category;
+    }
+
+    /**
+     * Generates options for Question with property stars set to true
+     */
+    public function generateStarOptions() {
+        for ($i = 1; $i < 6; $i++) {
+            $this->addOption(new Option('star'.$i,$i));
+        }
     }
 }
