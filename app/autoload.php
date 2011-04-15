@@ -13,6 +13,7 @@ $loader->registerNamespaces(array(
     'Doctrine'         => __DIR__.'/../vendor/doctrine/lib',
     'Monolog'          => __DIR__.'/../vendor/monolog/src',
     'Assetic'          => __DIR__.'/../vendor/assetic/src',
+    'fajr\\libfajr'    => __DIR__.'/../vendor/libfajr',
     'AnketaBundle'     => __DIR__.'/../src',
 ));
 $loader->registerPrefixes(array(
