@@ -8,6 +8,9 @@ class AnketaController extends Controller
 {
     public function indexAction()
     {
-        return $this->render('AnketaBundle:Anketa:index.html.twig');
+        $user = $this->get('security.context')->getToken()->getUser();
+        $username = $user->getUsername();
+        return $this->render('AnketaBundle:Anketa:index.html.twig',
+                             array('username'=>$username));
     }
 }
