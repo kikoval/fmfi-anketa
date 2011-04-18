@@ -19,6 +19,8 @@ use AnketaBundle\Entity\Category;
 use AnketaBundle\Entity\Answer;
 use AnketaBundle\Entity\Teacher;
 use AnketaBundle\Entity\Subject;
+use AnketaBundle\Entity\User;
+use AnketaBundle\Entity\Role;
 
 /**
  * Class for loading basic development data
@@ -108,6 +110,29 @@ class FixtureLoader implements FixtureInterface {
 
         $manager->persist($a);
         $manager->persist($a2);
+
+        // create users, roles
+        $u1 = new User('foo', 'Bc. Foo');
+        $u2 = new User('admin', 'admin');
+        $u3 = new User('sadmin', 'super_admin');
+        $r1 = new Role('ROLE_ADMIN');
+        $r2 = new Role('ROLE_USER');
+        $r3 = new Role('ROLE_SUPER_ADMIN');
+        
+        $u1->addSubject($s);
+        $u1->addRole($r2);
+
+        $u2->addRole($r1);
+
+        $u3->addRole($r3);
+
+        $manager->persist($u1);
+        $manager->persist($u2);
+        $manager->persist($u3);
+        $manager->persist($r1);
+        $manager->persist($r2);
+        $manager->persist($r3);
+
 
         $manager->flush();
     }
