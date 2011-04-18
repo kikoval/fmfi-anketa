@@ -57,3 +57,16 @@ swiftmailer:
 jms_security_extra:
     secure_controllers:  true
     secure_all_services: false
+    
+security:
+    factories:
+        - "%kernel.root_dir%/../src/SVT/CosignBundle/Resources/config/security_factories.xml"
+    providers:
+        main:
+            users:
+                foo: { password: bar, roles: ROLE_USER }
+    firewalls:
+        main:
+            pattern:    /(anketa|manage)/.*
+            cosign:     true
+            logout:     true
