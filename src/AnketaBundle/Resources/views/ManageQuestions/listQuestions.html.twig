@@ -5,8 +5,6 @@
     {% for question in questions %}
             <b> {{ question.getId }}: </b>
             <a href="{{ path('_viewquestion', { 'id': question.getId }) }}">{{ question.getQuestion }}</a><br />
-            &nbsp; &nbsp; &nbsp; &nbsp; Options: {{ question.getOptions }} <br />
-            &nbsp; &nbsp; &nbsp; &nbsp; Eval: {{ question.getEval }} <br />
     {% else %}
         Anketa nema ziadne otazky. Dakujeme za Vas cas.
     {% endfor %}

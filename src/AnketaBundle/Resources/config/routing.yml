@@ -23,6 +23,10 @@ _viewquestion:
     defaults: { _controller: AnketaBundle:ManageQuestions:viewQuestion }
     requirements:
       id:  \d+
+
+_answerquestions:
+    pattern: /answer/
+    defaults: { _controller: AnketaBundle:ManageQuestions:answerQuestions }
 _ping:
     pattern: /ping/{devName}
     defaults: { _controller: AnketaBundle:Ping:ping, devName: joe }

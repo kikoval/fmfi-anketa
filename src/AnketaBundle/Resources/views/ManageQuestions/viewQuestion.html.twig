@@ -2,6 +2,9 @@
 
 {% block content %}
     <h3>{{ question.getQuestion }}</h3>
-    Možnosti: {{ question.getOptions }} <br />
-    Hodnotenie: {{ question.getEval }}
+    {% for option in question.getOptions %}
+        &nbsp &nbsp &nbsp &nbsp {{ option.getOption }} (eval: {{ option.getEvaluation }}) <br />
+    {% endfor %}
+    ID: {{ question.getId }} <br />
+    Kategoria: {{ question.getCategory.getCategory }}
 {% endblock %}

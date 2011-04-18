@@ -96,6 +96,17 @@ class Question {
     }
 
     /**
+     * @return String options
+     */
+    public function getStringOptions() {
+        $result = '';
+        foreach ($this->options as $option) {
+            $result .= $option->getOption() . '\n';
+        }
+        return $result;
+    }
+
+    /**
      * @param Category $value
      */
     public function setCategory($value) {
@@ -114,6 +125,7 @@ class Question {
      * Generates options for Question with property stars set to true
      */
     public function generateStarOptions() {
+        $this->setStars(true);
         for ($i = 1; $i < 6; $i++) {
             $this->addOption(new Option('star'.$i,$i));
         }

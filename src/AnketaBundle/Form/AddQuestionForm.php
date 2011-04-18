@@ -6,7 +6,11 @@ use Symfony\Component\Form\Form;
 use Symfony\Component\Form\CheckboxField;
 use Symfony\Component\Form\TextField;
 use Symfony\Component\Form\TextareaField;
+use Symfony\Component\Form\CollectionField;
 
+/**
+ * Class not used
+ */
 class AddQuestionForm extends Form
 {
     protected function configure()
@@ -15,8 +19,7 @@ class AddQuestionForm extends Form
         $this->add(new TextField('question', array(
             'max_length' => 100,
         )));
-        $this->add(new TextareaField('options'));
-        $this->add(new CheckboxField('eval', array(
+        $this->add(new CheckboxField('stars', array(
             'required' => false,
         )));
     }

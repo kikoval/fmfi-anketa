@@ -2,9 +2,33 @@
 
 {% block content %}
 Forma na pridanie otazky: <br />
-<form action="#" method="post">
-    {{ form_field(form) }}
-
-    <input type="submit" value="Send!" />
-</form>
+    <form action="#" method="post">
+        <table>
+            <tr>
+                <td>
+                    <label for="question">Otazka:</label>
+                </td>
+                <td>
+                    <input type="text" id="question" name="_question" value="{{ question.getQuestion }}" required="true" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="options">Moznosti (oddelene enterom):</label>
+                </td>
+                <td>
+                    <textarea id="options" name="_options" cols="40" rows="6">{{ question.getQuestion }}</textarea>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="stars">Hodnotit hviezdami (moznosti budu ignorovane):</label>
+                </td>
+                <td>
+                    <input type="checkbox" id="stars" name="_stars" />
+                </td>
+            </tr>
+        </table>
+        <input type="submit" name="submit" value="submit" />
+    </form>
 {% endblock %}
