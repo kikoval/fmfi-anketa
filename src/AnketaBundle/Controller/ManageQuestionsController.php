@@ -38,28 +38,34 @@ class ManageQuestionsController extends Controller {
 
         $request = Request::createFromGlobals();
 
+        $em = $this->get('doctrine.orm.entity_manager');
+
         if ('POST' == $request->getMethod()) {
             // asi bude treba nejake validacie vstupu - na druhej strane,
             // snad nebude moct hocikto pridavat otazky
-
-            $em = $this->get('doctrine.orm.entity_manager');
 
             $question->setQuestion($request->request->get('_question'));
 
             if ($request->request->get('_stars')) {
                 $question->generateStarOptions();
             } else {
-                // treba doriesit ako nastavit evaluacie, zatial vsetky 0
-                $textAr = explode("\n", $request->request->get('_options'));
-                foreach ($textAr as $option) {
-                    $question->addOption(new Option($option, 0));
+                /**
+                 * @todo validacie - ale treba ich tu?
+                 */
+                for ($i = 1; $i <= 10; $i++) {
+                    $option = $request->request->get('_option' . $i);
+                    $eval = $request->request->get('_eval' . $i);
+                    if ($option != '') {
+                        if ($eval == '') {
+                            $eval = 0;
+                        }
+                        $question->addOption(new Option($option, $eval));
+                    }
                 }
             }
 
-            // treba nejako spravit aby sa dali kategorie vyberat zo select boxu
-            // zatial default general kategoria
-            $category = $em->getRepository('AnketaBundle\Entity\Category')
-                      ->findOneBy(array('category' => 'general'));
+            $categoryId = $request->request->get('_category');
+            $category = $em->find('AnketaBundle:Category', $categoryId);
             $question->setCategory($category);
 
             $em->persist($question);
@@ -68,8 +74,10 @@ class ManageQuestionsController extends Controller {
                            array('id' => $question->getId())));
         }
 
+        $categories = $em->getRepository('AnketaBundle:Category')->findAll();
+
         return $this->render('AnketaBundle:ManageQuestions:addQuestion.html.twig', array(
-            'question' => $question,
+            'question' => $question, 'categories' => $categories,
         ));
     }
 
@@ -91,7 +99,6 @@ class ManageQuestionsController extends Controller {
 
         // zatial vyberam vsetky
         $questions = $em->getRepository('AnketaBundle:Question')->findAll();
-        
         
 
         return $this->render('AnketaBundle:ManageQuestions:answerQuestions.html.twig',
