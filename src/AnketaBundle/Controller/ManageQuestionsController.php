@@ -5,7 +5,7 @@
  * found in the LICENSE file in the project root directory.
  *
  * @package    Anketa
- * @subpackage Anketa__Controller
+ * @subpackage Anketa__Controller__Manage
  * @author     Jakub Markoš <jakub.markos@gmail.com>
  */
 
@@ -25,11 +25,11 @@ use AnketaBundle\Form\AddQuestionForm;
  */
 
 class ManageQuestionsController extends Controller {
-
+    
     public function listQuestionsAction() {
        $em = $this->get('doctrine.orm.entity_manager');
        $questions = $em->getRepository('AnketaBundle:Question')->findAll();
-        return $this->render('AnketaBundle:ManageQuestions:listQuestions.html.twig',
+        return $this->render('AnketaBundle:Manage:questionList.html.twig',
                               array('questions' => $questions));
     }
 
@@ -76,7 +76,7 @@ class ManageQuestionsController extends Controller {
 
         $categories = $em->getRepository('AnketaBundle:Category')->findAll();
 
-        return $this->render('AnketaBundle:ManageQuestions:addQuestion.html.twig', array(
+        return $this->render('AnketaBundle:Manage:questionAdd.html.twig', array(
             'question' => $question, 'categories' => $categories,
         ));
     }
@@ -86,23 +86,8 @@ class ManageQuestionsController extends Controller {
         $question = $em->find('AnketaBundle:Question', $id);
         // alternativny sposob:
 //        $question = $em->getRepository('AnketaBundle\Entity\Question')->getQuestion($id);
-        return $this->render('AnketaBundle:ManageQuestions:viewQuestion.html.twig',
-                              array('question' => $question));        
+        return $this->render('AnketaBundle:Manage:questionView.html.twig',
+                              array('question' => $question));
     }
-
-    public function answerQuestionsAction() {
-        $em = $this->get('doctrine.orm.entity_manager');
-
-        // tu bude treba vytiahnut nejaku rozumnu mnozinu otazok, napr otazky
-        // tykajuce sa matalyzy, tykajuce sa skoly apod - potom premenovat akciu
-        // na nieco specifickejsie, pripadne pridat argument
-
-        // zatial vyberam vsetky
-        $questions = $em->getRepository('AnketaBundle:Question')->findAll();
-        
-
-        return $this->render('AnketaBundle:ManageQuestions:answerQuestions.html.twig',
-                array('questions' => $questions));
-        
-    }
+    
 }

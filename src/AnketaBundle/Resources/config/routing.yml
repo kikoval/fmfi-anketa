@@ -3,30 +3,17 @@ homepage:
     defaults: { _controller: AnketaBundle:Welcome:index }
 
 # might be moved to separate routing file in case more managing areas are needed
-_managequestions:
-    pattern: /manage/questions/
-    defaults: { _controller: AnketaBundle:ManageQuestions:listQuestions }
+_manage:
+    pattern: /manage/
+    resource: "@AnketaBundle/Resources/config/manage_routing.yml"
+
 _anketa:
     pattern: /anketa/
     defaults: { _controller: AnketaBundle:Anketa:index }
 
-_listquestions:
-    pattern: /manage/questions/list/
-    defaults: { _controller: AnketaBundle:ManageQuestions:listQuestions }
-
-_addquestion:
-    pattern: /manage/questions/add/
-    defaults: { _controller: AnketaBundle:ManageQuestions:addQuestion }
-
-_viewquestion:
-    pattern: /manage/questions/{id}
-    defaults: { _controller: AnketaBundle:ManageQuestions:viewQuestion }
-    requirements:
-      id:  \d+
-
 _answerquestions:
     pattern: /answer/
-    defaults: { _controller: AnketaBundle:ManageQuestions:answerQuestions }
+    defaults: { _controller: AnketaBundle:Manage:answerQuestions }
 _ping:
     pattern: /ping/{devName}
     defaults: { _controller: AnketaBundle:Ping:ping, devName: joe }

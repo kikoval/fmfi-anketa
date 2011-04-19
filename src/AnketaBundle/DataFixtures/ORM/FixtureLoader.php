@@ -83,17 +83,25 @@ class FixtureLoader implements FixtureInterface {
 
         // create teacher + subject
         $t = new Teacher('Ucitel');
+        $t2 = new Teacher('Profesor');
         $s = new Subject('Metalyza');
+        $s2 = new Subject('Agilne techniky v praxi');
+        $s3 = new Subject('Telesna vychova');
 
         // znova, teacher sa postara o update Subjectu
         $t->addSubject($s);
+        $t2->addSubject($s2);
+        $t2->addSubject($s3);
 
         // neni nastavene cascadovanie, kedze neviem ktorym smerom sa to
         // bude castejsie generovat - ci sa budu vyrabat predmety a k nim
         // pridavat ucitelia, alebo naopak
         // => takze musime najprv pridat ucitela, potom predmet
         $manager->persist($t);
+        $manager->persist($t2);
         $manager->persist($s);
+        $manager->persist($s2);
+        $manager->persist($s3);
 
         // create answers
         $a = new Answer();

@@ -20,7 +20,7 @@ class Answer {
     private $evaluation;
 
     /**
-     * @orm:Column(type="string", length=4096)
+     * @orm:Column(type="string", length=65535)
      */
     private $comment;
 

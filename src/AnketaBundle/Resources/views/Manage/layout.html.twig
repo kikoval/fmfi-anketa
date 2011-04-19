@@ -1,0 +1,12 @@
+{% extends 'AnketaBundle::layout.html.twig' %}
+{% block main_content %}
+    <h2>Sprava</h2>
+    <a href="{{ path('_managequestions') }}">Otazky</a> |
+    <a href="#">Uzivatelia</a> |
+    <a href="#">Kategorie</a>
+    <br /><br />
+    {% block managing_content %}
+
+    {% endblock %}
+    <br />
+{% endblock %}
