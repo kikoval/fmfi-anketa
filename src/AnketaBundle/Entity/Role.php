@@ -3,11 +3,12 @@
 namespace AnketaBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Security\Core\Role\RoleInterface;
 
 /**
  * @orm:Entity
  */
-class Role {
+class Role implements RoleInterface {
 
     /**
      * @orm:Id @orm:GeneratedValue @orm:Column(type="integer")
@@ -36,6 +37,10 @@ class Role {
 
     public function getName() {
         return $this->name;
+    }
+
+    public function getRole() {
+        return $this->getName();
     }
 
 }

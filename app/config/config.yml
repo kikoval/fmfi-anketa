@@ -58,13 +58,17 @@ jms_security_extra:
     secure_controllers:  true
     secure_all_services: false
     
+services:
+    anketa.user_provider:
+        class: AnketaBundle\Security\AnketaUserProvider
+        arguments: [ "@doctrine.orm.entity_manager" ]
+    
 security:
     factories:
         - "%kernel.root_dir%/../src/SVT/CosignBundle/Resources/config/security_factories.xml"
     providers:
         main:
-            users:
-                foo: { password: bar, roles: ROLE_USER }
+            id: anketa.user_provider
     firewalls:
         main:
             pattern:    /(anketa|manage)/.*

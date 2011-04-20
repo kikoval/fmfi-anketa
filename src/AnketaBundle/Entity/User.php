@@ -3,11 +3,12 @@
 namespace AnketaBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @orm:Entity(repositoryClass="AnketaBundle\Entity\Repository\UserRepository")
  */
-class User {
+class User implements UserInterface {
 
     /**
      * @orm:Id @orm:GeneratedValue @orm:Column(type="integer")
@@ -109,10 +110,29 @@ class User {
     }
 
     /**
-     * @return ArrayCollection roles
+     * @return Role[] roles
      */
     public function getRoles() {
-        return $this->roles;
+        return $this->roles->toArray();
+    }
+
+    public function equals(UserInterface $user) {
+        if (!$user instanceof User) {
+            return false;
+        }
+        
+        return $this->userName === $user->getUserName();
+    }
+
+    public function eraseCredentials() {
+    }
+
+    public function getPassword() {
+        return null;
+    }
+
+    public function getSalt() {
+        return null;
     }
 
 }
