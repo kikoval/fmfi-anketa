@@ -47,11 +47,17 @@ class Answer {
 
     /**
      * @orm:ManyToOne(targetEntity="Subject")
-     * @orm:JoinColumn(nullable=true)
      *
      * @var Subject $subject
      */
     private $subject;
+
+    /**
+     * @orm:ManyToOne(targetEntity="User")
+     *
+     * @var User $user
+     */
+    private $author;
 
     /**
      * @todo referencia na usera
@@ -133,5 +139,19 @@ class Answer {
      */
     public function getSubject() {
         return $this->subject;
+    }
+
+    /**
+     * @param User $value
+     */
+    public function setAuthor($value) {
+        $this->author = $value;
+    }
+
+    /**
+     * @return User the author
+     */
+    public function getAuthor() {
+        return $this->author;
     }
 }
