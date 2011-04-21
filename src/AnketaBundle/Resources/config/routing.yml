@@ -2,18 +2,18 @@ homepage:
     pattern:  /
     defaults: { _controller: AnketaBundle:Welcome:index }
 
-# might be moved to separate routing file in case more managing areas are needed
-_manage:
-    pattern: /manage/
-    resource: "@AnketaBundle/Resources/config/manage_routing.yml"
-
 _anketa:
     pattern: /anketa/
     defaults: { _controller: AnketaBundle:Anketa:index }
 
-_answerquestions:
+_manage:
+    pattern: /manage/
+    resource: "@AnketaBundle/Resources/config/manage_routing.yml"
+
+_answer:
     pattern: /answer/
-    defaults: { _controller: AnketaBundle:Manage:answerQuestions }
+    resource: "@AnketaBundle/Resources/config/answer_routing.yml"
+
 _ping:
     pattern: /ping/{devName}
     defaults: { _controller: AnketaBundle:Ping:ping, devName: joe }

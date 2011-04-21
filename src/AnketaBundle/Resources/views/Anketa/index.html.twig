@@ -1,10 +1,20 @@
 {% extends 'AnketaBundle::layout.html.twig' %}
 {% block main_content %}
+    {% block main_navigation %}
+        <p>Toto je zobrazenie po prihlaseni</p>
 
-<h1>TODO</h1>
+        <p>Prihlaseny pouzivatel je <b>{{ username }}</b></p>
+        <h1>Anketa 2011</h1>
+            <a href="{{ path('_answer') }}">Vyplnanie</a> |
+            <a href="#">Statistiky</a> |
+            <a href="#">Dalsia polozka</a>
+            <br /><br />
 
-<p>Toto je zobrazenie po prihlaseni</p>
+        {% block section_navigation %}
+        {% endblock %}
 
-<p>Prihlaseny pouzivatel je <b>{{ username }}</b></p>
+        {% block content %}
+        {% endblock %}
 
+    {% endblock %}
 {% endblock %}

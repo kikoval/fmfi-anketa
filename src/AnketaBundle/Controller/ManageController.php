@@ -30,20 +30,5 @@ class ManageController extends Controller {
     {
         return $this->render('AnketaBundle:Manage:layout.html.twig');
     }
-
-    public function answerQuestionsAction() {
-        $em = $this->get('doctrine.orm.entity_manager');
-
-        // tu bude treba vytiahnut nejaku rozumnu mnozinu otazok, napr otazky
-        // tykajuce sa matalyzy, tykajuce sa skoly apod - potom premenovat akciu
-        // na nieco specifickejsie, pripadne pridat argument
-
-        // zatial vyberam vsetky
-        $questions = $em->getRepository('AnketaBundle:Question')->findAll();
-        
-
-        return $this->render('AnketaBundle:Manage:answerQuestions.html.twig',
-                array('questions' => $questions));
-        
-    }
+    
 }

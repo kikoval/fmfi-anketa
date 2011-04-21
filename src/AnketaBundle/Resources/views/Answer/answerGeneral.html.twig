@@ -1,0 +1,34 @@
+{% extends 'AnketaBundle:Answer:layout.html.twig' %}
+
+{% block content %}
+
+Vseobecne otazky: <br /><br />
+
+<form action="#" method="post">
+{% for question in questions %}
+    <table>
+        <tr>
+            <td>
+                Otazka: {{ question.getQuestion }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                {% for option in question.getOptions %}
+                    <input type="radio" name="{{ question.getId }}" value="{{ option.getId }}" />
+                    <label for="{{ question.getId }}">{{ option.getOption }}</label><br>
+                {% endfor %}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="comment_{{ question.getId }}">Komentar:</label>
+                <textarea id="comment_{{ question.getId }}" name="_comment{{ question.getId }}" cols="40" rows="6">Vas komentar sem</textarea>
+            </td>
+        </tr>
+    </table> <br /> <br />
+{% endfor %}
+    <input type="submit" name="submit" value="submit" />
+</form>
+
+{% endblock %}

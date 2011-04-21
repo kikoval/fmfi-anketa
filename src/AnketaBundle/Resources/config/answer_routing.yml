@@ -1,0 +1,8 @@
+_answer:
+    pattern: /answer/
+    defaults: { _controller: AnketaBundle:Answer:answerGeneral }
+
+_answergeneral:
+    pattern: /answer/general/
+    defaults: { _controller: AnketaBundle:Answer:answerGeneral }
+    
