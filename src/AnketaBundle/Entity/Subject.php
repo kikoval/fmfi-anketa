@@ -15,26 +15,41 @@ class Subject {
     private $id;
 
     /**
+     * Uniquely identifies the subject
+     * @orm:Column(type="string", unique="true")
+     */
+    private $code;
+
+    /**
      * @orm:Column(type="string")
      */
     private $name;
 
     /**
-     * @orm:ManyToOne(targetEntity="Teacher", inversedBy="questions")
+     * @orm:ManyToMany(targetEntity="Teacher", mappedBy="subjects")
      *
-     * @var Teacher $teacher
+     * @var ArrayCollection $teachers
      */
-    private $teacher;
+    private $teachers;
 
     /**
      * @param String $name
      */
     public function __construct($name) {
+        $this->teachers = new ArrayCollection();
         $this->name = $name;
     }
 
     public function getId() {
         return $this->id;
+    }
+
+    public function setCode($value) {
+        $this->code = $value;
+    }
+
+    public function getCode() {
+        return $this->code;
     }
 
     public function setName($value) {
@@ -48,15 +63,15 @@ class Subject {
     /**
      * @param Teacher $value
      */
-    public function setTeacher($value) {
-        $this->teacher = $value;
+    public function addTeacher($value) {
+        $this->teachers[] = $value;
     }
 
     /**
-     * @return Teacher the teacher
+     * @return ArrayCollection teachers
      */
-    public function getTeacher() {
-        return $this->teacher;
+    public function getTeachers() {
+        return $this->teachers;
     }
 
 }

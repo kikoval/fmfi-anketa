@@ -20,7 +20,11 @@ class Teacher {
     private $name;
 
     /**
-     * @orm:OneToMany(targetEntity="Subject", mappedBy="teacher")
+     * @orm:ManyToMany(targetEntity="Subject")
+     * @orm:JoinTable(name="teachers_subjects",
+     *      joinColumns={@orm:JoinColumn(name="teacher_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@orm:JoinColumn(name="subject_id", referencedColumnName="id")}
+     *      )
      *
      * @var ArrayCollection $subjects
      */
@@ -57,8 +61,8 @@ class Teacher {
      * @param Subject $value
      */
     public function addSubject($value) {
+        $value->addTeacher($this);
         $this->subjects[] = $value;
-        $value->setTeacher($this);
     }
 
     /**

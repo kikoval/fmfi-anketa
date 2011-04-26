@@ -59,10 +59,6 @@ class Answer {
      */
     private $author;
 
-    /**
-     * @todo referencia na usera
-     */
-
     public function getId() {
         return $this->id;
     }
