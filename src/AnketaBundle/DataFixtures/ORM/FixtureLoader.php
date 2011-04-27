@@ -132,28 +132,43 @@ class FixtureLoader implements FixtureInterface {
 //        $manager->persist($a2);
 
         // create users, roles
-        $user1 = new User('foo', 'Bc. Foo');
-        $user2 = new User('admin', 'admin');
-        $user3 = new User('sadmin', 'super_admin');
-        $role1 = new Role('ROLE_ADMIN');
-        $role2 = new Role('ROLE_USER');
-        $role3 = new Role('ROLE_SUPER_ADMIN');
+        $userFoo = new User('foo', 'Bc. Foo');
+        $userAdmin = new User('admin', 'admin');
+
+        $roleAdmin = new Role('ROLE_ADMIN');
+        $roleUser = new Role('ROLE_USER');
+        $roleSuperAdmin = new Role('ROLE_SUPER_ADMIN');
+	
+        $developers = array('sucha14'   =>  'Martin Sucha',
+                            'trancik1'  =>  'Ivan Trančík',
+                            'peresini1' =>  'Bc. Peter Perešíni',
+                            'marek11'   =>  'Jakub Marek',
+                            'belan14'   =>  'Tomáš Belan',
+                            'markos1'   =>  'Jakub Markoš',
+                            'kralik3'   =>  'Bc. Martin Králik');
+        
+        foreach ($developers as $userName => $displayName) {
+            $user = new User($userName, $displayName);
+            $user->addRole($roleSuperAdmin);
+            $user->addSubject($sub1);
+            $user->addSubject($sub2);
+            $user->addSubject($sub3);
+            $manager->persist($user);
+        }
+
 //
-        $user1->addSubject($sub1);
-        $user1->addSubject($sub2);
-        $user1->addSubject($sub3);
-        $user1->addRole($role2);
+        $userFoo->addSubject($sub1);
+        $userFoo->addSubject($sub2);
+        $userFoo->addSubject($sub3);
+        $userFoo->addRole($roleUser);
 
-        $user2->addRole($role1);
+        $userAdmin->addRole($roleAdmin);
 
-        $user3->addRole($role3);
-
-        $manager->persist($user1);
-        $manager->persist($user2);
-        $manager->persist($user3);
-        $manager->persist($role1);
-        $manager->persist($role2);
-        $manager->persist($role3);
+        $manager->persist($userFoo);
+        $manager->persist($userAdmin);
+        $manager->persist($roleAdmin);
+        $manager->persist($roleUser);
+        $manager->persist($roleSuperAdmin);
 
 
         $manager->flush();
