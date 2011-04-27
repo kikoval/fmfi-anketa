@@ -29,7 +29,7 @@ class User implements UserInterface {
      * @orm:ManyToMany(targetEntity="Subject")
      * @orm:JoinTable(name="users_subjects",
      *      joinColumns={@orm:JoinColumn(name="user_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@orm:JoinColumn(name="subject_id", referencedColumnName="id", unique=true)}
+     *      inverseJoinColumns={@orm:JoinColumn(name="subject_id", referencedColumnName="id")}
      *      )
      */
     private $subjects;
@@ -38,7 +38,7 @@ class User implements UserInterface {
      * @orm:ManyToMany(targetEntity="Role")
      * @orm:JoinTable(name="users_roles",
      *      joinColumns={@orm:JoinColumn(name="user_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@orm:JoinColumn(name="role_id", referencedColumnName="id", unique=true)}
+     *      inverseJoinColumns={@orm:JoinColumn(name="role_id", referencedColumnName="id")}
      *      )
      */
     private $roles;
