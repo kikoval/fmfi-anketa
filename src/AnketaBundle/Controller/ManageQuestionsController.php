@@ -70,7 +70,7 @@ class ManageQuestionsController extends Controller {
 
             $em->persist($question);
             $em->flush();
-            return new RedirectResponse($this->generateUrl('_viewquestion',
+            return new RedirectResponse($this->generateUrl('view_question',
                            array('id' => $question->getId())));
         }
 

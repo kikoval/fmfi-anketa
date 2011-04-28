@@ -25,6 +25,11 @@ class Answer {
     private $comment;
 
     /**
+     * @orm:Column(type="boolean")
+     */
+    private $attended;
+
+    /**
      * @orm:ManyToOne(targetEntity="Question")
      *
      * @var Question $question
@@ -78,6 +83,14 @@ class Answer {
 
     public function getComment() {
         return $this->comment;
+    }
+
+    public function setAttended($value) {
+        $this->attended = $value;
+    }
+
+    public function getAttended() {
+        return $this->attended;
     }
 
     /**

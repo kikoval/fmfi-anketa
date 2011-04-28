@@ -97,6 +97,9 @@ class FixtureLoader implements FixtureInterface {
         $sub2->setCode('agil056');
         $sub3 = new Subject('Telesna vychova');
         $sub3->setCode('tv06');
+        // predmet ktory nikto nenavstevuje
+        $sub4 = new Subject('FMFI volno');
+        $sub4->setCode('fmfi');
         
         // znova, teacher sa postara o update Subjectu
         $teacher1->addSubject($sub1);
@@ -114,6 +117,7 @@ class FixtureLoader implements FixtureInterface {
         $manager->persist($sub1);
         $manager->persist($sub2);
         $manager->persist($sub3);
+        $manager->persist($sub4);
 
         // create answers
 //        $a = new Answer();

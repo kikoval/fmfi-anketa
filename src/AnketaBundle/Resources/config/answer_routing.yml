@@ -1,8 +1,13 @@
-_answer:
-    pattern: /answer/
-    defaults: { _controller: AnketaBundle:Answer:answerGeneral }
+answer:
+    pattern: /hlasuj/
+    defaults: { _controller: AnketaBundle:Answer:answerGeneral, id: -1 }
 
-_answergeneral:
-    pattern: /answer/general/
-    defaults: { _controller: AnketaBundle:Answer:answerGeneral }
-    
+answer_general:
+    pattern: /hlasuj/vseobecne/{id}
+    defaults: { _controller: AnketaBundle:Answer:answerGeneral, id: -1 }
+    requirements:
+      id:  \d+
+
+answer_subject:
+    pattern: /hlasuj/predmet/{code}
+    defaults: { _controller: AnketaBundle:Answer:answerSubject, code: -1 }

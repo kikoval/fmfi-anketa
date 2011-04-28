@@ -26,70 +26,130 @@ class AnswerController extends Controller {
         return $this->render('AnketaBundle:Answer:index.html.twig');
     }
 
-    public function answerGeneralAction() {
-        $request = Request::createFromGlobals();
+    /**
+     * Processes the form.
+     * 
+     * @param Request $request
+     * @param User $user current user
+     * @return array array of partially-created answers (without
+     * subject, category, user, etc fields set)
+     */
+    private function processForm($request, $user) {
 
         $em = $this->get('doctrine.orm.entity_manager');
 
+        $questionArray = $request->request->get('question');
+
+        $result = array();
+        // prechadzame otazky prvky
+        foreach ($questionArray as $questionId => $question) {
+            // todo: validacia oboch id-ciek
+            // todo: validacia ci uz neodpovedal - ak ano, treba iba updatovat
+            // todo: milion dalsich validacii - ma ten predmet / studijny
+            //       program vobec zapisany atd
+
+            // ziskame question+option z db
+            $questionObj = $em->find('AnketaBundle:Question', $questionId);
+            $option = $em->find('AnketaBundle:Option', $question['answer']);
+
+            $comment = $question['comment'];
+
+            $answer = new Answer();
+            $answer->setQuestion($questionObj);
+            // evaluacia sa nastavi z Option
+            $answer->setOption($option);
+            $answer->setAuthor($user);
+            $answer->setComment($comment);
+
+            $result[] = $answer;
+        };
+        
+        return $result;
+    }
+
+    public function answerSubjectAction($code) {
+        if ($code == -1) {
+            // default predmet
+            $code = 'met001';
+        }
+
+        $request = Request::createFromGlobals();
+        $user = $this->get('security.context')->getToken()->getUser();
+        $em = $this->get('doctrine.orm.entity_manager');
+        $attendedSubjects = $user->getSubjects();
+        // ak sa tuto nic nenajde, tak by to chcelo redirect na nejaku error page
+        $subject = $em->getRepository('AnketaBundle\Entity\Subject')
+                      ->findOneBy(array('code' => $code));
+
         if ('POST' == $request->getMethod()) {
-            $user = $this->get('security.context')->getToken()->getUser();
-
-            $questionArray = $request->request->get('question');
-
-            // prechadzame otazky prvky
-            foreach ($questionArray as $questionId => $question) {
-                // todo: validacia oboch id-ciek
-                // todo: validacia ci uz neodpovedal - ak ano, treba iba updatovat
-                // todo: milion dalsich validacii - ma ten predmet / studijny
-                //       program vobec zapisany atd
-
-                // ziskame question+option z db
-                $questionObj = $em->find('AnketaBundle:Question', $questionId);
-                $option = $em->find('AnketaBundle:Option', $question['answer']);
-
-                $comment = $question['comment'];
-
-                // tu vznika otazka, ako ziskat id predmetu / ucitela? ako nejaky
-                // hidden field vo forme? zatial null
-
-                $answer = new Answer();
-                $answer->setQuestion($questionObj);
-                // evaluacia sa nastavi z Option
-                $answer->setOption($option);
-                $answer->setAuthor($user);
-                $answer->setComment($comment);
+            $answerArray = $this->processForm($request, $user);
+            // neviem presne ako funguje ta doctrine ArrayCollection, ci
+            // sa tam da nejako vyhladavat alebo co, takze to robim takto
+            $attended = false;
+            foreach ($attendedSubjects AS $item) {
+                if ($item->getCode() == $subject->getCode())
+                    $attended = true;
+            }
+            foreach ($answerArray AS $answer) {
+                // chceme nastavit teacher + subject
+                // predpokladame ze subject je to co prislo v parametri kodu
+                $answer->setSubject($subject);
+                // ako ucitela zoberieme prveho... co asi urcite nechceme
+                $answer->setTeacher($subject->getTeachers()->get(0));
+                $answer->setAttended($attended);
 
                 $em->persist($answer);
-            };
+            }
 
             $em->flush();
+        }
+        $category = $em->getRepository('AnketaBundle\Entity\Category')
+	               ->findOneBy(array('category' => 'subject'));
+        $questions = $em->getRepository('AnketaBundle\Entity\Question')
+                        ->findBy(array('category' => $category->getId()));
+        $username = $user->getUserName();
 
+        return $this->render('AnketaBundle:Answer:answerSubject.html.twig',
+                array('questions' => $questions, 'username' => $username,
+                      'attendedsubjects' => $attendedSubjects, 'subject' => $subject));
+    }
+
+    public function answerGeneralAction($id) {
+        // nejaka default kategoria
+        if ($id == -1) {
+            // zatial 1, v realnej app bude treba ziskat id nejakej default kat.
+            $id = 1;
+        }
+
+        $request = Request::createFromGlobals();
+        $user = $this->get('security.context')->getToken()->getUser();
+        $em = $this->get('doctrine.orm.entity_manager');
+
+        if ('POST' == $request->getMethod()) {
+            $answerArray = $this->processForm($request, $user);
+            foreach ($answerArray AS $answer) {
+                $em->persist($answer);
+            }
+
+            $em->flush();
             // redirect na stranku s dalsimi otazkami
         } else {
             // ak neni POST request, tak chceme mozno zobrazit jeho
             // predchadzajuce odpovede, pripadne odpovede/komentare ostatnych ludi
         }
 
-        // chceme vceobecne otazky
-        $category = $em->getRepository('AnketaBundle\Entity\Category')
-                       ->findOneBy(array('category' => 'general'));
+        // chceme vceobecne subkategorie - pre menu do templatu
+        $subcategories = $em->getRepository('AnketaBundle\Entity\Category')
+                       ->findBy(array('category' => 'general'));
 
-        // najdeme tieto vseobecne otazky - chcelo by to asi viac vseobecnych
-        // kategorii aby nebolo 100 otazok na jednej stranke
+        // a kategoriu podla parametru (posiela sa aj do templatu)
+        $category = $em->find('AnketaBundle:Category', $id);
         $questions = $em->getRepository('AnketaBundle\Entity\Question')
                         ->findBy(array('category' => $category->getId()));
+        $username = $user->getUserName();
 
-        $user = $this->get('security.context')->getToken()->getUser();
-        $username = $user->getUsername();
-
-        /**
-         * ak by sme chceli mat iba jednu controller akciu na vsetky typy
-         * listovania otazok, tak bude treba do templatu poslat nieco ako
-         * nadpis (o aky typ otazok sa jedna), predmet (co za predmet),
-         * ucitel (kto to uci) apod
-         */
         return $this->render('AnketaBundle:Answer:answerGeneral.html.twig',
-                array('questions' => $questions, 'username' => $username));
-
+                array('questions' => $questions, 'username' => $username,
+                      'subcategories' => $subcategories, 'category' => $category));
     }
 }

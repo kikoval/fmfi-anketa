@@ -1,11 +1,16 @@
 {% extends 'AnketaBundle:Anketa:index.html.twig' %}
 
 {% block section_navigation %}
-    <h2>Odpovedanie</h2>
-    <a href="{{ path('_answergeneral') }}">Vseobecne otazky</a> |
-    <a href="#">Predmety</a> |
+    <h2>Kategorie:</h2>
+    <a href="{{ path('answer_general') }}">Vseobecne otazky</a> |
+    <a href="{{ path('answer_subject') }}">Predmety</a> |
     <a href="#">Este nieco ine?</a>
     <br /><br />
+
+    {% block subcategory_navigation %}
+
+    {% endblock %}
+
 {% endblock %}
 
 {% block content %}

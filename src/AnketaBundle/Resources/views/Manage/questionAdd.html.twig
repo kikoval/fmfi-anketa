@@ -42,7 +42,7 @@ Forma na pridanie otazky: <br />
                 <td>
                     <select name="_category">
                         {% for category in categories %}
-                            <option value="{{ category.getId }}">{{ category.getCategory }}</option>
+                            <option value="{{ category.getId }}">{{ category.getType }}</option>
                         {% endfor %}
                     </select>
                 </td>

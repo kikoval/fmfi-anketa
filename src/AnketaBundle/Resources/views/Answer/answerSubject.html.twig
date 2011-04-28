@@ -1,9 +1,9 @@
 {% extends 'AnketaBundle:Answer:layout.html.twig' %}
 
 {% block subcategory_navigation %}
-    <h3> Subkategorie: </h3>
-    {% for subcategory in subcategories %}
-        <a href="{{ path('answer_general', { 'id': subcategory.getId }) }}">{{ subcategory.getType }}</a>
+    <h3> Zapisane predmety: </h3>
+    {% for subject in attendedsubjects %}
+        <a href="{{ path('answer_subject', { 'code': subject.getCode }) }}">{{ subject.getName }}</a>
         {% if not loop.last %}
             |
         {% endif %}
@@ -12,7 +12,7 @@
 
 {% block content %}
 <br />
-{{ category.getType }}:
+{{ subject.getName }}:
 <br />
 
 {% include 'AnketaBundle:Answer:includeQuestionsForm.html.twig' %}

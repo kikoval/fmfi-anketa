@@ -2,18 +2,18 @@ homepage:
     pattern:  /
     defaults: { _controller: AnketaBundle:Welcome:index }
 
-_anketa:
+anketa:
     pattern: /anketa/
     defaults: { _controller: AnketaBundle:Anketa:index }
 
-_manage:
+manage:
     pattern: /manage/
     resource: "@AnketaBundle/Resources/config/manage_routing.yml"
 
-_answer:
-    pattern: /answer/
+answer:
+    pattern: /hlasuj/
     resource: "@AnketaBundle/Resources/config/answer_routing.yml"
 
-_ping:
+ping:
     pattern: /ping/{devName}
     defaults: { _controller: AnketaBundle:Ping:ping, devName: joe }

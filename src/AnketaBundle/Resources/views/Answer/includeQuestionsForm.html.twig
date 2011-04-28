@@ -1,0 +1,30 @@
+{#
+ # template for including, expects variable questions (array of questions)
+ #}
+
+<form action="#" method="post">
+{% for question in questions %}
+    <table>
+        <tr>
+            <td>
+                Otazka: {{ question.getQuestion }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                {% for option in question.getOptions %}
+                    <input type="radio" name="question[{{ question.getId }}][answer]" value="{{ option.getId }}" />
+                    <label for="{{ option.getId }}">{{ option.getOption }}</label><br>
+                {% endfor %}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="comment_{{ question.getId }}">Komentar:</label>
+                <textarea id="comment_{{ question.getId }}" name="question[{{ question.getId }}][comment]" cols="40" rows="6">Vas komentar sem</textarea>
+            </td>
+        </tr>
+    </table> <br /> <br />
+{% endfor %}
+    <input type="submit" name="submit" value="submit" />
+</form>

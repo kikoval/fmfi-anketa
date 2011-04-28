@@ -16,7 +16,7 @@ class Subject {
 
     /**
      * Uniquely identifies the subject
-     * @orm:Column(type="string", unique="true")
+     * @orm:Column(type="string", nullable="false", unique="true")
      */
     private $code;
 

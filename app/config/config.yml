@@ -71,6 +71,6 @@ security:
             id: anketa.user_provider
     firewalls:
         main:
-            pattern:    /(anketa|manage|answer)/.*
+            pattern:    /(anketa|manage|hlasuj)/.*
             cosign:     true
             logout:     true

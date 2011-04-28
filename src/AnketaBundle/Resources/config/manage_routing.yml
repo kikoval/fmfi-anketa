@@ -1,4 +1,4 @@
-_manage:
+manage:
     pattern: /manage/
     defaults: { _controller: AnketaBundle:Manage:index }
 
@@ -6,19 +6,19 @@ _manage:
 # Questions
 #--------------------------
 
-_managequestions:
+manage_questions:
     pattern: /manage/questions/
     defaults: { _controller: AnketaBundle:ManageQuestions:listQuestions }
 
-_listquestions:
+list_questions:
     pattern: /manage/questions/list/
     defaults: { _controller: AnketaBundle:ManageQuestions:listQuestions }
 
-_addquestion:
+add_question:
     pattern: /manage/questions/add/
     defaults: { _controller: AnketaBundle:ManageQuestions:addQuestion }
 
-_viewquestion:
+view_question:
     pattern: /manage/questions/{id}
     defaults: { _controller: AnketaBundle:ManageQuestions:viewQuestion }
     requirements:
