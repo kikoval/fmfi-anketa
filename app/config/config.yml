@@ -71,6 +71,19 @@ security:
             id: anketa.user_provider
     firewalls:
         main:
-            pattern:    /(anketa|manage|hlasuj)/.*
+            pattern:    /.*
+            anonymous:  true
             cosign:     true
-            logout:     true
+            switch_user: { role: ROLE_SUPER_ADMIN, parameter: _zmen_usera }
+            logout:
+                path:     /logout
+                target:   "https://login.uniba.sk/logout.cgi?https://anketa.fmph.uniba.sk/"
+                handlers: [security.logout.handler.cosign]
+    role_hierarchy:
+        ROLE_ADMIN:       ROLE_USER
+        ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_HAS_VOTE]
+    access_control:
+        - { path: /manage/.*, role: ROLE_ADMIN }
+        - { path: /hlasuj/.*, role: ROLE_HAS_VOTE }
+        - { path: /anketa/.*, role: IS_AUTHENTICATED_FULLY }
+        - { path: /.*, role: IS_AUTHENTICATED_ANONYMOUSLY }

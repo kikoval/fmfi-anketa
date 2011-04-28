@@ -66,6 +66,23 @@ abstract class AbstractPreAuthenticatedListener implements ListenerInterface
             if ($token instanceof PreAuthenticatedToken && $token->isAuthenticated() && $token->getUsername() === $user) {
                 return;
             }
+            // Check for switch user
+            if ($token->isAuthenticated() && $token->getUsername() !== $user) {
+                $roles = $token->getRoles();
+                foreach ($roles as $role) {
+                    if ($role instanceof \Symfony\Component\Security\Core\Role\SwitchUserRole) {
+                        $originalToken = $role->getSource();
+                        if (null !== $this->logger) {
+                            $this->logger->debug(sprintf('Pre-authenticated token used with switch_user, original token: %s', $originalToken));
+                        }
+                        if ($originalToken instanceof PreAuthenticatedToken && $originalToken->isAuthenticated() && $originalToken->getUsername() === $user) {
+                            // Do not perform pre-authentication in this case
+                            // as it would overwrite the switch user token
+                            return;
+                        }
+                    }
+                }
+            }
         }
 
         if (null !== $this->logger) {

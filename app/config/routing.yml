@@ -1,3 +1,6 @@
 _homepage:
     pattern:  /
     resource: "@AnketaBundle/Resources/config/routing.yml"
+
+logout:
+    pattern: /logout
