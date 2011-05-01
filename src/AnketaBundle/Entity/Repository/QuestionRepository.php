@@ -29,4 +29,25 @@ class QuestionRepository extends EntityRepository {
         
         return $query->getSingleResult();
     }
+
+    /**
+     *
+     * @param User $user
+     * @return integer number of questions accessible by user
+     */
+    public function getQuestionsCount($user) {
+        $em = $this->getEntityManager();
+        $category = $em->getRepository('AnketaBundle\Entity\Category')
+                       ->findOneBy(array('category' => 'subject'));
+        $query = $em->createQuery('SELECT COUNT(q.id)
+                                   FROM AnketaBundle\Entity\Question q');
+        $result = $query->getSingleScalarResult();
+        $query = $em->createQuery('SELECT COUNT(q.id)
+                                   FROM AnketaBundle\Entity\Question q
+                                   WHERE q.category = :subjectCatId');
+        $query->setParameter('subjectCatId', $category->getId());
+        $subCount = $query->getSingleScalarResult();
+        $result += $subCount * ($user->getSubjectsCount() - 1);
+        return $result;
+    }
 }

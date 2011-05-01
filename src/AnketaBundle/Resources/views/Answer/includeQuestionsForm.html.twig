@@ -1,5 +1,6 @@
 {#
  # template for including, expects variable questions (array of questions)
+ # and answers (array of already created answers)
  #}
 
 <form action="#" method="post">
@@ -13,7 +14,14 @@
         <tr>
             <td>
                 {% for option in question.getOptions %}
-                    <input type="radio" name="question[{{ question.getId }}][answer]" value="{{ option.getId }}" />
+                    <input type="radio" name="question[{{ question.getId }}][answer]" value="{{ option.getId }}"
+                        {% if answers[question.getId] is defined %}
+                            {% if answers[question.getId].hasOption %}
+                                {% if answers[question.getId].getOption.getId == option.getId %}
+                                    checked="checked"
+                                {% endif %}
+                            {% endif %}
+                        {% endif %} />
                     <label for="{{ option.getId }}">{{ option.getOption }}</label><br>
                 {% endfor %}
             </td>
@@ -21,10 +29,10 @@
         <tr>
             <td>
                 <label for="comment_{{ question.getId }}">Komentar:</label>
-                <textarea id="comment_{{ question.getId }}" name="question[{{ question.getId }}][comment]" cols="40" rows="6">Vas komentar sem</textarea>
+                <textarea id="comment_{{ question.getId }}" name="question[{{ question.getId }}][comment]" cols="40" rows="6">{% if answers[question.getId] is defined %}{{ answers[question.getId].getComment }}{% endif %}</textarea>
             </td>
         </tr>
     </table> <br /> <br />
 {% endfor %}
-    <input type="submit" name="submit" value="submit" />
+    <input type="submit" name="submit" value="chod na dalsiu sekciu" />
 </form>

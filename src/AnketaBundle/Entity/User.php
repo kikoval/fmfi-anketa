@@ -96,6 +96,13 @@ class User implements UserInterface {
     }
 
     /**
+     * @return integer
+     */
+    public function getSubjectsCount() {
+        return $this->subjects->count();
+    }
+
+    /**
      * @param ArrayCollection $value
      */
     public function setRoles($value) {

@@ -15,7 +15,7 @@ class Answer {
     private $id;
 
     /**
-     * @orm:Column(type="integer")
+     * @orm:Column(type="integer", nullable="true")
      */
     private $evaluation;
 
@@ -27,7 +27,7 @@ class Answer {
     /**
      * @orm:Column(type="boolean")
      */
-    private $attended;
+    private $attended = false;
 
     /**
      * @orm:ManyToOne(targetEntity="Question")
@@ -120,6 +120,13 @@ class Answer {
      */
     public function getOption() {
         return $this->option;
+    }
+
+    /**
+     * @return Boolean true if Answer has option set
+     */
+    public function hasOption() {
+        return !empty($this->option);
     }
 
     /**

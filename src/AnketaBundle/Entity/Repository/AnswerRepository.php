@@ -18,5 +18,44 @@ use Doctrine\ORM\EntityRepository;
  */
 
 class AnswerRepository extends EntityRepository {
-    
+
+    /**
+     *
+     * @param array $questions array of questions
+     * @param User $user current user
+     * @param Subject $subject
+     * @return array array of answers, indexed with question ids
+     */
+    public function getAnswersByCriteria($questions, $user, $subject = null) {
+        // odpoved je jednoznacne identifikovana autorom, id otazky, id predmetu
+        // mozno by bolo fajn vytvorit nad tym teda unique index
+        $result = array();
+        $questionRep = $this->getEntityManager()->getRepository('AnketaBundle\Entity\Answer');
+        $criteria = array('author' => $user->getId());
+        if ($subject != null) {
+            $criteria['subject'] = $subject->getId();
+        }
+        foreach ($questions AS $question) {
+            $criteria['question'] = $question->getId();
+            $answer = $questionRep->findOneBy($criteria);
+            $result[$question->getId()] = $answer;
+        }
+        return $result;
+    }
+
+    /**
+     *
+     * @param User $user
+     * @return integer number of user answers (not counting answers to subjects
+     * not attended)
+     */
+    public function getAnswersCount($user) {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery('SELECT COUNT(a.id)
+                                   FROM AnketaBundle\Entity\Answer a
+                                   WHERE a.author = :userId AND
+                                         ((a.subject IS NULL) OR (a.attended = true))');
+        $query->setParameter('userId', $user->getId());
+        return $query->getSingleScalarResult();
+    }
 }

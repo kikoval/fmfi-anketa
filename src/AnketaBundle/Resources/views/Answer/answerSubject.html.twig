@@ -2,7 +2,7 @@
 
 {% block subcategory_navigation %}
     <h3> Zapisane predmety: </h3>
-    {% for subject in attendedsubjects %}
+    {% for subject in attendedSubjects %}
         <a href="{{ path('answer_subject', { 'code': subject.getCode }) }}">{{ subject.getName }}</a>
         {% if not loop.last %}
             |
