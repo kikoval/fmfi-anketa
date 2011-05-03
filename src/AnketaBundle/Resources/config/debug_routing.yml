@@ -1,0 +1,7 @@
+_debug:
+  pattern: /
+  defaults: { _controller: AnketaBundle:Debug:index }
+
+_debug_ais:
+  pattern: /ais
+  defaults: { _controller: AnketaBundle:Debug:ais }

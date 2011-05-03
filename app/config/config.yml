@@ -57,11 +57,33 @@ swiftmailer:
 jms_security_extra:
     secure_controllers:  true
     secure_all_services: false
+
+svt_libfajr:
+    server: ais2.uniba.sk
+    login:
+        cosign_cookie: "napisatSem"
+        #cosign_proxy: /opt/cosign/proxy
+    connection:
+        curl:
+            directory: /tmp
+    trace: "null"
     
 services:
     anketa.user_provider:
         class: AnketaBundle\Security\AnketaUserProvider
-        arguments: [ "@doctrine.orm.entity_manager" ]
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@anketa.ais_retriever"
+            - [["2010/2011", "Z"], ["2010/2011", "L"]] # brat iba tieto semestre
+            - true # pouzivat data z AIS-u?
+    anketa.ais_retriever:
+        class: AnketaBundle\Integration\AISRetriever
+        arguments:
+            - "@libfajr.trace"
+            - "@libfajr.server.connection"
+            - "@libfajr.login"
+            - "@libfajr.window.main"
+            - "@libfajr.window.factory.administracia_studia"
     
 security:
     factories:

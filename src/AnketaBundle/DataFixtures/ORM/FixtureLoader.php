@@ -157,6 +157,7 @@ class FixtureLoader implements FixtureInterface {
             $user->addSubject($sub1);
             $user->addSubject($sub2);
             $user->addSubject($sub3);
+            $user->setHasVote(true);
             $manager->persist($user);
         }
 

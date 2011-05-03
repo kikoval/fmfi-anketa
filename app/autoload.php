@@ -26,3 +26,9 @@ $loader->register();
 $loader->registerPrefixFallback(array(
     __DIR__.'/../vendor/symfony/src/Symfony/Component/Locale/Resources/stubs',
 ));
+
+
+$legacyLoaderFile = __DIR__.DIRECTORY_SEPARATOR.'autoload_libfajr_legacy_map.php';
+
+$legacyLoader = new Symfony\Component\ClassLoader\MapFileClassLoader($legacyLoaderFile);
+$legacyLoader->register();

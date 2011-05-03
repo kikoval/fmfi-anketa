@@ -18,6 +18,7 @@ class AppKernel extends Kernel
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
             new SVT\CosignBundle\SVTCosignBundle(),
+            new SVT\LibfajrBundle\SVTLibfajrBundle(),
             new AnketaBundle\AnketaBundle(),
         );
 

@@ -14,5 +14,9 @@ _configurator:
     resource: "@SymfonyWebConfiguratorBundle/Resources/config/routing/configurator.xml"
     prefix:   /_configurator
 
+_debug:
+    resource: "@AnketaBundle/Resources/config/debug_routing.yml"
+    prefix:   /_debug
+
 _main:
     resource: routing.yml

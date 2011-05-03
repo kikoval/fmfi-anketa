@@ -1,0 +1,23 @@
+{% extends 'AnketaBundle::layout.html.twig' %}
+{% block main_content %}
+    <h1>Dáta zistené z AIS-u</h1>
+
+    <h2>Predmety</h2>
+    <table>
+        <tr>
+            <th>Názov</th>
+            <th>Kód</th>
+            <th>Rok</th>
+            <th>Semester</th>
+        </tr>
+    {% for row in predmety %}
+        <tr>
+            <td>{{ row.nazov }}</td>
+            <td>{{ row.skratka }}</td>
+            <td>{{ row.akRok }}</td>
+            <td>{{ row.semester }}</td>
+        </tr>
+    {% endfor %}
+    </table>
+
+{% endblock %}

@@ -26,6 +26,12 @@ class User implements UserInterface {
     private $displayName;
 
     /**
+     * @orm:Column(type="boolean")
+     * @var boolean
+     */
+    private $hasVote;
+
+    /**
      * @orm:ManyToMany(targetEntity="Subject")
      * @orm:JoinTable(name="users_subjects",
      *      joinColumns={@orm:JoinColumn(name="user_id", referencedColumnName="id")},
@@ -52,6 +58,7 @@ class User implements UserInterface {
         $this->roles= new ArrayCollection();
         $this->userName = $username;
         $this->displayName = $displayname;
+        $this->hasVote = false;
     }
 
     public function getId() {
@@ -72,6 +79,14 @@ class User implements UserInterface {
 
     public function getDisplayName() {
         return $this->displayName;
+    }
+
+    public function getHasVote() {
+        return $this->hasVote;
+    }
+
+    public function setHasVote($hasVote) {
+        $this->hasVote = $hasVote;
     }
 
     /**
@@ -120,7 +135,11 @@ class User implements UserInterface {
      * @return Role[] roles
      */
     public function getRoles() {
-        return $this->roles->toArray();
+        $roles = $this->roles->toArray();
+        if ($this->getHasVote()) {
+            $roles[] = 'ROLE_HAS_VOTE';
+        }
+        return $roles;
     }
 
     public function equals(UserInterface $user) {
@@ -140,6 +159,10 @@ class User implements UserInterface {
 
     public function getSalt() {
         return null;
+    }
+
+    public function __toString() {
+        return $this->getUserName();
     }
 
 }
