@@ -65,6 +65,7 @@ class FixtureLoader implements FixtureInterface {
         
         $question2 = new Question('Co nove ste sa dozvedeli na tomto predmete?');
         $question2->setCategory($cat4);
+        $question2->setDescription('Berte do uvahy mnozstvo informacii a podobne.');
         $op1 = new Option('nic', 0);
         $op2 = new Option('velmi vela', 100);
         $question2->addOption($op1);

@@ -11,6 +11,13 @@
                 Otazka: {{ question.getQuestion }}
             </td>
         </tr>
+        {% if question.hasDescription %}
+            <tr>
+                <td>
+                    Popis: {{ question.getDescription }}
+                </td>
+            </tr>
+        {% endif %}
         <tr>
             <td>
                 {% for option in question.getOptions %}

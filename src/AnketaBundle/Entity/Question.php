@@ -15,9 +15,19 @@ class Question {
     private $id;
 
     /**
+     * @orm:Column(type="string", nullable="true")
+     */
+    private $title;
+
+    /**
      * @orm:Column(type="string")
      */
     private $question;
+
+    /**
+     * @orm:Column(type="string", length=1024, nullable="true")
+     */
+    private $description;
 
     /**
      * @orm:Column(type="boolean")
@@ -51,12 +61,32 @@ class Question {
         return $this->id;
     }
 
+    public function setTitle($value) {
+        $this->title = $value;
+    }
+
+    public function getTitle() {
+        return $this->title;
+    }
+
     public function setQuestion($value) {
         $this->question = $value;
     }
 
     public function getQuestion() {
         return $this->question;
+    }
+
+    public function setDescription($value) {
+        $this->description = $value;
+    }
+
+    public function getDescription() {
+        return $this->description;
+    }
+
+    public function hasDescription() {
+        return !empty($this->description);
     }
 
     /**
