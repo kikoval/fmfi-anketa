@@ -85,13 +85,13 @@ class AnswerController extends Controller {
         $questionArray = $request->request->get('question');
 
         $result = array();
-        // prechadzame otazky prvky
-        //foreach ($questionArray as $questionId => $question) {
+        // prechadzame otazky na ktore sa ocakava mozna odpoved
         foreach ($questions as $question) {
-            // ak vobec vyplnil otazku - tzn vybral nejaku moznost a/alebo
-            // vyplnil komentar
+            // ak vobec vyplnil otazku - tzn vybral nejaku moznost (a nejake existovali)
+            // a/alebo vyplnil komentar (a otazka komentar mala)
             $optionFilled = isset($questionArray[$question->getId()]['answer']);
-            if ($optionFilled || (!empty($questionArray[$question->getId()]['comment']))) {
+            if (($optionFilled && $question->hasOptions()) ||
+                (!empty($questionArray[$question->getId()]['comment']) && $question->getHasComment())) {
                 // ak uz odpovedal niekedy, tak iba updatneme
                 if (isset($answers[$question->getId()])) {
                     $answer = $answers[$question->getId()];
@@ -144,13 +144,14 @@ class AnswerController extends Controller {
         $answers = $em->getRepository('AnketaBundle\Entity\Answer')
                       ->getAnswersByCriteria($questions, $user, $subject);
 
+        $attended = false;
+        $key = \array_search($subject, $attendedSubjects);
+        if ($key !== false) {
+            $attended = true;
+        }
         if ('POST' == $request->getMethod()) {
             $answerArray = $this->processForm($request, $user, $questions, $answers);
-            $attended = false;
-            foreach ($attendedSubjects AS $item) {
-                if ($item->getCode() == $subject->getCode())
-                    $attended = true;
-            }
+
             foreach ($answerArray AS $answer) {
                 // chceme nastavit este teacher + subject
                 // predpokladame ze subject je to co prislo v parametri kodu
@@ -165,10 +166,7 @@ class AnswerController extends Controller {
             $em->flush();
 
             // redirect na stranku s dalsimi otazkami
-            $key = \array_search($subject, $attendedSubjects);
-            if ($key === false)
-                throw new \Exception('Something went wrong!');
-            if ($key < (count($attendedSubjects) - 1))
+            if (($key !== false) && ($key < (count($attendedSubjects) - 1)))
                 return new RedirectResponse($this->generateUrl('answer_subject',
                                     array('code' => $attendedSubjects[$key + 1]->getCode())));
             return new RedirectResponse($this->generateUrl('answer'));

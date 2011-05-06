@@ -33,12 +33,14 @@
                 {% endfor %}
             </td>
         </tr>
-        <tr>
-            <td>
-                <label for="comment_{{ question.getId }}">Komentar:</label>
-                <textarea id="comment_{{ question.getId }}" name="question[{{ question.getId }}][comment]" cols="40" rows="6">{% if answers[question.getId] is defined %}{{ answers[question.getId].getComment }}{% endif %}</textarea>
-            </td>
-        </tr>
+        {% if question.getHasComment %}
+            <tr>
+                <td>
+                    <label for="comment_{{ question.getId }}">Komentar:</label>
+                    <textarea id="comment_{{ question.getId }}" name="question[{{ question.getId }}][comment]" cols="40" rows="6">{% if answers[question.getId] is defined %}{{ answers[question.getId].getComment }}{% endif %}</textarea>
+                </td>
+            </tr>
+        {% endif %}
     </table> <br /> <br />
 {% endfor %}
     <input type="submit" name="submit" value="chod na dalsiu sekciu" />

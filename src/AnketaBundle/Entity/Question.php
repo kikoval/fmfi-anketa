@@ -49,12 +49,18 @@ class Question {
     private $category;
 
     /**
+     * @orm:Column(type="boolean")
+     */
+    private $hasComment;
+
+    /**
      * @param String $question
      */
     public function __construct($question = '') {
         $this->options = new ArrayCollection();
         $this->question = $question;
         $this->stars = false;
+        $this->hasComment = true;
     }
 
     public function getId() {
@@ -126,6 +132,13 @@ class Question {
     }
 
     /**
+     * @return Boolean
+     */
+    public function hasOptions() {
+        return !$this->options->isEmpty();
+    }
+
+    /**
      * @return String options
      */
     public function getStringOptions() {
@@ -149,6 +162,14 @@ class Question {
      */
     public function getCategory() {
         return $this->category;
+    }
+
+    public function setHasComment($value) {
+        $this->hasComment = $value;
+    }
+
+    public function getHasComment() {
+        return $this->hasComment;
     }
 
     /**

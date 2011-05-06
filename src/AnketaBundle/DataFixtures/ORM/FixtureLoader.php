@@ -70,6 +70,20 @@ class FixtureLoader implements FixtureInterface {
         $op2 = new Option('velmi vela', 100);
         $question2->addOption($op1);
         $question2->addOption($op2);
+
+        $question5 = new Question('Aku cast prednasok ste absolvovali?');
+        $question5->setCategory($cat4);
+        $opt1 = new Option('0-20%', 10);
+        $opt2 = new Option('21-40%', 30);
+        $opt3 = new Option('41-60%', 50);
+        $opt4 = new Option('61-80%', 70);
+        $opt5 = new Option('90-100%', 100);
+        $question5->addOption($opt1);
+        $question5->addOption($opt2);
+        $question5->addOption($opt3);
+        $question5->addOption($opt4);
+        $question5->addOption($opt5);
+        $question5->setHasComment(false);
         
         $question3 = new Question('Ohodnotte osvetlenie chodieb');
         $question3->setCategory($cat1);
@@ -85,6 +99,7 @@ class FixtureLoader implements FixtureInterface {
         $manager->persist($question2);
         $manager->persist($question3);
         $manager->persist($question4);
+        $manager->persist($question5);
 
         // create teacher + subject
         $teacher1 = new Teacher('Ucitel');
