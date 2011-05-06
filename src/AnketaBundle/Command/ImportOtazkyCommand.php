@@ -30,13 +30,13 @@ use Symfony\Component\Yaml\Yaml;
  * @package    Anketa
  * @author     Jakub Marek <jakub.marek@gmail.com>
  */
-class TestCommand extends Command {
+class ImportOtazkyCommand extends Command {
 
     protected function configure() {
         parent::configure();
 
         $this
-                ->setName('test')
+                ->setName('import-otazky')
                 ->addArgument('file', InputArgument::REQUIRED)
                 ->addOption('duplicates', 'c', InputOption::VALUE_NONE, 'Checks for Duplicate Categories', null)
         ;
