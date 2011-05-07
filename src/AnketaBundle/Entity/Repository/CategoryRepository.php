@@ -19,4 +19,16 @@ use Doctrine\ORM\EntityRepository;
 
 class CategoryRepository extends EntityRepository {
     
+    /**
+     * 
+     * @return ArrayCollection general categories ordered by position
+     */
+    public function getOrderedGeneral() {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery("SELECT c
+                                   FROM AnketaBundle\Entity\Category c
+                                   WHERE c.category = 'general'
+                                   ORDER BY c.position ASC");
+        return $query->getResult();
+    }
 }

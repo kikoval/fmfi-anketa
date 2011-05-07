@@ -15,6 +15,12 @@ class Question {
     private $id;
 
     /**
+     * Defaults to 100
+     * @orm:Column(type="integer")
+     */
+    private $position;
+
+    /**
      * @orm:Column(type="string", nullable="true")
      */
     private $title;
@@ -61,10 +67,20 @@ class Question {
         $this->question = $question;
         $this->stars = false;
         $this->hasComment = true;
+        // viac ako 100 otazok dufam nikdy nebudeme zobrazovat na 1 stranke
+        $this->position = 100;
     }
 
     public function getId() {
         return $this->id;
+    }
+
+    public function setPosition($value) {
+        $this->position = $value;
+    }
+
+    public function getPosition() {
+        return $this->position;
     }
 
     public function setTitle($value) {

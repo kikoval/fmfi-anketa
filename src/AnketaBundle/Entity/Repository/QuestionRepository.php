@@ -13,6 +13,7 @@ namespace AnketaBundle\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use AnketaBundle\Entity\Question;
+use AnketaBundle\Entity\Category;
 
 /**
  * Repository class for Question Entity
@@ -49,5 +50,21 @@ class QuestionRepository extends EntityRepository {
         $subCount = $query->getSingleScalarResult();
         $result += $subCount * ($user->getSubjectsCount() - 1);
         return $result;
+    }
+
+    /**
+     *
+     * @param Category $category category of the questions to look for
+     * @return ArrayCollection questions ordered by position
+     */
+    public function getOrderedQuestions(Category $category) {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery("SELECT q, o
+                                   FROM AnketaBundle\Entity\Question q
+                                   INNER JOIN q.options o
+                                   WHERE q.category = :category
+                                   ORDER BY q.position ASC");
+        $query->setParameter('category', $category->getId());
+        return $query->getResult();
     }
 }

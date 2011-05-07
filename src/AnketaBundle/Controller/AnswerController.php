@@ -35,16 +35,6 @@ class AnswerController extends Controller {
     }
 
     /**
-     * Compares 2 categories based on their type property
-     */
-    private static function compareCategories($a, $b) {
-        if ($a == $b) {
-            return 0;
-        }
-        return \strcmp($a->getType(), $b->getType());
-    }
-
-    /**
      *
      * @param EntityManager $em
      * @param User $user current user
@@ -140,7 +130,7 @@ class AnswerController extends Controller {
         $category = $em->getRepository('AnketaBundle\Entity\Category')
 	               ->findOneBy(array('category' => 'subject'));
         $questions = $em->getRepository('AnketaBundle\Entity\Question')
-                        ->findBy(array('category' => $category->getId()));
+                        ->getOrderedQuestions($category);
         $answers = $em->getRepository('AnketaBundle\Entity\Answer')
                       ->getAnswersByCriteria($questions, $user, $subject);
 
@@ -196,13 +186,11 @@ class AnswerController extends Controller {
 
         // chceme vceobecne subkategorie - pre menu do templatu
         $subcategories = $em->getRepository('AnketaBundle\Entity\Category')
-                       ->findBy(array('category' => 'general'));
+                       ->getOrderedGeneral();
         if (empty($subcategories))
             throw new NotFoundHttpException ('Ziadne vseobecne kategorie.');
 
-        \usort($subcategories, array($this, 'compareCategories'));
-
-        // abecedne prva kategoria
+        // default prva kategoria (najnizsie position)
         if ($id == -1) {
             $category = $subcategories[0];
         } else {
@@ -213,7 +201,7 @@ class AnswerController extends Controller {
         }
         
         $questions = $em->getRepository('AnketaBundle\Entity\Question')
-                        ->findBy(array('category' => $category->getId()));
+                        ->getOrderedQuestions($category);
         $answers = $em->getRepository('AnketaBundle\Entity\Answer')
                       ->getAnswersByCriteria($questions, $user);
 

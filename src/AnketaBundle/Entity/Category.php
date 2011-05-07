@@ -15,6 +15,12 @@ class Category {
     private $id;
 
     /**
+     * Defaults to 100
+     * @orm:Column(type="integer")
+     */
+    private $position;
+
+    /**
      * The main category, i.e. general/subject
      * @orm:Column(type="string")
      */
@@ -38,10 +44,20 @@ class Category {
         $this->questions = new ArrayCollection();
         $this->category = $category;
         $this->type = $type;
+        // viac ako 100 otazok dufam nikdy nebudeme zobrazovat na 1 stranke
+        $this->position = 100;
     }
 
     public function getId() {
         return $this->id;
+    }
+
+    public function setPosition($value) {
+        $this->position = $value;
+    }
+
+    public function getPosition() {
+        return $this->position;
     }
 
     public function setCategory($value) {
