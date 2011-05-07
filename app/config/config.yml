@@ -61,7 +61,7 @@ jms_security_extra:
 svt_libfajr:
     server: ais2.uniba.sk
     login:
-        cosign_cookie: "napisatSem"
+        cosign_cookie: %ais_cookie%
         #cosign_proxy: /opt/cosign/proxy
     connection:
         curl:
@@ -73,9 +73,7 @@ services:
         class: AnketaBundle\Security\AnketaUserProvider
         arguments:
             - "@doctrine.orm.entity_manager"
-            - "@anketa.ais_retriever"
-            - [["2010/2011", "Z"], ["2010/2011", "L"]] # brat iba tieto semestre
-            - true # pouzivat data z AIS-u?
+            - ["@anketa.ais_user_source"]
     anketa.ais_retriever:
         class: AnketaBundle\Integration\AISRetriever
         arguments:
@@ -84,6 +82,13 @@ services:
             - "@libfajr.login"
             - "@libfajr.window.main"
             - "@libfajr.window.factory.administracia_studia"
+    anketa.ais_user_source:
+        class: AnketaBundle\Security\AISUserSource
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@anketa.ais_retriever"
+            - [["2010/2011", "Z"], ["2010/2011", "L"]] # brat iba tieto semestre
+            - Yes # pouzit AIS ako zdroj opravneni?
     
 security:
     factories:
@@ -104,6 +109,7 @@ security:
     role_hierarchy:
         ROLE_ADMIN:       ROLE_USER
         ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_HAS_VOTE]
+        ROLE_AIS_STUDENT: [ROLE_STUDENT]
     access_control:
         - { path: /manage/.*, role: ROLE_ADMIN }
         - { path: /hlasuj/.*, role: ROLE_HAS_VOTE }

@@ -149,4 +149,11 @@ class AISRetriever
         return $this->mainScreen->getFullUserName($this->trace);
     }
 
+    public function isAdministraciaStudiaAllowed()
+    {
+        $this->loginIfNotAlready();
+        $apps = $this->mainScreen->getAllAvailableApplications($this->trace, array('ES'));
+        return in_array(AIS2ApplicationEnum::ADMINISTRACIA_STUDIA, $apps);
+    }
+
 }
