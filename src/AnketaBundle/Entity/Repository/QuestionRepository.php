@@ -61,7 +61,7 @@ class QuestionRepository extends EntityRepository {
         $em = $this->getEntityManager();
         $query = $em->createQuery("SELECT q, o
                                    FROM AnketaBundle\Entity\Question q
-                                   INNER JOIN q.options o
+                                   LEFT JOIN q.options o
                                    WHERE q.category = :category
                                    ORDER BY q.position ASC");
         $query->setParameter('category', $category->getId());
