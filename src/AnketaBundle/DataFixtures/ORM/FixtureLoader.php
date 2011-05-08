@@ -39,7 +39,7 @@ class FixtureLoader implements FixtureInterface {
      */
     public function load($manager) {
         // create categories
-        $cat1 = new Category('general', 'Vyzor skoly');
+        /*$cat1 = new Category('general', 'Vyzor skoly');
         $cat2 = new Category('general', 'Moznosti stravovania');
         $cat3 = new Category('general', 'Ucitelia');
         $cat4 = new Category('subject', 'Predmety');
@@ -100,7 +100,7 @@ class FixtureLoader implements FixtureInterface {
         $manager->persist($question3);
         $manager->persist($question4);
         $manager->persist($question5);
-
+*/
         // create teacher + subject
         $teacher1 = new Teacher('Ucitel');
         $teacher2 = new Teacher('Profesor');
