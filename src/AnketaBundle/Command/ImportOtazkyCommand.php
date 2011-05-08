@@ -117,9 +117,10 @@ class ImportOtazkyCommand extends Command {
         }
         if (array_key_exists("moznosti", $import)) {
             foreach ($import["moznosti"] as $option) {
-                $op = new Option(
-                                $option["text"],
-                                $option["hodnota"]);
+                $evaluation = 0;
+                if (!empty($option["hodnota"]))
+                    $evaluation = $option["hodnota"];
+                $op = new Option($option["text"], $evaluation);
                 $question->addOption($op);
             }
         }
