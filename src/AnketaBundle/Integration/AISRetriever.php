@@ -91,6 +91,11 @@ class AISRetriever
         // Having triedLogin true means the connection must
         // have been initialized before as we already attempted to login
         if (!$this->triedLogin) return;
+
+        if ($this->adminStudiaScreen !== null) {
+            $this->adminStudiaScreen->closeIfNeeded($this->trace);
+        }
+
         if ($this->login->isLoggedIn($this->connection)) {
             $this->login->logout($this->connection);
         }

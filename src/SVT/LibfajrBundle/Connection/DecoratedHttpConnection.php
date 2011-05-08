@@ -32,24 +32,35 @@ abstract class DecoratedHttpConnection implements HttpConnection
      */
     public abstract function getRealConnection($poll = false);
 
-    public function addCookie($name, $value, $expire, $path, $domain, $secure = true, $tailmatch = false) {
+    public function addCookie($name, $value, $expire, $path, $domain, $secure = true, $tailmatch = false)
+    {
         return $this->getRealConnection()
                 ->addCookie($name, $value, $expire, $path, $domain, $secure, $tailmatch);
     }
 
-    public function clearCookies() {
+    public function clearCookies()
+    {
         return $this->getRealConnection()
                 ->clearCookies();
     }
 
-    public function get(Trace $trace, $url) {
+    public function get(Trace $trace, $url)
+    {
         return $this->getRealConnection()
                 ->get($trace, $url);
     }
 
-    public function post(Trace $trace, $url, $data) {
+    public function post(Trace $trace, $url, $data)
+    {
         return $this->getRealConnection()
                 ->post($trace, $url, $data);
+    }
+
+    public function close()
+    {
+        $conn = $this->getRealConnection(true);
+        if ($conn === null) return;
+        $conn->close();
     }
 
 }
