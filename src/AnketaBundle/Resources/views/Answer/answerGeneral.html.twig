@@ -3,7 +3,13 @@
 {% block subcategory_navigation %}
     <h3> Subkategorie: </h3>
     {% for subcategory in subcategories %}
-        <a href="{{ path('answer_general', { 'id': subcategory.getId }) }}">{{ subcategory.getType }}</a>
+        <a href="{{ path('answer_general', { 'id': subcategory.getId }) }}">
+            {{ subcategory.getType }}
+            {% if generalProgress[subcategory.getId] is defined %}
+                ({{ generalProgress[subcategory.getId]['answers'] }}/{{ generalProgress[subcategory.getId]['questions'] }}
+                ={{ generalProgress[subcategory.getId]['progress'] }})
+            {% endif %}
+        </a>
         {% if not loop.last %}
             |
         {% endif %}

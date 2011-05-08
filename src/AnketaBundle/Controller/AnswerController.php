@@ -42,9 +42,43 @@ class AnswerController extends Controller {
      */
     private function getCommonData($em, $user) {
         $result = array();
-        $username = $user->getUserName();
-        $allQuestions = $em->getRepository('AnketaBundle\Entity\Question')->getQuestionsCount($user);
-        $filledQuestions = $em->getRepository('AnketaBundle\Entity\Answer')->getAnswersCount($user);
+        $username = $user->getDisplayName();
+        $generalProgress = $em->getRepository('AnketaBundle\Entity\Question')
+                       ->getGeneralProgress($user);
+        $subjectProgress = $em->getRepository('AnketaBundle\Entity\Question')
+                       ->getSubjectProgress($user);
+        $attendedCodes = array();
+        foreach ($user->getSubjects() AS $subject) {
+            $attendedCodes[] = $subject->getCode();
+        }
+        $allQuestions = 0;
+        $filledQuestions = 0;
+        foreach ($generalProgress AS $id => $numbers) {
+            if ($id == 'subject')
+                continue;
+            $allQuestions += $numbers['questions'];
+            $filledQuestions += $numbers['answers'];
+            $generalProgress[$id]['progress'] = 0;
+            // iba kontrola na delenie nulou
+            if ($generalProgress[$id]['questions'] != 0) {
+                $generalProgress[$id]['progress'] =
+                    round($generalProgress[$id]['answers'] / $generalProgress[$id]['questions'], 2);
+            }
+        }
+
+        foreach ($subjectProgress AS $code => $numbers) {
+            $subjectProgress[$code]['progress'] = 0;
+            if ($generalProgress['subject'] != 0) {
+                $subjectProgress[$code]['progress'] =
+                    round($subjectProgress[$code]['answers'] / $generalProgress['subject'], 2);
+            }
+        }
+        // od filledQuestions treba este odpocitat odpovede z nezapisanych predmetov
+        foreach ($subjectProgress AS $code => $numbers) {
+            if (\array_search($code, $attendedCodes) === false)
+                    $filledQuestions -= $numbers['answers'];
+        }
+        $allQuestions += ($user->getSubjectsCount() - 1) * $generalProgress['subject'];
         if ($filledQuestions == $allQuestions) {
             $progress = 'Ďakujeme, vyplnil si všetky relevantné otázky.';
         } else {
@@ -52,6 +86,8 @@ class AnswerController extends Controller {
         }
         $result['username'] = $username;
         $result['progress'] = $progress;
+        $result['generalProgress'] = $generalProgress;
+        $result['subjectProgress'] = $subjectProgress;
         return $result;
     }
 
@@ -183,7 +219,7 @@ class AnswerController extends Controller {
         $request = Request::createFromGlobals();
         $user = $this->get('security.context')->getToken()->getUser();
         $em = $this->get('doctrine.orm.entity_manager');
-
+        
         // chceme vceobecne subkategorie - pre menu do templatu
         $subcategories = $em->getRepository('AnketaBundle\Entity\Category')
                        ->getOrderedGeneral();
