@@ -107,20 +107,36 @@ class ImportOtazkyCommand extends Command {
             $question = new Question('defaultna otazka, chyba polozka text v anketa.yml');
         }
 
+        if (array_key_exists("popis", $import)) {
+            $question->setDescription($import["popis"]);
+        }
+
         $kat = $import["kategoria"];
 
         $question->setCategory($categories[$kat]);
 
+        if ($import["komentar"] == 'No') {
+            $question->setHasComment(false);
+        } else {
+            $question->setHasComment(true);
+        }
+
         if ($import["hviezdicky"] == 'Yes') {
             $question->setStars(true);
             $question->generateStarOptions();
+        } else {
+            $question->setStars(false);
         }
         if (array_key_exists("moznosti", $import)) {
             foreach ($import["moznosti"] as $option) {
-                $evaluation = 0;
-                if (!empty($option["hodnota"]))
-                    $evaluation = $option["hodnota"];
-                $op = new Option($option["text"], $evaluation);
+                if (array_key_exists("hodnota", $option)) {
+                    $hodnota = $option["hodnota"];
+                } else {
+                    $hodnota = 0;
+                }
+                $op = new Option(
+                                $option["text"],
+                                $hodnota);
                 $question->addOption($op);
             }
         }
@@ -150,5 +166,4 @@ class ImportOtazkyCommand extends Command {
             }
         }
     }
-
 }
