@@ -53,12 +53,22 @@ class QuestionRepository extends EntityRepository {
     }
 
     /**
+     * Gets the number of questions and filled answers for each category.
+     *
+     * The result is an associative array of associative arrays, where:
+     *
+     * - result[categoryId]['questions'] = number of questions in category
+     * - result[categoryId]['answer'] = number of answers in category
+     * - result[categoryId]['category'] = the top-level category this category
+     *   belongs to, i.e. 'general' or 'subject'
+     *
+     * Note that for 'general' categories, 'answers' is at most 'questions',
+     * but for the 'subject' category, 'answers' is at most 'questions' times
+     * the number of attended subjects, because each subject has the same
+     * questions.
      *
      * @param User $user current user
-     * @return array
-     *      result[categoryId]['questions'] = number of questions in category
-     *      result[categoryId]['answers'] = number of answers in category
-     *      special: result['subject'] = number of questions in subject category
+     * @return array data with the number of questions, answers and top-level category
      */
     public function getGeneralProgress($user) {
         $em = $this->getEntityManager();
@@ -94,12 +104,9 @@ class QuestionRepository extends EntityRepository {
         $result = array();
         foreach ($questionsCount AS $row) {
             $result[$row['cat_id']]['questions'] = $row['num'];
+            $result[$row['cat_id']]['category'] = $row['cat_section'];
             // default value for answers
             $result[$row['cat_id']]['answers'] = 0;
-            // only for easier access to number of subject questions
-            if ($row['cat_section'] == 'subject') {
-                $result['subject'] = $row['num'];
-            }
         }
 
         foreach ($answerCount AS $row) {

@@ -1,6 +1,6 @@
 {% extends 'AnketaBundle:Manage:layoutQuestion.html.twig' %}
 
-{% block content %}
+{% block question_content %}
 Forma na pridanie otazky: <br />
     <form action="#" method="post">
         <table>
@@ -9,7 +9,7 @@ Forma na pridanie otazky: <br />
                     <label for="question">Otazka</label>
                 </td>
                 <td>
-                    <input type="text" id="question" name="_question" value="{{ question.getQuestion }}" required="true" size="60" />
+                    <input type="text" id="question" name="_question" value="{{ question.question }}" required="true" size="60" />
                     <br />
                 </td>
             </tr>
@@ -42,7 +42,7 @@ Forma na pridanie otazky: <br />
                 <td>
                     <select name="_category">
                         {% for category in categories %}
-                            <option value="{{ category.getId }}">{{ category.getType }}</option>
+                            <option value="{{ category.id }}">{{ category.type }}</option>
                         {% endfor %}
                     </select>
                 </td>

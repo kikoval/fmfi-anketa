@@ -1,10 +1,10 @@
 {% extends 'AnketaBundle:Manage:layoutQuestion.html.twig' %}
 
-{% block content %}
+{% block question_content %}
     Vypisujem vsetky otazky. <br />
     {% for question in questions %}
-            <b> {{ question.getId }}: </b>
-            <a href="{{ path('view_question', { 'id': question.getId }) }}">{{ question.getQuestion }}</a><br />
+            <b> {{ question.id }}: </b>
+            <a href="{{ path('view_question', { 'id': question.id }) }}">{{ question.question }}</a><br />
     {% else %}
         Anketa nema ziadne otazky. Dakujeme za Vas cas.
     {% endfor %}

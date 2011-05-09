@@ -1,0 +1,59 @@
+
+html, body {
+  background: #E0EFFF;
+  color: #222;
+}
+
+a:link, a:visited, a:active {
+  color: #003A76;
+}
+
+#user-bar {
+  color: #777;
+}
+
+#user-bar a {
+  color: inherit;
+}
+
+.menu li.inner {
+  background: transparent url("../images/collapsed.gif") no-repeat 0 0.3em;
+}
+
+.menu li.inner.active {
+  background: transparent url("../images/expanded.gif") no-repeat 0 0.3em;
+}
+
+.menu li.leaf.active {
+  background: white url("../images/active.gif") repeat-y left center;
+}
+
+.menu a.menu-level-0 {
+  color: black;
+}
+
+.progressbar {
+  border-color: #7FBBFB;
+}
+
+.progressbar .done {
+  background: #7FBBFB;
+}
+
+#content {
+  background: white;
+  border-radius: 1em;
+}
+
+.question {
+  border-color: #DDD;
+}
+
+.question .description {
+  color: #888;
+}
+
+#footer {
+  color: #777;
+}
+

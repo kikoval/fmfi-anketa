@@ -1,6 +1,6 @@
 answer:
     pattern: /hlasuj/
-    defaults: { _controller: AnketaBundle:Answer:answerGeneral, id: -1 }
+    defaults: { _controller: AnketaBundle:Answer:answerSubject, code: -1 }
 
 answer_general:
     pattern: /hlasuj/vseobecne/{id}

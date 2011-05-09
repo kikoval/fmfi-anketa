@@ -1,0 +1,84 @@
+{% extends 'AnketaBundle:Anketa:index.html.twig' %}
+
+{#
+ # @param menu the category tree, expressed as a list of items. every item has: id, title, href, progress?, children?, active. if present, children is another array of items.
+ # @param category the active category, expressed as a menu item
+ # @param questions list of questions for the active category
+ # @param answers list of answers for the active category
+ #}
+
+{% block user_bar %}
+    {# TODO toto mozno chceme presunut niekde vyssie... (ale potom aj nastavovanie username a displayname v AnswerControlleri niekde vyssie) #}
+    <span class="hidden">Prihlásený: </span><span class="user-fullname" title="{{ username }}">{{ displayname }}</span>
+    &mdash; <a href="{{ path('logout') }}" class="logout">Odhlásiť</a>
+{% endblock %}
+
+{#
+ # @param progress the current progressbar value (an integer in 0-100)
+ # @param class additional progress bar class
+ #}
+{% macro progressbar(progress, class) %}
+    <span class="progressbar{{ class|default('') }}" title="{{ progress }}%"><span class="done" style="width: {{ progress }}%;"></span></span>
+{% endmacro %}
+
+{#
+ # @param tree a list of menu items to display
+ # @param level the current depth in the menu tree (starting from 0 for top-level items)
+ #}
+{% macro menu_tree(tree, level) %}
+    <ul class="menu-level-{{ level }}">
+        {% for item in tree %}
+            <li class="menu-level-{{ level }} {{ 'children' in item|keys ? 'inner' : 'leaf' }}{{ item.active ? ' active' : '' }}">
+                {# TODO: necheme do titlu dať miesto percent konkrétny zlomok "answers/questions"? #}
+                <a class="menu-level-{{ level }}" href="{{ item.href }}">{% if 'progress' in item|keys %}{{ _self.progressbar(item.progress) }}{% endif %}{{ item.title }}</a>
+                {% if 'progress' in item|keys %}<span class="hidden"> {{ item.progress }}</span>{% endif %}
+                {% if item.active and 'children' in item|keys and item.children is not empty %}
+                    {{ _self.menu_tree(item.children, level + 1) }}
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+{% endmacro %}
+
+{% block navigation %}
+    <h2 class="hidden">Kategórie</h2>
+    <div class="menu">
+        {{ _self.menu_tree(menu, 0) }}
+    </div>
+    {# TODO: niekde možno chceme zobraziť celkový progress #}
+{% endblock %}
+
+{% block content %}
+    <h2>{{ category.title }}</h2>
+    <form action="#" method="post">
+    {% block submit %}
+    <div class="submit">
+{#        <input class="save" type="submit" name="save" value="Ulož" /> TODO tento button zatial nefunguje #}
+        <input class="next" type="submit" name="next" value="Ulož a choď ďalej &raquo;" />
+    </div>
+    {% endblock %}
+    {% for question in questions %}
+        <div class="question">
+            <h3>{{ question.question }}</h3>
+            {% if question.hasDescription %}
+                <div class="description">{{ question.description }}</div>
+            {% endif %}
+            {% for option in question.options %}
+                <div class="option"><label for="question_{{ question.id }}_{{ option.id }}">
+                    <input type="radio" id="question_{{ question.id }}_{{ option.id }}" name="question[{{ question.id }}][answer]" value="{{ option.id }}"
+                        {% if answers[question.id] is defined and answers[question.id].hasOption and answers[question.id].option.id == option.id %}
+                            checked="checked"
+                        {% endif %} />
+                    {{ option.option }}</label></div>
+            {% endfor %}
+            {% if question.hasComment %}
+            <div class="comment">
+                <div><label for="comment_{{ question.id }}">Komentár:</label></div>
+                <textarea id="comment_{{ question.id }}" name="question[{{ question.id }}][comment]" cols="40" rows="3">{{ answers[question.id] is defined ? answers[question.id].comment : "" }}</textarea>
+            </div>
+            {% endif %}
+        </div>
+    {% endfor %}
+    {{ block('submit') }}
+    </form>
+{% endblock %}

@@ -1,11 +1,11 @@
 {% extends 'AnketaBundle:Manage:layout.html.twig' %}
 
-    {% block managing_content %}
-        <h2>Sprava otazok</h2>
-        <a href="{{ path('add_question') }}">Pridat otazku</a> |
-        <a href="{{ path('list_questions') }}">List otazok</a>
+    {% block content %}
+        <h2>Správa otázok</h2>
+        <a href="{{ path('add_question') }}">Pridať otázku</a> |
+        <a href="{{ path('list_questions') }}">Zoznam otázok</a>
         <br /><br />
-        {% block content %}
+        {% block question_content %}
 
         {% endblock %}
     {% endblock %}

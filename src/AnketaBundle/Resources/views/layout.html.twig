@@ -2,30 +2,46 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <link rel="stylesheet" href="{{ asset('bundles/anketa/css/reset.css') }}" type="text/css" media="all" />
+        <link rel="stylesheet" href="{{ asset('bundles/anketa/css/base.css') }}" type="text/css" media="all" />
         <link rel="stylesheet" href="{{ asset('bundles/anketa/css/main.css') }}" type="text/css" media="all" />
+        <link rel="stylesheet" href="{{ asset('bundles/anketa/css/color.css') }}" type="text/css" media="all" />
+        <script type="text/javascript" src="{{ asset('bundles/anketa/js/jquery.js') }}"></script>
+        <!--[if lte IE 7]>
+        <style>
+            .container { width: 60em; }
+            .clearfix { zoom: 1; }
+        </style>
+        <![endif]-->
         <title>{% block title %}Anketa{% endblock %}</title>
         <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" />
     </head>
     <body>
-        <div class="header">
-                <div id="logo">
-                    FMFI Anketa 2011
-                </div>
-                <ul id="menu">
-                        <li><a href="{{ path('anketa') }}">Anketa</a></li>
-                        <li><a href="{{ path('manage') }}">Správa</a></li>
-                        <li><a href="{{ path('ping') }}">Pingni joe-a</a></li>
-                </ul>
-        </div>
-        
-        <div class="main_content">
-            {% block main_content %}
-            {% endblock %}
-        </div>
-        
-        <div class="footer">
-SVT Team 2011
-        </div>
+        <div id="container">
+            <div id="user-bar">
+                {% block user_bar %}
+                {% endblock %}
+            </div>
 
+            <div id="header">
+                <h1>Anketa <span>2011</span></h1>
+            </div>
+
+            <div id="sidebar">
+            <div id="sidebar-inner">
+                {% block sidebar %}
+                {% endblock %}
+            </div>
+            </div>
+
+            <div id="content" class="clearfix">
+                {% block content %}
+                {% endblock %}
+            </div>
+
+            <div id="footer">
+                &copy; Školský Vývojový Tím 2011
+            </div>
+        </div>
     </body>
 </html>
