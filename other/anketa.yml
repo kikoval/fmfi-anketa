@@ -11,146 +11,154 @@ kategorie:
       kategoria:  studijnyprogram
 
 # vseobecne kategorie
-    - id:         itvybavenie
-      popis:      IT vybavenie
+    - id:         fakulta
+      popis:      Otázky ku fakulte
       kategoria:  vseobecne
-
-    - id:         priestory
-      popis:      Priestory, toalety a ine
-      kategoria:  vseobecne
-
-    - id:         web
-      popis:      Web skoly
-      kategoria:  vseobecne
-
-    - id:         vedenie
-      popis:      Vedenie skoly
-      kategoria:  vseobecne
-
-    - id:         studiumzahranicie
-      popis:      Studium v zahranici a cudzie jazyky
-      kategoria:  vseobecne
-
-    - id:         studijne
-      popis:      Studijne oddelenie
-      kategoria:  vseobecne
-
-    - id:         internaty
-      popis:      Internaty
-      kategoria:  vseobecne
-
     - id:         anketa
       popis:      Anketa
       kategoria:  vseobecne
-
-    - id:         studium
-      popis:      Studium
-      kategoria:  vseobecne
-      
     - id:         ostatne
-      popis:      Ostatne otazky
+      popis:      Ostatné
       kategoria:  vseobecne
 
 otazky:
 # ako prve su tu otazky ku predmetom
-    - nazov:  Vyučovanie
-      text:   Ohodnoťte celkový výkon vyučujúceho na tejto hodine.
-      popis:  >
-        Zohľadnite pritom jeho pripravenosť, zrozumiteľnosť, pútavosť, tempo,
-        prezentáciu, alebo poznámky na tabuli, a pod.
+    - nazov:  Hodnotenie predmetu
+      text:   Celkové hodnotenie úrovne predmetu.
+      popis:  
       kategoria:  predmety
       komentar:   No
       hviezdicky: Yes
       position:   1
 
-    - nazov:  Diskusia
-      text:   Ohodnoťte, aký priestor dal vyučujúci študentom.
-      popis:  >
-        Podporoval vyučujúci diskusiu? Viedol diskusiu korektne?
-        Dokázal na otázky dobre odpovedať? Vedel riešiť prípadné problémy
-        na hodinách? Prejavoval snahu zistiť, či mu študenti rozumejú?
+    - nazov:  Zložitosť predmetu
+      text:   Na akej úrovni bola zložitosť preberaného materiálu?
+      popis:  
       kategoria:  predmety
       komentar:   No
-      hviezdicky: Yes
+      hviezdicky: No
+      moznosti:
+          - text: Nepochopiteľný.
+          - text: Mierne nadsadený.
+          - text: Akurát.
+          - text: Príliš jednoduchý.
+          - text: Triviálny.
       position:   2
 
-    - nazov:  Kráčanie s dobou
-      text:   Ohodnoťte, ako vyučujúci využíva nové technológie, alebo postupy.
-      popis:  >
-        Všimnite si, či vyučujúci zverejňuje prípravy na hodiny
-        na internete, či odpovedá na e-mail, či má na hodine netradičný
-        prístup ku študentom, či prinesie aj čerstvé poznatky vo svojej
-        oblasti, či je inovatívny a či neučí neaktuálne veci.
-      kategoria:  predmety
-      komentar:   No
-      hviezdicky: Yes
-      position:   3
-
-    - nazov:  Prístup k študentom
-      text:   Ohodnoťte, aká je kvalita starostlivosti vyučujúceho o študentov.
-      popis:  >
-        Pozerajte sa na dostupnosť a kvalitu študijnej literatúry, či je
-        vyučujúci zastihnuteľný počas konzultačných hodín a či sú vám návštevy
-        u neho na niečo prospešné. Prihliadnite aj na to, či vyučujúci svojvoľne
-        nemenil pravidlá hodnotenia počas semestra a či bolo od začiatku jasné,
-        za čo budú získavané body.
-      kategoria:  predmety
-      komentar:   No
-      hviezdicky: Yes
-      position:   4
-
-    - nazov:  Komentár k vyučujúcemu
-      text:   Vaše vyjadrenie sa k vyučujúcemu.
-      popis:
-      kategoria:  predmety
-      komentar:   Yes
-      hviezdicky: No
-      position:   5
-
-    - nazov:  Odporúčanie
-      text:   Vaše odporúčanie tohto predmetu kolegom.
-      popis:
-      kategoria:  predmety
-      komentar:   No
-      hviezdicky: Yes
-      position:   6
-
-    - nazov:  Účasť
-      text:   Zhodnoťte, ako často ste počas semestra navštevovali tento predmet.
+    - nazov:  Zaujímavosť predmetu
+      text:   Bol obsah predmetu pre Vás zaujímavý?
       popis:
       kategoria:  predmety
       komentar:   No
       hviezdicky: No
       moznosti:
-          - text:     90-100% prednášok
+          - text: Veľmi zaujímavý.
+          - text: Priemerne zaujímavý.
+          - text: Nezaujímavý.
+      position:   3
+
+    - nazov:  Množstvo práce
+      text:   Bolo množstvo práce primerané počtu kreditov?
+      popis:  >
+        Zhodnoťte množstvo domácich úloh, projektov, priebežné písomky,
+        množstvo nového učiva a pod.
+      kategoria:  predmety
+      komentar:   No
+      hviezdicky: No
+      moznosti:
+          - text: Nezvláduteľné.
+          - text: Príliš veľa.
+          - text: Akurát.
+          - text: Príliš málo.
+          - text: Aká práca?
+      position:   4
+
+    - nazov:  Odporúčanie predmetu
+      text:   Odporučili by ste tento predmet kolegom?
+      popis:
+      kategoria:  predmety
+      komentar:   Yes
+      hviezdicky: No
+      moznosti:
+          - text: Áno.
+          - text: Nie.
+      position:   5
+
+    - nazov:  Absolvovanie predmetu
+      text:   Akú časť prednášok a cvičení ste absolvovali?
+      popis:
+      kategoria:  predmety
+      komentar:   No
+      hviezdicky: No
+      moznosti:
+          - text:     90-100% prednášok a cvičení
             hodnota:  100
-          - text:     60-90% prednášok
+          - text:     60-90% 
             hodnota:  75
-          - text:     30-60% prednášok
+          - text:     30-60% 
             hodnota:  45
-          - text:     10-30% prednášok
+          - text:     10-30% 
             hodnota:  20
-          - text:     Nie.
+          - text:     Menej ako 10%.
             hodnota:  0
+      position:   6
+
+    - nazov:  Textový komentár ku predmetu
+      text:   Napíšte Váš názor na tento predmet.
+      popis:
+      kategoria:  predmety
+      komentar:   Yes
+      hviezdicky: No
       position:   7
 
-    - nazov:  Komentár k predmetu
-      text:   Váš komentár k predmetu.
+    - nazov:  Hodnotenie učiteľa
+      text:   Celkový dojem z vyučujúceho.
       popis:
       kategoria:  predmety
-      komentar:   Yes
-      hviezdicky: No
-      position:   
-
-    - nazov:  Knižnica - učebnice k predmetu
-      text:   Aké učebnice užitočné pri štúdiu tohoto predmetu Vám v knižnici chýbajú?
-      popis:
-      kategoria:  predmety
-      komentar:   Yes
-      hviezdicky: No
+      komentar:   No
+      hviezdicky: Yes
+      ucitel:     Yes
       position:   8
 
-      
+    - nazov:  Diskusia
+      text:   Ohodnoťte schopnosť vyučujúceho odpovedať na otázky študentov.
+      popis:
+      kategoria:  predmety
+      komentar:   No
+      hviezdicky: Yes
+      ucitel:     Yes
+      position:   9
+
+    - nazov:  Prezentácia
+      text:   Ohodnoťte ústny prejav a prezentačné schopnosti vyučujúceho.
+      popis:
+      kategoria:  predmety
+      komentar:   No
+      hviezdicky: Yes
+      ucitel:     Yes
+      position:   10
+
+    - nazov:  Odporúčanie učiteľa
+      text:   Odporučili by ste tohto učiteľa kolegom?
+      popis:
+      kategoria:  predmety
+      komentar:   Yes
+      hviezdicky: No
+      moznosti:
+          - text: Áno.
+          - text: Nie.
+      ucitel:     Yes
+      position:   11
+
+    - nazov:  Pripomienky k vyučujúcemu
+      text:   Napíšte Váš názor alebo pripomienky k učiteľovi.
+      popis:
+      kategoria:  predmety
+      komentar:   Yes
+      hviezdicky: No
+      ucitel:     Yes
+      position:   12
+
 # otazky k studijnemu programu
     - nazov:  Hodnotenie študijného programu
       text:   Ohodnoťte Váš študijný program
@@ -198,29 +206,6 @@ otazky:
       hviezdicky: No
       position:   4
 
-    - nazov:  Predmety nezahrnuté v študijnom programe
-      text:   Zapísali ste si niektorý predmet z iného študijného programu?
-      popis:  >
-        Ako študent UK máte možnosť si v rámci voliteľných predmetov  zvoliť
-        aj predmety z iných odborov, či fakúlt UK. Využili ste už túto možnosť?
-      kategoria:  studijnyprogram
-      komentar:   No
-      hviezdicky: No
-      moznosti:
-          - text: Áno, predmet z inej fakulty a / alebo odboru.
-          - text: Áno, predmet z iného odboru.
-          - text: Nie, ale viem o tejto možnosti.
-          - text: Nie, nevedel som o tejto možnosti.
-      position:   5
-
-    - nazov:  Výber študijného programu
-      text:   Prečo ste sa rozhodli pre štúdium Vášho odboru?
-      popis:
-      kategoria:  studijnyprogram
-      komentar:   Yes
-      hviezdicky: No
-      position:   6
-
     - nazov:  Očakávania a realita
       text:   >
         Aké boli Vaše predstavy o Vašom študijnom programe,
@@ -231,305 +216,51 @@ otazky:
       hviezdicky: No
       position:   7
 
+    - nazov:  Očakávania a realita
+      text:   Kvalita kľúčových učiteľov, tútora, garanta.
+      popis:
+      kategoria:  studijnyprogram
+      komentar:   Yes
+      hviezdicky: No
+      position:   7
 
-# vseobecne otazky - IT vybavenie
-    - nazov:  Prístupnosť
-      text:   >
-        Ohodnoťte prístupnosť počítačových miestností. Sú otvorené a prístupné
-        dostatočne potrebám študentov?
-      popis:  >
-        Dokážete sa dostať v škole na počítače vždy, keď to potrebujete? Čakáte
-        dlho na sprístupnenie počítača? Sú na začiatku roka počítačové miestnosti
-        dostatočne prístupné?
-      kategoria:  itvybavenie
+# vseobecne otazky - fakulta
+    - nazov:  Hodnotenie ankety
+      text:   Váš celkový dojem z fakulty na základe doterajších skúseností.
+      popis:  
+      kategoria:  fakulta
       komentar:   Yes
       hviezdicky: Yes
       position:   1
 
-    - nazov:  Software
-      text:   Aké programové vybavenie Vám chýba v počítačových učebniach?
+    - nazov:  Hodnotenie ankety
+      text:   Ohodnoťte prístup administratívnych zamestnancov ku študentom.
       popis:
-      kategoria:  itvybavenie
+      kategoria:  fakulta
       komentar:   Yes
-      hviezdicky: No
+      hviezdicky: Yes
       position:   2
-
-    - nazov:  Spolahlivosť poskytovaných služieb
-      text:   >
-        Zhodnoťte stabilitu a dostupnosť služieb - internetové pripojenie,
-        servery, e-maily.
+      
+    - nazov:  Hodnotenie ankety
+      text:   Zhodnoťte vybavenosť učební a celkové podmienky na výučbu.
       popis:
-      kategoria:  itvybavenie
+      kategoria:  fakulta
       komentar:   Yes
       hviezdicky: Yes
       position:   3
 
-    - nazov:  Vybavenie
-      text:   Ohodnoťte počítačové vybavenie, ktoré je študentom dostupné na škole.
-      popis:  >
-        Spomeňte si na počítačové učebne, na skleník, terminálky, projektory
-        v niektorých miestnostiach a na wifi pripojenie pre študentov.
-      kategoria:  itvybavenie
-      komentar:   Yes
-      hviezdicky: Yes
-      position:   4
-
-
-# vseobecne otazky - vybavenie skoly, priestory, toalety
-    - nazov:  Hodnotenie posluchární a učební
-      text:   >
-        Ako hodnotíte posluchárne a ostatné priestory určené na výuku? Slovne
-        vyjadrite svoje pripomienky.
-      popis:  Zohľadnite kvalitu lavíc, osvetlenia, kúrenia, tabúľ, atď.
-      kategoria:  priestory
-      komentar:   Yes
-      hviezdicky: Yes
-      position:   1
-
-    - nazov:  Hodnotenie knižnice
-      text:   Ako hodnotíte knižnicu, jej kvalitu a množstvo užitočných kníh?
-      popis:  >
-        Spomeňte si na množstvo a dostupnosť kníh, ktoré ste potrebovali,
-        otváracie hodiny, možnosti štúdia v priestoroch knižnice, na personál
-        knižnice, atď.
-      kategoria:  priestory
-      komentar:   Yes
-      hviezdicky: Yes
-      position:   2
-
-    - nazov:  Hodnotenie sociálnych zariadení
-      text:   Ako hodnotíte sociálne zariadenia?
-      popis:  >
-        Čistotu, funkčnosť, dostupnosť, hygienické potreby, tečúcu vodu,
-        vetranie, atď
-      kategoria:  priestory
-      komentar:   Yes
-      hviezdicky: Yes
-      position:   3
-
-    - nazov:  Priestory pre študentov
-      text:   >
-        Ako hodnotíte priestory na chodbách (lavičky, parapetné dosky, stoličky)
-        slúžiace na štúdium a oddych mimo vyučovania?
-      popis:  >
-        Zohľadnite možnosti na samostatné/skupinové štúdium, na oddych,
-        možnosti na sedenie mimo prednáškových miestností.
-      kategoria:  priestory
-      komentar:   Yes
-      hviezdicky: Yes
-      position:   4
-
-    - nazov:  Okolie školy
-      text:   Ako hodnotíte priestory pred školou a okolo školy?
-      popis:  Čistota, využitie, neoficiálny chodník, údržba v lete, údržba v zime, atď.
-      kategoria:  priestory
-      komentar:   Yes
-      hviezdicky: Yes
-      position:   5
-
-    - nazov:  Nové priestory
-      text:   >
-        Privítali by ste vytvorenie miestnosti, kde by sa študenti mohli
-        pripravovať na vyučovanie a tráviť voľný čas medzi hodinami?
+    - nazov:  Študentský život
+      text:   Zhodnoťte kvalitu študentského života.
       popis:
-      kategoria:  priestory
-      komentar:   Yes
-      hviezdicky: No
-      moznosti:
-          - text: Áno, takáto miestnosť mi na škole chýba a využíval by som ju.
-          - text: Aj áno, neviem či by som ju využíval.
-          - text: Nie, na škole je pre tento účel už dostatok priestoru.
-          - text: Nie, nezaujíma ma to.
-      position:   6
-        
-
-# vseobecne otazky - web skoly
-    - nazov:  Web
-      text:   Ako hodnotíte web fakulty a jeho kvalitu?
-      popis:  >
-        Myslite na prehľadnosť a aktuálnosť poskytovaných informácií a na to,
-        či je ich dostatok. Zhodnotťe, ako Vám vyhovuje navigácia a štruktúra
-        webu a či sa Vám páči jeho celkový vzhľad.
-      kategoria:  web
+      kategoria:  fakulta
       komentar:   Yes
       hviezdicky: Yes
-      position:   1
-
-    - nazov:  Informácie
-      text:   Ako hodnotíte informácie na fakultnom webe?
-      popis:  >
-        Nakoľko sú vám užitočné nájdené informácie? Sú aktuálne? Sú informácie
-        dobre a prehľadne členené?
-      kategoria:  web
-      komentar:   Yes
-      hviezdicky: Yes
-      position:   2
-
-
-# vseobecne otazky - Vedenie skoly a ucitelia
-    - nazov:  Tútor
-      text:   Ohodnoťte, aká je kvalita starostlivosti tútora o študentov.
-      popis:  >
-        Pomohol Vám tútor so zostavovaním Vášho študijného plánu?
-        Je Váš tútor zastihnuteľný?
-      kategoria:  vedenie
-      komentar:   Yes
-      hviezdicky: Yes
-      position:   1
-
-    - nazov:  Garant
-      text:   Ohodnoťte, ako sa stará garant o kvalitu Vášho študijného programu.
-      popis:  >
-        Stalo sa Vám, že niektorý predmet nemal kto učiť? Ste dostatočne
-        informovaní o obsahu záverečných (štátnych) skúšok? Počúva garant Vaše
-        návrhy na zlepšenie študijného programu? Zaznamenali ste nejaké pozitívne
-        zmeny v obsahu vyučovaných predmetov alebo v personálnom obsadení výučby?
-      kategoria:  vedenie
-      komentar:   Yes
-      hviezdicky: Yes
-      position:   2
-
-    - nazov:  Prodekani, vedúci katedier a gestori štúdia
-      text:   >
-        Návrhy a konštruktívne pripomienky pre prodekanov, vedúcich katedier
-        a gestorov štúdia.
-      popis:
-      kategoria:  vedenie
-      komentar:   Yes
-      hviezdicky: No
-      position:   3
-
-    - nazov:  Voľby dekana
-      text:   >
-        Aký máte názor na výsledok tohtoročných volieb dekana fakulty?
-        Koho by ste volili Vy?
-      popis:
-      kategoria:  vedenie
-      komentar:   Yes
-      hviezdicky: No
-      position:   4
-
-    - nazov:  Dekan
-      text:   >
-        Návrhy a konštruktívne pripomienky ku pôsobeniu dekana na fakulte
-        za posledný rok.
-      popis:
-      kategoria:  vedenie
-      komentar:   Yes
-      hviezdicky: No
-      position:   5
-
-
-
-# vseobecne otazky - studium v zahranici a cudzie otazky
-    - nazov:  Štúdium v zahraničí
-      text:   >
-        Mali by ste záujem zúčastniť sa študijného pobytu v zahraničí
-        (napr. cez program Erasmus/Socrates)?
-      popis:
-      kategoria:  studiumzahranicie
-      komentar:   No
-      hviezdicky: No
-      moznosti:
-          - text: Áno, vážne nad tým uvažujem.
-          - text: Asi áno, nemám ale dostatok informácií.
-          - text: Skôr nie, o možnostiach zahraničného štúdia veľa neviem.
-          - text: Určite nie, nemám o to záujem.
-      position:   1
-        
-    - nazov:  Hodnotenie možností pre zahraničné štúdium
-      text:   >
-        Zhodnoťte Vašu spokojnosť s ponúkanými možnosťami zahraničného štúdia
-        a spolupráce so zahraničnými inštitúciami.
-      popis:
-      kategoria:  studiumzahranicie
-      komentar:   Yes
-      hviezdicky: Yes
-      position:   2
-
-    - nazov:  Cudzie jazyky
-      text:   >
-        Ako hodnotíte rozsah a kvalitu jazykovej prípravy na fakulte?
-        Uvítali by ste štúdium niektorých alebo všetkých predmetov študijného
-        programu v cudzom jazyku?
-      popis:
-      kategoria:  studiumzahranicie
-      komentar:   Yes
-      hviezdicky: Yes
-      position:   3
-
-
-# vseobecne otazky - Studijne oddelenie
-    - nazov:  Personál
-      text:   Ako hodnotíte personál študijného oddelenia?
-      popis:  Posúďte ich prístup, profesionalitu, ochotu pomôcť, a pod.
-      kategoria:  studijne
-      komentar:   Yes
-      hviezdicky: Yes
-      position:   1
-
-    - nazov:  Prístupnosť
-      text:   Ako hodnotíte prístupnosť študijného oddelenia?
-      popis:  >
-        Zohľadnite otváracie hodiny, priebeh zápisu, priestory, formu podávania
-        informácií, mieru informatizácie, komnukáciu študijného oddelenia s Vami
-        počas štúdia (napr. e-mailom), a pod.
-      kategoria:  studijne
-      komentar:   Yes
-      hviezdicky: Yes
-      position:   2
-
-    - nazov:  Návrhy a pripomienky ku študijnému oddeleniu
-      text:   Vaše návrhy a pripomienky ku študijnému oddeleniu
-      popis:
-      kategoria:  studijne
-      komentar:   Yes
-      hviezdicky: No
-      position:   3
-
-
-# vseobecne otazky - internaty
-    - nazov:  Kvalita ubytovania
-      text:   Zhodnoťte kvalitu ubytovania na internátoch.
-      popis:
-      kategoria:  internaty
-      komentar:   Yes
-      hviezdicky: Yes
-      position:   1
-
-    - nazov:  Rozubytovanie
-      text:   Vyjadrite svoju spokojnosť s rozubytovaním.
-      popis:
-      kategoria:  internaty
-      komentar:   Yes
-      hviezdicky: Yes
-      position:   2
-
-    - nazov:  Ubytovacia komisia
-      text:   >
-        Vaše hodnotenie práce ubytovacej komisie, zhodnoťte spokojnosť
-        s komunikáciou a riešením problémov ubytovacou komisiou.
-      popis:
-      kategoria:  internaty
-      komentar:   Yes
-      hviezdicky: Yes
-      position:   3
-
-    - nazov:  Kritériá prideľovania
-      text:   Vaše návrhy na úpravu procesu prideľovania internátov a ubytovania.
-      popis:  >
-        Úprava kritérií pre tvorbu rebríčka žiadateľov, modifikátory, spôsob
-        rozubytovania. Rozubytovávať na izby (napr. s internetom) podľa rebríčka
-        alebo minimalizovať sťahovanie?
-      kategoria:  internaty
-      komentar:   Yes
-      hviezdicky: No
       position:   4
 
 
 # vseobecne otazky - anketa
     - nazov:  Hodnotenie ankety
-      text:   Ohodnoťte súčasnú anketu (tú, ktorú teraz vypĺňate).
+      text:   Ohodnoťte súčasnú anketu.
       popis:  >
         Páči sa Vám nová anketa? Čo je riešené lepšie, čo horšie ako
         v starej ankete?
@@ -556,117 +287,12 @@ otazky:
       hviezdicky: No
       position:   3
 
-
-# vseobecne otazky - Studium na nasej skole celkovo a jeho prinos pri hladani prace
-    - nazov:  Hodnotenie celého štúdia
-      text:   Ako celkovo hodnotíte štúdium na našej fakulte?
-      popis:  >
-        Nevyjadrujte sa k študijným programom alebo predmetom. (ak neviete
-        k čomu by sa mohol človek ešte potencionálne vyjadriť, vyjadrite sa
-        ku atmosfére na škole, k šírke chodieb, farbe radiátorov, alebo k tomu,
-        či bolo štúdium cennou skúsenosťou do života alebo zabitým časom)
-      kategoria:  studium
-      komentar:   Yes
-      hviezdicky: Yes
-      position:   1
-
-    - nazov:  Uplatnenie v praxi
-      text:   >
-        Ako významne Vám pomohlo absolvovanie štúdia na našej fakulte
-        pri uplatnení na trhu práce?
-      popis:
-      kategoria:  studium
-      komentar:   Yes
-      hviezdicky: No
-      position:   2
-
-    - nazov:  Vaše smerovanie v praxi
-      text:   >
-        V akej oblasti sa chystáte zamestnať a nakoľko súvisí s odborom,
-        ktorý ste študovali?
-      popis:
-      kategoria:  studium
-      komentar:   Yes
-      hviezdicky: No
-      position:   3
-
-    - nazov:  Očakávaný nástupný plat
-      text:   Aká je očakávaná výška Vášho nástupného mesačného platu? (v Huf)
-      popis:
-      kategoria:  studium
-      komentar:   Yes
-      hviezdicky: No
-      position:   4
-
-
 # vseobecne otazky - ostatne
-    - nazov:  Dianie na škole
-      text:   >
-        Zaujíma vás, čo sa deje na škole, čo nové sa chystá a čo robí vedenie
-        školy pre študentov a učiteľov?
-      popis:
+    - nazov:  Všeobecná otázka
+      text:   Chcete sa vyjadriť k niečomu, na čo nebola položená otázka?
+      popis:  
       kategoria:  ostatne
-      komentar:   No
+      komentar:   Yes
       hviezdicky: No
-      moznosti:
-          - text: NIE.
-          - text: Nie.
       position:   1
-
-    - nazov:  Beánia FMFI
-      text:   Ohodnoťte tohtoročnú Beániu FMFI (22.11.1997).
-      popis:  >
-        Hodnotenie lokality, času, programu, kapiel, tomboly či iné
-        konštruktívne nápady.
-      kategoria:  ostatne
-      komentar:   Yes
-      hviezdicky: Yes
-      position:   2
-
-    - nazov:  QuickStart Guide
-      text:   >
-        Vaše pripomienky k
-        <a href="http://skas.fmph.uniba.sk/wiki/lib/exe/fetch.php?media=skas:fmfi_quickstart_guide_2010_2011.pdf"
-        target="_blank">QuickStart Guide</a>
-      popis:
-      kategoria:  ostatne
-      komentar:   Yes
-      hviezdicky: Yes
-      position:   3
-
-    - nazov:  Zmeny k lepšiemu
-      text:   Čo by ste na škole zmenili, aby ste sa tu cítili lepšie?
-      popis:
-      kategoria:  ostatne
-      komentar:   Yes
-      hviezdicky: No
-      position:   4
-
-    - nazov:  Bufety
-      text:   Ako hodnotíte kvalitu bufetov na škole?
-      popis:  Ceny, obsluha, kvalita tovaru, návrhy a pripomienky.
-      kategoria:  ostatne
-      komentar:   Yes
-      hviezdicky: Yes
-      position:   5
-
-    - nazov:  Jedáleň na fakulte
-      text:   >
-        Ako hodnotíte novozrekonštruovanú jedáleň v bloku F1,
-        po novom dostupnú aj študentom?
-      popis:
-      kategoria:  ostatne
-      komentar:   Yes
-      hviezdicky: Yes
-      position:   6
-      
-    - nazov:  Voľné pripomienky
-      text:   Voľné pripomienky
-      popis:  >
-        Ak máte pripomienku, ku ktorej ste nenašli zodpovedajúcu otázku, prosím,
-        realizujte sa tu.
-      kategoria:  ostatne
-      komentar:   Yes
-      hviezdicky: No
-      position:   7
 ...
