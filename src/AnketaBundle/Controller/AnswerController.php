@@ -49,36 +49,32 @@ class AnswerController extends Controller {
      */
     private function buildMenu($em, $user) {
         $menu = array(
-            'subject' => array(
-                'title' => 'Predmety',
-                'href' => $this->generateUrl('answer_subject'),
-                'children' => array(),
-                'active' => false
+            'subject' => new MenuItem(
+                'Predmety',
+                $this->generateUrl('answer_subject')
             ),
-            'general' => array(
-                'title' => 'Všeobecné otázky',
-                'href' => $this->generateUrl('answer_general'),
-                'children' => array(),
-                'active' => false
+            'general' => new MenuItem(
+                'Všeobecné otázky',
+                $this->generateUrl('answer_general')
             )
         );
 
         $subcategories = $em->getRepository('AnketaBundle\Entity\Category')
                        ->getOrderedGeneral();
         foreach ($subcategories as $subcategory) {
-            $menu['general']['children'][$subcategory->getId()] = array(
-                'title' => $subcategory->getType(),
-                'href' => $this->generateUrl('answer_general', array('id' => $subcategory->getId())),
-                'active' => false
-            );
+            $menu['general']->children[$subcategory->getId()] =
+                new MenuItem(
+                    $subcategory->getType(),
+                    $this->generateUrl('answer_general', array('id' => $subcategory->getId()))
+                    );
         }
 
         foreach($this->getAttendedSubjectList($user) as $subject) {
-            $menu['subject']['children'][$subject->getCode()] = array(
-                'title' => $subject->getName(),
-                'href' => $this->generateUrl('answer_subject', array('code' => $subject->getCode())),
-                'active' => false
-            );
+            $menu['subject']->children[$subject->getCode()] = 
+                new MenuItem(
+                $subject->getName(),
+                $this->generateUrl('answer_subject', array('code' => $subject->getCode()))
+                );
         }
 
         return $menu;
@@ -101,51 +97,23 @@ class AnswerController extends Controller {
 
         $generalProgress = $em->getRepository('AnketaBundle\Entity\Question')
                        ->getGeneralProgress($user);
-        $numQuestions = array('general' => 0, 'subject' => 0, 'studijnyprogram' => 0);
-        $numAnswers = array('general' => 0, 'subject' => 0, 'studijnyprogram' => 0);
         foreach ($generalProgress AS $id => $data) {
-            $numQuestions[$data['category']] += $data['questions'];
-            $numAnswers[$data['category']] += $data['answers'];
-            if ($data['category'] == 'general' && isset($menu['general']['children'][$id]) && $data['questions'] != 0) {
-                $menu['general']['children'][$id]['progress'] = round(100 * $data['answers'] / $data['questions']);
+            if (array_key_exists($id, $menu['general']->children)) {
+                $menu['general']->children[$id]->setProgress($data['answers'], $data['questions']);
+            }
+            if ($data['category'] == 'subject') {
+                $questionsPerSubject = $data['questions'];
             }
         }
+
 
         $subjectProgress = $em->getRepository('AnketaBundle\Entity\Question')
                        ->getSubjectProgress($user);
         foreach ($subjectProgress AS $id => $data) {
-            if (isset($menu['subject']['children'][$id]) && $numQuestions['subject'] != 0) {
-                $menu['subject']['children'][$id]['progress'] = round(100 * $data['answers'] / $numQuestions['subject']);
+            if (array_key_exists($id, $menu['subject']->children)) {
+                $menu['subject']->children[$id]->setProgress($data['answers'],
+                        $questionsPerSubject);
             }
-        }
-
-        // od filledQuestions treba este odpocitat odpovede z nezapisanych predmetov
-        // TODO: huh? mozes vobec vyplnit odpoved z predmetu co nemas zapisany?
-        $attendedCodes = array();
-        foreach ($user->getSubjects() AS $subject) {
-            $attendedCodes[] = $subject->getCode();
-        }
-        foreach ($subjectProgress AS $code => $data) {
-            if (\array_search($code, $attendedCodes) === false)
-                $numAnswers['subject'] -= $data['answers'];
-        }
-
-        $numQuestions['subject'] *= $user->getSubjectsCount();
-
-        $allQuestions = 0;
-        $allAnswers = 0;
-        foreach($numQuestions as $category => $value) {
-            if ($value != 0) {
-                $menu[$category]['progress'] = round(100 * $numAnswers[$category] / $value);
-            }
-            $allQuestions += $value;
-            $allAnswers += $numAnswers[$category];
-        }
-
-        if ($allAnswers == $allQuestions) {
-            $result['progress'] = 'Ďakujeme, vyplnil si všetky relevantné otázky.';
-        } else {
-            $result['progress'] = 'Zatiaľ si vyplnil ' . $allAnswers . '/' . $allQuestions . ' otázok.';
         }
 
         unset($menu['studijnyprogram']);
@@ -280,9 +248,9 @@ class AnswerController extends Controller {
         }
 
         $templateParams = $this->getCommonData($em, $user);
-        $templateParams['menu']['subject']['active'] = true;
-        $templateParams['menu']['subject']['children'][$subject->getCode()]['active'] = true;
-        $templateParams['category'] = $templateParams['menu']['subject']['children'][$subject->getCode()];
+        $templateParams['menu']['subject']->active = true;
+        $templateParams['menu']['subject']->children[$subject->getCode()]->active = true;
+        $templateParams['category'] = $templateParams['menu']['subject']->children[$subject->getCode()];
         $templateParams['questions'] = $questions;
         $templateParams['answers'] = $answers;
         return $this->render('AnketaBundle:Answer:index.html.twig', $templateParams);
@@ -347,9 +315,9 @@ class AnswerController extends Controller {
         }
 
         $templateParams = $this->getCommonData($em, $user);
-        $templateParams['menu']['general']['active'] = true;
-        $templateParams['menu']['general']['children'][$category->getId()]['active'] = true;
-        $templateParams['category'] = $templateParams['menu']['general']['children'][$category->getId()];
+        $templateParams['menu']['general']->active = true;
+        $templateParams['menu']['general']->children[$category->getId()]->active = true;
+        $templateParams['category'] = $templateParams['menu']['general']->children[$category->getId()];
         $templateParams['questions'] = $questions;
         $templateParams['answers'] = $answers;
         return $this->render('AnketaBundle:Answer:index.html.twig', $templateParams);

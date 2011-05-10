@@ -28,11 +28,13 @@
 {% macro menu_tree(tree, level) %}
     <ul class="menu-level-{{ level }}">
         {% for item in tree %}
-            <li class="menu-level-{{ level }} {{ 'children' in item|keys ? 'inner' : 'leaf' }}{{ item.active ? ' active' : '' }}">
+            {# Warning: "item.children is empty" does not work, see
+            https://github.com/fabpot/Twig/issues/307 #}
+            <li class="menu-level-{{ level }} {{ item.children | length > 0 ? 'inner' : 'leaf' }}{{ item.active ? ' active' : '' }}">
                 {# TODO: necheme do titlu dať miesto percent konkrétny zlomok "answers/questions"? #}
-                <a class="menu-level-{{ level }}" href="{{ item.href }}">{% if 'progress' in item|keys %}{{ _self.progressbar(item.progress) }}{% endif %}{{ item.title }}</a>
-                {% if 'progress' in item|keys %}<span class="hidden"> {{ item.progress }}</span>{% endif %}
-                {% if item.active and 'children' in item|keys and item.children is not empty %}
+                <a class="menu-level-{{ level }}" href="{{ item.href }}">{% if item.progressTotal %}{{ _self.progressbar(item.percentDone) }}{% endif %}{{ item.title }}</a>
+                {% if 'progress' in item|keys %}<span class="hidden"> {{ item.percentDone }}</span>{% endif %}
+                {% if item.active and item.children is not empty %}
                     {{ _self.menu_tree(item.children, level + 1) }}
                 {% endif %}
             </li>
