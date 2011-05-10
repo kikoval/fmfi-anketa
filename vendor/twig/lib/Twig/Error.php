@@ -33,7 +33,7 @@ class Twig_Error extends Exception
     public function __construct($message, $lineno = -1, $filename = null, Exception $previous = null)
     {
         if (-1 === $lineno || null === $filename) {
-            list($lineno, $filename) = $this->findTemplateInfo(null !== $previous ? $previous : $this);
+            list($lineno, $filename) = $this->findTemplateInfo(null !== $previous ? $previous : $this, $lineno, $filename);
         }
 
         $this->lineno = $lineno;
@@ -134,10 +134,10 @@ class Twig_Error extends Exception
         }
     }
 
-    protected function findTemplateInfo(Exception $e)
+    protected function findTemplateInfo(Exception $e, $currentLine, $currentFile)
     {
         if (!function_exists('token_get_all')) {
-            return array(-1, null);
+            return array($currentLine, $currentFile);
         }
 
         $traces = $e->getTrace();
@@ -153,7 +153,7 @@ class Twig_Error extends Exception
 
             if (!file_exists($r->getFilename())) {
                 // probably an eval()'d code
-                return array(-1, null);
+                return array($currentLine, $currentFile);
             }
 
             $trace = $traces[$i - 1];
@@ -169,17 +169,16 @@ class Twig_Error extends Exception
                     return array($templateline, $template);
                 }
 
-                if (T_WHITESPACE === $token[0]) {
-                } elseif (T_COMMENT === $token[0] && null === $template && preg_match('#/\* +(.+) +\*/#', $token[1], $match)) {
+                if (T_COMMENT === $token[0] && null === $template && preg_match('#/\* +(.+) +\*/#', $token[1], $match)) {
                     $template = $match[1];
                 } elseif (T_COMMENT === $token[0] && preg_match('#^//\s*line (\d+)\s*$#', $token[1], $match)) {
                     $templateline = $match[1];
                 }
             }
 
-            return array(-1, $template);
+            return array($currentLine, $template);
         }
 
-        return array(-1, null);
+        return array($currentLine, $currentFile);
     }
 }

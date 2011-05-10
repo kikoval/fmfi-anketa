@@ -37,8 +37,9 @@ class PreAuthenticatedAuthenticationProvider implements AuthenticationProviderIn
     /**
      * Constructor.
      *
-     * @param UserProviderInterface   $userProvider   A UserProviderInterface instance
-     * @param UserCheckerInterface $userChecker An UserCheckerInterface instance
+     * @param UserProviderInterface $userProvider An UserProviderInterface instance
+     * @param UserCheckerInterface  $userChecker  An UserCheckerInterface instance
+     * @param string                $providerKey  The provider key
      */
     public function __construct(UserProviderInterface $userProvider, UserCheckerInterface $userChecker, $providerKey)
     {
@@ -64,7 +65,7 @@ class PreAuthenticatedAuthenticationProvider implements AuthenticationProviderIn
             throw new BadCredentialsException('No pre-authenticated credentials found in request.');
         }
 */
-        $user = $this->userProvider->loadUserByUsername((string) $user);
+        $user = $this->userProvider->loadUserByUsername($user);
 
         $this->userChecker->checkPostAuth($user);
 

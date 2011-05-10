@@ -39,9 +39,9 @@ abstract class DoctrineCommand extends Command
 {
     /**
      * Convenience method to push the helper sets of a given entity manager into the application.
-     * 
+     *
      * @param Application $application
-     * @param string $emName
+     * @param string      $emName
      */
     public static function setApplicationEntityManager(Application $application, $emName)
     {
@@ -102,6 +102,7 @@ abstract class DoctrineCommand extends Command
     {
         $connectionName = $name ?: $this->container->getParameter('doctrine.dbal.default_connection');
         $connectionName = sprintf('doctrine.dbal.%s_connection', $connectionName);
+
         if (!$this->container->has($connectionName)) {
             throw new \InvalidArgumentException(sprintf('<error>Could not find a connection named <comment>%s</comment></error>', $name));
         }
@@ -138,24 +139,6 @@ abstract class DoctrineCommand extends Command
         return $bundleMetadatas;
     }
 
-    protected function findBundle($bundleName)
-    {
-        $foundBundle = false;
-        foreach ($this->getApplication()->getKernel()->getBundles() as $bundle) {
-            /* @var $bundle Bundle */
-            if (strtolower($bundleName) == strtolower($bundle->getName())) {
-                $foundBundle = $bundle;
-                break;
-            }
-        }
-
-        if (!$foundBundle) {
-            throw new \InvalidArgumentException("No bundle " . $bundleName . " was found.");
-        }
-
-        return $foundBundle;
-    }
-
     /**
      * Transform classname to a path $foundBundle substract it to get the destination
      *
@@ -165,10 +148,11 @@ abstract class DoctrineCommand extends Command
     protected function findBasePathForBundle($bundle)
     {
         $path = str_replace('\\', '/', $bundle->getNamespace());
-        $destination = str_replace('/'.$path, "", $bundle->getPath(), $c);
+        $search = str_replace('\\', '/', $bundle->getPath());
+        $destination = str_replace('/'.$path, '', $search, $c);
 
         if ($c != 1) {
-            throw new \RuntimeException("Something went terribly wrong.");
+            throw new \RuntimeException(sprintf('Can\'t find base path for bundle (path: "%s", destination: "%s").', $path, $destination));
         }
 
         return $destination;

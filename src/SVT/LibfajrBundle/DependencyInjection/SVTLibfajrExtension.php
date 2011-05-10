@@ -74,14 +74,14 @@ class SVTLibfajrExtension extends Extension
             $mainId = 'libfajr.login.cosign_proxy';
             $container
                 ->setDefinition($mainId, new DefinitionDecorator($mainId . '.template'))
-                ->setArgument(0, $login['cosign_proxy']);
+                ->replaceArgument(0, $login['cosign_proxy']);
             $this->addAIS2CosignLogin($container, $mainId);
         }
         else if (isset($login['cosign_cookie'])) {
             $valueId = 'libfajr.login.cosign_cookie.value';
             $container
                 ->setDefinition($valueId, new DefinitionDecorator($valueId . '.template'))
-                ->setArgument(1, $login['cosign_cookie']);
+                ->replaceArgument(1, $login['cosign_cookie']);
             $mainId = 'libfajr.login.cosign_cookie';
             $container->setDefinition($mainId, new DefinitionDecorator($mainId . '.template'));
             $this->addAIS2CosignLogin($container, $mainId);
@@ -97,7 +97,7 @@ class SVTLibfajrExtension extends Extension
         $id = 'libfajr.login.cosign';
         $container
             ->setDefinition($id, new DefinitionDecorator($id . '.template'))
-            ->setArgument(0, new Reference($innerService));
+            ->replaceArgument(0, new Reference($innerService));
         $container->setAlias('libfajr.login', $id);
     }
 
@@ -111,9 +111,9 @@ class SVTLibfajrExtension extends Extension
         
         $container
             ->getDefinition('libfajr.http.connection.provider.curl')
-            ->setArgument(1, $conn['curl']['directory'])
-            ->setArgument(2, $conn['curl']['transient'])
-            ->setArgument(3, $conn['curl']['user_agent']);
+            ->replaceArgument(1, $conn['curl']['directory'])
+            ->replaceArgument(2, $conn['curl']['transient'])
+            ->replaceArgument(3, $conn['curl']['user_agent']);
         
     }
 

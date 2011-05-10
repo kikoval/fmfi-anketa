@@ -20,7 +20,7 @@ use Symfony\Component\Serializer\SerializerInterface;
  * @author John Wards <jwards@whiteoctober.co.uk>
  * @author Fabian Vogler <fabian@equivalence.ch>
  */
-class XmlEncoder extends AbstractEncoder
+class XmlEncoder extends AbstractEncoder implements DecoderInterface
 {
     private $dom;
     private $format;
@@ -55,7 +55,15 @@ class XmlEncoder extends AbstractEncoder
     {
         $xml = simplexml_load_string($data);
         if (!$xml->count()) {
-            return (string) $xml;
+            if (!$xml->attributes()) {
+                return (string) $xml;
+            }
+            $data = array();
+            foreach ($xml->attributes() as $attrkey => $attr) {
+                $data['@'.$attrkey] = (string) $attr;
+            }
+            $data['#'] = (string) $xml;
+            return $data;
         }
         return $this->parseXml($xml);
     }
@@ -137,7 +145,7 @@ class XmlEncoder extends AbstractEncoder
     }
 
     /**
-     * Checks the name is avalid xml element name
+     * Checks the name is a valid xml element name
      * @param string $name
      * @return Boolean
      */
@@ -157,14 +165,14 @@ class XmlEncoder extends AbstractEncoder
     private function parseXml($node)
     {
         $data = array();
+        if ($node->attributes()) {
+            foreach ($node->attributes() as $attrkey => $attr) {
+                $data['@'.$attrkey] = (string) $attr;
+            }
+        }
         foreach ($node->children() as $key => $subnode) {
             if ($subnode->count()) {
                 $value = $this->parseXml($subnode);
-                if ($subnode->attributes()) {
-                    foreach ($subnode->attributes() as $attrkey => $attr) {
-                        $value['@'.$attrkey] = (string) $attr;
-                    }
-                }
             } elseif ($subnode->attributes()) {
                 $value = array();
                 foreach ($subnode->attributes() as $attrkey => $attr) {
@@ -174,7 +182,7 @@ class XmlEncoder extends AbstractEncoder
             } else {
                 $value = (string) $subnode;
             }
-            
+
             if ($key === 'item') {
                 if (isset($value['@key'])) {
                     $data[(string)$value['@key']] = $value['#'];
@@ -201,7 +209,7 @@ class XmlEncoder extends AbstractEncoder
      *
      * @param DOMNode $parentNode
      * @param array|object $data data
-     * @return bool
+     * @return Boolean
      */
     private function buildXml($parentNode, $data)
     {
@@ -257,9 +265,10 @@ class XmlEncoder extends AbstractEncoder
     /**
      * Selects the type of node to create and appends it to the parent.
      *
-     * @param  $parentNode
-     * @param  $data
-     * @param  $nodename
+     * @param DOMNode      $parentNode
+     * @param array|object $data
+     * @param string       $nodename
+     * @param string       $key
      * @return void
      */
     private function appendNode($parentNode, $data, $nodeName, $key = null)

@@ -13,13 +13,15 @@
         <parameter key="monolog.handler.syslog.class">Monolog\Handler\SyslogHandler</parameter>
         <parameter key="monolog.handler.null.class">Monolog\Handler\NullHandler</parameter>
         <parameter key="monolog.handler.test.class">Monolog\Handler\TestHandler</parameter>
+        <parameter key="monolog.handler.firephp.class">Symfony\Bundle\MonologBundle\Logger\FirePHPHandler</parameter>
         <parameter key="monolog.handler.debug.class">Symfony\Bundle\MonologBundle\Logger\DebugHandler</parameter>
     </parameters>
 
     <services>
-        <service id="monolog.logger" parent="monolog.logger_prototype">
+        <service id="monolog.logger" parent="monolog.logger_prototype" public="false">
             <argument index="0">app</argument>
         </service>
+        <service id="logger" alias="monolog.logger" />
         <service id="monolog.logger_prototype" class="%monolog.logger.class%" abstract="true">
             <argument /><!-- Channel -->
         </service>

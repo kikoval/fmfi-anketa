@@ -25,7 +25,7 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
-                ->scalarNode('cache_warmer')->end()
+                ->scalarNode('cache_warmer')->defaultFalse()->end()
             ->end();
         ;
 
@@ -43,12 +43,7 @@ class Configuration implements ConfigurationInterface
             ->fixXmlConfig('extension')
             ->children()
                 ->arrayNode('extensions')
-                    ->prototype('scalar')
-                        ->beforeNormalization()
-                            ->ifTrue(function($v) { return is_array($v) && isset($v['id']); })
-                            ->then(function($v){ return $v['id']; })
-                        ->end()
-                    ->end()
+                    ->prototype('scalar')->end()
                 ->end()
             ->end()
         ;
@@ -64,11 +59,11 @@ class Configuration implements ConfigurationInterface
                     ->children()
                         ->arrayNode('resources')
                             ->addDefaultsIfNotSet()
-                            ->defaultValue(array('TwigBundle::form.html.twig'))
+                            ->defaultValue(array('TwigBundle:Form:div_layout.html.twig'))
                             ->validate()
                                 ->always()
                                 ->then(function($v){
-                                    return array_merge(array('TwigBundle::form.html.twig'), $v);
+                                    return array_merge(array('TwigBundle:Form:div_layout.html.twig'), $v);
                                 })
                             ->end()
                             ->prototype('scalar')->end()

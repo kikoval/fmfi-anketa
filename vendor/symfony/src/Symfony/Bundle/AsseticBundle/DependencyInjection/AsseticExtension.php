@@ -71,17 +71,18 @@ class AsseticExtension extends Extension
             }
         }
 
+        // twig functions
+        $container->getDefinition('assetic.twig_extension')->replaceArgument(2, $config['twig']['functions']);
+
         // choose dynamic or static
         if ($parameterBag->resolveValue($parameterBag->get('assetic.use_controller'))) {
             $loader->load('controller.xml');
-            $container->setParameter('assetic.twig_extension.class', '%assetic.twig_extension.dynamic.class%');
             $container->getDefinition('assetic.helper.dynamic')->addTag('templating.helper', array('alias' => 'assetic'));
-            $container->remove('assetic.helper.static');
+            $container->removeDefinition('assetic.helper.static');
         } else {
             $loader->load('asset_writer.xml');
-            $container->setParameter('assetic.twig_extension.class', '%assetic.twig_extension.static.class%');
             $container->getDefinition('assetic.helper.static')->addTag('templating.helper', array('alias' => 'assetic'));
-            $container->remove('assetic.helper.dynamic');
+            $container->removeDefinition('assetic.helper.dynamic');
         }
 
         // register config resources
@@ -115,12 +116,7 @@ class AsseticExtension extends Extension
     static protected function registerFormulaResources(ContainerBuilder $container, array $bundles)
     {
         $map = $container->getParameter('kernel.bundles');
-
-        if ($diff = array_diff($bundles, array_keys($map))) {
-            throw new \InvalidArgumentException(sprintf('The following bundles are not registered: "%s"', implode('", "', $diff)));
-        }
-
-        $am = $container->getDefinition('assetic.asset_manager');
+        $am  = $container->getDefinition('assetic.asset_manager');
 
         // bundle views/ directories and kernel overrides
         foreach ($bundles as $name) {

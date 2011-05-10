@@ -46,12 +46,12 @@ EOT
         $bundleName = $input->getArgument('bundle');
         $filterEntity = $input->getOption('entity');
 
-        $foundBundle = $this->findBundle($bundleName);
+        $foundBundle = $this->getApplication()->getKernel()->getBundle($bundleName);
 
         if ($metadatas = $this->getBundleMetadatas($foundBundle)) {
             $output->writeln(sprintf('Generating entity repositories for "<info>%s</info>"', $foundBundle->getName()));
             $generator = new EntityRepositoryGenerator();
-            
+
             foreach ($metadatas as $metadata) {
                 if ($filterEntity && $filterEntity !== $metadata->reflClass->getShortname()) {
                     continue;

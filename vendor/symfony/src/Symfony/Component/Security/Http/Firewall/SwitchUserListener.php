@@ -11,6 +11,7 @@
 
 namespace Symfony\Component\Security\Http\Firewall;
 
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\User\UserCheckerInterface;
@@ -28,7 +29,6 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Http\Event\SwitchUserEvent;
 use Symfony\Component\Security\Http\Events;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * SwitchUserListener allows a user to impersonate another one temporarily
@@ -113,7 +113,6 @@ class SwitchUserListener implements ListenerInterface
             throw new \LogicException(sprintf('You are already switched to "%s" user.', $token->getUsername()));
         }
 
-        // This is already fixed in Symfony 2 git
         if (false === $this->accessDecisionManager->decide($token, array($this->role))) {
             throw new AccessDeniedException();
         }
