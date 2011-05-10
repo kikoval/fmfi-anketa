@@ -99,7 +99,8 @@ class AnswerController extends Controller {
                        ->getGeneralProgress($user);
         foreach ($generalProgress AS $id => $data) {
             if (array_key_exists($id, $menu['general']->children)) {
-                $menu['general']->children[$id]->setProgress($data['answers'], $data['questions']);
+                $menu['general']->children[$id]->setProgress((int) $data['answers'], 
+                                                             (int) $data['questions']);
             }
             if ($data['category'] == 'subject') {
                 $questionsPerSubject = $data['questions'];
@@ -111,8 +112,8 @@ class AnswerController extends Controller {
                        ->getSubjectProgress($user);
         foreach ($subjectProgress AS $id => $data) {
             if (array_key_exists($id, $menu['subject']->children)) {
-                $menu['subject']->children[$id]->setProgress($data['answers'],
-                        $questionsPerSubject);
+                $menu['subject']->children[$id]->setProgress((int) $data['answers'],
+                                                             (int) $questionsPerSubject);
             }
         }
 
