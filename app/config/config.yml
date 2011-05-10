@@ -97,12 +97,10 @@ security:
         main:
             id: anketa.user_provider
     firewalls:
-        front:
-            pattern:    ^/$
-            anonymous:  true
         main:
             pattern:    ^/.*
             cosign:     true
+            anonymous:  true
             switch_user: { role: ROLE_SUPER_ADMIN, parameter: _zmen_usera }
             logout:
                 path:     /logout
