@@ -112,7 +112,7 @@ class Answer {
      */
     public function setOption($value) {
         $this->option = $value;
-        $this->evaluation = $value->getEvaluation();
+        $this->evaluation = $value === null ? 0 : $value->getEvaluation();
     }
 
     /**

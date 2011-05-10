@@ -180,29 +180,47 @@ class AnswerController extends Controller {
             // ak vobec vyplnil otazku - tzn vybral nejaku moznost (a nejake existovali)
             // a/alebo vyplnil komentar (a otazka komentar mala)
             $optionFilled = isset($questionArray[$question->getId()]['answer']);
-            if (($optionFilled && $question->hasOptions()) ||
-                (!empty($questionArray[$question->getId()]['comment']) && $question->getHasComment())) {
-                // ak uz odpovedal niekedy, tak iba updatneme
-                if (isset($answers[$question->getId()])) {
-                    $answer = $answers[$question->getId()];
-                } else {
-                    // inak vyrobime novu odpoved
-                    $answer = new Answer();
-                }
-                if ($optionFilled) {
-                    $optionId = $questionArray[$question->getId()]['answer'];
-                    $option = $em->find('AnketaBundle:Option', $optionId);
-                    // evaluacia sa nastavi z Option
-                    $answer->setOption($option);
-                }
-                
-                $comment = $questionArray[$question->getId()]['comment'];
+            $id = $question->getId();
+            if (!array_key_exists($id, $questionArray)) {
+                // TODO(ppershing): throw an exception here?
+                continue;
+            }
+
+            // Warning: do not use array_key_exists, $answers[$id] may be NULL
+            if (isset($answers[$id])) {
+                $answer = $answers[$id];
+            } else {
+                $answer = new Answer();
                 $answer->setQuestion($question);
                 $answer->setAuthor($user);
-                $answer->setComment($comment);
-
-                $result[] = $answer;
             }
+
+            if (isset($questionArray[$id]['answer'])) {
+                $optionId = $questionArray[$id]['answer'];
+                if ($optionId == -1) {
+                    $option = null;
+                } else {
+                    $option = $em->find('AnketaBundle:Option', $optionId);
+                    if (!($question->getOptions()->contains($option))) {
+                        // TODO(ppershing): throw an exception
+                        continue;
+                    }
+                }
+
+                $answer->setOption($option);
+            } else {
+                $answer->setOption(null);
+            }
+
+
+            if (isset($questionArray[$id]['comment']) &&
+                trim($questionArray[$id]['comment']) != '') {
+                $answer->setComment(trim($questionArray[$id]['comment']));
+            } else {
+                $answer->setComment(null);
+            }
+
+            $result[] = $answer;
         }
         return $result;
     }

@@ -85,6 +85,7 @@ class QuestionRepository extends EntityRepository {
                                         AnketaBundle\Entity\Answer a
                                    WHERE c.id = q.category AND q.id = a.question
                                          AND a.author = :authorID
+                                         AND (a.option IS NOT NULL OR a.comment IS NOT NULL)
                                    GROUP BY c.id');
         $query->setParameter('authorID', $user->getId());
         $answerCount = $query->getResult();
@@ -128,6 +129,7 @@ class QuestionRepository extends EntityRepository {
                                    FROM AnketaBundle\Entity\Subject s,
                                         AnketaBundle\Entity\Answer a
                                    WHERE s.id = a.subject AND a.author = :authorID
+                                         AND (a.option IS NOT NULL OR a.comment IS NOT NULL)
                                    GROUP BY s.id');
         $query->setParameter('authorID', $user->getId());
         $answerSubjectCount = $query->getResult();

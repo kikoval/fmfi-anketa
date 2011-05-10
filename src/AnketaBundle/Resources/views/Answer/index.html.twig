@@ -63,18 +63,45 @@
             {% if question.hasDescription %}
                 <div class="description">{{ question.description }}</div>
             {% endif %}
+            
+            {% if question.options | length %}
+              <div class="option">
+                <label for="question_{{ question.id }}_empty">
+                  <input type="radio"
+                         id="question_{{ question.id }}_empty"
+                         name="question[{{ question.id }}][answer]"
+                         value="-1"
+                      {% if not answers[question.id] is defined or not answers[question.id].hasOption %}
+                         checked="checked"
+                      {% endif %} />
+              žiadna odpoveď
+              </label>
+              </div>
+
             {% for option in question.options %}
-                <div class="option"><label for="question_{{ question.id }}_{{ option.id }}">
-                    <input type="radio" id="question_{{ question.id }}_{{ option.id }}" name="question[{{ question.id }}][answer]" value="{{ option.id }}"
+                <div class="option">
+                  <label for="question_{{ question.id }}_{{ option.id }}">
+                    <input type="radio"
+                           id="question_{{ question.id }}_{{ option.id }}"
+                           name="question[{{ question.id }}][answer]"
+                           value="{{ option.id }}"
                         {% if answers[question.id] is defined and answers[question.id].hasOption and answers[question.id].option.id == option.id %}
                             checked="checked"
                         {% endif %} />
-                    {{ option.option }}</label></div>
+                    {{ option.option }}
+                  </label>
+                </div>
             {% endfor %}
+            {% endif %}
+
             {% if question.hasComment %}
             <div class="comment">
                 <div><label for="comment_{{ question.id }}">Komentár:</label></div>
-                <textarea id="comment_{{ question.id }}" name="question[{{ question.id }}][comment]" cols="40" rows="3">{{ answers[question.id] is defined ? answers[question.id].comment : "" }}</textarea>
+                <textarea id="comment_{{ question.id }}"
+                          name="question[{{ question.id }}][comment]"
+                          cols="40"
+                          rows="3"
+                    >{{ answers[question.id] is defined ? answers[question.id].comment : "" }}</textarea>
             </div>
             {% endif %}
         </div>
