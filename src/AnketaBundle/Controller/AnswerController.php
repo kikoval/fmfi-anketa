@@ -21,6 +21,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 use AnketaBundle\Entity\Answer;
+use AnketaBundle\Entity\User;
 
 class AnswerController extends Controller {
 
@@ -32,6 +33,12 @@ class AnswerController extends Controller {
             return 0;
         }
         return \strcmp($a->getName(), $b->getName());
+    }
+
+    private static function getAttendedSubjectList(User $user) {
+        $attendedSubjects = $user->getSubjects()->toArray();
+        \usort($attendedSubjects, array('\AnketaBundle\Controller\AnswerController', 'compareSubjects'));
+        return $attendedSubjects;
     }
 
     /**
@@ -66,9 +73,7 @@ class AnswerController extends Controller {
             );
         }
 
-        $attendedSubjects = $user->getSubjects()->toArray();
-        \usort($attendedSubjects, array($this, 'compareSubjects'));
-        foreach($attendedSubjects as $subject) {
+        foreach($this->getAttendedSubjectList($user) as $subject) {
             $menu['subject']['children'][$subject->getCode()] = array(
                 'title' => $subject->getName(),
                 'href' => $this->generateUrl('answer_subject', array('code' => $subject->getCode())),
@@ -206,9 +211,7 @@ class AnswerController extends Controller {
         $request = Request::createFromGlobals();
         $user = $this->get('security.context')->getToken()->getUser();
         $em = $this->get('doctrine.orm.entity_manager');
-        // TODO toto je code duplication s buildMenu, tuto informaciu aj tak dostaneme v templateParams
-        $attendedSubjects = $user->getSubjects()->toArray();
-        \usort($attendedSubjects, array($this, 'compareSubjects'));
+        $attendedSubjects = $this->getAttendedSubjectList($user);
 
         if (count($attendedSubjects) == 0)
             throw new NotFoundHttpException ('Nemas ziadne predmety.');
