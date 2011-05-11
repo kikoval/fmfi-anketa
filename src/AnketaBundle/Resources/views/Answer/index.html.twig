@@ -14,8 +14,8 @@
 {% endblock %}
 
 {#
- # @param progress the current progressbar value (an integer in 0-100)
- # @param class additional progress bar class
+ # @param number progress the current progressbar value (an integer in 0-100)
+ # @param string|null class additional progress bar class
  #}
 {% macro progressbar(progress, class) %}
     <span class="progressbar{{ class|default('') }}" title="{{ progress }}%"><span class="done" style="width: {{ progress }}%;"></span></span>
@@ -73,7 +73,13 @@
                          id="question_{{ question.id }}_empty"
                          name="question[{{ question.id }}][answer]"
                          value="-1"
-                      {% if not answers[question.id] is defined or not answers[question.id].hasOption %}
+                      {# Warning: "x.y is not defined" or "not x.y is defined" does not work, see
+                         https://github.com/fabpot/Twig/issues/319 #}
+                      {% if answers[question.id] is defined %}
+                        {% if not answers[question.id].hasOption %}
+                          checked="checked"
+                        {% endif %}
+                      {% else %}
                          checked="checked"
                       {% endif %} />
               žiadna odpoveď
