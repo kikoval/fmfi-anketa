@@ -59,15 +59,14 @@ class AISUserSource implements UserSourceInterface
 
     public function load(UserBuilder $builder)
     {
-        $this->loadSubjects($builder);
-
         if (!$builder->hasFullName()) {
             $builder->setFullName($this->aisRetriever->getFullName());
         }
+        
+        if ($this->aisRetriever->isAdministraciaStudiaAllowed()) {
+            $this->loadSubjects($builder);
 
-        if ($this->loadAuth) {
-            // Not sure whether this works correctly in all cases
-            if ($this->aisRetriever->isAdministraciaStudiaAllowed()) {
+            if ($this->loadAuth) {            
                 $builder->addRole($this->findOrCreateRole('ROLE_AIS_STUDENT'));
                 $builder->markStudent();
             }
