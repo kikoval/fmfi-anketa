@@ -17,8 +17,3 @@ answer:
 ping:
     pattern: /ping/{devName}
     defaults: { _controller: AnketaBundle:Ping:ping, devName: -1 }
-
-
-answer_subject:
-   pattern: /hlasuj/predmet/{code}
-   defaults: { _controller: AnketaBundle:Answer:answerSubject, code: -1 }

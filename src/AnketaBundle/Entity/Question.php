@@ -31,6 +31,13 @@ class Question {
     private $question;
 
     /**
+     * @orm:ManyToOne(targetEntity="Season")
+     *
+     * @var Season $season
+     */
+    private $season;
+
+    /**
      * @orm:Column(type="string", length=1024, nullable="true")
      */
     private $description;
@@ -97,6 +104,20 @@ class Question {
 
     public function getQuestion() {
         return $this->question;
+    }
+
+    /**
+     * @param Season $value
+     */
+    public function setSeason($value) {
+        $this->season = $value;
+    }
+
+    /**
+     * @return Season the season
+     */
+    public function getSeason() {
+        return $this->season;
     }
 
     public function setDescription($value) {

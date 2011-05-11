@@ -11,9 +11,11 @@
 
 namespace AnketaBundle\Command;
 
+use DateTime;
 use AnketaBundle\Entity\Category;
 use AnketaBundle\Entity\Question;
 use AnketaBundle\Entity\Option;
+use AnketaBundle\Entity\Season;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Command\Command;
 use Symfony\Component\Console\Input\InputDefinition;
@@ -61,6 +63,17 @@ class ImportOtazkyCommand extends Command {
         $manager = $this->container->get('doctrine.orm.entity_manager');
         $input_array = Yaml::load($filename);
 
+        /**
+         * @todo Spravit v anketa.yml nejaky parameter na season, zatial iba takto
+         */
+        // month/day/year
+        $start = new DateTime("9/1/2010");
+        $end = new DateTime("6/31/2011");
+        $season = new Season($start, $end, '2010/2011');
+        $season->setWinterSemester(true);
+        $season->setSummerSemester(true);
+        $manager->persist($season);
+
         // checkDuplicates
         if ($checkDuplicatesOption != null) {
             $this->checkDuplicates($input_array, $manager);
@@ -78,7 +91,7 @@ class ImportOtazkyCommand extends Command {
         // spracuj otazky
         $questions = $input_array["otazky"];
         foreach ($questions as $question) {
-            $this->processQuestion($question, $manager, $ass_array);
+            $this->processQuestion($question, $manager, $ass_array, $season);
         }
 
         $manager->flush();
@@ -98,7 +111,7 @@ class ImportOtazkyCommand extends Command {
         return array($import["id"] => $category);
     }
 
-    private function processQuestion(array $import, EntityManager $manager, array $categories) {
+    private function processQuestion(array $import, EntityManager $manager, array $categories, Season $season) {
 
         // hlupy test, otazky su este zle navrhnute
         if ($import["text"] != '') {
@@ -140,6 +153,8 @@ class ImportOtazkyCommand extends Command {
                 $question->addOption($op);
             }
         }
+
+        $question->setSeason($season);
         $manager->persist($question);
     }
 
