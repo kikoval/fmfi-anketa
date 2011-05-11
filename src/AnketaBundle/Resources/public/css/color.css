@@ -32,12 +32,28 @@ a:link, a:visited, a:active {
   color: black;
 }
 
-.progressbar {
-  border-color: #7FBBFB;
+.progressbar-low {
+  border-color: #CC6265;
 }
 
-.progressbar .done {
-  background: #7FBBFB;
+.progressbar-low .done {
+  background: #CC6265;
+}
+
+.progressbar-medium {
+  border-color: #F5CD2B;
+}
+
+.progressbar-medium .done {
+  background: #F5CD2B;
+}
+
+.progressbar-high {
+  border-color: #5bf74e;
+}
+
+.progressbar-high .done {
+  background: #5bf74e;
 }
 
 #content {

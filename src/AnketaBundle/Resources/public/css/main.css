@@ -108,12 +108,18 @@ body {
   font-weight: bold;
 }
 
-.progressbar {
+.progressbar,
+.progressbar-low,
+.progressbar-medium,
+.progressbar-high {
   border: solid 1px;
   position: relative;
 }
 
-.progressbar .done {
+.progressbar .done,
+.progressbar-low .done,
+.progressbar-high .done,
+.progressbar-medium .done {
   position: absolute;
   left: 0;
   top: 0;
@@ -121,7 +127,10 @@ body {
   width: 40%;
 }
 
-.menu .progressbar {
+.menu .progressbar,
+.menu .progressbar-low,
+.menu .progressbar-medium,
+.menu .progressbar-high {
   width: 2.5em;
   height: 0.6em;
   float: right;

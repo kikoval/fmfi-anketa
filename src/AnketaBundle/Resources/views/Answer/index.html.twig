@@ -13,12 +13,24 @@
     &mdash; <a href="{{ path('logout') }}" class="logout">Odhlásiť</a>
 {% endblock %}
 
+{##
+ # displays progressbar style depending on the actual progress
+ #
+ # @param number percent_done
+ #}
+{% macro progressbar_style(percent_done) %}
+{{ percent_done >= 70 ? "high" : percent_done > 30 ? "medium" : "low" }}
+{% endmacro %}
+
 {#
  # @param number progress the current progressbar value (an integer in 0-100)
  # @param string|null class additional progress bar class
  #}
 {% macro progressbar(progress, class) %}
-    <span class="progressbar{{ class|default('') }}" title="{{ progress }}%"><span class="done" style="width: {{ progress }}%;"></span></span>
+    <span class="progressbar-{{ class|default(_self.progressbar_style(progress)) }}"
+          title="{{ "%.0f" | format(progress) }}%">
+      <span class="done" style="width: {{ "%.0f%%;" | format(progress) }}"></span>
+    </span>
 {% endmacro %}
 
 {#
@@ -32,8 +44,13 @@
             https://github.com/fabpot/Twig/issues/307 #}
             <li class="menu-level-{{ level }} {{ item.children | length > 0 ? 'inner' : 'leaf' }}{{ item.active ? ' active' : '' }}">
                 {# TODO: necheme do titlu dať miesto percent konkrétny zlomok "answers/questions"? #}
-                <a class="menu-level-{{ level }}" href="{{ item.href }}">{% if item.progressTotal %}{{ _self.progressbar(item.percentDone) }}{% endif %}{{ item.title }}</a>
-                {% if 'progress' in item|keys %}<span class="hidden"> {{ item.percentDone }}</span>{% endif %}
+                <a class="menu-level-{{ level }}" href="{{ item.href }}">
+                  {%- if item.progressTotal > 0 -%}
+                    {{ _self.progressbar(item.percentDone) }}
+                  {%- endif -%}{{ item.title }}</a>
+                {% if item.progressTotal > 0 %}
+                  <span class="hidden">{{ "%.0f%%" | format(item.percentDone) }}</span>
+                {% endif %}
                 {% if item.active and item.children is not empty %}
                     {{ _self.menu_tree(item.children, level + 1) }}
                 {% endif %}
