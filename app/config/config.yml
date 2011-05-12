@@ -28,15 +28,22 @@ assetic:
 # Doctrine Configuration
 doctrine:
     dbal:
-        default_connection: default
+        default_connection: mysql
         connections:
-            default:
-                driver:   %database_driver%
-                host:     %database_host%
-                dbname:   %database_name%
-                user:     %database_user%
-                password: %database_password%
-                path:     %kernel.root_dir%/../db/%database_file%
+            sqlite:
+                driver:   %db_sqlite_driver%
+                host:     %db_sqlite_host%
+                dbname:   %db_sqlite_name%
+                user:     %db_sqlite_user%
+                password: %db_sqlite_password%
+                path:     %kernel.root_dir%/../db/%db_sqlite_file%
+            mysql:
+                driver:   %db_mysql_driver%
+                host:     %db_mysql_host%
+                dbname:   %db_mysql_name%
+                user:     %db_mysql_user%
+                password: %db_mysql_password%
+                port:     %db_mysql_port%
 
     orm:
         default_entity_manager: default

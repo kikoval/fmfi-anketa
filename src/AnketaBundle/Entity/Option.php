@@ -4,6 +4,7 @@ namespace AnketaBundle\Entity;
 
 /**
  * @orm:Entity(repositoryClass="AnketaBundle\Entity\Repository\OptionRepository")
+ * @orm:Table(name="Choice")
  */
 class Option {
     
@@ -13,7 +14,7 @@ class Option {
     private $id;
 
     /**
-     * @orm:Column(type="string")
+     * @orm:Column(type="string", name="choice")
      */
     private $option;
 
