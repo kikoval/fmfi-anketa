@@ -25,105 +25,6 @@ use AnketaBundle\Entity\User;
 
 class AnswerController extends Controller {
 
-    /**
-     * Compares 2 subjects based on their name property
-     */
-    private static function compareSubjects($a, $b) {
-        if ($a == $b) {
-            return 0;
-        }
-        return \strcmp($a->getName(), $b->getName());
-    }
-
-    private static function getAttendedSubjectList(User $user) {
-        $attendedSubjects = $user->getSubjects()->toArray();
-        \usort($attendedSubjects, array('\AnketaBundle\Controller\AnswerController', 'compareSubjects'));
-        return $attendedSubjects;
-    }
-
-    /**
-     *
-     * @param EntityManager $em
-     * @param User $user current user
-     * @return array menu array of categories and their subcategories
-     */
-    private function buildMenu($em, $user) {
-        $menu = array(
-            'subject' => new MenuItem(
-                'Predmety',
-                $this->generateUrl('answer_subject')
-            ),
-            'general' => new MenuItem(
-                'Všeobecné otázky',
-                $this->generateUrl('answer_general')
-            )
-        );
-
-        $subcategories = $em->getRepository('AnketaBundle\Entity\Category')
-                       ->getOrderedGeneral();
-        foreach ($subcategories as $subcategory) {
-            $menu['general']->children[$subcategory->getId()] =
-                new MenuItem(
-                    $subcategory->getType(),
-                    $this->generateUrl('answer_general', array('id' => $subcategory->getId()))
-                    );
-        }
-
-        foreach($this->getAttendedSubjectList($user) as $subject) {
-            $menu['subject']->children[$subject->getCode()] = 
-                new MenuItem(
-                $subject->getName(),
-                $this->generateUrl('answer_subject', array('code' => $subject->getCode()))
-                );
-        }
-
-        return $menu;
-    }
-
-    /**
-     *
-     * @param EntityManager $em
-     * @param User $user current user
-     * @return array array of parameters for template
-     */
-    private function getCommonData($em, $user) {
-        $result = array();
-
-        $result['username'] = $user->getUserName();
-
-        $result['displayname'] = $user->getDisplayName();
-
-        $menu = $this->buildMenu($em, $user);
-
-        $generalProgress = $em->getRepository('AnketaBundle\Entity\Question')
-                       ->getGeneralProgress($user);
-        foreach ($generalProgress AS $id => $data) {
-            if (array_key_exists($id, $menu['general']->children)) {
-                $menu['general']->children[$id]->setProgress((int) $data['answers'], 
-                                                             (int) $data['questions']);
-            }
-            if ($data['category'] == 'subject') {
-                $questionsPerSubject = $data['questions'];
-            }
-        }
-
-
-        $subjectProgress = $em->getRepository('AnketaBundle\Entity\Question')
-                       ->getSubjectProgress($user);
-        foreach ($subjectProgress AS $id => $data) {
-            if (array_key_exists($id, $menu['subject']->children)) {
-                $menu['subject']->children[$id]->setProgress((int) $data['answers'],
-                                                             (int) $questionsPerSubject);
-            }
-        }
-
-        unset($menu['studijnyprogram']);
-
-        $result['menu'] = $menu;
-
-        return $result;
-    }
-
     public function indexAction() {
         return $this->render('AnketaBundle:Answer:index.html.twig');
     }
@@ -198,7 +99,8 @@ class AnswerController extends Controller {
         $request = Request::createFromGlobals();
         $user = $this->get('security.context')->getToken()->getUser();
         $em = $this->get('doctrine.orm.entity_manager');
-        $attendedSubjects = $this->getAttendedSubjectList($user);
+        $attendedSubjects = $em->getRepository('AnketaBundle\Entity\Subject')
+                               ->getAttendedSubjectForUser($user->getId());
 
         if (count($attendedSubjects) == 0)
             throw new NotFoundHttpException ('Nemas ziadne predmety.');
@@ -248,10 +150,9 @@ class AnswerController extends Controller {
             return new RedirectResponse($this->generateUrl('answer'));
         }
 
-        $templateParams = $this->getCommonData($em, $user);
-        $templateParams['menu']['subject']->active = true;
-        $templateParams['menu']['subject']->children[$subject->getCode()]->active = true;
-        $templateParams['category'] = $templateParams['menu']['subject']->children[$subject->getCode()];
+        $templateParams = array();
+        $templateParams['title'] = $subject->getName();
+        $templateParams['activeItems'] = array('subject', $subject->getCode());
         $templateParams['questions'] = $questions;
         $templateParams['answers'] = $answers;
         return $this->render('AnketaBundle:Answer:index.html.twig', $templateParams);
@@ -315,10 +216,9 @@ class AnswerController extends Controller {
             return new RedirectResponse($this->generateUrl('answer_subject'));
         }
 
-        $templateParams = $this->getCommonData($em, $user);
-        $templateParams['menu']['general']->active = true;
-        $templateParams['menu']['general']->children[$category->getId()]->active = true;
-        $templateParams['category'] = $templateParams['menu']['general']->children[$category->getId()];
+        $templateParams = array();
+        $templateParams['title'] = $category->getType();
+        $templateParams['activeItems'] = array('general', $category->getId());
         $templateParams['questions'] = $questions;
         $templateParams['answers'] = $answers;
         return $this->render('AnketaBundle:Answer:index.html.twig', $templateParams);

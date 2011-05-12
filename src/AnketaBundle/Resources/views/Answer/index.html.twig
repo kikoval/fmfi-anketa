@@ -1,74 +1,22 @@
 {% extends 'AnketaBundle:Anketa:index.html.twig' %}
 
 {#
- # @param menu the category tree, expressed as a list of items. every item has: id, title, href, progress?, children?, active. if present, children is another array of items.
- # @param category the active category, expressed as a menu item
+ # @param title description of the active category
  # @param questions list of questions for the active category
  # @param answers list of answers for the active category
+ # @param activeItems list of active items in menu
  #}
 
 {% block user_bar %}
-    {# TODO toto mozno chceme presunut niekde vyssie... (ale potom aj nastavovanie username a displayname v AnswerControlleri niekde vyssie) #}
-    <span class="hidden">Prihlásený: </span><span class="user-fullname" title="{{ username }}">{{ displayname }}</span>
-    &mdash; <a href="{{ path('logout') }}" class="logout">Odhlásiť</a>
+    {% render "AnketaBundle:TwigHelper:userBar" %}
 {% endblock %}
 
-{##
- # displays progressbar style depending on the actual progress
- #
- # @param number percent_done
- #}
-{% macro progressbar_style(percent_done) %}
-{{ percent_done >= 70 ? "high" : percent_done > 30 ? "medium" : "low" }}
-{% endmacro %}
-
-{#
- # @param number progress the current progressbar value (an integer in 0-100)
- # @param string|null class additional progress bar class
- #}
-{% macro progressbar(progress, class) %}
-    <span class="progressbar-{{ class|default(_self.progressbar_style(progress)) }}"
-          title="{{ "%.0f" | format(progress) }}%">
-      <span class="done" style="width: {{ "%.0f%%;" | format(progress) }}"></span>
-    </span>
-{% endmacro %}
-
-{#
- # @param tree a list of menu items to display
- # @param level the current depth in the menu tree (starting from 0 for top-level items)
- #}
-{% macro menu_tree(tree, level) %}
-    <ul class="menu-level-{{ level }}">
-        {% for item in tree %}
-            {# Warning: "item.children is empty" does not work, see
-            https://github.com/fabpot/Twig/issues/307 #}
-            <li class="menu-level-{{ level }} {{ item.children | length > 0 ? 'inner' : 'leaf' }}{{ item.active ? ' active' : '' }}">
-                {# TODO: necheme do titlu dať miesto percent konkrétny zlomok "answers/questions"? #}
-                <a class="menu-level-{{ level }}" href="{{ item.href }}">
-                  {%- if item.progressTotal > 0 -%}
-                    {{ _self.progressbar(item.percentDone) }}
-                  {%- endif -%}{{ item.title }}</a>
-                {% if item.progressTotal > 0 %}
-                  <span class="hidden">{{ "%.0f%%" | format(item.percentDone) }}</span>
-                {% endif %}
-                {% if item.active and item.children is not empty %}
-                    {{ _self.menu_tree(item.children, level + 1) }}
-                {% endif %}
-            </li>
-        {% endfor %}
-    </ul>
-{% endmacro %}
-
 {% block navigation %}
-    <h2 class="hidden">Kategórie</h2>
-    <div class="menu">
-        {{ _self.menu_tree(menu, 0) }}
-    </div>
-    {# TODO: niekde možno chceme zobraziť celkový progress #}
+    {% render "AnketaBundle:TwigHelper:menu" with { 'activeItems': activeItems } %}
 {% endblock %}
 
 {% block content %}
-    <h2>{{ category.title }}</h2>
+    <h2>{{ title }}</h2>
     <form action="#" method="post">
     {% block submit %}
     <div class="submit">
