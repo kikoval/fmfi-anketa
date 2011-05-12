@@ -88,18 +88,20 @@ class HlasovanieController extends Controller
                              $params);
     }
 
-    public function menuAction($activeItems) {
+    public function menuAction($activeItems = array()) {
         $user = $this->get('security.context')->getToken()->getUser();
         $em = $this->get('doctrine.orm.entity_manager');
         $templateParams = array('menu' => $this->buildMenu($em, $user));
 
-        $firstItem = array_shift($activeItems);
-        $templateParams['menu'][$firstItem]->active = true;
-        
-        $current = &$templateParams['menu'][$firstItem]->children;
-        foreach ($activeItems as $item) {
-            $current[$item]->active = true;
-            $current = &$current[$item]->children;
+        if (!empty($activeItems)) {
+            $firstItem = array_shift($activeItems);
+            $templateParams['menu'][$firstItem]->active = true;
+
+            $current = &$templateParams['menu'][$firstItem]->children;
+            foreach ($activeItems as $item) {
+                $current[$item]->active = true;
+                $current = &$current[$item]->children;
+            }
         }
 
         return $this->render('AnketaBundle:Hlasovanie:menu.html.twig',

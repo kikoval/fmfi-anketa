@@ -1,0 +1,17 @@
+{% extends 'AnketaBundle:Hlasovanie:index.html.twig' %}
+
+{% block user_bar %}
+    {% render "AnketaBundle:Hlasovanie:userBar" %}
+{% endblock %}
+
+{% block navigation %}
+    {% render "AnketaBundle:Hlasovanie:menu" %}
+{% endblock %}
+
+{% block content %}
+Naozaj to chceš?<br/>
+Bude to mať takéto dôsledky!
+<form action="#" method="post">
+<input type="submit" name="anonymizuj" value="Anonymizuj" />
+</form>
+{% endblock %}

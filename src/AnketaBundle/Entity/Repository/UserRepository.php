@@ -36,4 +36,20 @@ class UserRepository extends EntityRepository {
         return array_shift($result);
     }
 
+    public function anonymizeAnswersByUserId($userId) {
+        $q = $this->getEntityManager()->createQueryBuilder()
+                                      ->update('AnketaBundle\Entity\Answer', 'a')
+                                      ->set('a.author', '?1')
+                                      ->where('a.author = ?2')
+                                      ->getQuery();
+        $q->setParameters(array(
+            1 => null,
+            2 => $userId
+         ));
+
+        //TODO(majak): nikde som nenasiel, co tato funkcia vrati, ked to failne
+        //             normalne tu vracia pocet updatnutych riadkov
+        return $q->execute();
+    }
+
 }
