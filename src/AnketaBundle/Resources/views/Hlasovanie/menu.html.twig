@@ -39,7 +39,7 @@
                     {{ _self.progressbar(item.percentDone) }}
                   {%- endif -%}{{ item.title }}</a>
                 {% if item.progressTotal > 0 %}
-                  <span class="hidden">{{ "%.0f%%" | format(item.percentDone) }}</span>
+                  <span class="for-screen-readers">{{ "%.0f%%" | format(item.percentDone) }}</span>
                 {% endif %}
                 {% if item.active and item.children is not empty %}
                     {{ _self.menu_tree(item.children, level + 1) }}
@@ -49,7 +49,7 @@
     </ul>
 {% endmacro %}
 
-<h2 class="hidden">Kategórie</h2>
+<h2 class="for-screen-readers">Kategórie</h2>
 <div class="menu">
     {{ _self.menu_tree(menu, 0) }}
 </div>
