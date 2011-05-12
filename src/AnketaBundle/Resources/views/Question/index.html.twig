@@ -1,4 +1,4 @@
-{% extends 'AnketaBundle:Anketa:index.html.twig' %}
+{% extends 'AnketaBundle:Hlasovanie:index.html.twig' %}
 
 {#
  # @param title description of the active category
@@ -8,11 +8,11 @@
  #}
 
 {% block user_bar %}
-    {% render "AnketaBundle:TwigHelper:userBar" %}
+    {% render "AnketaBundle:Hlasovanie:userBar" %}
 {% endblock %}
 
 {% block navigation %}
-    {% render "AnketaBundle:TwigHelper:menu" with { 'activeItems': activeItems } %}
+    {% render "AnketaBundle:Hlasovanie:menu" with { 'activeItems': activeItems } %}
 {% endblock %}
 
 {% block content %}

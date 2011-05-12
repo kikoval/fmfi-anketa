@@ -4,7 +4,7 @@ homepage:
 
 anketa:
     pattern: /anketa/
-    defaults: { _controller: AnketaBundle:Anketa:index }
+    defaults: { _controller: AnketaBundle:Hlasovanie:index }
 
 manage:
     pattern: /manage/

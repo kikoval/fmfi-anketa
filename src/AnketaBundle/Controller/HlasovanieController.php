@@ -1,29 +1,19 @@
 <?php
-/**
- * @copyright Copyright (c) 2011 The FMFI Anketa authors (see AUTHORS).
- * Use of this source code is governed by a license that can be
- * found in the LICENSE file in the project root directory.
- *
- * @package    Anketa
- * @subpackage Anketa__Controller
- * @author     Jakub Markoš <jakub.markos@gmail.com>
- */
-
-/**
- * Controller for answering questions
- */
 
 namespace AnketaBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
-use AnketaBundle\Entity\Answer;
-use AnketaBundle\Entity\User;
-
-class TwigHelperController extends Controller {
+class HlasovanieController extends Controller
+{
+    public function indexAction()
+    {
+        // NOTE: tu by bol rozcestnik vyplnanie / statistiky / mozno nieco dalsie
+        // kedze zatial mame iba vyplnanie, proste dame redirect
+        // TODO: toto chceme aby rovno redirectovalo na prvu ne-100% sekciu
+        return new RedirectResponse($this->generateUrl('answer'));
+    }
 
     /**
      *
@@ -94,7 +84,7 @@ class TwigHelperController extends Controller {
         $params = array();
         $params['username'] = $user->getUserName();
         $params['displayname'] = $user->getDisplayName();
-        return $this->render('AnketaBundle:TwigHelper:user_bar.html.twig',
+        return $this->render('AnketaBundle:Hlasovanie:user_bar.html.twig',
                              $params);
     }
 
@@ -112,7 +102,7 @@ class TwigHelperController extends Controller {
             $current = &$current[$item]->children;
         }
 
-        return $this->render('AnketaBundle:TwigHelper:menu.html.twig',
+        return $this->render('AnketaBundle:Hlasovanie:menu.html.twig',
                              $templateParams);
     }
 

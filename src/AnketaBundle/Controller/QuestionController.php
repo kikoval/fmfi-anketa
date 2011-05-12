@@ -23,11 +23,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use AnketaBundle\Entity\Answer;
 use AnketaBundle\Entity\User;
 
-class AnswerController extends Controller {
-
-    public function indexAction() {
-        return $this->render('AnketaBundle:Answer:index.html.twig');
-    }
+class QuestionController extends Controller {
 
     /**
      * Processes the form.
@@ -155,7 +151,7 @@ class AnswerController extends Controller {
         $templateParams['activeItems'] = array('subject', $subject->getCode());
         $templateParams['questions'] = $questions;
         $templateParams['answers'] = $answers;
-        return $this->render('AnketaBundle:Answer:index.html.twig', $templateParams);
+        return $this->render('AnketaBundle:Question:index.html.twig', $templateParams);
     }
 
     public function answerGeneralAction($id) {
@@ -221,6 +217,6 @@ class AnswerController extends Controller {
         $templateParams['activeItems'] = array('general', $category->getId());
         $templateParams['questions'] = $questions;
         $templateParams['answers'] = $answers;
-        return $this->render('AnketaBundle:Answer:index.html.twig', $templateParams);
+        return $this->render('AnketaBundle:Question:index.html.twig', $templateParams);
     }
 }
