@@ -12,6 +12,9 @@
 namespace AnketaBundle\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use AnketaBundle\Entity\Teacher;
+use AnketaBundle\Entity\Subject;
+use AnketaBundle\Entity\User;
 
 /**
  * Repository class for Answer Entity
@@ -26,7 +29,10 @@ class AnswerRepository extends EntityRepository {
      * @param Subject $subject
      * @return array array of answers, indexed with question ids
      */
-    public function getAnswersByCriteria($questions, $user, $subject = null) {
+    public function getAnswersByCriteria(
+            array $questions, User $user,
+            Subject $subject = null, Teacher $teacher = null)
+    {
         // odpoved je jednoznacne identifikovana autorom, id otazky, id predmetu
         // mozno by bolo fajn vytvorit nad tym teda unique index
         $result = array();
@@ -34,6 +40,9 @@ class AnswerRepository extends EntityRepository {
         $criteria = array('author' => $user->getId());
         if ($subject != null) {
             $criteria['subject'] = $subject->getId();
+        }
+        if ($teacher != null) {
+            $criteria['teacher'] = $teacher->getId();
         }
         foreach ($questions AS $question) {
             $criteria['question'] = $question->getId();

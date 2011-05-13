@@ -11,11 +11,12 @@
 
 namespace AnketaBundle\Entity\Repository;
 
+use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\EntityRepository;
 use AnketaBundle\Entity\Question;
 use AnketaBundle\Entity\Category;
 use AnketaBundle\Entity\CategoryType;
-
+use fajr\libfajr\base\Preconditions;
 /**
  * Repository class for Question Entity
  */
@@ -141,5 +142,16 @@ class QuestionRepository extends EntityRepository {
                                    ORDER BY q.position ASC");
         $query->setParameter('category', $category->getId());
         return $query->getResult();
+    }
+
+    public function getOrderedQuestionsByCategoryType($type) {
+        Preconditions::check(CategoryType::isValid($type));
+        $category = $this->getEntityManager()
+                ->getRepository('AnketaBundle\Entity\Category')
+                ->findOneBy(array('type' => $type));
+        if ($category == null) {
+            throw new NoResultException();
+        }
+        return $this->getOrderedQuestions($category);
     }
 }

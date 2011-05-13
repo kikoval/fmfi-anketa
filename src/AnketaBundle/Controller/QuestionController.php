@@ -93,15 +93,17 @@ class QuestionController extends Controller {
         return $result;
     }
 
-    public function answerSubjectAction($code) {
-        $request = Request::createFromGlobals();
-        $user = $this->get('security.context')->getToken()->getUser();
+    /**
+     * Note: code may be "-1" meaning default first subject
+     */
+    public function getAttendedSubjectByCode($user, $code) {
         $em = $this->get('doctrine.orm.entity_manager');
         $attendedSubjects = $em->getRepository('AnketaBundle\Entity\Subject')
                                ->getAttendedSubjectForUser($user->getId());
 
-        if (count($attendedSubjects) == 0)
-            throw new NotFoundHttpException ('Nemas ziadne predmety.');
+        if (count($attendedSubjects) == 0) {
+            throw new \RuntimeException ('Nemas ziadne predmety.');
+        }
 
         // defaultne vraciame abecedne prvy predmet
         if ($code == -1) {
@@ -109,22 +111,42 @@ class QuestionController extends Controller {
         } else {
             $subject = $em->getRepository('AnketaBundle\Entity\Subject')
                           ->findOneBy(array('code' => $code));
-            if (empty($subject))
-                throw new NotFoundHttpException ('Chybny kod: ' . $code);
+            if (empty($subject)) {
+                throw new \RuntimeException('Chybny kod: ' . $code);
+            }
+            if (!in_array($subject, $attendedSubjects)) {
+                throw new \RuntimeException('Predmet ' . $code . ' nemas zapisany');
+            }
         }
 
-        $category = $em->getRepository('AnketaBundle\Entity\Category')
-	               ->findOneBy(array('type' => CategoryType::SUBJECT));
+        return $subject;
+    }
+
+    public function answerSubjectTeacherAction($subject_code, $teacher_code) {
+        $request = $this->get('request');
+        $user = $this->get('security.context')->getToken()->getUser();
+        $em = $this->get('doctrine.orm.entity_manager');
+        try {
+            $subject = $this->getAttendedSubjectByCode($user, $subject_code);
+        } catch (\RuntimeException $e) {
+            throw new NotFoundHttpException($e->getMessage());
+        }
+
         $questions = $em->getRepository('AnketaBundle\Entity\Question')
-                        ->getOrderedQuestions($category);
-        $answers = $em->getRepository('AnketaBundle\Entity\Answer')
-                      ->getAnswersByCriteria($questions, $user, $subject);
-
-        $attended = false;
-        $key = \array_search($subject, $attendedSubjects);
-        if ($key !== false) {
-            $attended = true;
+                        ->getOrderedQuestionsByCategoryType(CategoryType::TEACHER_SUBJECT);
+        // TODO: by Season
+        $teachers = $subject->getTeachers();
+        $teacher = null;
+        foreach ($teachers as $tmp) {
+            if ($tmp->getId() == $teacher_code) $teacher = $tmp;
         }
+        if ($teacher == null) {
+            throw new NotFoundHttpException("Ucitel " . $teacher_code . " neuci dany predmet");
+        }
+
+        $answers = $em->getRepository('AnketaBundle\Entity\Answer')
+                      ->getAnswersByCriteria($questions, $user, $subject, $teacher);
+
         if ('POST' == $request->getMethod()) {
             $answerArray = $this->processForm($request, $user, $questions, $answers);
 
@@ -133,8 +155,50 @@ class QuestionController extends Controller {
                 // predpokladame ze subject je to co prislo v parametri kodu
                 $answer->setSubject($subject);
                 // ako ucitela zatial zoberieme prveho... co asi urcite nechceme
-                $answer->setTeacher($subject->getTeachers()->get(0));
-                $answer->setAttended($attended);
+                $answer->setTeacher($teacher);
+                $answer->setAttended(true);
+
+                $em->persist($answer);
+            }
+
+            $em->flush();
+
+            return new RedirectResponse($this->generateUrl('TODO'));
+        }
+
+        $templateParams = array();
+        $templateParams['title'] = $subject->getName() . ' - ' . $teacher->getName();
+        $templateParams['activeItems'] = array('subject', $subject->getCode());
+        $templateParams['questions'] = $questions;
+        $templateParams['answers'] = $answers;
+        return $this->render('AnketaBundle:Question:index.html.twig', $templateParams);
+
+    }
+
+    public function answerSubjectAction($code) {
+        $request = $this->get('request');
+        $user = $this->get('security.context')->getToken()->getUser();
+        $em = $this->get('doctrine.orm.entity_manager');
+        try {
+            $subject = $this->getAttendedSubjectByCode($user, $code);
+        } catch (\RuntimeException $e) {
+            throw new NotFoundHttpException($e->getMessage());
+        }
+        $questions = $em->getRepository('AnketaBundle\Entity\Question')
+                        ->getOrderedQuestionsByCategoryType(CategoryType::SUBJECT);
+        $answers = $em->getRepository('AnketaBundle\Entity\Answer')
+                      ->getAnswersByCriteria($questions, $user, $subject);
+
+        if ('POST' == $request->getMethod()) {
+            $answerArray = $this->processForm($request, $user, $questions, $answers);
+
+            foreach ($answerArray AS $answer) {
+                // chceme nastavit este teacher + subject
+                // predpokladame ze subject je to co prislo v parametri kodu
+                $answer->setSubject($subject);
+                $answer->setTeacher(null);
+                // aktualne sa daju vyplnat iba predmety ktore sme navstevovali 
+                $answer->setAttended(true);
 
                 $em->persist($answer);
             }
@@ -167,7 +231,7 @@ class QuestionController extends Controller {
          *   - updatovanie / vytvorenie odpovedi (fcia processForm)
          *   - persistovanie odpovedi
          */
-        $request = Request::createFromGlobals();
+        $request = $this->get('request');
         $user = $this->get('security.context')->getToken()->getUser();
         $em = $this->get('doctrine.orm.entity_manager');
         

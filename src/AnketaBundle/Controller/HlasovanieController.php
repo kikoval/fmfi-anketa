@@ -42,14 +42,28 @@ class HlasovanieController extends Controller
                     $this->generateUrl('answer_general', array('id' => $subcategory->getId()))
                     );
         }
+        // TODO: season
         $subjects = $em->getRepository('AnketaBundle\Entity\Subject')
                        ->getAttendedSubjectForUser($user->getId());
         foreach($subjects as $subject) {
-            $menu['subject']->children[$subject->getCode()] =
+            $subjectMenu = 
                 new MenuItem(
                 $subject->getName(),
                 $this->generateUrl('answer_subject', array('code' => $subject->getCode()))
                 );
+            // TODO: season
+            $teachers = $subject->getTeachers();
+            foreach ($teachers as $teacher) {
+                $subjectMenu->children[$teacher->getId()] =
+                    new MenuItem(
+                            $teacher->getName(),
+                            $this->generateUrl('answer_subject_teacher',
+                                array('subject_code' => $subject->getCode(),
+                                      'teacher_code' => $teacher->getId()))
+                            );
+
+            }
+            $menu['subject']->children[$subject->getCode()] = $subjectMenu;
         }
 
         $generalProgress = $em->getRepository('AnketaBundle\Entity\Question')

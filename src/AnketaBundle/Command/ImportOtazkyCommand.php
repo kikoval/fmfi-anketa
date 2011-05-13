@@ -13,6 +13,7 @@ namespace AnketaBundle\Command;
 
 use DateTime;
 use AnketaBundle\Entity\Category;
+use AnketaBundle\Entity\CategoryType;
 use AnketaBundle\Entity\Question;
 use AnketaBundle\Entity\Option;
 use AnketaBundle\Entity\Season;
@@ -100,9 +101,10 @@ class ImportOtazkyCommand extends Command {
     private function processCategory(array $import, EntityManager $manager) {
 
         $sectionIdMap = array(
-            'vseobecne' => 'general',
-            'predmety' => 'subject',
-            'studijnyprogram' => 'studijnyprogram'
+            'vseobecne' => CategoryType::GENERAL,
+            'predmety' => CategoryType::SUBJECT,
+            'predmety_ucitel' => CategoryType::TEACHER_SUBJECT,
+            'studijnyprogram' => CategoryType::STUDY_PROGRAMME,
         );
 
         $category = new Category($sectionIdMap[$import['kategoria']], $import["popis"]);

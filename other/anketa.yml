@@ -5,6 +5,10 @@ kategorie:
       popis:      Predmety
       kategoria:  predmety
 
+    - id:         predmety_ucitel
+      popis:      Učitelia k predmetu
+      kategoria:  predmety_ucitel
+
 # kategorie studijnych programov
     - id:         studijnyprogram
       popis:      Studijny program
@@ -114,7 +118,7 @@ otazky:
     - nazov:  Hodnotenie učiteľa
       text:   Celkový dojem z vyučujúceho.
       popis:
-      kategoria:  predmety
+      kategoria:  predmety_ucitel
       komentar:   No
       hviezdicky: Yes
       ucitel:     Yes
@@ -123,7 +127,7 @@ otazky:
     - nazov:  Diskusia
       text:   Ohodnoťte schopnosť vyučujúceho odpovedať na otázky študentov.
       popis:
-      kategoria:  predmety
+      kategoria:  predmety_ucitel
       komentar:   No
       hviezdicky: Yes
       ucitel:     Yes
@@ -132,7 +136,7 @@ otazky:
     - nazov:  Prezentácia
       text:   Ohodnoťte ústny prejav a prezentačné schopnosti vyučujúceho.
       popis:
-      kategoria:  predmety
+      kategoria:  predmety_ucitel
       komentar:   No
       hviezdicky: Yes
       ucitel:     Yes
@@ -141,7 +145,7 @@ otazky:
     - nazov:  Odporúčanie učiteľa
       text:   Odporučili by ste tohto učiteľa kolegom?
       popis:
-      kategoria:  predmety
+      kategoria:  predmety_ucitel
       komentar:   Yes
       hviezdicky: No
       moznosti:
@@ -153,7 +157,7 @@ otazky:
     - nazov:  Pripomienky k vyučujúcemu
       text:   Napíšte Váš názor alebo pripomienky k učiteľovi.
       popis:
-      kategoria:  predmety
+      kategoria:  predmety_ucitel
       komentar:   Yes
       hviezdicky: No
       ucitel:     Yes

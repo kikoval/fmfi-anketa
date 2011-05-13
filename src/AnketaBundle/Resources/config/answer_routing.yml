@@ -11,3 +11,9 @@ answer_general:
 answer_subject:
     pattern: /hlasuj/predmet/{code}
     defaults: { _controller: AnketaBundle:Question:answerSubject, code: -1 }
+
+answer_subject_teacher:
+    pattern: /hlasuj/predmet/{subject_code}/ucitel/{teacher_code}
+    defaults: { _controller: AnketaBundle:Question:answerSubjectTeacher }
+
+
