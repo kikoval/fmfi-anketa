@@ -25,14 +25,14 @@
     </div>
     {% endblock %}
     {% for question in questions %}
-        <div class="question">
+        <div class="question{{ question.stars ? ' stars' : '' }}">
             <h3>{{ question.question }}</h3>
             {% if question.hasDescription %}
                 <div class="description">{{ question.description }}</div>
             {% endif %}
             
             {% if question.options | length %}
-              <div class="option">
+              <div class="option none">
                 <label for="question_{{ question.id }}_empty">
                   <input type="radio"
                          id="question_{{ question.id }}_empty"

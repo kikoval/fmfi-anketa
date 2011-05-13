@@ -1,0 +1,44 @@
+
+.stars-container {
+  margin-top: 1em;
+  position: relative;
+}
+
+.stars-container .star, .stars-container .cancel {
+  cursor: pointer;
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  background-image: url("../images/star.png");
+}
+
+.stars-container .star {
+  background-position: 0 0;
+}
+.stars-container .star.active {
+  background-position: 0 25%;
+}
+.stars-container.hover .star.active {
+  background-position: 0 50%;
+}
+.stars-container .cancel {
+  background-position: 0 75%;
+}
+.stars-container .cancel.hover {
+  background-position: 0 100%;
+}
+
+/* screen readre stale vidia standardny pohlad, a ignoruju elementy vygenerovane
+ * JavaScriptom (vsetko su to len divy a spany bez obsahu). aspon mali by.
+ */
+html.with-stars-js .question.stars .option,
+html.with-stars-js .question .option.none {
+  display: block;
+  position: absolute;
+  left: -5000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
