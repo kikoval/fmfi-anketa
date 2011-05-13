@@ -14,6 +14,7 @@ namespace AnketaBundle\Entity\Repository;
 use Doctrine\ORM\EntityRepository;
 use AnketaBundle\Entity\Question;
 use AnketaBundle\Entity\Category;
+use AnketaBundle\Entity\CategoryType;
 
 /**
  * Repository class for Question Entity
@@ -31,26 +32,6 @@ class QuestionRepository extends EntityRepository {
         return $query->getSingleResult();
     }
 
-    /**
-     *
-     * @param User $user
-     * @return integer number of questions accessible by user
-     */
-    public function getQuestionsCount($user) {
-        $em = $this->getEntityManager();
-        $category = $em->getRepository('AnketaBundle\Entity\Category')
-                       ->findOneBy(array('category' => 'subject'));
-        $query = $em->createQuery('SELECT COUNT(q.id)
-                                   FROM AnketaBundle\Entity\Question q');
-        $result = $query->getSingleScalarResult();
-        $query = $em->createQuery('SELECT COUNT(q.id)
-                                   FROM AnketaBundle\Entity\Question q
-                                   WHERE q.category = :subjectCatId');
-        $query->setParameter('subjectCatId', $category->getId());
-        $subCount = $query->getSingleScalarResult();
-        $result += $subCount * ($user->getSubjectsCount() - 1);
-        return $result;
-    }
 
     /**
      * Gets the number of questions and filled answers for each category.
@@ -72,14 +53,14 @@ class QuestionRepository extends EntityRepository {
      */
     public function getGeneralProgress($user) {
         $em = $this->getEntityManager();
-        $query = $em->createQuery('SELECT c.id AS cat_id, c.category AS cat_section, COUNT(q.id) AS num
+        $query = $em->createQuery('SELECT c.id AS cat_id, c.type AS cat_type, COUNT(q.id) AS num
                                    FROM AnketaBundle\Entity\Category c,
                                    AnketaBundle\Entity\Question q
                                    WHERE c.id = q.category
                                    GROUP BY c.id');
         $questionsCount = $query->getResult();
 
-        $query = $em->createQuery('SELECT c.id AS cat_id, c.category AS cat_section, COUNT(a.id) AS num
+        $query = $em->createQuery('SELECT c.id AS cat_id, c.type AS cat_type, COUNT(a.id) AS num
                                    FROM AnketaBundle\Entity\Category c,
                                         AnketaBundle\Entity\Question q,
                                         AnketaBundle\Entity\Answer a
@@ -94,18 +75,18 @@ class QuestionRepository extends EntityRepository {
          * query resulty maju typ tvaru:
          * [0]
          *      ['cat_id'] => id kategorie
-         *      ['cat_section'] => nazov top-kategorie
+         *      ['cat_type'] => typ kategorie
          *      ['num'] => num count
          * [1]
          *      ['cat_id'] => id kategorie
-         *      ['cat_section'] => nazov top-kategorie
+         *      ['cat_type'] => typ kategorie
          *      ['num']
          * ...
          */
         $result = array();
         foreach ($questionsCount AS $row) {
             $result[$row['cat_id']]['questions'] = $row['num'];
-            $result[$row['cat_id']]['category'] = $row['cat_section'];
+            $result[$row['cat_id']]['category'] = $row['cat_type'];
             // default value for answers
             $result[$row['cat_id']]['answers'] = 0;
         }

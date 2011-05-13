@@ -191,7 +191,6 @@ class FixtureLoader implements FixtureInterface {
         $manager->persist($roleUser);
         $manager->persist($roleSuperAdmin);
 
-
         $manager->flush();
     }
 }

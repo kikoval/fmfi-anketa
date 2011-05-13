@@ -22,6 +22,8 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 
 use AnketaBundle\Entity\Answer;
 use AnketaBundle\Entity\User;
+use AnketaBundle\Entity\Category;
+use AnketaBundle\Entity\CategoryType;
 
 class QuestionController extends Controller {
 
@@ -112,7 +114,7 @@ class QuestionController extends Controller {
         }
 
         $category = $em->getRepository('AnketaBundle\Entity\Category')
-	               ->findOneBy(array('category' => 'subject'));
+	               ->findOneBy(array('type' => CategoryType::SUBJECT));
         $questions = $em->getRepository('AnketaBundle\Entity\Question')
                         ->getOrderedQuestions($category);
         $answers = $em->getRepository('AnketaBundle\Entity\Answer')
@@ -182,8 +184,11 @@ class QuestionController extends Controller {
         } else {
             // kontrola na integer sa odohrala uz v routovani
             $category = $em->find('AnketaBundle:Category', $id);
-            if (empty($category) || ($category->getCategory() !== 'general'))
+
+            if (empty($category) ||
+                ($category->getType() !== CategoryType::GENERAL)) {
                 throw new NotFoundHttpException ('Chybna kategoria: ' . $id);
+            }
         }
         
         $questions = $em->getRepository('AnketaBundle\Entity\Question')
@@ -213,7 +218,7 @@ class QuestionController extends Controller {
         }
 
         $templateParams = array();
-        $templateParams['title'] = $category->getType();
+        $templateParams['title'] = $category->getDescription();
         $templateParams['activeItems'] = array('general', $category->getId());
         $templateParams['questions'] = $questions;
         $templateParams['answers'] = $answers;

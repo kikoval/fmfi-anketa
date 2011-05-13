@@ -169,11 +169,11 @@ class ImportOtazkyCommand extends Command {
         );
         $categoryRepository = $manager->getRepository('AnketaBundle\Entity\Category');
         foreach ($categories as $category) {
-            $objekt = $categoryRepository->findOneBy(
-                            array('category' => $sectionIdMap[$category['kategoria']],
-                                'type' => $category["popis"]));
             $kat = $sectionIdMap[$category['kategoria']];
             $typ = $category["popis"];
+            $objekt = $categoryRepository->findOneBy(
+                            array('type' => $kat,
+                                'description' => $typ));
             if ($objekt == null) {
                 echo 'null';
             } else {

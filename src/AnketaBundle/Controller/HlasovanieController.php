@@ -38,7 +38,7 @@ class HlasovanieController extends Controller
         foreach ($subcategories as $subcategory) {
             $menu['general']->children[$subcategory->getId()] =
                 new MenuItem(
-                    $subcategory->getType(),
+                    $subcategory->getDescription(),
                     $this->generateUrl('answer_general', array('id' => $subcategory->getId()))
                     );
         }

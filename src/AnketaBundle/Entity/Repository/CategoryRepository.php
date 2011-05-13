@@ -12,6 +12,7 @@
 namespace AnketaBundle\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use AnketaBundle\Entity\CategoryType;
 
 /**
  * Repository class for Category Entity
@@ -27,8 +28,9 @@ class CategoryRepository extends EntityRepository {
         $em = $this->getEntityManager();
         $query = $em->createQuery("SELECT c
                                    FROM AnketaBundle\Entity\Category c
-                                   WHERE c.category = 'general'
+                                   WHERE c.type = :type
                                    ORDER BY c.position ASC");
+        $query->setParameter('type', CategoryType::GENERAL);
         return $query->getResult();
     }
 }
