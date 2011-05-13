@@ -14,19 +14,25 @@
 }
 
 .stars-container .star {
-  background-position: 0 0;
+  background-position: left top;
+}
+.stars-container .star.hover {
+  background-position: center top;
 }
 .stars-container .star.active {
-  background-position: 0 25%;
+  background-position: left center;
 }
-.stars-container.hover .star.active {
-  background-position: 0 50%;
+.stars-container .star.active.hover {
+  background-position: center center;
+}
+.stars-container.cancel-hover .star.active {
+  background-position: right center;
 }
 .stars-container .cancel {
-  background-position: 0 75%;
+  background-position: left bottom;
 }
-.stars-container .cancel.hover {
-  background-position: 0 100%;
+.stars-container.cancel-hover .cancel {
+  background-position: center bottom;
 }
 
 /* screen readre stale vidia standardny pohlad, a ignoruju elementy vygenerovane

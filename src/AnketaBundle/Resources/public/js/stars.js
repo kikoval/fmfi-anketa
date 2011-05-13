@@ -8,8 +8,8 @@
  */
 
 (function ($) {
-  var starWidth = 24;
-  var starHeight = 24;
+  var starWidth = 25;
+  var starHeight = 25;
 
   var cancelText = "Zruš odpoveď";
 
@@ -56,17 +56,16 @@
           if($options[i].checked) active = i;
         }
         for(var i = 0; i < $stars.length; i++) {
-          $stars.eq(i).toggleClass('active', i <= active);
+          $stars.eq(i).toggleClass('active', i <= active).removeClass('hover');
         }
-        $container.removeClass('hover');
-        $cancel.removeClass('hover');
+        $container.removeClass('cancel-hover');
         $cancel.toggle(active != -1);
       };
       var redrawHover = function () {
+        redraw();
         var hover = $(this).data('id');
-        $container.addClass('hover');
         for(var i = 0; i < $stars.length; i++) {
-          $stars.eq(i).toggleClass('active', i <= hover);
+          $stars.eq(i).toggleClass('hover', i <= hover);
         }
       }
 
@@ -81,13 +80,12 @@
         mouseout: redraw,
         click: function () {
           $options[$(this).data('id')].checked = true;
-          redraw();
+          redrawHover.call(this);
         }
       });
       $cancel.bind({
         mouseover: function () {
-          $cancel.addClass('hover');
-          $stars.removeClass('active');
+          $container.addClass('cancel-hover');
         },
         mouseout: redraw,
         click: function () {
