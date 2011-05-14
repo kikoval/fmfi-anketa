@@ -17,4 +17,3 @@ svn export "./src/AnketaBundle/$SUFFIX" "./web/bundles/anketa"
 svn export "$SF_BUNDLES/FrameworkBundle/$SUFFIX" "./web/bundles/framework"
 svn export "$SF_BUNDLES/WebProfilerBundle/$SUFFIX" "./web/bundles/webprofiler"
 svn export "./vendor/bundles/Symfony/Bundle/WebConfiguratorBundle/$SUFFIX" "./web/bundles/symfonywebconfigurator"
-

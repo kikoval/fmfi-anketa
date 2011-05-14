@@ -15,10 +15,18 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
+-- vysistime pozostatky fixtures
+
+DELETE FROM teachers_subjects;
+DELETE FROM subject;
+DELETE FROM teacher;
+
 --
 -- Bez transakcie to je strasne pomale!
---
-BEGIN TRANSACTION;
+-- Iba BEGIN; funguje aj v sqlite a mysql, START TRANSACTIO; a BEGIN TRANSACTION;
+-- su plaformovo zavisle
+BEGIN;
+
 
 --
 -- Dumping data for table `subject`

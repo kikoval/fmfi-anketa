@@ -4,6 +4,6 @@
 #
 
 CACHE=`dirname "$0"`/../app/cache
+
 chmod 777 "$CACHE"
-echo "Clearing cache at $CACHE "
 rm -rf "$CACHE"/*
