@@ -45,7 +45,6 @@ doctrine:
                 password: %db_mysql_password%
                 port:     %db_mysql_port%
                 charset:  %db_mysql_charset%
-                driverOptions: {8 : 2}
 
     orm:
         default_entity_manager: default
