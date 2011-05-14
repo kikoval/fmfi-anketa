@@ -28,7 +28,7 @@ assetic:
 # Doctrine Configuration
 doctrine:
     dbal:
-        default_connection: sqlite
+        default_connection: mysql
         connections:
             sqlite:
                 driver:   %db_sqlite_driver%

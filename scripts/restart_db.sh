@@ -18,7 +18,7 @@ CONSOLE="$SCRIPT_PATH"/../app/console
 TEACHERS_SUBJECTS_IMPORT_FILE="$SCRIPT_PATH"/../other/teachers_subjects.sql
 QUESTIONS_IMPORT_FILE="$SCRIPT_PATH"/../other/anketa.yml
 
-if test "$BACKEND" == "sqlite"; then
+if test "$BACKEND" = "sqlite"; then
 chmod 777 "$SQLITE_DATABASE_FOLDER"
 fi
 
@@ -26,7 +26,7 @@ $CONSOLE doctrine:database:drop --force
 
 $CONSOLE doctrine:database:create
 
-if test "$BACKEND" == "sqlite"; then
+if test "$BACKEND" = "sqlite"; then
 chmod 777 "$SQLITE_DATABASE_FILE"
 fi
 
@@ -36,8 +36,8 @@ $CONSOLE doctrine:data:load
 
 $CONSOLE anketa:import-otazky $QUESTIONS_IMPORT_FILE
 
-if test "$BACKEND" == "mysql"; then
+if test "$BACKEND" = "mysql"; then
 $MYSQL_CLIENT  -u"$MYSQL_LOGIN" -p"$MYSQL_PASS" "$MYSQL_DATABASE_NAME" < "$TEACHERS_SUBJECTS_IMPORT_FILE"
-elif test "$BACKEND" == "sqlite"; then
+elif test "$BACKEND" = "sqlite"; then
 sqlite3 "$SQLITE_DATABASE_FILE" < "$TEACHERS_SUBJECTS_IMPORT_FILE"
 fi
