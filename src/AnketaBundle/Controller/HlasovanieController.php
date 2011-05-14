@@ -30,6 +30,10 @@ class HlasovanieController extends Controller
             'general' => new MenuItem(
                 'Všeobecné otázky',
                 $this->generateUrl('answer_general')
+            ),
+            'anonymizuj' => new MenuItem(
+                    'Anonymizuj odpovede',
+                    $this->generateUrl('anonymizuj')
             )
         );
 
