@@ -163,12 +163,18 @@ class QuestionController extends Controller {
 
             $em->flush();
 
-            return new RedirectResponse($this->generateUrl('TODO'));
+            if ($request->request->get('next')) {
+                return $this->forward('AnketaBundle:Hlasovanie:menuNext',
+                    array('activeItems' => array('subject', $subject->getCode(), $teacher->getId())));
+            }
+            else {
+                return new RedirectResponse($request->getRequestUri());
+            }
         }
 
         $templateParams = array();
         $templateParams['title'] = $subject->getName() . ' - ' . $teacher->getName();
-        $templateParams['activeItems'] = array('subject', $subject->getCode());
+        $templateParams['activeItems'] = array('subject', $subject->getCode(), $teacher->getId());
         $templateParams['questions'] = $questions;
         $templateParams['answers'] = $answers;
         return $this->render('AnketaBundle:Question:index.html.twig', $templateParams);
@@ -205,11 +211,13 @@ class QuestionController extends Controller {
 
             $em->flush();
 
-            // redirect na stranku s dalsimi otazkami
-            if (($key !== false) && ($key < (count($attendedSubjects) - 1)))
-                return new RedirectResponse($this->generateUrl('answer_subject',
-                                    array('code' => $attendedSubjects[$key + 1]->getCode())));
-            return new RedirectResponse($this->generateUrl('answer'));
+            if ($request->request->get('next')) {
+                return $this->forward('AnketaBundle:Hlasovanie:menuNext',
+                    array('activeItems' => array('subject', $subject->getCode())));
+            }
+            else {
+                return new RedirectResponse($request->getRequestUri());
+            }
         }
 
         $templateParams = array();
@@ -268,17 +276,13 @@ class QuestionController extends Controller {
 
             $em->flush();
 
-            // redirect na stranku s dalsimi otazkami - tzn na dalsiu
-            // subkategoriu v abecednom poradi
-            // TODO toto chceme spojit s answerSubjectAction a v oboch pripadoch proste pouzit info z buildMenu
-            // TODO a tiez chceme podporovat aj "uloz" button co redirectuje na aktualnu stranku
-            $key = \array_search($category, $subcategories);
-            if ($key === false)
-                throw new \Exception('Something went wrong!');
-            if ($key < (count($subcategories) - 1))
-                return new RedirectResponse($this->generateUrl('answer_general',
-                                array('id' => $subcategories[$key + 1]->getId())));
-            return new RedirectResponse($this->generateUrl('answer_subject'));
+            if ($request->request->get('next')) {
+                return $this->forward('AnketaBundle:Hlasovanie:menuNext',
+                    array('activeItems' => array('general', $category->getId())));
+            }
+            else {
+                return new RedirectResponse($request->getRequestUri());
+            }
         }
 
         $templateParams = array();

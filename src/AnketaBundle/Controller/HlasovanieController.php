@@ -126,4 +126,34 @@ class HlasovanieController extends Controller
                              $templateParams);
     }
 
+    public function menuNextAction($activeItems = array()) {
+        $user = $this->get('security.context')->getToken()->getUser();
+        $em = $this->get('doctrine.orm.entity_manager');
+        $menu = $this->buildMenu($em, $user);
+
+        // pre kazdu aktivnu polozku spocitame jej praveho surodenca.
+        $nextSibling = array();
+        $current = &$menu;
+        foreach ($activeItems as $item) {
+            $siblings = array_keys($current);
+            $myIndex = array_search($item, $siblings);
+            $nextSibling[] = ($myIndex === false ? null : $current[$siblings[$myIndex + 1]]);
+
+            $current = &$current[$item]->children;
+        }
+
+        $myChildren = array_keys($current);
+        if (!empty($myChildren)) {
+            return new RedirectResponse($current[$myChildren[0]]->href);
+        }
+
+        for ($i = count($nextSibling) - 1; $i >= 0; $i--) {
+            if($nextSibling[$i] !== null) {
+                return new RedirectResponse($nextSibling[$i]->href);
+            }
+        }
+
+        return new RedirectResponse($this->get('request')->getRequestUri());
+    }
+
 }
