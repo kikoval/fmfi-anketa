@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block navigation %}
-    {% render "AnketaBundle:Hlasovanie:menu" %}
+    {% render "AnketaBundle:Hlasovanie:menu" with { 'activeItems': ['anonymizuj'] } %}
 {% endblock %}
 
 {% block content %}
