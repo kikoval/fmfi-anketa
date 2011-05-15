@@ -29,7 +29,8 @@
         return str.replace(/^\s*|\s*$/g, "");
       }
 
-      var $container = $('<div />', { 'class': 'stars-container', 'height': starHeight }).appendTo($question);
+      var $container = $('<div />', { 'class': 'stars-container', 'height': starHeight });
+      $container.insertAfter($question.find('.option:last'));
       $container.append($('<span />', {
         'class': 'cancel',
         'title': cancelText,
