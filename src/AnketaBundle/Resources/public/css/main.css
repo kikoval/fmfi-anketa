@@ -84,23 +84,35 @@ body {
   padding-bottom: 3em;
 }
 
-#sidebar .menu ul, #sidebar .menu li {
+#sidebar .menu ul {
   margin: 0;
   padding: 0;
+  margin-left: 18px;   /* width of collapsed.gif = 15px */
+}
+
+#sidebar .menu li {
+  margin: 0;
+  padding: 0;
+  margin-left: -18px;   /* width of collapsed.gif = 15px */
+  padding-left: 18px;
   list-style-type: none;
   list-style-image: none;
 }
 
-#sidebar .menu li {
-  margin-right: -1.2em;
-  padding-right: 1.2em;
+/* zrusime rozbalovatka prvej urovne */
+#sidebar .menu ul.menu-level-0 {
+  margin-left: 0;
+}
+#sidebar .menu li.menu-level-0 {
+  margin-left: 0;
+  padding-left: 0;
 }
 
 #sidebar .menu a {
   text-decoration: none;
   display: block;
-  margin-left: 18px;   /* width of collapsed.gif = 15px */
-  padding: 0.2em 0 0.2em 1em;
+  margin-right: -1em;
+  padding: 0.2em 1em 0.2em 1em;
   text-indent: -1em;
 }
 

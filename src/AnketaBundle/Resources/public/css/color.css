@@ -20,11 +20,16 @@ a:link, a:visited, a:active {
   background: transparent url("../images/collapsed.gif") no-repeat 0 0.3em;
 }
 
-.menu li.inner.active {
+.menu li.inner.expanded {
   background: transparent url("../images/expanded.gif") no-repeat 0 0.3em;
 }
 
-.menu li.leaf.active {
+/* zrusime rozbalovatka prvej urovne */
+#sidebar .menu li.menu-level-0 {
+  background: none;
+}
+
+.menu a.active {
   background: white url("../images/active.gif") repeat-y left center;
 }
 

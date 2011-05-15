@@ -111,15 +111,15 @@ class HlasovanieController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $templateParams = array('menu' => $this->buildMenu($em, $user));
 
-        if (!empty($activeItems)) {
-            $firstItem = array_shift($activeItems);
-            $templateParams['menu'][$firstItem]->active = true;
-
-            $current = &$templateParams['menu'][$firstItem]->children;
-            foreach ($activeItems as $item) {
-                $current[$item]->active = true;
-                $current = &$current[$item]->children;
-            }
+        $activeTail = null;
+        $current = &$templateParams['menu'];
+        foreach ($activeItems as $item) {
+            $activeTail = $current[$item];
+            $current[$item]->expanded = true;
+            $current = &$current[$item]->children;
+        }
+        if ($activeTail) {
+            $activeTail->active = true;
         }
 
         return $this->render('AnketaBundle:Hlasovanie:menu.html.twig',

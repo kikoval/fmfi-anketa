@@ -18,6 +18,7 @@ class MenuItem {
     public $title;
     public $href;
     public $children;
+    public $expanded;
     public $active;
 
     /**
@@ -40,6 +41,7 @@ class MenuItem {
         $this->title = $title;
         $this->href = $link;
         $this->children = array();
+        $this->expanded = false;
         $this->active = false;
         $this->progress_done = 0;
         $this->progress_all = 0;
