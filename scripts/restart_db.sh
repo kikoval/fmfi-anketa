@@ -1,6 +1,8 @@
 set -x
 SCRIPT_PATH=`dirname "$0"`
-BACKEND=`sh "$SCRIPT_PATH"/db_backend.sh`
+
+CONFIG_PATH="$SCRIPT_PATH"/../app/config/config.yml
+BACKEND=`grep "default_connection:" "$CONFIG_PATH" | grep -Eo '[a-z]+$'`
 
 SQLITE_DATABASE_FOLDER="$SCRIPT_PATH"/../db
 SQLITE_DATABASE_FILE="$SQLITE_DATABASE_FOLDER"/anketa.sqlite
@@ -8,10 +10,10 @@ SQLITE_DATABASE_FILE="$SQLITE_DATABASE_FOLDER"/anketa.sqlite
 MYSQL_DATABASE_NAME="anketa"
 MYSQL_LOGIN="anketa"
 MYSQL_PASS="beeliyaebNeShoot"
-MYSQL_CLIENT="mysql"
-if test -n "`type mysql5 2>/dev/null`"; then
-MYSQL_CLIENT="mysql5"
-fi
+MYSQL_CLIENT="unknown"
+# check if client exists and set
+command -v mysql &>/dev/null && { MYSQL_CLIENT="mysql"; }
+command -v mysql5 &>/dev/null && { MYSQL_CLIENT="mysql5"; }
 
 CONSOLE="$SCRIPT_PATH"/../app/console
 
