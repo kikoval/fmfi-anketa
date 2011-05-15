@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @orm:Entity(repositoryClass="AnketaBundle\Entity\Repository\TeacherRepository")
+ * @orm:Table(name="teacher")
  */
 class Teacher {
     

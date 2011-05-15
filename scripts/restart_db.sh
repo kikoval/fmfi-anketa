@@ -12,8 +12,11 @@ MYSQL_LOGIN="anketa"
 MYSQL_PASS="beeliyaebNeShoot"
 MYSQL_CLIENT="unknown"
 # check if client exists and set
-command -v mysql &>/dev/null && { MYSQL_CLIENT="mysql"; }
-command -v mysql5 &>/dev/null && { MYSQL_CLIENT="mysql5"; }
+if test -n "`which "mysql"`"; then
+MYSQL_CLIENT="mysql";
+elif test -n "`which "mysql5"`"; then
+MYSQL_CLIENT="mysql5";
+fi
 
 CONSOLE="$SCRIPT_PATH"/../app/console
 
