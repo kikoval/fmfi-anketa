@@ -16,6 +16,7 @@ $loader->registerNamespaces(array(
     'fajr\\libfajr'    => __DIR__.'/../vendor/libfajr',
     'AnketaBundle'     => __DIR__.'/../src',
     'SVT'              => __DIR__.'/../src',
+    'Bundle'           => __DIR__.'/../src',
 ));
 $loader->registerPrefixes(array(
     'Twig_Extensions_' => __DIR__.'/../vendor/twig-extensions/lib',
