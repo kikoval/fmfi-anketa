@@ -214,8 +214,10 @@ class Question {
      */
     public function generateStarOptions() {
         $this->setStars(true);
-        for ($i = 1; $i < 6; $i++) {
-            $this->addOption(new Option('star'.$i,$i));
+        $starCnt = 5;
+        for ($i = 1; $i <= $starCnt; $i++) {
+            $this->addOption(new Option($i . ' z ' . $starCnt . ' hviezdičiek',
+                                        $i, $i));
         }
     }
 }

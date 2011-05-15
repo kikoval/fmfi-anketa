@@ -143,6 +143,7 @@ class ImportOtazkyCommand extends Command {
             $question->setStars(false);
         }
         if (array_key_exists("moznosti", $import)) {
+            $pos = 0;
             foreach ($import["moznosti"] as $option) {
                 if (array_key_exists("hodnota", $option)) {
                     $hodnota = $option["hodnota"];
@@ -151,7 +152,8 @@ class ImportOtazkyCommand extends Command {
                 }
                 $op = new Option(
                                 $option["text"],
-                                $hodnota);
+                                $hodnota,
+                                $pos++);
                 $question->addOption($op);
             }
         }
