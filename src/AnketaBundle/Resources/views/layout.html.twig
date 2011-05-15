@@ -18,11 +18,10 @@
         <title>{% block title %}Anketa{% endblock %}</title>
         <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" />
     </head>
-    <body>
+    <body{{ block('sidebar') == '' ? ' class="no-sidebar"' : '' }}>
         <div id="container">
             <div id="user-bar">
-                {% block user_bar %}
-                {% endblock %}
+                {% block user_bar %}{% endblock %}
             </div>
 
             <div id="header">
@@ -31,14 +30,12 @@
 
             <div id="sidebar">
             <div id="sidebar-inner">
-                {% block sidebar %}
-                {% endblock %}
+                {% block sidebar %}{% endblock %}
             </div>
             </div>
 
             <div id="content" class="clearfix">
-                {% block content %}
-                {% endblock %}
+                {% block content %}{% endblock %}
             </div>
 
             <div id="footer">

@@ -72,6 +72,10 @@ body {
   text-align: left;
 }
 
+.no-sidebar #sidebar {
+  display: none;
+}
+
 #sidebar-inner {
   padding: 1em 1em 1em 0;
 }
@@ -148,6 +152,10 @@ body {
 #content {
   margin-left: 30%;
   padding: 1em;
+}
+
+.no-sidebar #content {
+  margin-left: 0;
 }
 
 #content h2 {
