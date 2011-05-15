@@ -42,11 +42,11 @@ otazky:
       komentar:   No
       hviezdicky: No
       moznosti:
-          - text: Nepochopiteľný.
-          - text: Mierne nadsadený.
+          - text: Nepochopiteľná.
+          - text: Mierne nadsadená.
           - text: Akurát.
-          - text: Príliš jednoduchý.
-          - text: Triviálny.
+          - text: Príliš jednoduchá.
+          - text: Triviálna.
       position:   2
 
     - nazov:  Zaujímavosť predmetu
