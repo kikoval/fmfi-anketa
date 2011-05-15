@@ -1,7 +1,6 @@
 set -x
 SCRIPT_PATH=`dirname "$0"`
 
-CONFIG_PATH="$SCRIPT_PATH"/../app/config/config.yml
 PARAMETERS_PATH="$SCRIPT_PATH"/../app/config/parameters.ini
 BACKEND=`grep "db_backend" "$PARAMETERS_PATH" | grep -Eo '=.*$' | cut -c2-`
 
