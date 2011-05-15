@@ -11,9 +11,25 @@
 {% endblock %}
 
 {% block content %}
-Naozaj to chceš?<br/>
-Bude to mať takéto dôsledky!
+<h2>POZOR!</h2>
+<p>
+Po kliknutí na tlačidlo sa vymažú z databázy odpovedí údaje identifikujúce Teba ako autora,
+takže nebude možné spätne určiť, ktorú odpoveď si písal, alebo ako si hlasoval.
+</p>
+<p>
+Tento proces je nevratný.
+</p>
+<p>
+Po anonymizácii odpovedí nebude možné sa prihlásiť do ankety a svoje odpovede prezrieť,
+či zmeniť. Prezrieť sa bude dať len všeobecná štatistika.
+</p>
+<p>
+Ak si si istý, že si vyplnil všetko čo si chcel a ako si chcel, klikni na tlačidlo Anonymizuj.
+</p>
+<p>
+Ak si ešte chceš svoje odpovede prezrieť, či zmeniť, neklikaj.
+</p>
 <form action="#" method="post">
-<input type="submit" name="anonymizuj" value="Anonymizuj" />
+<input type="submit" name="anonymizuj" value="Anonymizuj a ukonči hlasovanie" />
 </form>
 {% endblock %}
