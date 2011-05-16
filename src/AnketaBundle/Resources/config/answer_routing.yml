@@ -2,6 +2,10 @@ answer:
     pattern: /hlasuj/
     defaults: { _controller: AnketaBundle:Question:answerSubject, code: -1 }
 
+answer_incomplete:
+    pattern: /hlasuj/nevyplnene/
+    defaults: { _controller: AnketaBundle:Question:answerIncomplete}
+
 answer_general:
     pattern: /hlasuj/vseobecne/{id}
     defaults: { _controller: AnketaBundle:Question:answerGeneral, id: -1 }

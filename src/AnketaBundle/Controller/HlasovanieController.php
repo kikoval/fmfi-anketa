@@ -9,10 +9,12 @@ class HlasovanieController extends Controller
 {
     public function indexAction()
     {
-        // NOTE: tu by bol rozcestnik vyplnanie / statistiky / mozno nieco dalsie
-        // kedze zatial mame iba vyplnanie, proste dame redirect
         // TODO: toto chceme aby rovno redirectovalo na prvu ne-100% sekciu
-        return new RedirectResponse($this->generateUrl('answer'));
+        if ($this->get('security.context')->getToken()->getUser()->getHasVote()) {
+            return new RedirectResponse($this->generateUrl('answer_incomplete'));
+        } else {
+            return new RedirectResponse($this->generateUrl('dakujeme'));
+        }
     }
 
     /**
@@ -32,7 +34,7 @@ class HlasovanieController extends Controller
                 $this->generateUrl('answer_general')
             ),
             'anonymizuj' => new MenuItem(
-                    'Anonymizuj odpovede',
+                    'Anonymizácia odpovedí',
                     $this->generateUrl('anonymizuj')
             )
         );

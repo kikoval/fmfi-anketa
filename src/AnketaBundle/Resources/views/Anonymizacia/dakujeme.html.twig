@@ -1,11 +1,20 @@
 {% extends 'AnketaBundle:Hlasovanie:index.html.twig' %}
 
-{% block title %}Anonymizácia - Anketa{% endblock %}
+{% block title %}Anketa{% endblock %}
 
 {% block user_bar %}
     {% render "AnketaBundle:Hlasovanie:userBar" %}
 {% endblock %}
 
 {% block content %}
-Ďakujeme za účasť v ankete.
+{% if app.session.hasFlash('anonymizacia') %}
+        {{ app.session.flash('anonymizacia') }}<br/>
+{% endif %}
+Ďakujeme ti za účasť v ankete.<br/>
+Viac už nemôžeš hlasovať.<br/>
+Ak si myslíš, že k tejto situácii prišlo bez tvojho vedomia,
+môžeš kontaktovať administrátorov na adrese fmfi-anketa-devel@googlegroups.com
+a vysvetliť im svoj problém.
+Pravdepodobne sa s tým nebude dať nič spraviť,
+ale za pokus to stojí.
 {% endblock %}

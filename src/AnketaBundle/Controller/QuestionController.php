@@ -292,4 +292,10 @@ class QuestionController extends Controller {
         $templateParams['answers'] = $answers;
         return $this->render('AnketaBundle:Question:index.html.twig', $templateParams);
     }
+
+    public function answerIncompleteAction() {
+        //TODO(majak): spravit redirect na prvu sekciu,
+        //             ktora nema 100% vyplnenie
+        return new RedirectResponse($this->generateUrl('answer'));
+    }
 }

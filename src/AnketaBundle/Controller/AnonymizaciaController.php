@@ -18,6 +18,7 @@ class AnonymizaciaController extends Controller {
                ->anonymizeAnswersByUserId($user->getId());
             $em->flush();
 
+            $this->get('session')->setFlash('anonymizacia', 'Tvoje odpovede boli úspešne anonymizované.');
             return new RedirectResponse($this->generateUrl('dakujeme'));
         }
         
@@ -25,8 +26,10 @@ class AnonymizaciaController extends Controller {
     }
 
     public function dakujemeAction() {
+        $user = $this->get('security.context')->getToken()->getUser();
+        if ($user->getHasVote()) return new RedirectResponse($this->generateUrl('answer_incomplete'));
+        
         return $this->render('AnketaBundle:Anonymizacia:dakujeme.html.twig');
     }
-
 
 }
