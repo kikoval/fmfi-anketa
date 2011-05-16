@@ -49,6 +49,7 @@ class Question {
 
     /**
      * @orm:OneToMany(targetEntity="Option", mappedBy="question", cascade={"persist", "remove"})
+     * @orm:OrderBy({"position" = "ASC"})
      *
      * @var ArrayCollection $options
      */

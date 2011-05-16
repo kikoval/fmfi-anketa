@@ -36,6 +36,7 @@ class Category {
 
     /**
      * @orm:OneToMany(targetEntity="Question", mappedBy="type")
+     * @orm:OrderBy({"position" = "ASC"})
      *
      * @var ArrayCollection $questions
      */
