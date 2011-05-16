@@ -91,8 +91,10 @@ class ImportOtazkyCommand extends Command {
 
         // spracuj otazky
         $questions = $input_array["otazky"];
+        $questionPos = 0;
         foreach ($questions as $question) {
-            $this->processQuestion($question, $manager, $ass_array, $season);
+            $this->processQuestion($question, $manager, $ass_array, $season, $questionPos);
+            $questionPos++;
         }
 
         $manager->flush();
@@ -113,7 +115,8 @@ class ImportOtazkyCommand extends Command {
         return array($import["id"] => $category);
     }
 
-    private function processQuestion(array $import, EntityManager $manager, array $categories, Season $season) {
+    private function processQuestion(array $import, EntityManager $manager,
+            array $categories, Season $season, $questionPos) {
 
         // hlupy test, otazky su este zle navrhnute
         if ($import["text"] != '') {
@@ -121,6 +124,8 @@ class ImportOtazkyCommand extends Command {
         } else {
             $question = new Question('defaultna otazka, chyba polozka text v anketa.yml');
         }
+
+        $question->setPosition($questionPos);
 
         if (array_key_exists("popis", $import)) {
             $question->setDescription($import["popis"]);
