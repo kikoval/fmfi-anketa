@@ -80,13 +80,9 @@ class AISUserSource implements UserSourceInterface
      */
     private function loadSubjects(UserBuilder $builder)
     {
-        $aisPredmety = $this->aisRetriever->getPredmety();
+        $aisPredmety = $this->aisRetriever->getPredmety($this->semestre);
 
         foreach ($aisPredmety as $aisPredmet) {
-            if (!$this->jeAktualny($aisPredmet['akRok'], $aisPredmet['semester'])) {
-                continue;
-            }
-
             $dlhyKod = $aisPredmet['skratka'];
             $kratkyKod = $this->getKratkyKod($dlhyKod);
 
@@ -111,11 +107,6 @@ class AISUserSource implements UserSourceInterface
 
         $kratkyKod = $matches[1];
         return $kratkyKod;
-    }
-
-    private function jeAktualny($akRok, $semester)
-    {
-        return in_array(array($akRok, $semester), $this->semestre);
     }
 
     // TODO(anty): move to role repository

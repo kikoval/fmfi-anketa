@@ -123,7 +123,17 @@ class AISRetriever
         return $this->studia;
     }
 
-    public function getPredmety()
+    /**
+     * Get a list of subjects
+     * 
+     * @param array(array(string(rok/rok),string(Z/L)))
+     *        $semestre a list of semesters to return or null if all are to
+     *                  be returned. Default is to return subjects for all
+     *                  semesters.
+     *        
+     * @return array(array()) a list of subjects
+     */
+    public function getPredmety(array $semestre = null)
     {
         if ($this->predmety !== null) {
             return $this->predmety;
@@ -134,14 +144,39 @@ class AISRetriever
         $studia = $this->getStudia();
 
         $vsetky_predmety = array();
+        
+        if ($semestre !== null) {
+            $roky = array();
+            foreach ($semestre as $semester) {
+                if (!array_key_exists($semester[0], $roky)) {
+                    $roky[$semester[0]] = array();
+                }
+                $roky[$semester[0]][] = $semester[1];
+            }
+        }
 
         foreach ($studia as $studium => $studiumInfo) {
-            $prehladKreditovDialog = $adminStudiaScreen->
-                getPrehladKreditovDialog($this->trace, $studium);
-            $predmety = $prehladKreditovDialog->getPredmety($this->trace);
-            $prehladKreditovDialog->closeIfNeeded($this->trace);
-
-            $vsetky_predmety = array_merge($vsetky_predmety, $predmety->getData());
+            
+            $zapisneListy = $adminStudiaScreen->getZapisneListy($this->trace, $studium)->getData();
+            
+            foreach ($zapisneListy as $zapisnyList => $zapisnyListInfo) {
+                $akadRok = $zapisnyListInfo['popisAkadRok'];
+                if ($semestre !== null && !array_key_exists($akadRok, $roky)) continue;
+                
+                $hodnoteniaPriemeryScreen = $this->adminStudiaFactory->
+                        newHodnoteniaPriemeryScreen($this->trace,
+                        $adminStudiaScreen->getZapisnyListIdFromZapisnyListIndex($this->trace, $zapisnyList));
+                
+                $hodnotenia = $hodnoteniaPriemeryScreen->getHodnotenia($this->trace)->getData();
+                
+                foreach ($hodnotenia as $hodnotenie) {
+                    if ($semestre !== null && !in_array($hodnotenie['semester'], $roky[$akadRok])) continue;
+                    $hodnotenie['akRok'] = $akadRok;
+                    $vsetky_predmety[] = $hodnotenie;
+                }
+                
+                $hodnoteniaPriemeryScreen->closeIfNeeded($this->trace);
+            }
         }
 
         $this->predmety = $vsetky_predmety;
