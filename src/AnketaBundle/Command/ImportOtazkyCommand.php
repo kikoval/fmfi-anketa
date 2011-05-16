@@ -73,6 +73,9 @@ class ImportOtazkyCommand extends Command {
         $season = new Season($start, $end, '2010/2011');
         $season->setWinterSemester(true);
         $season->setSummerSemester(true);
+        // interni 1814 + externi 621
+        // TODO: chceme ratat aj externych?
+        $season->setStudentCount(1814);
         $manager->persist($season);
 
         // checkDuplicates

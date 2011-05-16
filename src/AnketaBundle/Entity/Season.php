@@ -50,6 +50,13 @@ class Season {
      * @orm:Column(type="string")
      */
     private $description;
+    
+    /**
+     * Total number of students in this season
+     * @orm:Column(type="integer")
+     * @var int $studentCount
+     */
+    private $studentCount;
 
     public function __construct(DateTime $start, DateTime $end, $description) {
         $this->start = $start;
@@ -114,4 +121,13 @@ class Season {
     public function getDescription() {
         return $this->description;
     }
+    
+    public function getStudentCount() {
+        return $this->studentCount;
+    }
+
+    public function setStudentCount($studentCount) {
+        $this->studentCount = $studentCount;
+    }
+
 }
