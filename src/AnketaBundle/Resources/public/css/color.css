@@ -16,24 +16,30 @@ a:link, a:visited, a:active {
   color: inherit;
 }
 
-.menu li.inner {
+#sidebar .menu li.inner {
   background: transparent url("../images/collapsed.gif") no-repeat 0 0.3em;
 }
 
-.menu li.inner.expanded {
+#sidebar .menu li.inner.expanded {
   background: transparent url("../images/expanded.gif") no-repeat 0 0.3em;
 }
 
 /* zrusime rozbalovatka prvej urovne */
-#sidebar .menu li.menu-level-0 {
+#sidebar .menu li.inner.menu-level-0 {
   background: none;
 }
 
-.menu a.active {
+#sidebar .menu a.active {
   background: white url("../images/active.gif") repeat-y left center;
 }
 
-.menu a.menu-level-0 {
+.mobile #sidebar .menu a.active {
+  background-image: none;
+  border-radius: 0.5em;
+  padding-left: 1.5em;
+}
+
+#sidebar .menu a.menu-level-0 {
   color: black;
 }
 
@@ -64,6 +70,10 @@ a:link, a:visited, a:active {
 #content {
   background: white;
   border-radius: 1em;
+}
+
+.mobile #content {
+  border-radius: 0;
 }
 
 .question {

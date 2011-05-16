@@ -30,6 +30,10 @@ body {
   height: 0;
 }
 
+h1, h2, h3, h4, h5, h6 {
+  text-align: left;
+}
+
 /*** HEADER + FOOTER ***/
 
 #user-bar {
@@ -80,10 +84,6 @@ body {
   padding: 1em 1em 1em 0;
 }
 
-#sidebar .menu {
-  padding-bottom: 3em;
-}
-
 #sidebar .menu ul {
   margin: 0;
   padding: 0;
@@ -111,8 +111,8 @@ body {
 #sidebar .menu a {
   text-decoration: none;
   display: block;
-  margin-right: -1em;
-  padding: 0.2em 1em 0.2em 1em;
+  margin-right: -1.1em;
+  padding: 0.2em 1.1em 0.2em 1em;
   text-indent: -1em;
 }
 
@@ -194,11 +194,20 @@ body {
 .question h3 {
   font-size: 100%;
   line-height: 100%;
-  margin: 0;
+  margin: 0 0 0.5em 0;
   font-weight: bold;
 }
 
+#content .description {
+  padding: 0.5em 0 0.2em;
+}
+
+#content .option {
+  padding: 0.15em 0;
+}
+
 #content textarea {
+  margin-top: 0.5em;
   width: 90%;
 }
 

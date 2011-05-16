@@ -81,7 +81,7 @@
         mouseout: redraw,
         click: function () {
           $options[$(this).data('id')].checked = true;
-          redrawHover.call(this);
+          redraw();
         }
       });
       $cancel.bind({

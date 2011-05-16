@@ -1,0 +1,67 @@
+
+.mobile body {
+  padding: 0;
+  line-height: 1.2em;
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: left;
+}
+
+.mobile #container {
+  max-width: none;
+  font-size: 1.4em;
+}
+
+.mobile #user-bar {
+  float: none;
+  text-align: right;
+  margin-right: 1em;
+}
+
+.mobile #header {
+  padding: 1em;
+}
+
+.mobile #header h1 {
+  margin: 0;
+  padding: 0;
+  font-size: 1.8em;
+}
+
+.mobile #footer {
+  padding: 1.5em 0;
+}
+
+.mobile #sidebar {
+  display: none;
+}
+.mobile.show-sidebar #sidebar {
+  display: block;
+  width: auto;
+  float: none;
+}
+
+.mobile #sidebar-inner {
+  padding: 1em;
+}
+
+.mobile #sidebar .menu a {
+  margin: 0;
+  padding: 0.4em 0.5em 0.4em 1em;
+  text-indent: -1em;
+}
+
+.mobile #content {
+  margin-left: 0;
+}
+.mobile.show-sidebar #content {
+  display: none;
+}
+
+.mobile .submit {
+  font-size: 0.8em;
+}
+
+.mobile .bigbtn {
+  width: auto;
+}
+
