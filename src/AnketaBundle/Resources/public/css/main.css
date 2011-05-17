@@ -261,5 +261,22 @@ h1, h2, h3, h4, h5, h6 {
     font-size: 200%;
 }
 
+.section {
+    font-size: 100%;
+    line-height: 100%;
+    margin: 0 1em 0 0;
+    font-weight: bold;
+    text-decoration: none;
+    color: #000;
+    display: block;
+    float: left;
+}
+
+#section-bar {
+  float: right;
+  margin-top: 1em;
+  margin-right: 1em;
+}
+
 /* TODO: v starom main.css bola kopa symfony-specific veci (cca od #symfony-header po .flash-message). odkial boli, a chceme ich aj tu? */
 

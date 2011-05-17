@@ -22,4 +22,10 @@ class WelcomeController extends Controller
     {
         return $this->render('AnketaBundle:Welcome:index.html.twig');
     }
+
+    public function faqAction()
+    {
+        return $this->render('AnketaBundle:Welcome:faq.html.twig');
+    }
+
 }

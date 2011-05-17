@@ -26,9 +26,15 @@
             <div id="user-bar">
                 {% block user_bar %}{% endblock %}
             </div>
+            <div id="section-bar">
+                <a href="{{ path('faq') }}" class="section">FAQ</a>
+                {% if is_granted('ROLE_HAS_VOTE') %}
+                    <a href="{{ path('answer') }}" class="section" />Hlasuj</a>
+                {% endif %}
+            </div>
 
             <div id="header">
-                <h1>Anketa <span>2011</span></h1>
+                <a href="{{ path('homepage') }}"><h1>Anketa <span>2011</span></h1></a>
             </div>
 
             <div id="sidebar">
