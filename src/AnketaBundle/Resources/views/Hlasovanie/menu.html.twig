@@ -35,11 +35,11 @@
             <li class="menu-level-{{ level }} {{ item.children | length > 0 ? 'inner' : 'leaf' }}{{ item.expanded ? ' expanded' : '' }}{{ item.active ? ' active' : '' }}">
                 {# TODO: necheme do titlu dať miesto percent konkrétny zlomok "answers/questions"? #}
                 <a class="menu-level-{{ level }} {{ item.children | length > 0 ? 'inner' : 'leaf' }}{{ item.expanded ? ' expanded' : '' }}{{ item.active ? ' active' : '' }}" href="{{ item.href }}">
-                  {%- if item.progressTotal > 0 -%}
-                    {{ _self.progressbar(item.percentDone) }}
+                  {%- if item.progressbar.progressTotal > 0 -%}
+                    {{ _self.progressbar(item.progressbar.percentDone) }}
                   {%- endif -%}{{ item.title }}</a>
-                {% if item.progressTotal > 0 %}
-                  <span class="for-screen-readers">{{ "%.0f%%" | format(item.percentDone) }}</span>
+                {% if item.progressbar.progressTotal > 0 %}
+                  <span class="for-screen-readers">{{ "%.0f%%" | format(item.progressbar.percentDone) }}</span>
                 {% endif %}
                 {% if item.expanded and item.children is not empty %}
                     {{ _self.menu_tree(item.children, level + 1) }}
