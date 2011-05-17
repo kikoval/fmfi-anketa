@@ -72,29 +72,38 @@ class HlasovanieController extends Controller
             $menu['subject']->children[$subject->getCode()] = $subjectMenu;
         }
 
-        $generalProgress = $em->getRepository('AnketaBundle\Entity\Question')
-                       ->getGeneralProgress($user);
-        foreach ($generalProgress AS $id => $data) {
-            if (array_key_exists($id, $menu['general']->children)) {
-                $menu['general']->children[$id]->setProgress((int) $data['answers'], 
-                                                             (int) $data['questions']);
-            }
-            if ($data['category'] == 'subject') {
-                $questionsPerSubject = $data['questions'];
-            }
-        }
 
-
-        $subjectProgress = $em->getRepository('AnketaBundle\Entity\Question')
-                       ->getSubjectProgress($user);
-        foreach ($subjectProgress AS $id => $data) {
-            if (array_key_exists($id, $menu['subject']->children)) {
-                $menu['subject']->children[$id]->setProgress((int) $data['answers'],
-                                                             (int) $questionsPerSubject);
+        $questionRepository = $em->getRepository('AnketaBundle\Entity\Question');
+        
+        foreach ($questionRepository->getProgressForSubjectTeachersByUser($user) as $subject => $rest) {
+            foreach ($rest as $teacher => $progress) {
+                
+                $menu['subject']->children[$subject]
+                                ->children[$teacher]
+                                ->getProgressbar()
+                                ->setProgress((int)$progress['answered'],
+                                              (int)$progress['total']);
             }
         }
 
-        unset($menu['studijnyprogram']);
+        foreach ($questionRepository->getProgressForSubjectsByUser($user) as $subject => $progress) {
+            $menu['subject']->children[$subject]
+                            ->getProgressbar()
+                            ->setProgress((int)$progress['answered'],
+                                          (int)$progress['total']);
+            $menu['subject']->children[$subject]
+                            ->getProgressbar()
+                            ->setIncludeChildren(false);
+        }
+
+        foreach ($questionRepository->getProgressForCategoriesByUser($user) as $categoryId => $progress) {
+            if (array_key_exists($categoryId, $menu['general']->children)) {
+                $menu['general']->children[$categoryId]
+                                ->getProgressbar()
+                                ->setProgress((int)$progress['answered'],
+                                              (int)$progress['total']);
+            }
+        }
 
         return $menu;
     }

@@ -55,7 +55,7 @@ class User implements UserInterface {
      */
     public function __construct($username, $displayname) {
         $this->subjects = new ArrayCollection();
-        $this->roles= new ArrayCollection();
+        $this->roles = new ArrayCollection();
         $this->userName = $username;
         $this->displayName = $displayname;
         $this->hasVote = false;

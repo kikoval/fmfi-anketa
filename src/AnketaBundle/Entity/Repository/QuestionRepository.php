@@ -7,6 +7,7 @@
  * @package    Anketa
  * @subpackage Anketa__Entity__Repository
  * @author     Jakub Markoš <jakub.markos@gmail.com>
+ * @author     Martin Králik <majak47@gmail.com>
  */
 
 namespace AnketaBundle\Entity\Repository;
@@ -16,6 +17,7 @@ use Doctrine\ORM\EntityRepository;
 use AnketaBundle\Entity\Question;
 use AnketaBundle\Entity\Category;
 use AnketaBundle\Entity\CategoryType;
+use AnketaBundle\Entity\User;
 use fajr\libfajr\base\Preconditions;
 /**
  * Repository class for Question Entity
@@ -31,101 +33,6 @@ class QuestionRepository extends EntityRepository {
         $query->setParameter('id', $id);
         
         return $query->getSingleResult();
-    }
-
-
-    /**
-     * Gets the number of questions and filled answers for each category.
-     *
-     * The result is an associative array of associative arrays, where:
-     *
-     * - result[categoryId]['questions'] = number of questions in category
-     * - result[categoryId]['answer'] = number of answers in category
-     * - result[categoryId]['category'] = the top-level category this category
-     *   belongs to, i.e. 'general' or 'subject'
-     *
-     * Note that for 'general' categories, 'answers' is at most 'questions',
-     * but for the 'subject' category, 'answers' is at most 'questions' times
-     * the number of attended subjects, because each subject has the same
-     * questions.
-     *
-     * @param User $user current user
-     * @return array data with the number of questions, answers and top-level category
-     */
-    public function getGeneralProgress($user) {
-        $em = $this->getEntityManager();
-        $query = $em->createQuery('SELECT c.id AS cat_id, c.type AS cat_type, COUNT(q.id) AS num
-                                   FROM AnketaBundle\Entity\Category c,
-                                   AnketaBundle\Entity\Question q
-                                   WHERE c.id = q.category
-                                   GROUP BY c.id');
-        $questionsCount = $query->getResult();
-
-        $query = $em->createQuery('SELECT c.id AS cat_id, c.type AS cat_type, COUNT(a.id) AS num
-                                   FROM AnketaBundle\Entity\Category c,
-                                        AnketaBundle\Entity\Question q,
-                                        AnketaBundle\Entity\Answer a
-                                   WHERE c.id = q.category AND q.id = a.question
-                                         AND a.author = :authorID
-                                         AND (a.option IS NOT NULL OR a.comment IS NOT NULL)
-                                   GROUP BY c.id');
-        $query->setParameter('authorID', $user->getId());
-        $answerCount = $query->getResult();
-
-        /**
-         * query resulty maju typ tvaru:
-         * [0]
-         *      ['cat_id'] => id kategorie
-         *      ['cat_type'] => typ kategorie
-         *      ['num'] => num count
-         * [1]
-         *      ['cat_id'] => id kategorie
-         *      ['cat_type'] => typ kategorie
-         *      ['num']
-         * ...
-         */
-        $result = array();
-        foreach ($questionsCount AS $row) {
-            $result[$row['cat_id']]['questions'] = $row['num'];
-            $result[$row['cat_id']]['category'] = $row['cat_type'];
-            // default value for answers
-            $result[$row['cat_id']]['answers'] = 0;
-        }
-
-        foreach ($answerCount AS $row) {
-            $result[$row['cat_id']]['answers'] = $row['num'];
-        }
-
-        return $result;
-    }
-
-    /**
-     *
-     * @param User $user current user
-     * @return array
-     *       result[subjectCode]['answers'] = number of answers for subject
-     */
-    public function getSubjectProgress($user) {
-        $em = $this->getEntityManager();
-        $query = $em->createQuery('SELECT s.code AS subject_code, COUNT(a.id) AS num
-                                   FROM AnketaBundle\Entity\Subject s,
-                                        AnketaBundle\Entity\Answer a
-                                   WHERE s.id = a.subject AND a.author = :authorID
-                                         AND (a.option IS NOT NULL OR a.comment IS NOT NULL)
-                                   GROUP BY s.id');
-        $query->setParameter('authorID', $user->getId());
-        $answerSubjectCount = $query->getResult();
-
-        $result = array();
-        foreach ($answerSubjectCount AS $row) {
-            $result[$row['subject_code']]['answers'] = $row['num'];
-        }
-        // default values for attended subjects
-        foreach ($user->getSubjects() AS $subject) {
-            if (!isset($result[$subject->getCode()]))
-                    $result[$subject->getCode()]['answers'] = 0;
-        }
-        return $result;
     }
 
     /**
@@ -144,6 +51,10 @@ class QuestionRepository extends EntityRepository {
         return $query->getResult();
     }
 
+    //TODO(ppershing): Toto je cele zle.
+    //                 Nefunguje to pre "general" kategoriu,
+    //                 kde to vrati pocet otazok iba prvej kategorie.
+    //                 Navrhujem tuto funkciu zrusit a pouzivat iba tu nad nou.
     public function getOrderedQuestionsByCategoryType($type) {
         Preconditions::check(CategoryType::isValid($type));
         $category = $this->getEntityManager()
@@ -153,5 +64,142 @@ class QuestionRepository extends EntityRepository {
             throw new NoResultException();
         }
         return $this->getOrderedQuestions($category);
+    }
+
+     public function getNumberOfQuestionsForCategoryType($type) {
+        Preconditions::check(CategoryType::isValid($type));
+        $em = $this->getEntityManager();
+        $query = $em->createQuery("SELECT COUNT(q.id) as questions
+                                   FROM AnketaBundle\Entity\Question q
+                                   JOIN q.category c
+                                   WHERE c.type = :type");
+        $result = $query->setParameter('type', $type)->getResult();
+        return $result[0]['questions'];
+    }
+
+    /**
+     * Returned array contains progress for provided user in following format:
+     * - result[subject_code]['answered'] = number of answers for subject
+     * - result[subject_code]['total'] = number of questions for subject
+     * Includes progress for teacher with the largest progress!
+     * @param User $user
+     * @return array
+     */
+    public function getProgressForSubjectsByUser(User $user) {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery('SELECT s.code AS subject_code, COUNT(a.id) AS num
+                                   FROM AnketaBundle\Entity\Answer a
+                                   JOIN a.subject s
+                                   WHERE a.author = :authorID
+                                         AND (a.option IS NOT NULL OR a.comment IS NOT NULL)
+                                         AND a.teacher IS NULL
+                                   GROUP BY s.id');
+        $rows = $query->setParameter('authorID', $user->getId())->getResult();
+
+        $subjectQuestions = $this->getNumberOfQuestionsForCategoryType(CategoryType::SUBJECT);
+        $subjectTeachersQuestions = $this->getNumberOfQuestionsForCategoryType(CategoryType::TEACHER_SUBJECT);
+
+        $teachers = $this->getProgressForSubjectTeachersByUser($user);
+
+        $mostCompleteTeacher = function(array $array)
+        {
+            return \max(\array_map(function($value){return $value['answered'];}, $array));
+        };
+
+        $result = array();
+        foreach ($user->getSubjects() as $subject) {
+                $result[$subject->getCode()] = array(
+                    'answered' => 0,
+                    'total' => $subjectQuestions
+                );
+        }
+        foreach ($rows as $row) {
+            $result[$row['subject_code']]['answered'] = $row['num'];
+            if (array_key_exists($row['subject_code'], $teachers)) {
+                $result[$row['subject_code']]['answered'] += $mostCompleteTeacher($teachers[$row['subject_code']]);
+                $result[$row['subject_code']]['total'] += $subjectTeachersQuestions;
+            }
+        }
+        
+        return $result;
+    }
+
+    /**
+     * Returned array contains progress for provided user in following format:
+     * - result[subject_code][teacher_id]['answered'] = number of answers for subject and teacher
+     * - result[subject_code][teacher_id]['total'] = number of questions for subject and teacher
+     * @param User $user
+     * @return array
+     */
+    public function getProgressForSubjectTeachersByUser(User $user) {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery('SELECT s.code AS subject_code, t.id AS teacher_id, COUNT(a.id) AS num
+                                   FROM AnketaBundle\Entity\Answer a
+                                        JOIN a.subject s
+                                        JOIN a.teacher t
+                                   WHERE a.author = :authorID
+                                         AND (a.option IS NOT NULL OR a.comment IS NOT NULL)
+                                   GROUP BY s.id, a.teacher');
+        $rows = $query->setParameter('authorID', $user->getId())->getResult();
+
+        $subjectTeachersQuestions = $this->getNumberOfQuestionsForCategoryType(CategoryType::TEACHER_SUBJECT);
+
+        $result = array();
+        foreach ($user->getSubjects() as $subject) {
+            foreach ($subject->getTeachers() as $teacher) {
+                $result[$subject->getCode()][$teacher->getId()] = array(
+                    'answered' => 0,
+                    'total' => $subjectTeachersQuestions
+                );
+            }
+        }
+
+        foreach ($rows as $row) {
+            $result[$row['subject_code']][$row['teacher_id']]['answered'] = $row['num'];
+        }
+
+        return $result;
+    }
+
+    /**
+     * Returned array contains progress for provided user in following format:
+     * - result[cat_id]['answered'] = number of answers for category
+     * - result[cat_id]['total'] = number of questions for category
+     * @param User $user
+     * @return array
+     */
+    public function getProgressForCategoriesByUser(User $user) {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery('SELECT c.id AS cat_id, COUNT(a.id) AS num
+                                   FROM AnketaBundle\Entity\Answer a
+                                        JOIN a.question q
+                                        JOIN q.category c
+                                   WHERE a.author = :authorID
+                                         AND (a.option IS NOT NULL OR a.comment IS NOT NULL)
+                                   GROUP BY c.id');
+        $rows = $query->setParameter('authorID', $user->getId())->getResult();
+
+        $result = array();
+        foreach ($em->getRepository('AnketaBundle\Entity\Category')->findAll() as $category) {
+                $result[$category->getId()] = array(
+                    'answered' => 0,
+                    'total' => $category->getQuestionsCount()
+                );
+        }
+
+        foreach ($rows as $row) {
+            $result[$row['cat_id']]['answered'] = $row['num'];
+        }
+
+        return $result;
+    }
+
+    // number of users who provided at least one answer (even if they deleted it afterwards)
+    public function getNumberOfVoters() {
+        $em = $this->getEntityManager();
+        $result = $em->createQuery("SELECT COUNT(DISTINCT a.author) AS num
+                                    FROM AnketaBundle\Entity\Answer a")
+                     ->getResult();
+        return $result[0]['num'];
     }
 }

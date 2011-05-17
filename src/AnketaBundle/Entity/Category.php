@@ -35,7 +35,7 @@ class Category {
     private $description;
 
     /**
-     * @orm:OneToMany(targetEntity="Question", mappedBy="type")
+     * @orm:OneToMany(targetEntity="Question", mappedBy="category")
      * @orm:OrderBy({"position" = "ASC"})
      *
      * @var ArrayCollection $questions
@@ -99,6 +99,13 @@ class Category {
      */
     public function getQuestions() {
         return $this->questions;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getQuestionsCount() {
+        return $this->questions->count();
     }
 
 }
