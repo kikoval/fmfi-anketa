@@ -139,7 +139,7 @@ class HlasovanieController extends Controller
         foreach ($activeItems as $item) {
             $siblings = array_keys($current);
             $myIndex = array_search($item, $siblings);
-            $nextSibling[] = ($myIndex === false ? null : $current[$siblings[$myIndex + 1]]);
+            $nextSibling[] = ($myIndex === false || $myIndex + 1 == count($siblings) ? null : $current[$siblings[$myIndex + 1]]);
 
             $current = &$current[$item]->children;
         }
