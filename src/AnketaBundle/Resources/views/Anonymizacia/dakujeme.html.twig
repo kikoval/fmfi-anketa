@@ -2,9 +2,6 @@
 
 {% block title %}Anketa{% endblock %}
 
-{% block user_bar %}
-    {% render "AnketaBundle:Hlasovanie:userBar" %}
-{% endblock %}
 
 {% block content %}
 {% if app.session.hasFlash('anonymizacia') %}

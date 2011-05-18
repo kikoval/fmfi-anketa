@@ -108,15 +108,6 @@ class HlasovanieController extends Controller
         return $menu;
     }
 
-    public function userBarAction() {
-        $user = $this->get('security.context')->getToken()->getUser();
-        $params = array();
-        $params['username'] = $user->getUserName();
-        $params['displayname'] = $user->getDisplayName();
-        return $this->render('AnketaBundle:Hlasovanie:user_bar.html.twig',
-                             $params);
-    }
-
     public function menuAction($activeItems = array()) {
         $user = $this->get('security.context')->getToken()->getUser();
         $em = $this->get('doctrine.orm.entity_manager');

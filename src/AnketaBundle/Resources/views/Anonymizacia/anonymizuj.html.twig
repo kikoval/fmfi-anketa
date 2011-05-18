@@ -2,10 +2,6 @@
 
 {% block title %}Anonymizácia - Anketa{% endblock %}
 
-{% block user_bar %}
-    {% render "AnketaBundle:Hlasovanie:userBar" %}
-{% endblock %}
-
 {% block navigation %}
     {% render "AnketaBundle:Hlasovanie:menu" with { 'activeItems': ['anonymizuj'] } %}
 {% endblock %}

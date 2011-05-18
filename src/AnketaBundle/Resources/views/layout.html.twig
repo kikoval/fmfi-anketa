@@ -24,7 +24,9 @@
     <body{{ block('sidebar') == '' ? ' class="no-sidebar"' : '' }}>
         <div id="container">
             <div id="user-bar">
-                {% block user_bar %}{% endblock %}
+                {% block user_bar %}
+                    {% render "AnketaBundle:User:userBar" %}
+                {% endblock %}
             </div>
             <div id="section-bar">
                 <a href="{{ path('faq') }}" class="section">FAQ</a>
