@@ -67,7 +67,7 @@ class AISUserSource implements UserSourceInterface
             $this->loadSubjects($builder);
 
             if ($this->loadAuth) {            
-                $builder->addRole($this->findOrCreateRole('ROLE_AIS_STUDENT'));
+                $builder->addRole($this->roleRepository->findOrCreateRole('ROLE_AIS_STUDENT'));
                 $builder->markStudent();
             }
         }
@@ -107,16 +107,6 @@ class AISUserSource implements UserSourceInterface
 
         $kratkyKod = $matches[1];
         return $kratkyKod;
-    }
-
-    // TODO(anty): move to role repository
-    private function findOrCreateRole($name) {
-        $role = $this->roleRepository->findOneBy(array('name' => $name));
-        if ($role == null) {
-            $role = new Role($name);
-            $this->entityManager->persist($role);
-        }
-        return $role;
     }
 
 }

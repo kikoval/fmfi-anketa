@@ -29,6 +29,12 @@ class AnketaUserProvider implements UserProviderInterface
      */
     private $userRepository;
 
+    /**
+     * Doctrine repository for Role entity
+     * @var AnketaBundle\Entity\Repository\RoleRepository
+     */
+    private $roleRepository;
+
     /** @var EntityManager */
     private $entityManager;
 
@@ -39,6 +45,7 @@ class AnketaUserProvider implements UserProviderInterface
     {
         $this->entityManager = $em;
         $this->userRepository = $em->getRepository('AnketaBundle:User');
+        $this->roleRepository = $em->getRepository('AnketaBundle:Role');
         $this->userSources = $userSources;
     }
 
@@ -75,6 +82,7 @@ class AnketaUserProvider implements UserProviderInterface
         if ($user === null) {
             $builder = new UserBuilder();
             $builder->setUsername($username);
+            $builder->addRole($this->roleRepository->findOrCreateRole('ROLE_USER'));
 
             foreach ($this->userSources as $userSource) {
                 $userSource->load($builder);

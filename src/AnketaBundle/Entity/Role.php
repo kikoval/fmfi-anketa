@@ -6,7 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Security\Core\Role\RoleInterface;
 
 /**
- * @orm:Entity
+ * @orm:Entity(repositoryClass="AnketaBundle\Entity\Repository\RoleRepository")
  */
 class Role implements RoleInterface {
 
