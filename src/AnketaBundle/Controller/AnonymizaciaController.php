@@ -18,7 +18,7 @@ class AnonymizaciaController extends Controller {
                ->anonymizeAnswersByUserId($user->getId());
             $em->flush();
 
-            $this->get('session')->setFlash('anonymizacia', 'Tvoje odpovede boli úspešne anonymizované.');
+            $this->get('session')->setFlash('anonymizacia', 'Vaše hlasovanie v Ankete 2011 bolo úspešne ukončené.');
             return new RedirectResponse($this->generateUrl('dakujeme'));
         }
         

@@ -36,7 +36,7 @@ otazky:
       position:   1
 
     - nazov:  Zložitosť predmetu
-      text:   Na akej úrovni bola zložitosť preberaného materiálu?
+      text:   Ako veľmi náročná bola podľa Vás preberaná látka?
       popis:  
       kategoria:  predmety
       komentar:   No
@@ -62,7 +62,7 @@ otazky:
       position:   3
 
     - nazov:  Množstvo práce
-      text:   Bolo množstvo práce primerané počtu kreditov?
+      text:   Aké bolo množstvo práce vzhľadom na počet kreditov?
       popis:  >
         Zhodnoťte množstvo domácich úloh, projektov, priebežné písomky,
         množstvo nového učiva a pod.
@@ -70,10 +70,10 @@ otazky:
       komentar:   No
       hviezdicky: No
       moznosti:
-          - text: Nezvláduteľné.
-          - text: Príliš veľa.
+          - text: Absolútne predimenzované.
+          - text: Naddimenzované.
           - text: Akurát.
-          - text: Príliš málo.
+          - text: Poddimenzované.
           - text: Aká práca?
       position:   4
 
@@ -95,7 +95,7 @@ otazky:
       komentar:   No
       hviezdicky: No
       moznosti:
-          - text:     90-100% prednášok a cvičení
+          - text:     90-100%
             hodnota:  100
           - text:     60-90% 
             hodnota:  75
@@ -165,8 +165,8 @@ otazky:
 
 # otazky k studijnemu programu
     - nazov:  Hodnotenie študijného programu
-      text:   Ohodnoťte Váš študijný program
-      popis:  (váš študijný program bude zobrazený pri prípadnej textovej odpovedi)
+      text:   Napíšte, čo si myslíte o Vašom študíjnom programe.
+      popis:  (Váš študijný program bude zobrazený pri prípadnej textovej odpovedi)
       kategoria:  studijnyprogram
       komentar:   Yes
       hviezdicky: Yes
@@ -253,18 +253,10 @@ otazky:
       hviezdicky: Yes
       position:   3
 
-    - nazov:  Študentský život
-      text:   Zhodnoťte kvalitu študentského života.
-      popis:
-      kategoria:  fakulta
-      komentar:   Yes
-      hviezdicky: Yes
-      position:   4
-
 
 # vseobecne otazky - anketa
     - nazov:  Hodnotenie ankety
-      text:   Ohodnoťte súčasnú anketu.
+      text:   Napíšte, čo si myslíte o súčasnej ankete.
       popis:  >
         Páči sa Vám nová anketa? Čo je riešené lepšie, čo horšie ako
         v starej ankete?
@@ -275,17 +267,17 @@ otazky:
 
     - nazov:  Čo očakávate od ankety?
       text:   Čo očakávate od ankety?
-      popis:  svet bude krajší, drevené lavice nebudú tvrdé, v škole bude teplo
+      popis:  
       kategoria:  anketa
       komentar:   Yes
       hviezdicky: No
       position:   2
 
     - nazov:  Otázky, pripomienky a návrhy pre organizátorov ankety.
-      text:   >
+      text:   Napíšte Vaše postrehy k ankete
+      popis: >
         Pripomienky ku kladeným otázkam, pravopisným chybám,
         návrhy na nové otázky, návrhy na odstránenie otázok.
-      popis:
       kategoria:  anketa
       komentar:   Yes
       hviezdicky: No
@@ -293,7 +285,7 @@ otazky:
 
 # vseobecne otazky - ostatne
     - nazov:  Všeobecná otázka
-      text:   Chcete sa vyjadriť k niečomu, na čo nebola položená otázka?
+      text:   Chcete sa ešte k niečomu vyjadriť?
       popis:  
       kategoria:  ostatne
       komentar:   Yes

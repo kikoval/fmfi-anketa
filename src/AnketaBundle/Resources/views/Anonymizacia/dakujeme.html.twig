@@ -4,14 +4,19 @@
 
 
 {% block content %}
+<h2>
 {% if app.session.hasFlash('anonymizacia') %}
         {{ app.session.flash('anonymizacia') }}<br/>
 {% endif %}
-Ďakujeme ti za účasť v ankete.<br/>
-Viac už nemôžeš hlasovať.<br/>
-Ak si myslíš, že k tejto situácii prišlo bez tvojho vedomia,
-môžeš kontaktovať administrátorov na adrese fmfi-anketa-devel@googlegroups.com
-a vysvetliť im svoj problém.
-Pravdepodobne sa s tým nebude dať nič spraviť,
-ale za pokus to stojí.
+</h2>
+<p>
+Ďakujeme Vám za účasť v ankete.
+</p>
+<p>
+Viac už nemôžete hlasovať.
+</p>
+<p>
+Ak si myslíte, že k tejto situácii prišlo bez Vášho vedomia,
+nahláste bug na <a href="http://code.google.com/p/fmfi-anketa/">http://code.google.com/p/fmfi-anketa/</a>.
+</p>
 {% endblock %}
