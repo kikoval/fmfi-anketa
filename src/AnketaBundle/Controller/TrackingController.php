@@ -19,8 +19,15 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class TrackingController extends Controller {
 
+    const TRACK_CODE_PARAMETER = 'google_analytics_tracking_code';
+    
     public function trackAction() {
-        $ga = $this->container->getParameter('google_analytics_tracking_code');
+        if ($this->container->hasParameter(self::TRACK_CODE_PARAMETER)) {
+            $ga = $this->container->getParameter(self::TRACK_CODE_PARAMETER);
+        }
+        else {
+            $ga = null;
+        }
         return $this->render('AnketaBundle:Tracking:analytics.html.twig',
                         array('ga_tracking_code' => $ga));
     }
