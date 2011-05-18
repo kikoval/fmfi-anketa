@@ -8,8 +8,8 @@
  */
 
 (function ($) {
-  var starWidth = 25;
-  var starHeight = 25;
+  var starWidth = 40;
+  var starHeight = 40;
 
   var cancelText = "Zruš odpoveď";
 
