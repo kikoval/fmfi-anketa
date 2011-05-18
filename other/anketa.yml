@@ -36,7 +36,7 @@ otazky:
       position:   1
 
     - nazov:  Zložitosť predmetu
-      text:   Ako veľmi náročná bola podľa Vás preberaná látka?
+      text:   Ako náročná bola podľa Vás preberaná látka?
       popis:  
       kategoria:  predmety
       komentar:   No
@@ -54,11 +54,7 @@ otazky:
       popis:
       kategoria:  predmety
       komentar:   No
-      hviezdicky: No
-      moznosti:
-          - text: Veľmi zaujímavý.
-          - text: Priemerne zaujímavý.
-          - text: Nezaujímavý.
+      hviezdicky: Yes
       position:   3
 
     - nazov:  Množstvo práce
@@ -70,15 +66,15 @@ otazky:
       komentar:   No
       hviezdicky: No
       moznosti:
-          - text: Absolútne predimenzované.
-          - text: Naddimenzované.
+          - text: Totálny zabijak.
+          - text: Pomerne veľké.
           - text: Akurát.
-          - text: Poddimenzované.
+          - text: Pomerne malé.
           - text: Aká práca?
       position:   4
 
     - nazov:  Odporúčanie predmetu
-      text:   Odporučili by ste tento predmet kolegom?
+      text:   Odporučili by ste tento predmet kolegom a prečo?
       popis:
       kategoria:  predmety
       komentar:   Yes
@@ -89,7 +85,7 @@ otazky:
       position:   5
 
     - nazov:  Absolvovanie predmetu
-      text:   Akú časť prednášok a cvičení ste absolvovali?
+      text:   Zhruba akú časť prednášok a cvičení ste absolvovali?
       popis:
       kategoria:  predmety
       komentar:   No
@@ -143,7 +139,7 @@ otazky:
       position:   10
 
     - nazov:  Odporúčanie učiteľa
-      text:   Odporučili by ste tohto učiteľa kolegom?
+      text:   Odporučili by ste tohto učiteľa kolegom a prečo?
       popis:
       kategoria:  predmety_ucitel
       komentar:   Yes
@@ -256,38 +252,49 @@ otazky:
 
 # vseobecne otazky - anketa
     - nazov:  Hodnotenie ankety
-      text:   Napíšte, čo si myslíte o súčasnej ankete.
+      text:   Čo si myslíte o forme súčasnej ankety?
       popis:  >
-        Páči sa Vám nová anketa? Čo je riešené lepšie, čo horšie ako
+        Páči sa Vám? Čo je riešené lepšie, čo horšie ako
         v starej ankete?
       kategoria:  anketa
       komentar:   Yes
       hviezdicky: Yes
       position:   1
 
-    - nazov:  Čo očakávate od ankety?
-      text:   Čo očakávate od ankety?
+    - nazov:  Otázky, pripomienky a návrhy pre organizátorov ankety.
+      text:   Čo si myslíte o anketových otázkach?
+      popis: >
+        Páčia sa Vám? Pripomienky ku pravopisným chybám,
+        návrhy na nové otázky, návrhy na odstránenie otázok.
+      kategoria:  anketa
+      komentar:   Yes
+      hviezdicky: Yes
+      position:   2
+
+    - nazov:  Čo by mali zodpovední urobiť s výsledkami ankety?
+      text:   Čo by mali zodpovední urobiť s výsledkami ankety?
       popis:  
       kategoria:  anketa
       komentar:   Yes
       hviezdicky: No
-      position:   2
+      position:   3
 
-    - nazov:  Otázky, pripomienky a návrhy pre organizátorov ankety.
-      text:   Napíšte Vaše postrehy k ankete
-      popis: >
-        Pripomienky ku kladeným otázkam, pravopisným chybám,
-        návrhy na nové otázky, návrhy na odstránenie otázok.
+    - nazov:  Čo očakávate od ankety?
+      text:   Aké zmeny by ste navrhli do budúcich ročníkov ankety?
+      popis:
       kategoria:  anketa
       komentar:   Yes
       hviezdicky: No
-      position:   3
+      position:   4
 
 # vseobecne otazky - ostatne
     - nazov:  Všeobecná otázka
       text:   Chcete sa ešte k niečomu vyjadriť?
       popis:  
       kategoria:  ostatne
+      moznosti:
+          - text: Áno.
+          - text: Nie.
       komentar:   Yes
       hviezdicky: No
       position:   1
