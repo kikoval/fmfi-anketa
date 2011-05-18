@@ -176,6 +176,23 @@ h1, h2, h3, h4, h5, h6 {
   margin-top: 0.5em;
 }
 
+#content h2.faq {
+  font-size: 2em;
+  line-height: 100%;
+  margin-top: 1em;
+}
+
+div.faq {
+    margin-left: 10em;
+    margin-right: 10em;
+}
+
+.faq-item {
+  margin: 1em 0;
+  border-bottom: solid 1px #DDDDDD;
+  padding-bottom: 1.5em;
+}
+
 .question {
   margin: 1em 0;
   border-top: solid 1px;

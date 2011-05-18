@@ -1,10 +1,11 @@
-{% extends 'AnketaBundle:Hlasovanie:index.html.twig' %}
+{% extends 'AnketaBundle::layout.html.twig' %}
 
 {% block title %}Faq - Anketa{% endblock %}
 
 {% block content %}
-    <h2>Načo je dobrá anketa?</h2>
-        <div class="question">
+<div class="faq">
+    <h2 class="faq">Načo je dobrá anketa?</h2>
+        <div class="faq-item">
                 Anketa je v prvom rade možnosť konštruktívne hodnotiť rôzne aspekty fakulty.
         Tieto dáta poslúžia jednak budúcim študentom, ktorí si budú môcť na základe
         komentárov a hodnotení spraviť predstavu o jednotlivých predmetoch, ale
@@ -13,17 +14,17 @@
         zlepšiť úroveň výučby, alebo upraviť študijné programy.
         Len tak mimochodom, povinnosť usporiadať anketu vyplýva zo zákona o vysokých školách :)
         </div>
-    <h2>Kto je za anketou?</h2>
-        <div class="question">
+    <h2 class="faq">Kto je za anketou?</h2>
+        <div class="faq-item">
           Študentský vývojový tým v zložení Peter Perešíni, Martin Sucha, Tomáš Belan,
         Jakub Marek, Jakub Markoš, Ivan Trančík a Martin Králik pod vedením Mgr. Tomáša Vinařa PhD.
         </div>
-    <h2>Kto sa dostane k dátam z ankety?</h2>
-        <div class="question">
+    <h2 class="faq">Kto sa dostane k dátam z ankety?</h2>
+        <div class="faq-item">
           Štatistické výsledky a anonymné komentáre budú prístupné pre všetkých študentov a akademických členov fakulty.
      </div>
-    <h2>Ako funguje spomínaná anonymizácia?</h2>
-        <div class="question">
+    <h2 class="faq">Ako funguje spomínaná anonymizácia?</h2>
+        <div class="faq-item">
          Počas hlasovania sú odpovede a komentáre ukladané do databázy dočasne
         spolu s identifikátorom autora, takže je možné
         vypĺňať anketu aj na viac krát. Tieto dočasné neanonymné dáta sú ukladané v zabezpečenej databáze a majú k nim prístup iba
@@ -35,20 +36,21 @@
         odpovede od ostatných. V databáze zostane už len informácia že daný
         človek už hlasoval a táto informácia zostane neverejná.
        </div>
-    <h2>Naďabil som sa na bug/napadlo ma vylepšenie. Čo mám robiť?
+    <h2 class="faq">Naďabil som sa na bug/napadlo ma vylepšenie. Čo mám robiť?
 </h2>
-        <div class="question">
+        <div class="faq-item">
          V prvom rade navštív <a href="http://code.google.com/p/fmfi-anketa/">http://code.google.com/p/fmfi-anketa/</a>.
         Teraz máš na výber - buď vyplň bug report a počkaj kým to niekto opraví, alebo vyplň bug report,
         stiahni si zdrojový kód, oprav to sám/sama a hneď nám k tomu reportu prilož aj patch :-)
         </div>
-    <h2>Čo mám spraviť, ak chýba v hodnotení učiteľ alebo cvičiaci?</h2>
-        <div class="question">
+    <h2 class="faq">Čo mám spraviť, ak chýba v hodnotení učiteľ alebo cvičiaci?</h2>
+        <div class="faq-item">
 Pošlite meno učiteľa a kód predmetu ako issue do bug-trackera na <a href="http://code.google.com/p/fmfi-anketa/">http://code.google.com/p/fmfi-anketa/</a>
       </div>
-    <h2>Čo by som ešte mal vedieť?</h2>
-        <div class="question">
+    <h2 class="faq">Čo by som ešte mal vedieť?</h2>
+        <div class="faq-item">
         Anketa je open source projekt licencovaný pod GPLv3+, pre
         zdrojové kódy a viac informácií navštív <a href="http://code.google.com/p/fmfi-anketa/">http://code.google.com/p/fmfi-anketa/</a>.
       </div>
+</div>
 {% endblock %}
