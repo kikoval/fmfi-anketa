@@ -51,5 +51,8 @@
                 &copy; Študentský Vývojový Tím 2011
             </div>
         </div>
+        {% block google_analytics %}
+          {% render 'AnketaBundle:Tracking:track' %}
+        {% endblock %}
     </body>
 </html>
