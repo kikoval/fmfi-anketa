@@ -4,16 +4,22 @@ namespace AnketaBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use AnketaBundle\Entity\User;
 
 class HlasovanieController extends Controller
 {
     public function indexAction()
     {
         // TODO: toto chceme aby rovno redirectovalo na prvu ne-100% sekciu
-        if ($this->get('security.context')->getToken()->getUser()->getHasVote()) {
+        $security = $this->get('security.context');
+        if ($security->isGranted('ROLE_HAS_VOTE')) {
             return new RedirectResponse($this->generateUrl('answer_incomplete'));
-        } else {
-            return new RedirectResponse($this->generateUrl('dakujeme'));
+        }
+        else if ($security->isGranted('ROLE_STUDENT')) {
+            return $this->render('AnketaBundle:Hlasovanie:dakujeme.html.twig');
+        }
+        else {
+            return $this->render('AnketaBundle:Hlasovanie:novote.html.twig');
         }
     }
 

@@ -121,5 +121,6 @@ security:
     access_control:
         - { path: /manage/.*, role: ROLE_ADMIN }
         - { path: /hlasuj/.*, role: ROLE_HAS_VOTE }
+        - { path: /anonymizuj/.*, role: ROLE_HAS_VOTE }
         - { path: /anketa/.*, role: IS_AUTHENTICATED_FULLY }
         - { path: /.*, role: IS_AUTHENTICATED_ANONYMOUSLY }

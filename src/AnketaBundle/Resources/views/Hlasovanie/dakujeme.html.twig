@@ -1,0 +1,22 @@
+{% extends 'AnketaBundle::layout.html.twig' %}
+
+{% block title %}Anketa{% endblock %}
+
+{% block content %}
+{% if app.session.hasFlash('anonymizacia') %}
+    <div class="big-success-flash"><div class="big-success-flash-in">
+        {{ app.session.flash('anonymizacia') }}
+    </div></div>
+{% endif %}
+<h2>Ďakujeme</h2>
+<p>
+Ďakujeme Vám, že ste si našli čas vyplniť študenstkú anketu.
+Aby mala anketa nejakú výpovednú hodnotu, treba aby sa zúčastnil
+dostatočne vysoký počet študentov. Prosíme Vás preto, aby ste dali vedieť
+aj svojim spolužiakom, napríklad prostredníctvom rozhovoru, emailu či Facebooku.
+</p>
+{% include 'AnketaBundle:Welcome:likebox.html.twig' %}
+<p>Výsledky ankety sa objavia na stránke ankety niekedy v priebehu prázdnin.
+</p>
+
+{% endblock %}

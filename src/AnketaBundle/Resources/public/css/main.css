@@ -245,6 +245,18 @@ div.faq {
   padding: 0 0.5em;
 }
 
+/*** Flashes ***/
+
+.big-success-flash {
+    padding: 0.5em;
+    border: 1px solid;
+}
+
+.big-success-flash-in {
+    padding-left: 50px;
+    line-height: 40px;
+}
+
 /*** BIGBTN ***/
 
 .bigbtn_left {
