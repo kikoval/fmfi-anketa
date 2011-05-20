@@ -28,7 +28,7 @@ kategorie:
 otazky:
 # ako prve su tu otazky ku predmetom
     - nazov:  Hodnotenie predmetu
-      text:   Celkové hodnotenie úrovne predmetu.
+      text:   Celkové hodnotenie kvality predmetu.
       popis:  
       kategoria:  predmety
       komentar:   No
