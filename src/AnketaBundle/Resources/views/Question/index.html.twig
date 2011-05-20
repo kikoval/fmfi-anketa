@@ -5,6 +5,7 @@
  # @param questions list of questions for the active category
  # @param answers list of answers for the active category
  # @param activeItems list of active items in menu
+ # @param categoryType type of active category
  #}
 
 {% block title %}{{ title }} - Anketa{% endblock %}
@@ -16,6 +17,9 @@
 {% block content %}
     <h2>{{ title }}</h2>
     <form action="#" method="post">
+    {% if categoryType == 'teacher_subject' %}
+        <p>Ak vás tento učiteľ neučil, môžete otázky preskočiť a zvoliť <em>Ulož a choď ďalej</em>.</p>
+    {% endif %}
     {% block submit %}
     <div class="submit">
         <input class="save" type="submit" name="save" value="Ulož" />

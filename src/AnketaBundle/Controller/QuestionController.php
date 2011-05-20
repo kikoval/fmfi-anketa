@@ -177,6 +177,7 @@ class QuestionController extends Controller {
         $templateParams['activeItems'] = array('subject', $subject->getCode(), $teacher->getId());
         $templateParams['questions'] = $questions;
         $templateParams['answers'] = $answers;
+        $templateParams['categoryType'] = 'teacher_subject';
         return $this->render('AnketaBundle:Question:index.html.twig', $templateParams);
 
     }
@@ -225,6 +226,7 @@ class QuestionController extends Controller {
         $templateParams['activeItems'] = array('subject', $subject->getCode());
         $templateParams['questions'] = $questions;
         $templateParams['answers'] = $answers;
+        $templateParams['categoryType'] = 'subject';
         return $this->render('AnketaBundle:Question:index.html.twig', $templateParams);
     }
 
@@ -290,6 +292,7 @@ class QuestionController extends Controller {
         $templateParams['activeItems'] = array('general', $category->getId());
         $templateParams['questions'] = $questions;
         $templateParams['answers'] = $answers;
+        $templateParams['categoryType'] = 'general';
         return $this->render('AnketaBundle:Question:index.html.twig', $templateParams);
     }
 
