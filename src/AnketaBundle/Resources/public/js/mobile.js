@@ -23,5 +23,12 @@
       }
     });
   }
+  // work around an iPhone bug/feature. (presumably affects iPad as well)
+  // see http://forums.macrumors.com/showthread.php?t=785632
+  if (navigator.userAgent.match(/Safari/i) && navigator.userAgent.match(/Mobile/i)) {
+    $(document).ready(function () {
+      $('.option label').attr('onclick', '');
+    });
+  }
 })(jQuery);
 

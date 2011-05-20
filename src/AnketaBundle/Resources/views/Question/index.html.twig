@@ -51,9 +51,7 @@
 
             {% for option in question.options %}
                 <div class="option">
-                {# the onclick is a workaround for an iPhone bug/feature.
-                   see http://forums.macrumors.com/showthread.php?t=785632 #}
-                  <label for="question_{{ question.id }}_{{ option.id }}" onclick="">
+                  <label for="question_{{ question.id }}_{{ option.id }}">
                     <input type="radio"
                            id="question_{{ question.id }}_{{ option.id }}"
                            name="question[{{ question.id }}][answer]"
