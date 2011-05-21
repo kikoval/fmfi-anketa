@@ -178,6 +178,7 @@ class QuestionController extends Controller {
         $templateParams['questions'] = $questions;
         $templateParams['answers'] = $answers;
         $templateParams['categoryType'] = 'teacher_subject';
+        $templateParams['subject'] = $subject;
         return $this->render('AnketaBundle:Question:index.html.twig', $templateParams);
 
     }
@@ -227,6 +228,7 @@ class QuestionController extends Controller {
         $templateParams['questions'] = $questions;
         $templateParams['answers'] = $answers;
         $templateParams['categoryType'] = 'subject';
+        $templateParams['subject'] = $subject;
         return $this->render('AnketaBundle:Question:index.html.twig', $templateParams);
     }
 
@@ -293,6 +295,7 @@ class QuestionController extends Controller {
         $templateParams['questions'] = $questions;
         $templateParams['answers'] = $answers;
         $templateParams['categoryType'] = 'general';
+        $templateParams['subject'] = null;
         return $this->render('AnketaBundle:Question:index.html.twig', $templateParams);
     }
 

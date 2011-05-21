@@ -6,6 +6,7 @@
  # @param answers list of answers for the active category
  # @param activeItems list of active items in menu
  # @param categoryType type of active category
+ # @param subject current subject if it is relevant for the category type
  #}
 
 {% block title %}{{ title }} - Anketa{% endblock %}
@@ -19,6 +20,11 @@
     <form action="#" method="post">
     {% if categoryType == 'teacher_subject' %}
         <p>Ak vás tento učiteľ neučil, môžete otázky preskočiť a zvoliť <em>Ulož a choď ďalej</em>.</p>
+    {% elseif categoryType == 'subject' %}
+        <p>Chýba vám nejaký učiteľ k tomuto predmetu?
+        <a href="{{ path('assoc_teacher_with_subject', {'subject_code': subject.code}) }}"
+           >Dajte nám vedieť a my to napravíme</a>.
+        </p>
     {% endif %}
     {% block submit %}
     <div class="submit">

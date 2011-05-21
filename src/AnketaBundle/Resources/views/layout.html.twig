@@ -46,6 +46,11 @@
             </div>
 
             <div id="content" class="clearfix">
+                {% if app.session.hasFlash('success') %}
+                    <div class="big-success-flash"><div class="big-success-flash-in">
+                        {{ app.session.flash('success') }}
+                    </div></div>
+                {% endif %}
                 {% block content %}{% endblock %}
             </div>
 

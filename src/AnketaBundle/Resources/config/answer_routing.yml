@@ -20,4 +20,18 @@ answer_subject_teacher:
     pattern: /hlasuj/predmet/{subject_code}/ucitel/{teacher_code}
     defaults: { _controller: AnketaBundle:Question:answerSubjectTeacher }
 
+assoc_teacher_with_subject:
+    pattern: /hlasuj/predmet/{subject_code}/pridaj-ucitela
+    defaults: { _controller: AnketaBundle:TeachingAssociation:form }
+    requirements:
+      _method: GET
 
+assoc_teacher_with_subject_process:
+    pattern: /hlasuj/predmet/{subject_code}/pridaj-ucitela
+    defaults: { _controller: AnketaBundle:TeachingAssociation:processForm }
+    requirements:
+      _method: POST
+      
+assoc_teacher_with_subject_skip:
+    pattern: /hlasuj/predmet/{subject_code}/pridaj-ucitela/preskocit
+    defaults: { _controller: AnketaBundle:TeachingAssociation:skip }
