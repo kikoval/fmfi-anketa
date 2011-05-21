@@ -97,6 +97,10 @@ services:
             - "@anketa.ais_retriever"
             - [["2010/2011", "Z"], ["2010/2011", "L"]] # brat iba tieto semestre
             - Yes # pouzit AIS ako zdroj opravneni?
+    anketa.demo_user_source:
+        class: AnketaBundle\Security\DemoUserSource
+        arguments:
+            - "@doctrine.orm.entity_manager"
     
 security:
     factories:
@@ -118,6 +122,7 @@ security:
         ROLE_ADMIN:       ROLE_USER
         ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_HAS_VOTE]
         ROLE_AIS_STUDENT: [ROLE_STUDENT]
+        ROLE_DEMO_USER:   [ROLE_STUDENT]
     access_control:
         - { path: /manage/.*, role: ROLE_ADMIN }
         - { path: /hlasuj/.*, role: ROLE_HAS_VOTE }
