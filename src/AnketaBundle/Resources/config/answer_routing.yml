@@ -31,7 +31,3 @@ assoc_teacher_with_subject_process:
     defaults: { _controller: AnketaBundle:TeachingAssociation:processForm }
     requirements:
       _method: POST
-      
-assoc_teacher_with_subject_skip:
-    pattern: /hlasuj/predmet/{subject_code}/pridaj-ucitela/preskocit
-    defaults: { _controller: AnketaBundle:TeachingAssociation:skip }
