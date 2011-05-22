@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use AnketaBundle\Entity\TeachingAssociation;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use DateTime;
 
 class TeachingAssociationController extends Controller
@@ -16,6 +17,9 @@ class TeachingAssociationController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $repo = $em->getRepository('AnketaBundle\Entity\Subject');
         $subject = $repo->findOneBy(array('code' => $subject_code));
+        if ($subject === null) {
+            throw new NotFoundHttpException('Chybny kod: ' . $subject_code);
+        }
         
         return $this->render('AnketaBundle:TeachingAssociation:form.html.twig',
                 array('subject'=>$subject));
@@ -30,6 +34,9 @@ class TeachingAssociationController extends Controller
         
         $season = $seasonRepository->getActiveSeason(new DateTime());
         $subject = $subjectRepository->findOneBy(array('code' => $subject_code));
+        if ($subject === null) {
+            throw new NotFoundHttpException('Chybny kod: ' . $subject_code);
+        }
         $security = $this->get('security.context');
         $user = $security->getToken()->getUser();
         $note = $request->request->get('note', '');

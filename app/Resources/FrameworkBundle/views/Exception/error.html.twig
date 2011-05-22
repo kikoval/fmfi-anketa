@@ -1,0 +1,10 @@
+{% extends 'AnketaBundle::layout.html.twig' %}
+
+{% block title %}
+    Chyba!
+{% endblock %}
+
+{% block content %}
+        <h1>{{ exception.statuscode }}</h1>
+        <h2>{{ exception.message }}</h2>
+{% endblock %}
