@@ -8,6 +8,7 @@
  */
 
 (function ($) {
+  "use strict";
   var width = window.innerWidth || $('html').width();
   if (navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/Android/i) || (width && width < 500)) {
     $('html').addClass('mobile');

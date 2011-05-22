@@ -1,4 +1,8 @@
 
+.question h3.keyboard-focus {
+  background: #DDD;
+}
+
 .stars-container {
   margin: 0.5em 0;
   position: relative;

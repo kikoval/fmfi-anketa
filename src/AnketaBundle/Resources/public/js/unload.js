@@ -8,6 +8,7 @@
  */
 
 jQuery(document).ready(function ($) {
+  "use strict";
   function getState() {
     var result = [];
     $('input, textarea, option').each(function () {

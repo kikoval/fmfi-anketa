@@ -8,6 +8,7 @@
  */
 
 (function ($) {
+  "use strict";
   var starWidth = 40;
   var starHeight = 40;
 
@@ -23,6 +24,7 @@
       var $options = $question.find('.option:not(.none) :radio');
       var $noneOption = $question.find('.option.none :radio');
       var $labels = $question.find('.option:not(.none)');
+      var $header = $question.find('h3');
 
       function trim(str) {
         // remove all whitespace from str's beginning and end
@@ -70,11 +72,10 @@
         }
       }
 
-      $options.bind({
-        change: redraw
-      });
-      $noneOption.bind({
-        change: redraw
+      $options.add($noneOption).bind({
+        change: redraw,
+        focus: function () { $header.addClass('keyboard-focus'); },
+        blur: function () { $header.removeClass('keyboard-focus'); }
       });
       $stars.bind({
         mouseover: redrawHover,
@@ -101,6 +102,7 @@
     // na normalne otazky pridame linku "cancel"
     $('.question:has(:radio):not(.stars)').each(function () {
       var $question = $(this);
+      var $header = $question.find('h3');
       var $cancel = $('<a />', {
         'href': '#',
         'text': cancelText,
@@ -123,6 +125,10 @@
       }
 
       $question.find(':radio').bind('change', refresh);
+      $question.find('.option.none :radio').bind({
+        focus: function () { $header.addClass('keyboard-focus'); },
+        blur: function () { $header.removeClass('keyboard-focus'); }
+      });
 
       refresh();
     });
