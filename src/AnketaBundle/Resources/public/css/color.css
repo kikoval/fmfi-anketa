@@ -8,6 +8,10 @@ a:link, a:visited, a:active {
   color: #003A76;
 }
 
+#header a {
+  color: inherit;
+}
+
 #user-bar {
   color: #777;
 }
