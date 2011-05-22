@@ -49,7 +49,7 @@ class TeachingAssociationController extends Controller
         $em->flush();
         
         $session = $this->get('session');
-        $session->setFlash('success', 'Ďakujeme za informáciu o chýbajúcom učiteľovi');
+        $session->setFlash('success', 'Ďakujeme za informáciu o chýbajúcom učiteľovi. V priebehu pár dní by mal pribudnúť, preto si nezabudnite otvoriť anketu znovu a ohodnotiť ho.');
         
         return new RedirectResponse($this->generateUrl(
                 'answer_subject', array('code'=>$subject->getCode())));

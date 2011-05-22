@@ -21,7 +21,7 @@
     {% if categoryType == 'teacher_subject' %}
         <p>Ak vás tento učiteľ neučil, môžete otázky preskočiť a zvoliť <em>Ulož a choď ďalej</em>.</p>
     {% elseif categoryType == 'subject' %}
-        <p>Chýba niekto v zozname učiteľov k tomuto predmetu?
+        <p>Chýba v menu nejaký učiteľ k tomuto predmetu?
         <a href="{{ path('assoc_teacher_with_subject', {'subject_code': subject.code}) }}"
            >Dajte nám vedieť a my to napravíme</a>.
         </p>

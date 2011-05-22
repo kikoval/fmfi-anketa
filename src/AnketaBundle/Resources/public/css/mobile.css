@@ -53,6 +53,11 @@
 .mobile #content {
   margin-left: 0;
 }
+
+.mobile #content li {
+  padding-bottom: 1em;
+}
+
 .mobile.show-sidebar #content {
   display: none;
 }
@@ -65,3 +70,7 @@
   width: auto;
 }
 
+.mobile div.faq {
+    margin-left: 0em;
+    margin-right: 0em;
+}
