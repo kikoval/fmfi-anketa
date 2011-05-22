@@ -74,10 +74,10 @@ otazky:
       position:   4
 
     - nazov:  Odporúčanie predmetu
-      text:   Odporučili by ste tento predmet kolegom a prečo?
+      text:   Odporučili by ste tento predmet kolegom?
       popis:
       kategoria:  predmety
-      komentar:   Yes
+      komentar:   No
       hviezdicky: No
       moznosti:
           - text: Áno.
@@ -139,10 +139,10 @@ otazky:
       position:   10
 
     - nazov:  Odporúčanie učiteľa
-      text:   Odporučili by ste tohto učiteľa kolegom a prečo?
+      text:   Odporučili by ste tohto učiteľa kolegom?
       popis:
       kategoria:  predmety_ucitel
-      komentar:   Yes
+      komentar:   No
       hviezdicky: No
       moznosti:
           - text: Áno.
