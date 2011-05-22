@@ -1,0 +1,11 @@
+{#
+ # @param globalProgressbar the progress bar data
+ # @param mode the context in which we're shown, i.e. 'welcome', 'stats', ...
+ #}
+
+{% if globalProgressbar and globalProgressbar.progressTotal > 0 %}
+{% if mode == 'welcome' %}
+<p>Zúčastnilo sa už <strong>{{ globalProgressbar.progressDone }} študentov</strong> &mdash; pridajte sa medzi nich!</p>
+{% endif %}
+<div class="progressbar-welcome-wrapper" title="{{ "%.0f%%" | format(globalProgressbar.percentDone) }}"></div>
+{% endif %}

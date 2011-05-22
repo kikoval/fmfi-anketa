@@ -61,7 +61,7 @@
   font-size: 0.8em;
 }
 
-.mobile .bigbtn {
+.mobile .bigbtn, .mobile .progressbar-welcome {
   width: auto;
 }
 

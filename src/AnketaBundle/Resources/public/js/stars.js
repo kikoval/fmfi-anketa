@@ -40,7 +40,7 @@
         'height': starHeight,
         'css': { 'left': ($options.length * starWidth) + 'px' }
       }));
-      for(var i = 0; i < $options.length; i++) {
+      for (var i = 0; i < $options.length; i++) {
         $container.append($('<span />', {
           'class': 'star',
           'title': trim($labels.eq(i).text()),
@@ -55,10 +55,10 @@
 
       var redraw = function () {
         var active = -1;
-        for(var i = 0; i < $options.length; i++) {
-          if($options[i].checked) active = i;
+        for (var i = 0; i < $options.length; i++) {
+          if ($options[i].checked) active = i;
         }
-        for(var i = 0; i < $stars.length; i++) {
+        for (var i = 0; i < $stars.length; i++) {
           $stars.eq(i).toggleClass('active', i <= active).removeClass('hover');
         }
         $container.removeClass('cancel-hover');
@@ -67,7 +67,7 @@
       var redrawHover = function () {
         redraw();
         var hover = $(this).data('id');
-        for(var i = 0; i < $stars.length; i++) {
+        for (var i = 0; i < $stars.length; i++) {
           $stars.eq(i).toggleClass('hover', i <= hover);
         }
       }
@@ -116,7 +116,7 @@
       $cancel.insertAfter($question.find('.option:last'));
 
       function refresh() {
-        if($question.find('.option:not(.none):has(:radio:checked)').length) {
+        if ($question.find('.option:not(.none):has(:radio:checked)').length) {
           $cancel.show(100);
         }
         else {

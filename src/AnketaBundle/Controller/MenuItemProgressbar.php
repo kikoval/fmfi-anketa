@@ -74,7 +74,7 @@ class MenuItemProgressbar {
 
     public function getProgressDone() {
         $done = $this->progress_done;
-        if ($this->includeChildren) foreach ($this->menu_item->children as $item) {
+        if ($this->includeChildren && $this->menu_item) foreach ($this->menu_item->children as $item) {
             $done += $item->getProgressbar()->getProgressDone();
         }
         return $done;
@@ -82,7 +82,7 @@ class MenuItemProgressbar {
 
     public function getProgressTotal() {
         $total = $this->progress_all;
-        if ($this->includeChildren) foreach ($this->menu_item->children as $item) {
+        if ($this->includeChildren && $this->menu_item) foreach ($this->menu_item->children as $item) {
             $total += $item->getProgressbar()->getProgressTotal();
         }
         return $total;

@@ -51,6 +51,14 @@ a:link, a:visited, a:active {
   color: black;
 }
 
+.progressbar-welcome {
+  border-color: #9ACBFF;
+}
+
+.progressbar-welcome .done {
+  background: #9ACBFF;
+}
+
 .progressbar-low {
   border-color: #CC6265;
 }

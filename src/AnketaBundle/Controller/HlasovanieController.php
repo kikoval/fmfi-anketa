@@ -164,4 +164,20 @@ class HlasovanieController extends Controller
         return new RedirectResponse($this->get('request')->getRequestUri());
     }
 
+    public function globalProgressbarAction($mode) {
+        $em = $this->get('doctrine.orm.entity_manager');
+
+        $total = $em->getRepository('AnketaBundle\Entity\Season')
+                    ->getActiveSeason(new \DateTime())
+                    ->getStudentCount();
+        $done = $em->getRepository('AnketaBundle\Entity\Question')
+                   ->getNumberOfVoters();
+
+        $templateParams = array();
+        $templateParams['globalProgressbar'] = new MenuItemProgressbar(null, $total, $done);
+        $templateParams['mode'] = $mode;
+        return $this->render('AnketaBundle:Hlasovanie:globalProgressbar.html.twig',
+                             $templateParams);
+    }
+
 }
