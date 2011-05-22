@@ -32,6 +32,12 @@ class User implements UserInterface {
     private $hasVote;
 
     /**
+     * @orm:Column(type="boolean")
+     * @var boolean
+     */
+    private $participated;
+
+    /**
      * @orm:ManyToMany(targetEntity="Subject")
      * @orm:JoinTable(name="users_subjects",
      *      joinColumns={@orm:JoinColumn(name="user_id", referencedColumnName="id")},
@@ -59,6 +65,7 @@ class User implements UserInterface {
         $this->userName = $username;
         $this->displayName = $displayname;
         $this->hasVote = false;
+        $this->participated = false;
     }
 
     public function getId() {
@@ -87,6 +94,14 @@ class User implements UserInterface {
 
     public function setHasVote($hasVote) {
         $this->hasVote = $hasVote;
+    }
+
+    public function getParticipated() {
+        return $this->participated;
+    }
+
+    public function setParticipated($participated) {
+        $this->participated = $participated;
     }
 
     /**

@@ -193,13 +193,4 @@ class QuestionRepository extends EntityRepository {
 
         return $result;
     }
-
-    // number of users who provided at least one answer (even if they deleted it afterwards)
-    public function getNumberOfVoters() {
-        $em = $this->getEntityManager();
-        $result = $em->createQuery("SELECT COUNT(DISTINCT a.author) AS num
-                                    FROM AnketaBundle\Entity\Answer a")
-                     ->getResult();
-        return $result[0]['num'];
-    }
 }

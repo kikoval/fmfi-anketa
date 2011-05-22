@@ -161,6 +161,8 @@ class QuestionController extends Controller {
                 $em->persist($answer);
             }
 
+            $user->setParticipated(true);
+
             $em->flush();
 
             if ($request->request->get('next')) {
@@ -210,6 +212,8 @@ class QuestionController extends Controller {
 
                 $em->persist($answer);
             }
+
+            $user->setParticipated(true);
 
             $em->flush();
 
@@ -277,6 +281,8 @@ class QuestionController extends Controller {
             foreach ($answerArray AS $answer) {
                 $em->persist($answer);
             }
+
+            $user->setParticipated(true);
 
             $em->flush();
 

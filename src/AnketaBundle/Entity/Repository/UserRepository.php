@@ -52,4 +52,13 @@ class UserRepository extends EntityRepository {
         return $q->execute();
     }
 
+     public function getNumberOfVoters() {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery("SELECT COUNT(u.id) as voters
+                                   FROM AnketaBundle\Entity\User u
+                                   WHERE u.participated = true");
+        $result = $query->getResult();
+        return $result[0]['voters'];
+    }
+
 }

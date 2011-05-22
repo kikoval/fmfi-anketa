@@ -170,7 +170,7 @@ class HlasovanieController extends Controller
         $total = $em->getRepository('AnketaBundle\Entity\Season')
                     ->getActiveSeason(new \DateTime())
                     ->getStudentCount();
-        $done = $em->getRepository('AnketaBundle\Entity\Question')
+        $done = $em->getRepository('AnketaBundle\Entity\User')
                    ->getNumberOfVoters();
 
         $templateParams = array();
