@@ -8,6 +8,10 @@ a:link, a:visited, a:active {
   color: #003A76;
 }
 
+.warning {
+  color: red;
+}
+
 #header a {
   color: inherit;
 }
