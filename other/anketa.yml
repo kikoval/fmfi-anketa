@@ -73,17 +73,6 @@ otazky:
           - text: Aká práca?
       position:   4
 
-    - nazov:  Odporúčanie predmetu
-      text:   Odporučili by ste tento predmet kolegom?
-      popis:
-      kategoria:  predmety
-      komentar:   No
-      hviezdicky: No
-      moznosti:
-          - text: Áno.
-          - text: Nie.
-      position:   5
-
     - nazov:  Absolvovanie predmetu
       text:   Zhruba akú časť prednášok a cvičení ste absolvovali?
       popis:
@@ -101,10 +90,21 @@ otazky:
             hodnota:  20
           - text:     Menej ako 10%.
             hodnota:  0
+      position:   5
+
+    - nazov:  Odporúčanie predmetu
+      text:   Odporučili by ste tento predmet kolegom?
+      popis:
+      kategoria:  predmety
+      komentar:   No
+      hviezdicky: No
+      moznosti:
+          - text: Áno.
+          - text: Nie.
       position:   6
 
     - nazov:  Textový komentár ku predmetu
-      text:   Napíšte Váš názor na tento predmet.
+      text:   Napíšte Váš názor na tento predmet. Zdôvodnite, prečo by ste ho odporúčali/neodporúčali.
       popis:
       kategoria:  predmety
       komentar:   Yes
@@ -151,7 +151,7 @@ otazky:
       position:   11
 
     - nazov:  Pripomienky k vyučujúcemu
-      text:   Napíšte Váš názor alebo pripomienky k učiteľovi.
+      text:   Napíšte Váš názor alebo pripomienky k učiteľovi. Zdôvodnite, prečo by ste ho odporúčali/neodporúčali.
       popis:
       kategoria:  predmety_ucitel
       komentar:   Yes
