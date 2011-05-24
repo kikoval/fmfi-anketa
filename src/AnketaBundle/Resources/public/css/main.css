@@ -266,13 +266,13 @@ div.faq {
 /*** FLASHES ***/
 
 .big-success-flash {
-    padding: 0.5em;
+    padding: 1.0em;
     border: 1px solid;
 }
 
 .big-success-flash-in {
+    min-height: 40px;
     padding-left: 50px;
-    line-height: 40px;
 }
 
 /*** BIGBTN ***/
