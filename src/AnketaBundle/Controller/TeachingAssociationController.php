@@ -43,13 +43,31 @@ class TeachingAssociationController extends Controller
         
         // TODO(anty): toto sa nastavi, az ked budeme mat UI na vybratie ucitela zo zoznamu
         $teacher = null;
-        
+
         $assoc = new TeachingAssociation($season, $subject, $teacher, $user, $note);
         $em->persist($assoc);
         $em->flush();
+
+        $emailTpl = array(
+                'subject' => $subject,
+                'teacher' => $teacher,
+                'note' => $note,
+                'user' => $user);
+        $sender = $this->container->getParameter('mail_sender');
+        $to = $this->container->getParameter('mail_dest_new_teaching_association');
+        $body = $this->renderView('AnketaBundle:TeachingAssociation:email.txt.twig', $emailTpl);
+        $message = \Swift_Message::newInstance()
+                        ->setSubject('FMFI ANKETA -- requested teacher')
+                        ->setFrom($sender)
+                        ->setTo($to)
+                        ->setBody($body);
+        $this->get('mailer')->send($message);
         
         $session = $this->get('session');
-        $session->setFlash('success', 'Ďakujeme za informáciu o chýbajúcom učiteľovi. V priebehu pár dní by mal pribudnúť, preto si nezabudnite otvoriť anketu znovu a ohodnotiť ho.');
+        $session->setFlash('success',
+                'Ďakujeme za informáciu o chýbajúcom učiteľovi. ' .
+                'V priebehu pár dní by mal pribudnúť, preto si nezabudnite ' .
+                'otvoriť anketu znovu a ohodnotiť ho.');
         
         return new RedirectResponse($this->generateUrl(
                 'answer_subject', array('code'=>$subject->getCode())));

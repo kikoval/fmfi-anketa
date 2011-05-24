@@ -61,6 +61,7 @@ swiftmailer:
     password:  %mailer_password%
     auth_mode: %mailer_auth_mode%
     password: %mailer_password%
+    encryption: %mailer_encryption%
     
 jms_security_extra:
     secure_controllers:  true

@@ -17,10 +17,15 @@
     db_mysql_charset=utf8
 
     mailer_transport=smtp
-    mailer_host=smtp.azet.sk
+    mailer_host=smtp.gmail.com
+    mailer_user=fmfi.svt
+    mailer_password=********
     mailer_auth_mode=login
-    mailer_user=pingas@azet.sk
-    mailer_password=jakubko1945
+    mailer_encryption=ssl
+    mailer_port=465
+    
+    mail_sender=anketa@anketa.fmph.uniba.sk
+    mail_dest_new_teaching_association=fmfi-anketa-devel@googlegroups.com
 
     locale=en
     csrf_secret=417ceb1c3737e1d3bfcd995b67c3bf8c
