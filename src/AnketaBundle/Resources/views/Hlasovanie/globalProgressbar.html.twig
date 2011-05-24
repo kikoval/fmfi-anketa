@@ -5,7 +5,8 @@
 
 {% if globalProgressbar and globalProgressbar.progressTotal > 0 %}
 {% if mode == 'welcome' %}
-<p>Zúčastnilo sa už <strong>{{ globalProgressbar.progressDone }} študentov</strong>.
+<p>Doteraz sa zúčastnilo <strong>{{ voters }} študentov</strong>,
+{{ anon }} z nich už hlasovanie ukončilo.
 Našim cieľom tohto roku je dosiahnuť 40% účasť. Preto neváhajte a zapojte sa tiež!</p>
 {% endif %}
 <div class="progressbar-welcome-wrapper" title="{{ "%.0f%%" | format(globalProgressbar.percentDone) }}"></div>

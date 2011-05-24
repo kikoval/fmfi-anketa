@@ -170,11 +170,15 @@ class HlasovanieController extends Controller
         $total = $em->getRepository('AnketaBundle\Entity\Season')
                     ->getActiveSeason(new \DateTime())
                     ->getStudentCount();
-        $done = $em->getRepository('AnketaBundle\Entity\User')
-                   ->getNumberOfVoters();
+        $voters = $em->getRepository('AnketaBundle\Entity\User')
+                     ->getNumberOfVoters();
+        $anon = $em->getRepository('AnketaBundle\Entity\User')
+                   ->getNumberOfAnonymizations();
 
         $templateParams = array();
-        $templateParams['globalProgressbar'] = new MenuItemProgressbar(null, $total, $done);
+        $templateParams['globalProgressbar'] = new MenuItemProgressbar(null, $total, $anon);
+        $templateParams['voters'] = $voters;
+        $templateParams['anon'] = $anon;
         $templateParams['mode'] = $mode;
         return $this->render('AnketaBundle:Hlasovanie:globalProgressbar.html.twig',
                              $templateParams);

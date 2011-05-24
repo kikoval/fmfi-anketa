@@ -52,13 +52,29 @@ class UserRepository extends EntityRepository {
         return $q->execute();
     }
 
-     public function getNumberOfVoters() {
+    public function getNumberOfVoters() {
         $em = $this->getEntityManager();
         $query = $em->createQuery("SELECT COUNT(u.id) as voters
                                    FROM AnketaBundle\Entity\User u
                                    WHERE u.participated = true");
         $result = $query->getResult();
         return $result[0]['voters'];
+    }
+
+    /**
+     * Pocet ludi co anonymizovali.
+     * Warning: toto je nasty hack
+     * TODO: potrebujeme specialny field k user-season ci anonymizoval
+     */
+    public function getNumberOfAnonymizations() {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery("SELECT COUNT(u.id) as anon
+                                   FROM AnketaBundle\\Entity\\User u
+                                   JOIN u.roles r
+                                   WHERE u.hasVote = 0 AND 'ROLE_AIS_STUDENT' = r.name
+                                   ");
+        $result = $query->getResult();
+        return $result[0]['anon'];
     }
 
 }
