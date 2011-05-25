@@ -148,7 +148,8 @@ h1, h2, h3, h4, h5, h6 {
   position: relative;
 }
 
-.progressbar-welcome .done,
+.progressbar-welcome .anon,
+.progressbar-welcome .voters,
 .progressbar-low .done,
 .progressbar-high .done,
 .progressbar-medium .done {

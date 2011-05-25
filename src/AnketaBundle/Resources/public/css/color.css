@@ -55,8 +55,12 @@ a:link, a:visited, a:active {
   border-color: #9ACBFF;
 }
 
-.progressbar-welcome .done {
+.progressbar-welcome .anon {
   background: #9ACBFF;
+}
+
+.progressbar-welcome .voters {
+  background: #E6F2FF;
 }
 
 .progressbar-low {

@@ -176,7 +176,8 @@ class HlasovanieController extends Controller
                    ->getNumberOfAnonymizations();
 
         $templateParams = array();
-        $templateParams['globalProgressbar'] = new MenuItemProgressbar(null, $total, $anon);
+        $templateParams['progressAnon'] = new MenuItemProgressbar(null, $total, $anon);
+        $templateParams['progressVoters'] = new MenuItemProgressbar(null, $total, $voters);
         $templateParams['voters'] = $voters;
         $templateParams['anon'] = $anon;
         $templateParams['mode'] = $mode;

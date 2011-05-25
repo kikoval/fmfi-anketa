@@ -1,13 +1,17 @@
 {#
- # @param globalProgressbar the progress bar data
+ # @param progressAnon the progress bar data for anonymization
+ # @param progressVoters the progress bar data for voter
+ # @param voters total number of voters
+ # @param anon total number of people that anonymized
  # @param mode the context in which we're shown, i.e. 'welcome', 'stats', ...
  #}
 
-{% if globalProgressbar and globalProgressbar.progressTotal > 0 %}
-{% if mode == 'welcome' %}
+{% if anon > 5 and voters > 5 and mode == 'welcome' %}
 <p>Doteraz sa zúčastnilo <strong>{{ voters }} študentov</strong>,
 {{ anon }} z nich už hlasovanie ukončilo.
-Našim cieľom tohto roku je dosiahnuť 40% účasť. Preto neváhajte a zapojte sa tiež!</p>
-{% endif %}
-<div class="progressbar-welcome-wrapper" title="{{ "%.0f%%" | format(globalProgressbar.percentDone) }}"></div>
+Naším cieľom tohto roku je dosiahnuť 40% účasť. Preto neváhajte a zapojte sa tiež!</p>
+<div class="progressbar-welcome-wrapper"
+     data-anon="{{ "%.0f%%" | format(progressAnon.percentDone) }}"
+     data-voters="{{ "%.0f%%" | format(progressVoters.percentDone) }}"
+    ></div>
 {% endif %}

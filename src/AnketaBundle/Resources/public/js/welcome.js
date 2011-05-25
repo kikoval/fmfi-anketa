@@ -12,14 +12,18 @@ jQuery(document).ready(function ($) {
 
   var $wrapper = $('.progressbar-welcome-wrapper');
   /** @var double number of seconds to fill 100% progressbar */
-  var maxTime = 10;
+  var maxTimeAnon = 8;
+  var maxTimeVoters = 6.4;
   if ($wrapper.length) {
-    var targetWidth = $wrapper.attr('title');
-    $wrapper.removeAttr('title');
-    $wrapper.html('<div class="progressbar-welcome"><span class="done"></span><span class="text"></span></div>');
-    $wrapper.find('.text').text(targetWidth);
-    $wrapper.find('.done').animate({ width: targetWidth },
-                                   maxTime * 10 * parseInt(targetWidth) );
+    var progressAnon = $wrapper.attr('data-anon');
+    var progressVoters = $wrapper.attr('data-voters');
+    // .voters span is first in DOM to be lower in z-index than .anon
+    $wrapper.html('<div class="progressbar-welcome"><span class="voters"></span><span class="anon"></span><span class="text"></span></div>');
+    $wrapper.find('.text').text(progressAnon);
+    $wrapper.find('.voters').animate({ width: progressVoters },
+                                   maxTimeVoters * 10 * parseInt(progressVoters) );
+    $wrapper.find('.anon').animate({ width: progressAnon },
+                                   maxTimeAnon * 10 * parseInt(progressAnon) );    
   }
 });
 
