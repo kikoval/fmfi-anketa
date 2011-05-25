@@ -6,7 +6,8 @@
  # @param mode the context in which we're shown, i.e. 'welcome', 'stats', ...
  #}
 
-{% if anon > 5 and voters > 5 and mode == 'welcome' %}
+{% if mode == 'welcome' %}
+{% if anon > 5 and voters > 5 %}
 <p>Doteraz sa zúčastnilo <strong>{{ voters }} študentov</strong>,
 {{ anon }} z nich už hlasovanie ukončilo.
 Naším cieľom tohto roku je dosiahnuť 40% účasť. Preto neváhajte a zapojte sa tiež!</p>
@@ -14,4 +15,5 @@ Naším cieľom tohto roku je dosiahnuť 40% účasť. Preto neváhajte a zapojt
      data-anon="{{ "%.0f%%" | format(progressAnon.percentDone) }}"
      data-voters="{{ "%.0f%%" | format(progressVoters.percentDone) }}"
     ></div>
+{% endif %}
 {% endif %}
