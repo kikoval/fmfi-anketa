@@ -81,10 +81,18 @@ class AISUserSource implements UserSourceInterface
     private function loadSubjects(UserBuilder $builder)
     {
         $aisPredmety = $this->aisRetriever->getPredmety($this->semestre);
+        
+        $kody = array();
 
         foreach ($aisPredmety as $aisPredmet) {
             $dlhyKod = $aisPredmet['skratka'];
             $kratkyKod = $this->getKratkyKod($dlhyKod);
+            
+            // Ignorujme duplicitne predmety
+            if (in_array($kratkyKod, $kody)) {
+                continue;
+            }
+            $kody[] = $kratkyKod;
 
             $subject = $this->subjectRepository->findOneBy(array('code' => $kratkyKod));
             if ($subject == null) {
