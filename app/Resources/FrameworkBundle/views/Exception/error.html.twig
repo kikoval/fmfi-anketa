@@ -1,10 +1,15 @@
-{% extends 'AnketaBundle::layout.html.twig' %}
+{% extends '::base.html.twig' %}
 
 {% block title %}
     Chyba!
 {% endblock %}
 
 {% block content %}
-        <h1>{{ exception.statuscode }}</h1>
-        <h2>{{ exception.message }}</h2>
+        <h1>Chyba {{ exception.statuscode }}</h1>
+        <p>Pri spracovávaní požiadavky sme narazili na chybu: {{ exception.message }}</p>
+        <p>Prosím skúste znova. Ak to nepomôže, dajte nám prosím vedieť &mdash;
+           <a href="http://code.google.com/p/fmfi-anketa/issues/entry">nahláste bug</a>,
+           alebo nám <a href="mailto:fmfi-anketa-users@googlegroups.com"
+            >pošlite mail na fmfi-anketa-users@googlegroups.com</a>
+        </p>
 {% endblock %}

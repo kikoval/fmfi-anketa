@@ -1,66 +1,19 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <link rel="stylesheet" href="{{ asset('bundles/anketa/css/reset.css') }}" type="text/css" media="all" />
-        <link rel="stylesheet" href="{{ asset('bundles/anketa/css/base.css') }}" type="text/css" media="all" />
-        <link rel="stylesheet" href="{{ asset('bundles/anketa/css/main.css') }}" type="text/css" media="all" />
-        <link rel="stylesheet" href="{{ asset('bundles/anketa/css/mobile.css') }}" type="text/css" media="all" />
-        <link rel="stylesheet" href="{{ asset('bundles/anketa/css/color.css') }}" type="text/css" media="all" />
-        <link rel="stylesheet" href="{{ asset('bundles/anketa/css/stars.css') }}" type="text/css" media="all" />
-        <script type="text/javascript" src="{{ asset('bundles/anketa/js/jquery.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('bundles/anketa/js/mobile.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('bundles/anketa/js/stars.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('bundles/anketa/js/unload.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('bundles/anketa/js/welcome.js') }}"></script>
-        <!--[if lte IE 7]>
-        <style>
-            .container { width: 60em; }
-            .clearfix { zoom: 1; }
-        </style>
-        <![endif]-->
-        <title>{% block title %}Anketa{% endblock %}</title>
-        <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" />
-    </head>
-    <body{{ block('sidebar') == '' ? ' class="no-sidebar"' : '' }}>
-        <div id="container">
-            <div id="user-bar">
-                {% block user_bar %}
-                    {% render "AnketaBundle:User:userBar" %}
-                {% endblock %}
-            </div>
-            <div id="section-bar">
-                <a href="{{ path('faq') }}" class="section">FAQ</a>
-                {% if is_granted('ROLE_HAS_VOTE') %}
-                    <a href="{{ path('answer') }}" class="section">Hlasuj</a>
-                {% endif %}
-            </div>
+{% extends '::base.html.twig' %}
 
-            <div id="header">
-                <h1><a href="{{ path('homepage') }}">Anketa <span>2011</span></a></h1>
-            </div>
+{% block user_bar %}
+    {% render "AnketaBundle:User:userBar" %}
+{% endblock %}
 
-            <div id="sidebar">
-            <div id="sidebar-inner">
-                {% block sidebar %}{% endblock %}
-            </div>
-            </div>
+{% block section_bar %}
+    {{ parent() }}
+    {% if is_granted('ROLE_HAS_VOTE') %}
+        <a href="{{ path('answer') }}" class="section">Hlasuj</a>
+    {% endif %}
+{% endblock %}
 
-            <div id="content" class="clearfix">
-                {% if app.session.hasFlash('success') %}
-                    <div class="big-success-flash"><div class="big-success-flash-in">
-                        {{ app.session.flash('success') }}
-                    </div></div>
-                {% endif %}
-                {% block content %}{% endblock %}
-            </div>
-
-            <div id="footer">
-                &copy; Študentský Vývojový Tím 2011
-            </div>
-        </div>
-        {% block google_analytics %}
-          {% render 'AnketaBundle:Tracking:track' %}
-        {% endblock %}
-    </body>
-</html>
+{% block body %}
+    {{ parent() }}
+    {% block google_analytics %}
+        {% render 'AnketaBundle:Tracking:track' %}
+    {% endblock %}
+{% endblock %}

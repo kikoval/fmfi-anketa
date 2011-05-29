@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        {% block head %}
+        {% block metas %}
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        {% endblock %}
+        {% block stylesheets %}
+        <link rel="stylesheet" href="{{ asset('bundles/anketa/css/reset.css') }}" type="text/css" media="all" />
+        <link rel="stylesheet" href="{{ asset('bundles/anketa/css/base.css') }}" type="text/css" media="all" />
+        <link rel="stylesheet" href="{{ asset('bundles/anketa/css/main.css') }}" type="text/css" media="all" />
+        <link rel="stylesheet" href="{{ asset('bundles/anketa/css/mobile.css') }}" type="text/css" media="all" />
+        <link rel="stylesheet" href="{{ asset('bundles/anketa/css/color.css') }}" type="text/css" media="all" />
+        <link rel="stylesheet" href="{{ asset('bundles/anketa/css/stars.css') }}" type="text/css" media="all" />
+        {% endblock %}
+        {% block scripts %}
+        <script type="text/javascript" src="{{ asset('bundles/anketa/js/jquery.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/anketa/js/mobile.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/anketa/js/stars.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/anketa/js/unload.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/anketa/js/welcome.js') }}"></script>
+        {% endblock %}
+        <!--[if lte IE 7]>
+        <style>
+            .container { width: 60em; }
+            .clearfix { zoom: 1; }
+        </style>
+        <![endif]-->
+        <title>{% block title %}Anketa{% endblock %}</title>
+        <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" />
+        {% endblock %}
+    </head>
+    <body{{ block('sidebar') == '' ? ' class="no-sidebar"' : '' }}>
+        {% block body %}
+        <div id="container">
+            <div id="user-bar">
+                {% block user_bar %}{% endblock %}
+            </div>
+            <div id="section-bar">
+                {% block section_bar %}
+                    <a href="{{ path('faq') }}" class="section">FAQ</a>
+                {% endblock %}
+            </div>
+
+            <div id="header">
+                {% block header %}
+                    <h1><a href="{{ path('homepage') }}">Anketa <span>2011</span></a></h1>
+                {% endblock %}
+            </div>
+
+            <div id="sidebar">
+            <div id="sidebar-inner">
+                {% block sidebar %}{% endblock %}
+            </div>
+            </div>
+
+            <div id="content" class="clearfix">
+                {% if app.session.hasFlash('success') %}
+                    <div class="big-success-flash"><div class="big-success-flash-in">
+                        {{ app.session.flash('success') }}
+                    </div></div>
+                {% endif %}
+                {% block content %}{% endblock %}
+            </div>
+
+            <div id="footer">
+                &copy; Študentský Vývojový Tím 2011
+            </div>
+        </div>
+        {% endblock %}
+    </body>
+</html>
