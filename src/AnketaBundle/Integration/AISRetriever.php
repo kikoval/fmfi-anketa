@@ -165,7 +165,8 @@ class AISRetriever
                 
                 $hodnoteniaPriemeryScreen = $this->adminStudiaFactory->
                         newHodnoteniaPriemeryScreen($this->trace,
-                        $adminStudiaScreen->getZapisnyListIdFromZapisnyListIndex($this->trace, $zapisnyList));
+                        $adminStudiaScreen->getZapisnyListIdFromZapisnyListIndex($this->trace, $zapisnyList,
+                            AdministraciaStudiaScreen::ACTION_HODNOTENIA_PRIEMERY));
                 
                 $hodnotenia = $hodnoteniaPriemeryScreen->getHodnotenia($this->trace)->getData();
                 
