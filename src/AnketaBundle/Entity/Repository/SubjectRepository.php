@@ -20,6 +20,8 @@ use Doctrine\ORM\EntityRepository;
 class SubjectRepository extends EntityRepository {
     /**
      * Compares 2 subjects based on their name property
+     *
+     * @deprecated TODO: remove this function and sort in database!
      */
     public static function compareSubjects($a, $b) {
         if ($a == $b) {
@@ -34,6 +36,32 @@ class SubjectRepository extends EntityRepository {
         $attendedSubjects = $user->getSubjects()->toArray();
         \usort($attendedSubjects, array('\AnketaBundle\Entity\Repository\SubjectRepository', 'compareSubjects'));
         return $attendedSubjects;
+    }
+
+    /**
+     * @todo season as parameter
+     */
+    public function getSortedSubjects() {
+        $subjects = $this->getEntityManager()
+                         ->getRepository('AnketaBundle\Entity\Subject')
+                         ->findAll();
+        \usort($subjects, array('\AnketaBundle\Entity\Repository\SubjectRepository', 'compareSubjects'));
+        return $subjects;
+    }
+
+    /**
+     * @todo season as parameter
+     */
+    public function getSortedSubjectsWithAnswers() {
+        // Note: JOIN does not work here, see
+        // http://www.doctrine-project.org/jira/browse/DDC-1001
+        $dql = 'SELECT s FROM AnketaBundle\Entity\Answer a, ' .
+            'AnketaBundle\Entity\Subject s ' . 
+            'WHERE a.subject = s';
+        $subjects = $this->getEntityManager()
+                         ->createQuery($dql)->execute();
+        \usort($subjects, array('\AnketaBundle\Entity\Repository\SubjectRepository', 'compareSubjects'));
+        return $subjects;
     }
 
 }

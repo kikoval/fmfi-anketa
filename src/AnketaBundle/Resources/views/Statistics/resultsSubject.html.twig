@@ -1,0 +1,9 @@
+{% extends 'AnketaBundle:Statistics:index.html.twig' %}
+{% import 'AnketaBundle:Statistics:displayQuestionMacro.html.twig' as macro %}
+{% block content %}
+    <h1> {{ subject.code }} {{ subject.name }}</h1>
+    {% for result in results %}
+        {{ macro.displayResults(result) }}
+        <hr/>
+    {% endfor %}
+{% endblock %}

@@ -85,6 +85,10 @@ class Answer {
         return $this->comment;
     }
 
+    public function hasComment() {
+        return !empty($this->comment);
+    }
+
     public function setAttended($value) {
         $this->attended = $value;
     }

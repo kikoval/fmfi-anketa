@@ -1,0 +1,12 @@
+{% extends 'AnketaBundle:Statistics:index.html.twig' %}
+
+{% block content %}
+    <h1> {{ subject.code }} {{ subject.name }}</h1>
+    Otázky k predmetu/učiteľovi vyplnilo menej ako {{ limit }} ľudí.
+    Ich štatistická výpovedná hodnota je príliš nízka aby sme
+    ich mohli zverejniť (z politických dôvodov). Nemusíš sa báť, učitelia
+    svoje výsledky uvidia.
+    Ak aj napriek tomu dané výsledky vidieť chceš, 
+    <a href="mailto:tomas.vinar@fmph.uniba.sk"> môžeš si ich vyžiadať </a>
+    a my ti ich poskytneme.
+{% endblock %}

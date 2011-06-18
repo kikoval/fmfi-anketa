@@ -1,0 +1,37 @@
+statistics:
+    pattern: /vysledky/
+    defaults: { _controller: AnketaBundle:Statistics:subjects, season_id: -1}
+
+statistics_subjects:
+    pattern: /vysledky/{season_id}/predmety/
+    defaults: { _controller: AnketaBundle:Statistics:subjects}
+    requirements:
+      season_id:   \d+
+
+results_subject:
+    pattern: /vysledky/{season_id}/predmety/{subject_id}/
+    defaults: { _controller: AnketaBundle:Statistics:resultsSubject}
+    requirements:
+      season_id:   \d+
+      subject_id:  \d+
+
+results_subject_teacher:
+    pattern: /vysledky/{season_id}/predmety/{subject_id}/ucitel/{teacher_id}
+    defaults: { _controller: AnketaBundle:Statistics:resultsSubjectTeacher}
+    requirements:
+      season_id:   \d+
+      subject_id:  \d+
+      teacher_id:  \d+
+
+statistics_general:
+    pattern: /vysledky/{season_id}/vseobecne/
+    defaults: { _controller: AnketaBundle:Statistics:general}
+    requirements:
+      season_id:   \d+
+
+statistics_results_general:
+    pattern: /vysledky/{season_id}/vseobecne/{question_id}
+    defaults: { _controller: AnketaBundle:Statistics:resultsGeneral}
+    requirements:
+      season_id:   \d+
+      question_id: \d+

@@ -1,0 +1,68 @@
+{# TODO(ppershing): make title, description, chart, histogram and comments as parameters #}
+{% macro displayResults(data) %}
+    <h2> {{ data.title }} </h2>
+    <div>
+    {# nasledujuci if je nutny, lebo aj polozka pola je null, twig hadze
+        Item "description" for "Array" does not exist #}
+    {% if data.description is defined %} {{ data.description }} {% endif %}
+    </div>
+    {% if data.chart is defined %}
+        {{ data.chart.render | raw  }}
+    {% endif %}
+    {% if data.histogram is not empty %}
+        {% if data.stats.cnt > 0 %}
+        <table>
+            <thead>
+                <tr>
+                    <th> </th>
+                    <th> Možnosť </th>
+                    <th> hlasov </th>
+                </tr>
+            </thead>
+            {% for row in data.histogram %}
+                <tr>
+                    <td> {{ row.value }} </td>
+                    <td> {{ row.title }} </td>
+                    <td> {{ row.cnt }} </td>
+                </tr>
+            {% endfor %}
+        </table>
+        {% endif %}
+        <div>
+        <b>Štatistika:</b>
+        <ul>
+            <li> počet odpovedí: {{ data.stats.cnt }} </li>
+            {% if data.stats.avg is defined %} 
+                <li> priemer: {{ "%.2f" | format(data.stats.avg) }} </li>
+            {% endif %}
+            {% if data.stats.sigma is defined %} 
+                <li> smerodajná odchýlka: {{ "%.2f" | format(data.stats.sigma) }} </li>
+            {% endif %}
+            {% if data.stats.confidence_interval_low is defined %} 
+                <li> odhadovaný interval skutočnej hodnoty
+                    ({{ "%.0f" | format(data.stats.confidence_value * 100) }}% spoľahlivosti):{# <div class='tooltip'>
+                    Skutočná hodnota sa od vypočítaného priemeru môže líšiť.
+                    Čím viac údajov a čím menší rozptyl, tým menší bude interval kde sa reálny priemer
+                    môže nachádzať..
+                </div>#}
+                [{{ "%.2f" | format(data.stats.confidence_interval_low) }},
+                 {{ "%.2f" | format(data.stats.confidence_interval_high) }}]
+                </li>
+            {% endif %}
+        </div>
+    {% endif %}
+    {% if data.comments is not empty %}
+        Komentáre:
+        <br />
+        {% for comment in data.comments %}
+            <div class='comment'>
+            {{ loop.index }}: {{ comment.comment }}
+{# TODO(ppershing): uncomment when controller is available:
+            <a href="{{ path('report_unappropriate', {'answer_id' : comment.answer_id}) }}"
+                >Report unappropriate</a>
+#}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+{% endmacro %}

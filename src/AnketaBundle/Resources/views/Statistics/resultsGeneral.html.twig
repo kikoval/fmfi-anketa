@@ -1,0 +1,5 @@
+{% extends 'AnketaBundle:Statistics:index.html.twig' %}
+{% import 'AnketaBundle:Statistics:displayQuestionMacro.html.twig' as macro %}
+{% block content %}
+    {{ macro.displayResults(result) }}
+{% endblock %}
