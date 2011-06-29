@@ -1,6 +1,6 @@
 statistics:
     pattern: /vysledky/
-    defaults: { _controller: AnketaBundle:Statistics:subjects, season_id: -1}
+    defaults: { _controller: AnketaBundle:Statistics:general, season_id: -1}
 
 statistics_subjects:
     pattern: /vysledky/{season_id}/predmety/{category}/
