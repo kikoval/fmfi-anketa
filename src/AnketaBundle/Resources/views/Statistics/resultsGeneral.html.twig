@@ -1,5 +1,8 @@
 {% extends 'AnketaBundle:Statistics:index.html.twig' %}
 {% import 'AnketaBundle:Statistics:displayQuestionMacro.html.twig' as macro %}
+{% block navigation %}
+    {% render "AnketaBundle:Statistics:menuVseobecne" with { 'season' : season } %}
+{% endblock %}
 {% block content %}
     {{ macro.displayResults(result) }}
 {% endblock %}

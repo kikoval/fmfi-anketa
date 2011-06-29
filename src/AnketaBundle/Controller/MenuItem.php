@@ -22,6 +22,11 @@ class MenuItem {
     public $children;
     public $expanded;
     public $active;
+    /**
+     * show only expanded child.
+     * Useful when the sub-menu list is extremely long
+     */
+    public $only_expanded;
     
     /*
      * @var MenuItemProgressbar Cointains information about completion progress
@@ -37,6 +42,7 @@ class MenuItem {
         $this->children = array();
         $this->expanded = false;
         $this->active = false;
+        $this->only_expanded = false;
         $this->progressbar = new MenuItemProgressbar($this);
     }
 

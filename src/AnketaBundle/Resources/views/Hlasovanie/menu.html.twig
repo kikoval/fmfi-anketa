@@ -27,30 +27,32 @@
  # @param tree a list of menu items to display
  # @param level the current depth in the menu tree (starting from 0 for top-level items)
  #}
-{% macro menu_tree(tree, level) %}
+{% macro menu_tree(tree, level, only_expanded) %}
     <ul class="menu-level-{{ level }}">
         {% for item in tree %}
-            {# Warning: "item.children is empty" does not work, see
-            https://github.com/fabpot/Twig/issues/307 #}
-            <li class="menu-level-{{ level }} {{ item.children | length > 0 ? 'inner' : 'leaf' }}{{ item.expanded ? ' expanded' : '' }}{{ item.active ? ' active' : '' }}">
-                {# TODO: necheme do titlu dať miesto percent konkrétny zlomok "answers/questions"? #}
-                <a class="menu-level-{{ level }} {{ item.children | length > 0 ? 'inner' : 'leaf' }}{{ item.expanded ? ' expanded' : '' }}{{ item.active ? ' active' : '' }}" href="{{ item.href }}">
-                  {%- if item.progressbar.progressTotal > 0 -%}
-                    {{ _self.progressbar(item.progressbar.percentDone) }}
-                  {%- endif -%}{{ item.title }}</a>
-                {% if item.progressbar.progressTotal > 0 %}
-                  <span class="for-screen-readers">{{ "%.0f%%" | format(item.progressbar.percentDone) }}</span>
-                {% endif %}
-                {% if item.expanded and item.children is not empty %}
-                    {{ _self.menu_tree(item.children, level + 1) }}
-                {% endif %}
-            </li>
+            {% if not only_expanded or item.expanded %}
+              {# Warning: "item.children is empty" does not work, see
+              https://github.com/fabpot/Twig/issues/307 #}
+              <li class="menu-level-{{ level }} {{ item.children | length > 0 ? 'inner' : 'leaf' }}{{ item.expanded ? ' expanded' : '' }}{{ item.active ? ' active' : '' }}">
+                  {# TODO: necheme do titlu dať miesto percent konkrétny zlomok "answers/questions"? #}
+                  <a class="menu-level-{{ level }} {{ item.children | length > 0 ? 'inner' : 'leaf' }}{{ item.expanded ? ' expanded' : '' }}{{ item.active ? ' active' : '' }}" href="{{ item.href }}">
+                    {%- if item.progressbar.progressTotal > 0 -%}
+                      {{ _self.progressbar(item.progressbar.percentDone) }}
+                    {%- endif -%}{{ item.title }}</a>
+                  {% if item.progressbar.progressTotal > 0 %}
+                    <span class="for-screen-readers">{{ "%.0f%%" | format(item.progressbar.percentDone) }}</span>
+                  {% endif %}
+                  {% if item.expanded and item.children is not empty %}
+                      {{ _self.menu_tree(item.children, level + 1, item.only_expanded) }}
+                  {% endif %}
+              </li>
+            {% endif %}
         {% endfor %}
     </ul>
 {% endmacro %}
 
 <h2 class="for-screen-readers">Kategórie</h2>
 <div class="menu">
-    {{ _self.menu_tree(menu, 0) }}
+    {{ _self.menu_tree(menu, 0, false) }}
 </div>
 {# TODO: niekde možno chceme zobraziť celkový progress #}

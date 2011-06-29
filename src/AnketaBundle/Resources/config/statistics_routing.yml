@@ -3,20 +3,20 @@ statistics:
     defaults: { _controller: AnketaBundle:Statistics:subjects, season_id: -1}
 
 statistics_subjects:
-    pattern: /vysledky/{season_id}/predmety/
-    defaults: { _controller: AnketaBundle:Statistics:subjects}
+    pattern: /vysledky/{season_id}/predmety/{category}/
+    defaults: { _controller: AnketaBundle:Statistics:subjects, category: null}
     requirements:
       season_id:   \d+
 
 results_subject:
-    pattern: /vysledky/{season_id}/predmety/{subject_id}/
+    pattern: /vysledky/{season_id}/predmety/{category}/{subject_id}/
     defaults: { _controller: AnketaBundle:Statistics:resultsSubject}
     requirements:
       season_id:   \d+
       subject_id:  \d+
 
 results_subject_teacher:
-    pattern: /vysledky/{season_id}/predmety/{subject_id}/ucitel/{teacher_id}
+    pattern: /vysledky/{season_id}/predmety/{category}/{subject_id}/ucitel/{teacher_id}
     defaults: { _controller: AnketaBundle:Statistics:resultsSubjectTeacher}
     requirements:
       season_id:   \d+

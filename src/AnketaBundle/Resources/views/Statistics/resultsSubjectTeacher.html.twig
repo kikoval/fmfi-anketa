@@ -1,5 +1,14 @@
 {% extends 'AnketaBundle:Statistics:index.html.twig' %}
 {% import 'AnketaBundle:Statistics:displayQuestionMacro.html.twig' as macro %}
+{% block navigation %}
+    {% render "AnketaBundle:Statistics:menuPredmety" with { 
+        'season' : season,
+        'category' : category,
+        'subject_id': subject.id,
+        'teacher_id' : teacher.id
+        }
+    %}
+{% endblock %}
 {% block content %}
     <h1>{{ subject.code }} {{ subject.name }} - {{ teacher.name }}</h1>
     {% for result in results %}

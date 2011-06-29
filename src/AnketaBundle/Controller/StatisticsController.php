@@ -187,23 +187,33 @@ class StatisticsController extends Controller {
         uksort($categorized, 'strcasecmp');
         // we want to append this after sorting
         if (!empty($uncategorized)) {
-            $categorized['XXX/nekategorizovane'] = $uncategorized;
+            $categorized['XXX-nekategorizovane'] = $uncategorized;
         }
         return $categorized;
     }
 
-    public function subjectsAction($season_id) {
+    public function subjectsAction($season_id, $category) {
         $em = $this->get('doctrine.orm.entity_manager');
 
         $season = $this->getSeason($season_id);
         // TODO: subjects by Season
         $templateParams = array();
-        $templateParams['categorized_subjects'] = $this->getCategorizedSubjects($season);
+        $subjects = $this->getCategorizedSubjects($season);
+
+        if ($category == null) {
+            $templateParams['categorized_subjects'] = $subjects;
+        } else {
+            if (!array_key_exists($category, $subjects)) {
+                throw new NotFoundHttpException("Category '$category' not found");
+            }
+            $templateParams['categorized_subjects'] = array($category => $subjects[$category]);
+        }
         $templateParams['season'] = $season;
+        $templateParams['category'] = $category;
         return $this->render('AnketaBundle:Statistics:subjects.html.twig', $templateParams);
     }
 
-    public function resultsSubjectAction($season_id, $subject_id) {
+    public function resultsSubjectAction($season_id, $category, $subject_id) {
         $em = $this->get('doctrine.orm.entity_manager');
         $season = $this->getSeason($season_id);
         // TODO: check ci predmet s tym id patri do tejto sezony
@@ -228,6 +238,7 @@ class StatisticsController extends Controller {
             $results[] = $data;
         }
         $templateParams['season'] = $season;
+        $templateParams['category'] = $category;
         $templateParams['subject'] = $subject;
         
         if ($maxCnt >= self::MIN_VOTERS_FOR_PUBLIC ||
@@ -242,7 +253,7 @@ class StatisticsController extends Controller {
         }
     }
 
-    public function resultsSubjectTeacherAction($season_id, $subject_id, $teacher_id) {
+    public function resultsSubjectTeacherAction($season_id, $category, $subject_id, $teacher_id) {
         $em = $this->get('doctrine.orm.entity_manager');
         $season = $this->getSeason($season_id);
         // TODO: check ci predmet s tym id patri do tejto sezony
@@ -272,6 +283,7 @@ class StatisticsController extends Controller {
             $results[] = $data;
         }
         $templateParams['season'] = $season;
+        $templateParams['category'] = $category;
         $templateParams['subject'] = $subject;
         $templateParams['teacher'] = $teacher;
         
@@ -287,34 +299,121 @@ class StatisticsController extends Controller {
         }
     }
 
-    // TODO(ppershing): dorobit menu
-    public function menuAction($activeItems = array()) {
+    public function getMenuRoot($season) {
         $em = $this->get('doctrine.orm.entity_manager');
         
         $current = array(
                 'general' => new MenuItem(
                     'Všeobecné otázky',
-                    ''),
-                'subject' => new MenuItem(
+                    $this->generateUrl('statistics_general',
+                        array('season_id' => $season->getId()))),
+                'subjects' => new MenuItem(
                     'Predmety',
-                    '')
+                    $this->generateUrl('statistics_subjects',
+                        array('season_id' => $season->getId()))),
                 );
 
         $seasons = $em->getRepository('AnketaBundle\Entity\Season')
                     ->findAll(array());
         $menu = array();
         foreach ($seasons as $tmp) {
-            $menu[$tmp->getDescription()] = new MenuItem($tmp->getDescription(), '');
+            $menu[$tmp->getId()] = new MenuItem($tmp->getDescription(),
+                    $this->generateUrl('statistics_general',
+                        array('season_id' => $season->getId())));
         }
         
-        $season = $em->getRepository('AnketaBundle\Entity\Season')
-                  ->getActiveSeason(new DateTime("now"));
-        $menu[$season->getDescription()]->children = $current;
-        $menu[$season->getDescription()]->active = true;
-        $menu[$season->getDescription()]->expanded = true;
+        $menu[$season->getId()]->children = $current;
+        $menu[$season->getId()]->expanded = true;
+        return $menu;
+    }
+
+    public function menuAction($season) {
+        $menu = $this->getMenuRoot($season);
+        $menu[$season->getId()]->active = true;
+        $templateParams = array('menu' => $this->getMenuRoot($season));
+        return $this->render('AnketaBundle:Hlasovanie:menu.html.twig',
+                             $templateParams);
+    }
+
+    public function menuVseobecneAction($season) {
+        $menu = $this->getMenuRoot($season);
+        $menu[$season->getId()]->children['general']->active = true;
         $templateParams = array('menu' => $menu);
         return $this->render('AnketaBundle:Hlasovanie:menu.html.twig',
                              $templateParams);
+
+    }
+
+    public function menuPredmetyAction($season, $category=null, $subject_id=-1, $teacher_id=-1) {
+        $menu = $this->getMenuRoot($season);
+        $subjects_menu = $menu[$season->getId()]->children['subjects'];
+        $subjects_menu->expanded = true;
+        
+        $subjects = $this->getCategorizedSubjects($season);
+        $subjects_menu->children = array();
+        foreach (array_keys($subjects) as $key) {
+            $subjects_menu->children[$key] = new MenuItem(
+                    $key,
+                    $this->generateUrl('statistics_subjects',
+                        array('season_id' => $season->getId(), 'category' => $key)));
+        }
+
+        if ($category == null) {
+            $subjects_menu->active = true;
+        } else {
+            if (!array_key_exists($category, $subjects)) {
+                throw new NotFoundHttpException("Category '$category' not found");
+            }
+            $subjects_menu->only_expanded = true;
+            $category_menu = $subjects_menu->children[$category];
+            $category_menu->expanded = true;
+            foreach ($subjects[$category] as $subj) {
+                $category_menu->children[$subj->getId()] = new MenuItem(
+                        $subj->getName(),
+                        $this->generateUrl('results_subject',
+                            array('season_id' => $season->getId(),
+                                  'category' => $category,
+                                  'subject_id' => $subj->getId())));
+            }
+            $category_menu->expanded = true;
+            if ($subject_id == -1) {
+                $category_menu->active = true;
+            } else {
+                $category_menu->only_expanded = true;
+                $subject_menu = $category_menu->children[$subject_id];
+                $subject_menu->expanded = true;
+                
+                $em = $this->get('doctrine.orm.entity_manager');
+                $subject = $em->find('AnketaBundle:Subject', $subject_id);
+                if ($subject == null) {
+                    throw new NotFoundHttpException("Subject not found");
+                }
+                $teachers = $subject->getTeachers();
+                foreach ($teachers as $teacher) {
+                    $subject_menu->children[$teacher->getId()] = new MenuItem(
+                            $teacher->getName(),
+                            $this->generateUrl('results_subject_teacher',
+                                array('season_id' => $season->getId(),
+                                      'category' => $category,
+                                      'subject_id' => $subject_id,
+                                      'teacher_id' => $teacher->getId()))
+                        );
+                }
+                
+                if ($teacher_id == -1) {
+                    $subject_menu->active = true;
+                } else {
+                    $subject_menu->children[$teacher_id]->active = true;
+                }
+
+            }
+        }
+
+
+        $templateParams = array('menu' => $menu);
+        return $this->render('AnketaBundle:Hlasovanie:menu.html.twig',
+                             $templateParams);
+
     }
 
     public function generalAction($season_id) {

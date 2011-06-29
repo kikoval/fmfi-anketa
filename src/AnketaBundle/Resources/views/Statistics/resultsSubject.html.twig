@@ -1,5 +1,13 @@
 {% extends 'AnketaBundle:Statistics:index.html.twig' %}
 {% import 'AnketaBundle:Statistics:displayQuestionMacro.html.twig' as macro %}
+{% block navigation %}
+    {% render "AnketaBundle:Statistics:menuPredmety" with { 
+        'season' : season,
+        'category' : category,
+        'subject_id': subject.id
+        }
+    %}
+{% endblock %}
 {% block content %}
     <h1> {{ subject.code }} {{ subject.name }}</h1>
     {% for result in results %}
