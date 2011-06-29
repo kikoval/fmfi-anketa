@@ -55,13 +55,13 @@
         Komentáre:
         <br />
         {% for comment in data.comments %}
-            <div class='comment'>
+            <p class='comment'>
             {{ loop.index }}: {{ comment.comment }}
 {# TODO(ppershing): uncomment when controller is available:
             <a href="{{ path('report_unappropriate', {'answer_id' : comment.answer_id}) }}"
                 >Report unappropriate</a>
 #}
-            </div>
+            </p>
         {% endfor %}
     {% endif %}
 
