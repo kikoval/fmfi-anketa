@@ -55,7 +55,7 @@ class SubjectRepository extends EntityRepository {
     public function getSortedSubjectsWithAnswers() {
         // Note: JOIN does not work here, see
         // http://www.doctrine-project.org/jira/browse/DDC-1001
-        $dql = 'SELECT s FROM AnketaBundle\Entity\Answer a, ' .
+        $dql = 'SELECT DISTINCT s FROM AnketaBundle\Entity\Answer a, ' .
             'AnketaBundle\Entity\Subject s ' . 
             'WHERE a.subject = s';
         $subjects = $this->getEntityManager()
