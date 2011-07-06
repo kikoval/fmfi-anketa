@@ -58,6 +58,16 @@ class Season {
      */
     private $studentCount;
 
+    /**
+     * Slug - unique descriptive ID to be used in URLs.
+     *
+     * For example 2010-2011
+     *
+     * @orm:Column(type="string", nullable="false", unique="true")
+     * @var string $slug
+     */
+    private $slug;
+
     public function __construct(DateTime $start, DateTime $end, $description) {
         $this->start = $start;
         $this->end = $end;
@@ -128,6 +138,14 @@ class Season {
 
     public function setStudentCount($studentCount) {
         $this->studentCount = $studentCount;
+    }
+
+    public function getSlug() {
+        return $this->slug;
+    }
+
+    public function setSlug($value) {
+        $this->slug = $value;
     }
 
 }

@@ -37,5 +37,26 @@ class SeasonRepository extends EntityRepository {
         return array_shift($result);
     }
 
+    public function getLastActiveSeason(DateTime $date) {
+        $dql = 'SELECT s FROM AnketaBundle\Entity\Season s ' .
+               'WHERE s.start = ' .
+                    '(SELECT MAX(s2.start) ' .
+                    ' FROM AnketaBundle\Entity\Season s2' .
+                    ' WHERE s2.start <= :date)';
+        $query = $this->getEntityManager()->createQuery($dql);
+        // the explicit type is required, see bug
+        // http://www.doctrine-project.org/jira/browse/DDC-697
+        $query->setParameter('date', $date, \Doctrine\DBAL\Types\Type::DATETIME);
+        $result = $query->execute();
+
+        if (count($result) > 1) {
+            throw new NonUniqueResultException();
+        }
+        if (count($result) == 0) {
+            throw new NoResultException();
+        }
+        return array_shift($result);
+    }
+
 
 }

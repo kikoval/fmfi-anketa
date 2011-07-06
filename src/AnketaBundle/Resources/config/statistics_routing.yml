@@ -1,37 +1,38 @@
 statistics:
-    pattern: /vysledky/
-    defaults: { _controller: AnketaBundle:Statistics:general, season_id: -1}
+    pattern: /vysledky
+    defaults: { _controller: AnketaBundle:Statistics:general, season_slug: null}
 
 statistics_subjects:
-    pattern: /vysledky/{season_id}/predmety/{category}/
+    pattern: /vysledky/{season_slug}/predmety/{category}
     defaults: { _controller: AnketaBundle:Statistics:subjects, category: null}
     requirements:
-      season_id:   \d+
+      season_slug:   "[a-z0-9-]+"
+      category:      "[a-zA-Z0-9-]*"
 
 results_subject:
-    pattern: /vysledky/{season_id}/predmety/{category}/{subject_id}/
+    pattern: /vysledky/{season_slug}/predmet/{subject_code}
     defaults: { _controller: AnketaBundle:Statistics:resultsSubject}
     requirements:
-      season_id:   \d+
-      subject_id:  \d+
+      season_slug:   "[a-z0-9-]+"
+      subject_code:  "[a-zA-Z0-9-]+"
 
 results_subject_teacher:
-    pattern: /vysledky/{season_id}/predmety/{category}/{subject_id}/ucitel/{teacher_id}
+    pattern: /vysledky/{season_slug}/predmet/{subject_code}/ucitel/{teacher_id}
     defaults: { _controller: AnketaBundle:Statistics:resultsSubjectTeacher}
     requirements:
-      season_id:   \d+
-      subject_id:  \d+
+      season_slug:   "[a-z0-9-]+"
+      subject_code:  "[a-zA-Z0-9-]+"
       teacher_id:  \d+
 
 statistics_general:
-    pattern: /vysledky/{season_id}/vseobecne/
+    pattern: /vysledky/{season_slug}/vseobecne
     defaults: { _controller: AnketaBundle:Statistics:general}
     requirements:
-      season_id:   \d+
+      season_slug:   "[a-z0-9-]+"
 
 statistics_results_general:
-    pattern: /vysledky/{season_id}/vseobecne/{question_id}
+    pattern: /vysledky/{season_slug}/vseobecne/{question_id}
     defaults: { _controller: AnketaBundle:Statistics:resultsGeneral}
     requirements:
-      season_id:   \d+
+      season_slug:   "[a-z0-9-]+"
       question_id: \d+

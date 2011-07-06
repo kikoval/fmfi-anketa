@@ -10,6 +10,7 @@ use Bundle\GoogleChartBundle\Library\PieChart\Arc;
 use AnketaBundle\Entity\Question;
 use AnketaBundle\Entity\CategoryType;
 use AnketaBundle\Entity\Season;
+use AnketaBundle\Entity\Subject;
 use DateTime;
 use AnketaBundle\Lib\StatisticalFunctions;
 
@@ -18,19 +19,19 @@ class StatisticsController extends Controller {
     const INTERVAL_CONFIDENCE = 0.9;
 
     /**
-     * @param integer $season_id if -1, returns current active season
+     * @param string $season_slug if null, returns current active season
      * @returns Season the season
      */
-    private function getSeason($season_id) {
+    private function getSeason($season_slug = null) {
         $em = $this->get('doctrine.orm.entity_manager');
-        if ($season_id == -1) {
-            $season = $em->getRepository('AnketaBundle\Entity\Season')
-                      ->getActiveSeason(new DateTime("now"));
+        $repository = $em->getRepository('AnketaBundle\Entity\Season');
+        if ($season_slug === null) {
+            $season = $repository->getLastActiveSeason(new DateTime("now"));
         } else {
-            $season = $em->find('AnketaBundle:Season', $season_id);
+            $season = $repository->findOneBy(array('slug' => $season_slug));
         }
         if ($season == null) {
-            throw new NotFoundHttpException('Chybna sezona: ' . $season_id);
+            throw new NotFoundHttpException('Chybna sezona: ' . $season_slug);
         }
         return $season;
     }
@@ -168,6 +169,21 @@ class StatisticsController extends Controller {
         return $data;
     }
 
+    /**
+     * Vrat nazov kategorie pre predmet
+     * @param Subject $subject
+     * @return string|null nazov kategorie alebo null ak je nekategorizovany
+     */
+    private function getCategory(Subject $subject)
+    {
+        $match = preg_match("@^[^-]*-([^-]*)-@", $subject->getCode(), $matches);
+        if ($match == 0) {
+            return null;
+        } else {
+            return $matches[1];
+        }
+    }
+
     // TODO:nahrad celu tuto saskaren studijnymi programmi ked budu k dispozicii
     public function getCategorizedSubjects(Season $season) {
         $em = $this->get('doctrine.orm.entity_manager');
@@ -176,12 +192,12 @@ class StatisticsController extends Controller {
         $categorized = array();
         $uncategorized = array();
         foreach ($subjects as $subject) {
-            $match = preg_match("@[^-]*-([^-]*)-@", $subject->getCode(), $matches);
-            if ($match == 0) {
+            $category = $this->getCategory($subject);
+
+            if ($category === null) {
                 $uncategorized[] = $subject;
             } else {
-                $category = $matches[1];
-                $categorized[$matches[1]][] = $subject;
+                $categorized[$category][] = $subject;
             }
         }
         uksort($categorized, 'strcasecmp');
@@ -192,10 +208,10 @@ class StatisticsController extends Controller {
         return $categorized;
     }
 
-    public function subjectsAction($season_id, $category) {
+    public function subjectsAction($season_slug, $category) {
         $em = $this->get('doctrine.orm.entity_manager');
 
-        $season = $this->getSeason($season_id);
+        $season = $this->getSeason($season_slug);
         // TODO: subjects by Season
         $templateParams = array();
         $subjects = $this->getCategorizedSubjects($season);
@@ -213,16 +229,19 @@ class StatisticsController extends Controller {
         return $this->render('AnketaBundle:Statistics:subjects.html.twig', $templateParams);
     }
 
-    public function resultsSubjectAction($season_id, $category, $subject_id) {
+    public function resultsSubjectAction($season_slug, $subject_code) {
         $em = $this->get('doctrine.orm.entity_manager');
-        $season = $this->getSeason($season_id);
+        $season = $this->getSeason($season_slug);
         // TODO: check ci predmet s tym id patri do tejto sezony
-        $subject = $em->find('AnketaBundle:Subject', $subject_id);
+        $subjectRepository = $em->getRepository('AnketaBundle:Subject');
+        $subject = $subjectRepository->findOneBy(array('code' => $subject_code));
         if ($subject === null) {
-            throw new NotFoundHttpException('Predmet ' . $subject_id . ' v sezone ' .
-                        $season->getStart()->format('d.m.Y') . ' - ' . $season->getStart()->format('d.m.Y').
+            throw new NotFoundHttpException('Predmet ' . $subject_code . ' v sezone ' .
+                        $season->getDescription() .
                         ' neexistoval.');
         }
+
+        $category = $this->getCategory($subject);
 
         $maxCnt = 0;
         $results = array();
@@ -232,7 +251,7 @@ class StatisticsController extends Controller {
         foreach ($questions as $question) {
             $answers = $em->getRepository('AnketaBundle\Entity\Answer')
                           ->findBy(array('question' => $question->getId(),
-                                      'subject' => $subject_id));
+                                      'subject' => $subject->getId()));
             $data = $this->processQuestion($question, $answers);
             $maxCnt = max($maxCnt, $data['stats']['cnt']);
             $results[] = $data;
@@ -253,16 +272,18 @@ class StatisticsController extends Controller {
         }
     }
 
-    public function resultsSubjectTeacherAction($season_id, $category, $subject_id, $teacher_id) {
+    public function resultsSubjectTeacherAction($season_slug, $subject_code, $teacher_id) {
         $em = $this->get('doctrine.orm.entity_manager');
-        $season = $this->getSeason($season_id);
+        $season = $this->getSeason($season_slug);
         // TODO: check ci predmet s tym id patri do tejto sezony
-        $subject = $em->find('AnketaBundle:Subject', $subject_id);
+        $subjectRepository = $em->getRepository('AnketaBundle:Subject');
+        $subject = $subjectRepository->findOneBy(array('code' => $subject_code));
         if ($subject === null) {
-            throw new NotFoundHttpException('Predmet ' . $subject_id . ' v sezone ' .
-                        $season->getStart()->format('d.m.Y') . ' - ' . $season->getStart()->format('d.m.Y').
+            throw new NotFoundHttpException('Predmet ' . $subject_code . ' v sezone ' .
+                        $season->getDescription() .
                         ' neexistoval.');
         }
+        $category = $this->getCategory($subject);
         $teacher = $em->find('AnketaBundle:Teacher', $teacher_id);
         if ($teacher === null) {
             throw new NotFoundHttpException('Učiteľ ' . $teacher_id . ' neexistuje');
@@ -276,8 +297,8 @@ class StatisticsController extends Controller {
         foreach ($questions as $question) {
             $answers = $em->getRepository('AnketaBundle\Entity\Answer')
                           ->findBy(array('question' => $question->getId(),
-                                      'subject' => $subject_id,
-                                      'teacher' => $teacher_id));
+                                      'subject' => $subject->getId(),
+                                      'teacher' => $teacher->getId()));
             $data = $this->processQuestion($question, $answers);
             $maxCnt = max($maxCnt, $data['stats']['cnt']);
             $results[] = $data;
@@ -306,11 +327,11 @@ class StatisticsController extends Controller {
                 'general' => new MenuItem(
                     'Všeobecné otázky',
                     $this->generateUrl('statistics_general',
-                        array('season_id' => $season->getId()))),
+                        array('season_slug' => $season->getSlug()))),
                 'subjects' => new MenuItem(
                     'Predmety',
                     $this->generateUrl('statistics_subjects',
-                        array('season_id' => $season->getId()))),
+                        array('season_slug' => $season->getSlug()))),
                 );
 
         $seasons = $em->getRepository('AnketaBundle\Entity\Season')
@@ -319,7 +340,7 @@ class StatisticsController extends Controller {
         foreach ($seasons as $tmp) {
             $menu[$tmp->getId()] = new MenuItem($tmp->getDescription(),
                     $this->generateUrl('statistics_general',
-                        array('season_id' => $season->getId())));
+                        array('season_slug' => $season->getSlug())));
         }
         
         $menu[$season->getId()]->children = $current;
@@ -355,7 +376,7 @@ class StatisticsController extends Controller {
             $subjects_menu->children[$key] = new MenuItem(
                     $key,
                     $this->generateUrl('statistics_subjects',
-                        array('season_id' => $season->getId(), 'category' => $key)));
+                        array('season_slug' => $season->getSlug(), 'category' => $key)));
         }
 
         if ($category == null) {
@@ -371,9 +392,8 @@ class StatisticsController extends Controller {
                 $category_menu->children[$subj->getId()] = new MenuItem(
                         $subj->getName(),
                         $this->generateUrl('results_subject',
-                            array('season_id' => $season->getId(),
-                                  'category' => $category,
-                                  'subject_id' => $subj->getId())));
+                            array('season_slug' => $season->getSlug(),
+                                  'subject_code' => $subj->getCode())));
             }
             $category_menu->expanded = true;
             if ($subject_id == -1) {
@@ -393,9 +413,8 @@ class StatisticsController extends Controller {
                     $subject_menu->children[$teacher->getId()] = new MenuItem(
                             $teacher->getName(),
                             $this->generateUrl('results_subject_teacher',
-                                array('season_id' => $season->getId(),
-                                      'category' => $category,
-                                      'subject_id' => $subject_id,
+                                array('season_slug' => $season->getSlug(),
+                                      'subject_code' => $subject->getCode(),
                                       'teacher_id' => $teacher->getId()))
                         );
                 }
@@ -416,9 +435,9 @@ class StatisticsController extends Controller {
 
     }
 
-    public function generalAction($season_id) {
+    public function generalAction($season_slug = null) {
         $em = $this->get('doctrine.orm.entity_manager');
-        $season = $this->getSeason($season_id);
+        $season = $this->getSeason($season_slug);
         // TODO: by season
         $categories = $em->getRepository('AnketaBundle\Entity\Category')
                          ->findBy(array('type' => 'general'));
@@ -435,10 +454,10 @@ class StatisticsController extends Controller {
         return $this->render('AnketaBundle:Statistics:general.html.twig', $templateParams);
     }
 
-    public function resultsGeneralAction($season_id, $question_id) {
+    public function resultsGeneralAction($season_slug, $question_id) {
         $em = $this->get('doctrine.orm.entity_manager');
         // TODO: check ci otazka s tym id patri do tejto sezony
-        $season = $this->getSeason($season_id);
+        $season = $this->getSeason($season_slug);
         // TODO: validacia ci ta otazka je vseobecna
         $question = $em->find('AnketaBundle:Question', $question_id);
         if ($question == null) {

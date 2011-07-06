@@ -58,7 +58,7 @@ abstract class AbstractChart {
                 $filteredParts[] = $key . '=' . $content;
             }
         }
-        return 'http://chart.googleapis.com/chart?' . implode('&', $filteredParts);
+        return 'https://chart.googleapis.com/chart?' . implode('&', $filteredParts);
     }
     
     public function render() {

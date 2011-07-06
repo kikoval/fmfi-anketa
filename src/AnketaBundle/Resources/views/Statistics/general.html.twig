@@ -8,7 +8,7 @@
         <strong>{{ category.description }}: </strong>
         <br />
         {% for question in questions[category.id] %}
-            <a href="{{ path('statistics_results_general', { 'season_id': season.id, 'question_id': question.id }) }}"
+            <a href="{{ path('statistics_results_general', { 'season_slug': season.slug, 'question_id': question.id }) }}"
               >{{ question.question }}</a>
             <br />
         {% endfor %}
