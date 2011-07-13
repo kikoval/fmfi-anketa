@@ -72,6 +72,7 @@ class UserRepository extends EntityRepository {
                                    FROM AnketaBundle\\Entity\\User u
                                    JOIN u.roles r
                                    WHERE u.hasVote = 0 AND 'ROLE_AIS_STUDENT' = r.name
+                                   AND u.participated = true
                                    ");
         $result = $query->getResult();
         return $result[0]['anon'];
