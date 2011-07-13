@@ -1,6 +1,6 @@
 {# TODO(ppershing): make title, description, chart, histogram and comments as parameters #}
 {% macro displayResults(data) %}
-    <h2> {{ data.title }} </h2>
+    <h2 class="fragment" id="otazka{{ data.id }}"> <a href="#otazka{{ data.id }}">{{ data.title }}</a> </h2>
     <div>
     {# nasledujuci if je nutny, lebo aj polozka pola je null, twig hadze
         Item "description" for "Array" does not exist #}
@@ -63,8 +63,8 @@
                 Komentáre:
                 <div class="results-comments">
                 {% for comment in data.comments %}
-                    <div class='comment' id="comment{{ comment.answer_id }}">
-                    <div class="comment-top"><a class="comment-link" href="#comment{{ comment.answer_id }}">#{{ comment.answer_id }}<a/>:
+                    <div class='comment' id="komentar{{ comment.answer_id }}">
+                    <div class="comment-top"><a class="comment-link" href="#komentar{{ comment.answer_id }}">#{{ comment.answer_id }}<a/>:
                     </div>
                     <p class="comment-comment">{{ comment.comment }}</p>
         {# TODO(ppershing): uncomment when controller is available:

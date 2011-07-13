@@ -201,6 +201,7 @@ class StatisticsController extends Controller {
             $histogram = array();
         }
         $data = array(
+                'id' => $question->getId(),
                 'title' => $question->getQuestion(),
                 'description' => $question->getDescription(),
                 'commentsAllowed' => $question->getHasComment(),

@@ -1,3 +1,4 @@
+@charset "UTF-8";
 
 body {
   font-size: 0.8em;
@@ -324,26 +325,37 @@ div.faq {
     background: #E0EFFF;
 }
 
-.results-comments div.comment:target {
+.results-comments div.comment:target,
+h2:target {
     border-top: 1px solid black;
     border-bottom: 1px solid black;
     background: #E0EFFF;
 }
 
-.results-comments a.comment-link {
+.results-comments a.comment-link,
+.category-listing a,
+h2.fragment a {
     text-decoration: none;
 }
 
-.results-comments a.comment-link:hover {
+h2.fragment a {
+    color: black;
+}
+
+h2.fragment, .results-comments div.comment {
+    position: relative;
+}
+
+.results-comments a.comment-link:hover,
+.category-listing a:hover, .category-listing a:active{
     text-decoration: underline;
 }
 
-.category-listing a {
-    text-decoration: none;
-}
-
-.category-listing a:hover, .category-listing a:active {
-    text-decoration: underline;
+h2.fragment a:hover:after, .results-comments a.comment-link:hover:after {
+    content: "¶";
+    position: absolute;
+    right: 0;
+    color: #999;
 }
 
 .question-description {
