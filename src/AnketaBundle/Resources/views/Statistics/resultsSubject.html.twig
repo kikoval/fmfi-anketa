@@ -11,7 +11,9 @@
 {% block content %}
     <h1> {{ subject.code }} {{ subject.name }}</h1>
     {% for result in results %}
+        {% if not loop.first %}
+            <hr />
+        {% endif %}
         {{ macro.displayResults(result) }}
-        <hr/>
     {% endfor %}
 {% endblock %}

@@ -17,6 +17,7 @@ use AnketaBundle\Lib\StatisticalFunctions;
 class StatisticsController extends Controller {
     const MIN_VOTERS_FOR_PUBLIC = 0;
     const INTERVAL_CONFIDENCE = 0.9;
+    const NO_CATEGORY = 'XXX-nekategorizovane';
 
     /**
      * @param string $season_slug if null, returns current active season
@@ -143,7 +144,28 @@ class StatisticsController extends Controller {
         }
         return $stats;
     }
-
+    
+    /**
+     * Check if the array contains at least one pair of different values
+     * @param array $array
+     * @return boolean true if the array contains at least two different values
+     */
+    private function hasMoreThanOneValue($array)
+    {
+        $first = true;
+        $prev = null;
+        foreach ($array as $value) {
+            if (!$first) {
+                if ($prev !== $value) {
+                    return true;
+                }
+            }
+            $prev = $value;
+            $first = false;
+        }
+        return false;
+    }
+    
     /**
      * Function returns the statistics for a question in a format:
      *      result['results'] - array of number of options indexed by option id
@@ -157,13 +179,32 @@ class StatisticsController extends Controller {
      */
     public function processQuestion(Question $question, $answers) {
         $histogram = $this->getHistogramData($question, $answers);
+        $stats = $this->getStatistics($histogram);
+        $hasAnswer = $stats['cnt'] > 0;
+        if ($hasAnswer) {
+            foreach ($histogram as $key=>$value) {
+                $histogram[$key]['portion'] = $value['cnt'] / $stats['cnt'];
+            }
+        }
+        $evaluations = array();
+        foreach ($question->getOptions() as $option) {
+            $evaluations[] = $option->getEvaluation();
+        }
+        $hasDifferentOptions = $this->hasMoreThanOneValue($evaluations);
+        if (!$hasDifferentOptions) {
+            // Nema zmysel prezentovat zlozitejsiu statistiku pocitanu z rovnakych hodnot
+            $stats = array('cnt' => $stats['cnt']);
+        }
         $data = array(
                 'title' => $question->getQuestion(),
                 'description' => $question->getDescription(),
+                'commentsAllowed' => $question->getHasComment(),
+                'hasAnswer' => $hasAnswer,
+                'hasDifferentOptions' => $hasDifferentOptions,
                 'comments' => $this->getComments($answers),
                 'histogram' => $histogram,
                 'chart' => $this->getChart($question->getQuestion(), $histogram),
-                'stats' => $this->getStatistics($histogram),
+                'stats' => $stats,
                 );
 
         return $data;
@@ -172,13 +213,13 @@ class StatisticsController extends Controller {
     /**
      * Vrat nazov kategorie pre predmet
      * @param Subject $subject
-     * @return string|null nazov kategorie alebo null ak je nekategorizovany
+     * @return string nazov kategorie alebo self::NO_CATEGORY ak je nekategorizovany
      */
     private function getCategory(Subject $subject)
     {
         $match = preg_match("@^[^-]*-([^-]*)-@", $subject->getCode(), $matches);
         if ($match == 0) {
-            return null;
+            return self::NO_CATEGORY;
         } else {
             return $matches[1];
         }
@@ -194,7 +235,7 @@ class StatisticsController extends Controller {
         foreach ($subjects as $subject) {
             $category = $this->getCategory($subject);
 
-            if ($category === null) {
+            if ($category === self::NO_CATEGORY) {
                 $uncategorized[] = $subject;
             } else {
                 $categorized[$category][] = $subject;
@@ -203,7 +244,7 @@ class StatisticsController extends Controller {
         uksort($categorized, 'strcasecmp');
         // we want to append this after sorting
         if (!empty($uncategorized)) {
-            $categorized['XXX-nekategorizovane'] = $uncategorized;
+            $categorized[self::NO_CATEGORY] = $uncategorized;
         }
         return $categorized;
     }

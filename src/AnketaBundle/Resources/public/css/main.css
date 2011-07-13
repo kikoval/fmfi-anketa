@@ -193,12 +193,12 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 #content h2 {
-  font-size: 2em;
+  font-size: 135%;
   margin-top: 0.5em;
 }
 
 #content h2.faq {
-  font-size: 2em;
+  font-size: 135%;
   margin-top: 1em;
 }
 
@@ -307,6 +307,61 @@ div.faq {
     width: 12em;
     margin: auto;
     font-size: 200%;
+}
+
+.results-comments div.comment {
+    margin-top: 0.5em;
+    border-top: 1px dashed #999;
+    border-bottom: 1px solid transparent;
+    padding-top: 0.4ex;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+}
+
+.results-comments div.comment:hover {
+    border-top: 1px dashed black;
+    border-bottom: 1px dashed black;
+    background: #E0EFFF;
+}
+
+.results-comments div.comment:target {
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+    background: #E0EFFF;
+}
+
+.results-comments a.comment-link {
+    text-decoration: none;
+}
+
+.results-comments a.comment-link:hover {
+    text-decoration: underline;
+}
+
+.category-listing a {
+    text-decoration: none;
+}
+
+.category-listing a:hover, .category-listing a:active {
+    text-decoration: underline;
+}
+
+.question-description {
+    font-style: italic;
+}
+
+hr {
+    border: none;
+    border-top: 1px solid #999;
+}
+
+.help-tooltip {
+    border-bottom: 1px dashed black;
+    cursor: help;
+}
+
+.histogram-value {
+    text-align: right;
 }
 
 /* TODO: v starom main.css bola kopa symfony-specific veci (cca od #symfony-header po .flash-message). odkial boli, a chceme ich aj tu? */

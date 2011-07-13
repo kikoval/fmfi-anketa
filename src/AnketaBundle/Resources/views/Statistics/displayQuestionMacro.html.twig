@@ -4,65 +4,80 @@
     <div>
     {# nasledujuci if je nutny, lebo aj polozka pola je null, twig hadze
         Item "description" for "Array" does not exist #}
-    {% if data.description is defined %} {{ data.description }} {% endif %}
+    {% if data.description is defined %}
+        <p class="question-description">{{ data.description }}</p>
+    {% endif %}
     </div>
-    {% if data.chart is defined %}
-        {{ data.chart.render | raw  }}
-    {% endif %}
-    {% if data.histogram is not empty %}
-        {% if data.stats.cnt > 0 %}
-        <table>
-            <thead>
-                <tr>
-                    <th> </th>
-                    <th> Možnosť </th>
-                    <th> hlasov </th>
-                </tr>
-            </thead>
-            {% for row in data.histogram %}
-                <tr>
-                    <td> {{ row.value }} </td>
-                    <td> {{ row.title }} </td>
-                    <td> {{ row.cnt }} </td>
-                </tr>
-            {% endfor %}
-        </table>
+    {% if not data.hasAnswer %}
+        Na túto otázku nikto neodpovedal.
+    {% else %}
+        {% if data.chart is defined %}
+            {{ data.chart.render | raw  }}
         {% endif %}
-        <div>
-        <b>Štatistika:</b>
-        <ul>
-            <li> počet odpovedí: {{ data.stats.cnt }} </li>
-            {% if data.stats.avg is defined %} 
-                <li> priemer: {{ "%.2f" | format(data.stats.avg) }} </li>
+        {% if data.histogram is not empty %}
+            <table>
+                <thead>
+                    <tr>
+                        <th> Možnosť </th>
+                        <th> hlasov </th>
+                        <th> podiel </th>
+                        {% if data.hasDifferentOptions %}
+                        <th> <span title="Hodnota použitá pri počítaní štatistiky" class="help-tooltip">V</span> </th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                {% for row in data.histogram %}
+                    <tr>
+                        <td> {{ row.title }} </td>
+                        <td class="histogram-value"> {{ row.cnt }} </td>
+                        <td class="histogram-value"> {{ "%.0f" | format(row.portion*100) }}% </td>
+                        {% if data.hasDifferentOptions %}
+                        <td> {{ row.value }} </td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </table>
+            <div>
+            <b>Štatistika:</b>
+            <ul>
+                <li> počet odpovedí: {{ data.stats.cnt }} </li>
+                {% if data.stats.avg is defined %} 
+                    <li> priemer: {{ "%.2f" | format(data.stats.avg) }} </li>
+                {% endif %}
+                {% if data.stats.sigma is defined %} 
+                    <li> smerodajná odchýlka: {{ "%.2f" | format(data.stats.sigma) }} </li>
+                {% endif %}
+                {% if data.stats.confidence_interval_low is defined %} 
+                    <li> <span title="Skutočná hodnota sa od vypočítaného priemeru môže líšiť. {#
+                               #}Čím viac údajov a čím menší rozptyl, tým menší bude interval kde {#
+                               #}sa reálny priemer môže nachádzať." class="help-tooltip">odhadovaný interval skutočnej hodnoty</span>
+                        ({{ "%.0f" | format(data.stats.confidence_value * 100) }}% spoľahlivosti):
+                    [{{ "%.2f" | format(data.stats.confidence_interval_low) }},
+                     {{ "%.2f" | format(data.stats.confidence_interval_high) }}]
+                    </li>
+                {% endif %}
+            </div>
+        {% endif %}
+        {% if data.commentsAllowed %}
+            {% if data.comments is not empty %}
+                Komentáre:
+                <div class="results-comments">
+                {% for comment in data.comments %}
+                    <div class='comment' id="comment{{ comment.answer_id }}">
+                    <div class="comment-top"><a class="comment-link" href="#comment{{ comment.answer_id }}">#{{ comment.answer_id }}<a/>:
+                    </div>
+                    <p class="comment-comment">{{ comment.comment }}</p>
+        {# TODO(ppershing): uncomment when controller is available:
+                    <a href="{{ path('report_unappropriate', {'answer_id' : comment.answer_id}) }}"
+                        >Report unappropriate</a>
+        #}
+                    </div>
+                {% endfor %}
+                </div>
+            {% else %}
+                K tejto otázke nikto nepridal žiaden komentár.
             {% endif %}
-            {% if data.stats.sigma is defined %} 
-                <li> smerodajná odchýlka: {{ "%.2f" | format(data.stats.sigma) }} </li>
-            {% endif %}
-            {% if data.stats.confidence_interval_low is defined %} 
-                <li> odhadovaný interval skutočnej hodnoty
-                    ({{ "%.0f" | format(data.stats.confidence_value * 100) }}% spoľahlivosti):{# <div class='tooltip'>
-                    Skutočná hodnota sa od vypočítaného priemeru môže líšiť.
-                    Čím viac údajov a čím menší rozptyl, tým menší bude interval kde sa reálny priemer
-                    môže nachádzať..
-                </div>#}
-                [{{ "%.2f" | format(data.stats.confidence_interval_low) }},
-                 {{ "%.2f" | format(data.stats.confidence_interval_high) }}]
-                </li>
-            {% endif %}
-        </div>
-    {% endif %}
-    {% if data.comments is not empty %}
-        Komentáre:
-        <br />
-        {% for comment in data.comments %}
-            <p class='comment'>
-            {{ loop.index }}: {{ comment.comment }}
-{# TODO(ppershing): uncomment when controller is available:
-            <a href="{{ path('report_unappropriate', {'answer_id' : comment.answer_id}) }}"
-                >Report unappropriate</a>
-#}
-            </p>
-        {% endfor %}
+        {% endif %}
     {% endif %}
 
 {% endmacro %}

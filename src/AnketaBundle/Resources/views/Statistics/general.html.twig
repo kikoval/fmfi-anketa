@@ -5,12 +5,13 @@
 {% endblock %}
 {% block content %}
     {% for category in categories %}
-        <strong>{{ category.description }}: </strong>
-        <br />
+        <h3>{{ category.description }}: </h3>
+        <ul class="category-listing">
         {% for question in questions[category.id] %}
-            <a href="{{ path('statistics_results_general', { 'season_slug': season.slug, 'question_id': question.id }) }}"
+            <li><a href="{{ path('statistics_results_general', { 'season_slug': season.slug, 'question_id': question.id }) }}"
               >{{ question.question }}</a>
-            <br />
+            </li>
         {% endfor %}
+        </ul>
     {% endfor %}
 {% endblock %}
