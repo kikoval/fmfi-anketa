@@ -180,8 +180,10 @@ class StatisticsController extends Controller {
     public function processQuestion(Question $question, $answers) {
         $histogram = $this->getHistogramData($question, $answers);
         $stats = $this->getStatistics($histogram);
-        $hasAnswer = $stats['cnt'] > 0;
-        if ($hasAnswer) {
+        $comments = $this->getComments($answers);
+        $hasComments = count($comments) > 0;
+        $hasAnsweredOption = $stats['cnt'] > 0;
+        if ($hasAnsweredOption) {
             foreach ($histogram as $key=>$value) {
                 $histogram[$key]['portion'] = $value['cnt'] / $stats['cnt'];
             }
@@ -195,13 +197,16 @@ class StatisticsController extends Controller {
             // Nema zmysel prezentovat zlozitejsiu statistiku pocitanu z rovnakych hodnot
             $stats = array('cnt' => $stats['cnt']);
         }
+        if (!$hasAnsweredOption) {
+            $histogram = array();
+        }
         $data = array(
                 'title' => $question->getQuestion(),
                 'description' => $question->getDescription(),
                 'commentsAllowed' => $question->getHasComment(),
-                'hasAnswer' => $hasAnswer,
+                'hasAnswer' => $hasAnsweredOption | $hasComments,
                 'hasDifferentOptions' => $hasDifferentOptions,
-                'comments' => $this->getComments($answers),
+                'comments' => $comments,
                 'histogram' => $histogram,
                 'chart' => $this->getChart($question->getQuestion(), $histogram),
                 'stats' => $stats,
