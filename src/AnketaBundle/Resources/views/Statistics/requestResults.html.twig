@@ -1,12 +1,33 @@
 {% extends 'AnketaBundle:Statistics:index.html.twig' %}
 
+{% block navigation %}
+{% if teacher is defined %}
+    {% render "AnketaBundle:Statistics:menuPredmety" with { 
+        'season' : season,
+        'category' : category,
+        'subject_id': subject.id,
+        'teacher_id' : teacher.id
+        }
+    %}
+{% elseif subject is defined %}
+    {% render "AnketaBundle:Statistics:menuPredmety" with { 
+        'season' : season,
+        'category' : category,
+        'subject_id': subject.id
+        }
+    %}
+{% endif %}
+{% endblock %}
+
 {% block content %}
-    <h1> {{ subject.code }} {{ subject.name }}</h1>
+    <h1> {{ subject.code }} {{ subject.name }}
+         {%if teacher is defined %} - {{ teacher.name }} {% endif %}
+    </h1>
     Otázky k predmetu/učiteľovi vyplnilo menej ako {{ limit }} ľudí.
     Ich štatistická výpovedná hodnota je príliš nízka aby sme
     ich mohli zverejniť (z politických dôvodov). Nemusíš sa báť, učitelia
     svoje výsledky uvidia.
     Ak aj napriek tomu dané výsledky vidieť chceš, 
-    <a href="mailto:tomas.vinar@fmph.uniba.sk"> môžeš si ich vyžiadať </a>
+    <a href="mailto:tomas.vinar@fmph.uniba.sk">môžeš si ich vyžiadať</a> 
     a my ti ich poskytneme.
 {% endblock %}
