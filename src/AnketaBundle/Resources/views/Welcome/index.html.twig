@@ -3,13 +3,16 @@
 
 <h2>Študentská anketa FMFI</h2>
 
-<p>Vitajte v Študentskej ankete 2011! Zapojte sa aj Vy a prezentujte svoj názor!</p>
+<p>Vitajte v Študentskej ankete 2011!</p>
 
-<p><a class="bigbtn" id="uvod_prihlas" href="{{ path('anketa') }}">
-<span class="bigbtn_middle"><span class="bigbtn_left"><span class="bigbtn_right bigbtn_in">Hlasuj!</span></span></span></a></p>
+<p>Hlasovanie v ankete je ukončené.</p>
 
-{% render "AnketaBundle:Hlasovanie:globalProgressbar" with { 'mode': 'welcome' } %}
+<p><a class="bigbtn" id="uvod_prihlas" href="{{ path('statistics') }}">
+<span class="bigbtn_middle"><span class="bigbtn_left"><span class="bigbtn_right bigbtn_in">Výsledky</span></span></span></a></p>
 
+{% render "AnketaBundle:Hlasovanie:globalProgressbar" with { 'mode': 'finished' } %}
+
+{#
 <p>Aká je táto anketa?</p>
 <ul>
 <li><b>Rýchla</b> &mdash; obsahuje len málo otázok, zvlášť oproti starej ankete</li>
@@ -21,6 +24,8 @@
 </ul>
 
 <p><strong>AJ VÁŠ HLAS MÔŽE ZMENIŤ NAŠU ALMA-MÁTER K LEPŠIEMU ;-)</strong><p>
+#}
+
 {% include 'AnketaBundle:Welcome:likebox.html.twig' %}
 
 {% endblock %}
