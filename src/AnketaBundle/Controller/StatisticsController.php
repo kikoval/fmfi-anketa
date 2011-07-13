@@ -15,7 +15,7 @@ use DateTime;
 use AnketaBundle\Lib\StatisticalFunctions;
 
 class StatisticsController extends Controller {
-    const MIN_VOTERS_FOR_PUBLIC = 0;
+    const MIN_VOTERS_FOR_PUBLIC = 5;
     const INTERVAL_CONFIDENCE = 0.9;
     const NO_CATEGORY = 'XXX-nekategorizovane';
 
