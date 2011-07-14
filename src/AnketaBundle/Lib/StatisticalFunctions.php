@@ -79,6 +79,45 @@ class StatisticalFunctions {
         }
         return array_sum(array_map(function ($x) {return $x[0] * $x[1];}, $data)) / $cnt;
     }
+    
+    static function compareDataByValue($a, $b) {
+        if ($a[0] == $b[0]) return 0;
+        return ($a[0] < $b[0]) ? -1 : 1;
+    }
+    
+    /**
+     * Return median of data points
+     *
+     * Median is the middle data point in case of odd number of data points
+     * and average of the two middle data points in case of even number of data
+     * points.
+     *
+     * @param array $data @see checkAndNormalizeData for details
+     *
+     * @returns double median value
+     * @throws
+     */
+    public static function median(array $data) {
+        $data = self::checkAndNormalizeData($data);
+        $cnt = self::cnt($data);
+        if ($cnt == 0) {
+            throw new StatisticalException("No data to find median.");
+        }
+        usort($data, array('AnketaBundle\Lib\StatisticalFunctions', 'compareDataByValue'));
+        $bucket = 0;
+        $remaining = intval($cnt / 2);
+        foreach ($data as $val) {
+            if ($remaining - $val[1] <= 0) {
+                break;
+            }
+            $remaining -= $val[1];
+            $bucket++;
+        }
+        if ($cnt % 2 == 0 && $remaining == $data[$bucket][1]) {
+            return ($data[$bucket][0] + $data[$bucket+1][0])/2;
+        }
+        return $data[$bucket][0];
+    }
 
     /**
      * Returns *sample* standard deviation

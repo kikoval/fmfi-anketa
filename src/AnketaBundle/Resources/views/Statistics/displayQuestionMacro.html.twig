@@ -44,6 +44,9 @@
                 {% if data.stats.avg is defined %} 
                     <li> priemer: {{ "%.2f" | format(data.stats.avg) }} </li>
                 {% endif %}
+                {% if data.stats.median is defined %}
+                    <li> medián: {{ "%.2f" | format(data.stats.median) }} </li>
+                {% endif %}
                 {% if data.stats.sigma is defined %} 
                     <li> smerodajná odchýlka: {{ "%.2f" | format(data.stats.sigma) }} </li>
                 {% endif %}

@@ -131,6 +131,7 @@ class StatisticsController extends Controller {
         $stats['cnt'] = $cnt;
         if ($cnt > 0) {
             $stats['avg'] = StatisticalFunctions::average($data);
+            $stats['median'] = StatisticalFunctions::median($data);
         }
         if ($cnt > 1) {
             $stats['sigma'] = StatisticalFunctions::stddev($data);
