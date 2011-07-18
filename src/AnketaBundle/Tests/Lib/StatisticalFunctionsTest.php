@@ -60,6 +60,18 @@ class StatisticalFunctionsTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(1.29, StatisticalFunctions::median($data),
                 '', 0.001);
     }
+    
+    public function testMedian2() {
+        $data = array(array(-1, 2), array(1, 3));
+        $this->assertEquals(1, StatisticalFunctions::median($data),
+                '', 0.001);
+    }
+    
+    public function testMedian3() {
+        $data = array(-1, -1, 1, 1, 1);
+        $this->assertEquals(1, StatisticalFunctions::median($data),
+                '', 0.001);
+    }
 
     public function testAverageComplex() {
         $data = array(47,

@@ -105,15 +105,15 @@ class StatisticalFunctions {
         }
         usort($data, array('AnketaBundle\Lib\StatisticalFunctions', 'compareDataByValue'));
         $bucket = 0;
-        $remaining = intval($cnt / 2);
+        $remaining = intval(($cnt - 1) / 2);
         foreach ($data as $val) {
-            if ($remaining - $val[1] <= 0) {
+            if ($remaining - $val[1] < 0) {
                 break;
             }
             $remaining -= $val[1];
             $bucket++;
         }
-        if ($cnt % 2 == 0 && $remaining == $data[$bucket][1]) {
+        if ($cnt % 2 == 0 && $remaining == ($data[$bucket][1] - 1) ) {
             return ($data[$bucket][0] + $data[$bucket+1][0])/2;
         }
         return $data[$bucket][0];
