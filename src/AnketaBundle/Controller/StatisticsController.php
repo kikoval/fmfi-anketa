@@ -87,7 +87,7 @@ class StatisticsController extends Controller {
     /**
      * Creates chart for given histogram
      */
-    public function getChart($title, $histogram) {
+    public function getChart(Question $question, $histogram) {
         $counts = array_map(function ($data) { return $data['cnt']; },
                             $histogram);
         $total_cnt = array_sum($counts);
@@ -100,6 +100,14 @@ class StatisticsController extends Controller {
         $chart->setLegend('r');
         $chart->setSize(300, 150);
 
+        $values = array();
+        foreach ($histogram as $data) {
+            $values[] = $data['value'];
+        }
+        sort($values);
+
+        $scaleColors = array('d40000', 'f1792a', 'b3b3b3', 'bae11e', '338000');
+        $twoColors = array('ff2a2a', '0066ff');
 
         foreach ($histogram as $data) {
             // Zero count magically drops things from the legend
@@ -109,6 +117,13 @@ class StatisticsController extends Controller {
             // with chopping off high values
             $bar = new Arc($cnt / 1.0 / $total_cnt);
             $bar->setTitle($data['title']);
+            if (count($histogram) == count($scaleColors)) {
+                $index = array_search($data['value'], $values);
+                $bar->setColor($scaleColors[$index]);
+            }
+            else if (count($histogram) == 2) {
+                $bar->setColor($twoColors[($data['value']>=0?1:0)]);
+            }
             $chart->addData($bar);
         }
 
@@ -210,7 +225,7 @@ class StatisticsController extends Controller {
                 'hasDifferentOptions' => $hasDifferentOptions,
                 'comments' => $comments,
                 'histogram' => $histogram,
-                'chart' => $this->getChart($question->getQuestion(), $histogram),
+                'chart' => $this->getChart($question, $histogram),
                 'stats' => $stats,
                 );
 
