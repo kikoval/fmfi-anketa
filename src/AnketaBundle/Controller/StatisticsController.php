@@ -106,8 +106,15 @@ class StatisticsController extends Controller {
         }
         sort($values);
 
-        $scaleColors = array('d40000', 'f1792a', 'b3b3b3', 'bae11e', '338000');
-        $twoColors = array('ff2a2a', '0066ff');
+        $colors = null;
+        $palettes = array(array('d40000', 'f1792a', 'b3b3b3', 'bae11e', '338000'),
+                          array('d40000', '338000'));
+        foreach ($palettes as $palette) {
+            if (count($histogram) == count($palette)) {
+                $colors = $palette;
+                break;
+            }
+        }
 
         foreach ($histogram as $data) {
             // Zero count magically drops things from the legend
@@ -117,12 +124,9 @@ class StatisticsController extends Controller {
             // with chopping off high values
             $bar = new Arc($cnt / 1.0 / $total_cnt);
             $bar->setTitle($data['title']);
-            if (count($histogram) == count($scaleColors)) {
+            if ($colors != null) {
                 $index = array_search($data['value'], $values);
-                $bar->setColor($scaleColors[$index]);
-            }
-            else if (count($histogram) == 2) {
-                $bar->setColor($twoColors[($data['value']>=0?1:0)]);
+                $bar->setColor($colors[$index]);
             }
             $chart->addData($bar);
         }
