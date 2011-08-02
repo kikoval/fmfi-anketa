@@ -44,7 +44,7 @@ class StatisticsController extends Controller {
         $comments = array();
 
         foreach ($answers as $answer) {
-            if ($answer->hasComment()) {
+            if ($answer->hasComment() && !$answer->getInappropriate()) {
                 $comments[] = array('answer_id' => $answer->getId(),
                                     'comment' => $answer->getComment());
             }
