@@ -150,13 +150,15 @@ class StatisticsController extends Controller {
         }
         if ($cnt > 1) {
             $stats['sigma'] = StatisticalFunctions::stddev($data);
-            $confHalf = StatisticalFunctions::confidenceHalf($data, self::INTERVAL_CONFIDENCE);
-            // Warning: we do not want to do this in statistical functions, as we need to get
-            // minimum/maximum also of histogram items with count 0
-            $values = array_map(function ($x) {return $x[0];}, $data);
-            $stats['confidence_value'] = self::INTERVAL_CONFIDENCE;
-            $stats['confidence_interval_low'] = max(min($values), $stats['avg'] - $confHalf);
-            $stats['confidence_interval_high'] = min(max($values), $stats['avg'] + $confHalf);
+            if (function_exists('stats_cdf_t')) {
+                $confHalf = StatisticalFunctions::confidenceHalf($data, self::INTERVAL_CONFIDENCE);
+                // Warning: we do not want to do this in statistical functions, as we need to get
+                // minimum/maximum also of histogram items with count 0
+                $values = array_map(function ($x) {return $x[0];}, $data);
+                $stats['confidence_value'] = self::INTERVAL_CONFIDENCE;
+                $stats['confidence_interval_low'] = max(min($values), $stats['avg'] - $confHalf);
+                $stats['confidence_interval_high'] = min(max($values), $stats['avg'] + $confHalf);
+            }
         }
         return $stats;
     }
