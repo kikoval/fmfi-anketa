@@ -1,8 +1,12 @@
 {% extends 'AnketaBundle:Statistics:index.html.twig' %}
-{% import 'AnketaBundle:Statistics:displayQuestionMacro.html.twig' as macro %}
+{% import 'AnketaBundle:Statistics:displayQuestionMacro.html.twig' as questionMacro %}
+{% import 'AnketaBundle:Statistics:displayTeacherResponseMacro.html.twig' as responseMacro %}
+
 {% block navigation %}
     {% render "AnketaBundle:Statistics:menuVseobecne" with { 'season' : season } %}
 {% endblock %}
+
 {% block content %}
-    {{ macro.displayResults(result) }}
+    {{ responseMacro.displayResponse(responses) }}
+    {{ questionMacro.displayResults(result) }}
 {% endblock %}

@@ -376,5 +376,10 @@ hr {
     text-align: right;
 }
 
+.results-comments-official {
+  background-color: #FFFED4;
+  padding: 0.5em;
+}
+
 /* TODO: v starom main.css bola kopa symfony-specific veci (cca od #symfony-header po .flash-message). odkial boli, a chceme ich aj tu? */
 

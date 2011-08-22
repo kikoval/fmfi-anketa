@@ -1,5 +1,6 @@
 {% extends 'AnketaBundle:Statistics:index.html.twig' %}
-{% import 'AnketaBundle:Statistics:displayQuestionMacro.html.twig' as macro %}
+{% import 'AnketaBundle:Statistics:displayQuestionMacro.html.twig' as questionMacro %}
+{% import 'AnketaBundle:Statistics:displayTeacherResponseMacro.html.twig' as responseMacro %}
 {% block navigation %}
     {% render "AnketaBundle:Statistics:menuPredmety" with { 
         'season' : season,
@@ -11,8 +12,9 @@
 {% endblock %}
 {% block content %}
     <h1>{{ subject.code }} {{ subject.name }} - {{ teacher.name }}</h1>
+    {{ responseMacro.displayResponse(responses) }}
     {% for result in results %}
-        {{ macro.displayResults(result) }}
+        {{ questionMacro.displayResults(result) }}
         <hr/>
     {% endfor %}
 {% endblock %}

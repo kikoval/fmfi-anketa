@@ -325,6 +325,10 @@ class StatisticsController extends Controller {
             $maxCnt = max($maxCnt, $data['stats']['cnt']);
             $results[] = $data;
         }
+
+        $responses = $em->getRepository('AnketaBundle:Response')
+                        ->findBy(array('subject' => $subject->getId(), 'teacher' => null));
+        $templateParams['responses'] = $this->createUsernameFromLogin($responses);
         $templateParams['season'] = $season;
         $templateParams['category'] = $category;
         $templateParams['subject'] = $subject;
@@ -372,6 +376,10 @@ class StatisticsController extends Controller {
             $maxCnt = max($maxCnt, $data['stats']['cnt']);
             $results[] = $data;
         }
+        
+        $responses = $em->getRepository('AnketaBundle:Response')
+                        ->findBy(array('subject' => $subject->getId(), 'teacher' => $teacher_id));
+        $templateParams['responses'] = $this->createUsernameFromLogin($responses);
         $templateParams['season'] = $season;
         $templateParams['category'] = $category;
         $templateParams['subject'] = $subject;
@@ -535,9 +543,27 @@ class StatisticsController extends Controller {
         $answers = $em->getRepository('AnketaBundle\Entity\Answer')
                       ->findBy(array('question' => $question->getId()));
 
+        $responses = $em->getRepository('AnketaBundle:Response')
+                        ->findBy(array('question' => $question_id));
+        $templateParams['responses'] = $this->createUsernameFromLogin($responses);
         $templateParams['result'] = $this->processQuestion($question, $answers);
         $templateParams['season'] = $season;
         return $this->render('AnketaBundle:Statistics:resultsGeneral.html.twig', $templateParams);
+    }
+
+    private function createUsernameFromLogin($responses)
+    {
+        foreach ($responses as $response)
+        {
+            if ($response->getAuthorLogin())
+            {
+                $em = $this->get('doctrine.orm.entity_manager');
+                $user = $em->getRepository('AnketaBundle:User')
+                           ->findOneBy(array('userName' => $response->getAuthorLogin()));
+                if (!empty($user)) $response->setAuthorText($user->getDisplayName());
+            }
+        }
+        return $responses;
     }
 
 }
