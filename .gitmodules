@@ -1,0 +1,3 @@
+[submodule "vendor/libfajr/fajr/libfajr"]
+	path = vendor/libfajr/fajr/libfajr
+	url = https://code.google.com/p/fajr.libfajr/
