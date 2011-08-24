@@ -1,0 +1,23 @@
+
+# /
+/nbproject
+/report
+
+# /app/
+/app/cache
+/app/logs
+
+# /app/config/
+/app/config/parameters.ini
+/app/config/config.yml
+
+# /db/
+/db/anketa.sqlite
+
+# /scripts/
+/scripts/restart_db.sh
+
+# /vendor/libfajr/fajr/
+
+# /web/bundles/
+/web/bundles/*
