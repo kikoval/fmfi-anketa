@@ -12,7 +12,7 @@
         Na túto otázku nikto neodpovedal.
     {% else %}
         {% if data.chart is defined %}
-            {{ data.chart.render | raw  }}
+            <img src="{{ data.chart.url }}" width="{{ data.chart.width }}" height="{{ data.chart.height }}" alt="">
         {% endif %}
         {% if data.histogram is not empty %}
             <table>

@@ -5,8 +5,6 @@ namespace AnketaBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Bundle\GoogleChartBundle\Library\PieChart\PieChart;
-use Bundle\GoogleChartBundle\Library\PieChart\Arc;
 use AnketaBundle\Entity\Question;
 use AnketaBundle\Entity\CategoryType;
 use AnketaBundle\Entity\Season;
@@ -88,50 +86,50 @@ class StatisticsController extends Controller {
      * Creates chart for given histogram
      */
     public function getChart(Question $question, $histogram) {
-        $counts = array_map(function ($data) { return $data['cnt']; },
-                            $histogram);
-        $total_cnt = array_sum($counts);
-        if ($total_cnt == 0) {
+        $width = 300;
+        $height = 150;
+
+        if (count($histogram) == 2) {
+            $palette = '338000|d40000';   // the first choice is the best
+        }
+        else if (count($histogram) == 5 && $histogram[2]['value'] == 0) {
+            $palette = 'd40000|bae11e|338000|bae11e|d40000';   // the middle choice is the best
+        }
+        else if (count($histogram) == 5 && $histogram[0]['value'] > $histogram[4]['value']) {
+            $palette = '338000|bae11e|b3b3b3|f1792a|d40000';   // the first choice is the best
+        }
+        else if (count($histogram) == 5) {
+            $palette = 'd40000|f1792a|b3b3b3|bae11e|338000';   // the last choice is the best
+        }
+        else {
+            $palette = '';
+        }
+
+        $titles = array_map(function ($data) { return $data['title']; }, $histogram);
+        $counts = array_map(function ($data) { return $data['cnt']; }, $histogram);
+        if (array_sum($counts) == 0) {
             return null;
         }
+ 
+        // docs at http://code.google.com/apis/chart/image/docs/gallery/bar_charts.html
+        $options = array(
+            'cht' => 'bhs',   // bar chart, horizontal, stacked
+            'chbh' => 'a',   // bar width = automatic
+            'chds' => 'a',   // automatic data scaling
+            'chxt' => 'x,y',   // visible axes
+            // axis style: leave default color (676767) and font (11.5), align right (1) and
+            // show only axis line (l) and not line with tick marks (lt)
+            'chxs' => '1,676767,11.5,1,l',
+            'chs' => $width . 'x' . $height,
+            'chco' => $palette,
+            'chxl' => '1:|' . implode('|', array_reverse($titles)),
+            'chd' => 't:' . implode(',', $counts)
+        );
 
-        $chart = new PieChart();
-        $chart->setTitle(false);
-        $chart->setLegend('r');
-        $chart->setSize(300, 150);
+        $url = (isset($_SERVER['HTTPS']) ? 'https' : 'http') .
+            '://chart.googleapis.com/chart?' . http_build_query($options);
 
-        $values = array();
-        foreach ($histogram as $data) {
-            $values[] = $data['value'];
-        }
-        sort($values);
-
-        $colors = null;
-        $palettes = array(array('d40000', 'f1792a', 'b3b3b3', 'bae11e', '338000'),
-                          array('d40000', '338000'));
-        foreach ($palettes as $palette) {
-            if (count($histogram) == count($palette)) {
-                $colors = $palette;
-                break;
-            }
-        }
-
-        foreach ($histogram as $data) {
-            // Zero count magically drops things from the legend
-            // and we do not want that
-            $cnt = $data['cnt'] == 0 ? 0.001 : $data['cnt'];
-            // We normalize data because Google Pie chart have some bug
-            // with chopping off high values
-            $bar = new Arc($cnt / 1.0 / $total_cnt);
-            $bar->setTitle($data['title']);
-            if ($colors != null) {
-                $index = array_search($data['value'], $values);
-                $bar->setColor($colors[$index]);
-            }
-            $chart->addData($bar);
-        }
-
-        return $chart;
+        return array('url' => $url, 'width' => $width, 'height' => $height);
     }
 
     /**
