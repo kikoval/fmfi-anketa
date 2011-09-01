@@ -12,7 +12,7 @@
   var width = window.innerWidth || $('html').width();
   if (navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/Android/i) || (width && width < 500)) {
     $('html').addClass('mobile');
-    $('html').delegate('.sidebar-toggle, #sidebar a.active', 'click keypress', function () {
+    $('html').delegate('.sidebar-toggle, #sidebar a.active', 'click', function () {
       $('html').toggleClass('show-sidebar');
       return false;
     });
