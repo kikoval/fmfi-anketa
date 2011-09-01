@@ -23,37 +23,36 @@
                             <th> hlasov </th>
                             <th> podiel </th>
                             {% if data.hasDifferentOptions %}
-                            <th> <span title="Hodnota použitá pri počítaní štatistiky" class="help-tooltip">V</span> </th>
+                            <th> <span title="Váha použitá pri počítaní štatistiky" class="help-tooltip">V</span> </th>
                             {% endif %}
                         </tr>
                     </thead>
                     {% for row in data.histogram %}
                         <tr>
                             <td> {{ row.title }} </td>
-                            <td class="histogram-value"> {{ row.cnt }} </td>
-                            <td class="histogram-value"> {{ "%.0f" | format(row.portion*100) }}% </td>
+                            <td class="numeric"> {{ row.cnt }} </td>
+                            <td class="numeric"> {{ "%.0f" | format(row.portion*100) }}% </td>
                             {% if data.hasDifferentOptions %}
-                            <td> {{ row.value }} </td>
+                                <td class="numeric"> {{ row.value }} </td>
                             {% endif %}
                         </tr>
                     {% endfor %}
                 </table>
-                <b>Štatistika:</b>
                 <ul>
-                    <li data-cnt="{{ data.stats.cnt }}"> počet odpovedí: {{ data.stats.cnt }} </li>
+                    <li data-cnt="{{ data.stats.cnt }}">Počet hlasov: {{ data.stats.cnt }} </li>
                     {% if data.stats.avg is defined %} 
-                        <li data-avg="{{ "%.2f" | format(data.stats.avg) }}"> priemer: {{ "%.2f" | format(data.stats.avg) }} </li>
+                        <li data-avg="{{ "%.2f" | format(data.stats.avg) }}">Priemer: {{ "%.2f" | format(data.stats.avg) }} </li>
                     {% endif %}
                     {% if data.stats.median is defined %}
-                        <li> medián: {{ "%.2f" | format(data.stats.median) }} </li>
+                        <li>Medián: {{ "%.2f" | format(data.stats.median) }} </li>
                     {% endif %}
                     {% if data.stats.sigma is defined %} 
-                        <li> smerodajná odchýlka: {{ "%.2f" | format(data.stats.sigma) }} </li>
+                        <li>Smerodajná odchýlka: {{ "%.2f" | format(data.stats.sigma) }} </li>
                     {% endif %}
                     {% if data.stats.confidence_interval_low is defined %} 
                         <li> <span title="Skutočná hodnota sa od vypočítaného priemeru môže líšiť. {#
                                    #}Čím viac údajov a čím menší rozptyl, tým menší bude interval kde {#
-                                   #}sa reálny priemer môže nachádzať." class="help-tooltip">odhadovaný interval skutočnej hodnoty</span>
+                                   #}sa reálny priemer môže nachádzať." class="help-tooltip">Odhadovaný interval skutočnej hodnoty</span>
                             ({{ "%.0f" | format(data.stats.confidence_value * 100) }}% spoľahlivosti):
                         [{{ "%.2f" | format(data.stats.confidence_interval_low) }},
                          {{ "%.2f" | format(data.stats.confidence_interval_high) }}]
