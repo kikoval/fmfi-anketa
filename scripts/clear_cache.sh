@@ -1,9 +1,11 @@
-# This is a script that clears symfony cache files.
-# @copyright   Copyright (c) 2011 Peter Peresini 
-# @author      Peter Peresini <ppershing+agiltech@gmail.com>
-#
+#!/bin/bash
 
-CACHE=`dirname "$0"`/../app/cache
+cd "`dirname "$0"`/.."
+bold=$'\e[37;40;1m'
+normal=$'\e[0m'
 
-chmod 777 "$CACHE"
-rm -rf "$CACHE"/*
+echo "${bold}clearing cache${normal}"
+
+mkdir -p app/cache
+chmod 777 app/cache
+rm -rf app/cache/*

@@ -1,7 +1,11 @@
-# @author Ivan Trancik <descent89@gmail.com>
-#
+#!/bin/bash
 
-LOGS=`dirname "$0"`/../app/logs
+cd "`dirname "$0"`/.."
+bold=$'\e[37;40;1m'
+normal=$'\e[0m'
 
-chmod 777 "$LOGS"
-rm -rf "$LOGS"/*
+echo "${bold}clearing logs${normal}"
+
+mkdir -p app/logs
+chmod 777 app/logs
+rm -rf app/logs/*
