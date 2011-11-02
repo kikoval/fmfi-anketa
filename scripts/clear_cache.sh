@@ -6,6 +6,4 @@ normal=$'\e[0m'
 
 echo "${bold}clearing cache${normal}"
 
-mkdir -p app/cache
-chmod 777 app/cache
 rm -rf app/cache/*

@@ -6,6 +6,4 @@ normal=$'\e[0m'
 
 echo "${bold}clearing logs${normal}"
 
-mkdir -p app/logs
-chmod 777 app/logs
 rm -rf app/logs/*

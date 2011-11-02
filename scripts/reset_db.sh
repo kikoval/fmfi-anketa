@@ -4,15 +4,12 @@ cd "`dirname "$0"`/.."
 bold=$'\e[37;40;1m'
 normal=$'\e[0m'
 
-console=app/console
-parameters=app/config/parameters.ini
+! [ -f app/config/parameters.ini ] && echo "CHYBA: neviem najst parameters.ini" && exit 1
 
-! [ -f "$parameters" ] && echo "CHYBA: neviem najst parameters.ini" && exit 1
-
-zisti () { grep "$1" "$parameters" | grep -Eo '=.*$' | cut -c2-; }
+zisti () { grep "$1" app/config/parameters.ini | grep -Eo '=.*$' | cut -c2-; }
 sprav () { echo "$bold> $*$normal"; "$@"; }
 
-[ "`zisti db_allow_reset`" != "true" ] && echo "${bold}PRESKAKUJEM restart databazy lebo neni db_allow_reset=true${normal}" && exit 0
+[ "`zisti db_allow_reset`" != "true" ] && echo "${bold}PRESKAKUJEM reset databazy lebo neni db_allow_reset=true${normal}" && exit 0
 
 echo "${bold}resetujem databazu${normal}"
 
@@ -26,15 +23,15 @@ type mysql5 &>/dev/null && mysql_client=mysql5
 
 # odtialto sa zacne aj nieco diat
 
-[ "$db_backend" == "sqlite" ] && sprav mkdir -p db
-[ "$db_backend" == "sqlite" ] && sprav chmod 777 db
-sprav "$console" doctrine:database:drop --force
-sprav "$console" doctrine:database:create
-[ "$db_backend" == "sqlite" ] && sprav chmod 777 "db/$db_sqlite_file"
+sprav app/console doctrine:database:drop --force
+sprav app/console doctrine:database:create
 
-sprav "$console" doctrine:schema:create
-sprav "$console" doctrine:data:load
-sprav "$console" anketa:import-otazky other/anketa.yml
+sprav app/console doctrine:schema:create
+sprav app/console doctrine:data:load
+sprav app/console anketa:import-otazky other/anketa.yml
 
-[ "$db_backend" == "sqlite" ] && sprav sqlite3 "db/$db_sqlite_file" <other/teachers_subjects.sql
-[ "$db_backend" == "mysql" ] && sprav "$mysql_client" -u"`zisti db_mysql_user`" -p"`zisti db_mysql_pass`" "`zisti db_mysql_name`" <other/teachers_subjects.sql
+echo "${bold}> importujem other/teachers_subjects.sql..."
+[ "$db_backend" == "sqlite" ] && sqlite3 "db/$db_sqlite_file" <other/teachers_subjects.sql
+[ "$db_backend" == "mysql" ] && "$mysql_client" -u"`zisti db_mysql_user`" -p"`zisti db_mysql_pass`" "`zisti db_mysql_name`" <other/teachers_subjects.sql
+
+echo "${bold}databaza resetnuta${normal}"
