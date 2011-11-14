@@ -10,8 +10,9 @@
  * @author     Martin Králik <majak47@gmail.com>
  */
 
-namespace AnketaBundle\Entity\Repository;
+namespace AnketaBundle\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\EntityRepository;
 use AnketaBundle\Entity\Question;

@@ -2,68 +2,71 @@
 
 namespace AnketaBundle\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @orm:Entity(repositoryClass="AnketaBundle\Entity\Repository\QuestionRepository")
+ * @ORM\Entity(repositoryClass="AnketaBundle\Entity\QuestionRepository")
  */
 class Question {
     
     /**
-     * @orm:Id @orm:GeneratedValue @orm:Column(type="integer")
+     * @ORM\Id 
+     * @ORM\GeneratedValue 
+     * @ORM\Column(type="integer")
      */
     private $id;
 
     /**
      * Defaults to 100
-     * @orm:Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     private $position;
 
     /**
-     * @orm:Column(type="string", nullable="true")
+     * @ORM\Column(type="string", nullable="true")
      */
     private $title;
 
     /**
-     * @orm:Column(type="string")
+     * @ORM\Column(type="string")
      */
     private $question;
 
     /**
-     * @orm:ManyToOne(targetEntity="Season")
+     * @ORM\ManyToOne(targetEntity="Season")
      *
      * @var Season $season
      */
     private $season;
 
     /**
-     * @orm:Column(type="string", length=1024, nullable="true")
+     * @ORM\Column(type="string", length=1024, nullable="true")
      */
     private $description;
 
     /**
-     * @orm:Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     private $stars;
 
     /**
-     * @orm:OneToMany(targetEntity="Option", mappedBy="question", cascade={"persist", "remove"})
-     * @orm:OrderBy({"position" = "ASC"})
+     * @ORM\OneToMany(targetEntity="Option", mappedBy="question", cascade={"persist", "remove"})
+     * @ORM\OrderBy({"position" = "ASC"})
      *
      * @var ArrayCollection $options
      */
     private $options;
 
     /**
-     * @orm:ManyToOne(targetEntity="Category", inversedBy="questions")
+     * @ORM\ManyToOne(targetEntity="Category", inversedBy="questions")
      *
      * @var Category $category
      */
     private $category;
 
     /**
-     * @orm:Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     private $hasComment;
 

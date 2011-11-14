@@ -2,41 +2,44 @@
 
 namespace AnketaBundle\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use fajr\libfajr\base\Preconditions;
 
 /**
- * @orm:Entity(repositoryClass="AnketaBundle\Entity\Repository\CategoryRepository")
+ * @ORM\Entity(repositoryClass="AnketaBundle\Entity\CategoryRepository")
  */
 class Category {
     
     /**
-     * @orm:Id @orm:GeneratedValue @orm:Column(type="integer")
+     * @ORM\Id 
+     * @ORM\GeneratedValue 
+     * @ORM\Column(type="integer")
      */
     private $id;
 
     /**
      * Defaults to 100
-     * @orm:Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     private $position;
 
     /**
      * The type of the category, i.e. "general", "subject"
-     * @orm:Column(type="string")
+     * @ORM\Column(type="string")
      */
     private $type;
 
     /**
      * Describes the subcategory, i.e. School properties/Food for students
      * If no subcategories are needed, it's the same as main category
-     * @orm:Column(type="string")
+     * @ORM\Column(type="string")
      */
     private $description;
 
     /**
-     * @orm:OneToMany(targetEntity="Question", mappedBy="category")
-     * @orm:OrderBy({"position" = "ASC"})
+     * @ORM\OneToMany(targetEntity="Question", mappedBy="category")
+     * @ORM\OrderBy({"position" = "ASC"})
      *
      * @var ArrayCollection $questions
      */

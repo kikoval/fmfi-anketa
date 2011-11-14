@@ -9,7 +9,7 @@
  * @author     Martin Sucha <anty.sk+svt@googlegroups.com>
  */
 
-namespace AnketaBundle\Entity\Repository;
+namespace AnketaBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
 use AnketaBundle\Entity\Role;

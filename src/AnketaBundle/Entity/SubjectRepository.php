@@ -9,7 +9,7 @@
  * @author     Jakub Markoš <jakub.markos@gmail.com>
  */
 
-namespace AnketaBundle\Entity\Repository;
+namespace AnketaBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
 

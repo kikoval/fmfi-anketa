@@ -9,8 +9,9 @@
  * @author     Jakub Markoš <jakub.markos@gmail.com>
  */
 
-namespace AnketaBundle\Entity\Repository;
+namespace AnketaBundle\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\EntityRepository;
 use AnketaBundle\Entity\CategoryType;
 

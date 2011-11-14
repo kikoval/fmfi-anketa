@@ -2,21 +2,24 @@
 
 namespace AnketaBundle\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Security\Core\Role\RoleInterface;
 
 /**
- * @orm:Entity(repositoryClass="AnketaBundle\Entity\Repository\RoleRepository")
+ * @ORM\Entity(repositoryClass="AnketaBundle\Entity\RoleRepository")
  */
 class Role implements RoleInterface {
 
     /**
-     * @orm:Id @orm:GeneratedValue @orm:Column(type="integer")
+     * @ORM\Id 
+     * @ORM\GeneratedValue 
+     * @ORM\Column(type="integer")
      */
     private $id;
 
     /**
-     * @orm:Column(type="string", unique="true")
+     * @ORM\Column(type="string", unique="true")
      */
     private $name;
 

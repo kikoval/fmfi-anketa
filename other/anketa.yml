@@ -43,9 +43,9 @@ otazky:
       hviezdicky: No
       moznosti:
           - text: Nepochopiteľná.
-          - text: Mierne nadsadená.
+          - text: Nadsadená.
           - text: Akurát.
-          - text: Príliš jednoduchá.
+          - text: Nenáročná.
           - text: Triviálna.
       position:   2
 
@@ -74,7 +74,7 @@ otazky:
       position:   4
 
     - nazov:  Absolvovanie predmetu
-      text:   Zhruba akú časť prednášok a cvičení ste absolvovali?
+      text:   Zhruba akú časť prednášok ste absolvovali?
       popis:
       kategoria:  predmety
       komentar:   No
@@ -92,14 +92,34 @@ otazky:
             hodnota:  0
       position:   5
 
+    - nazov:  Absolvovanie predmetu
+      text:   Zhruba akú časť cvičení ste absolvovali?
+      popis:
+      kategoria:  predmety
+      komentar:   No
+      hviezdicky: No
+      moznosti:
+          - text:     90-100%
+            hodnota:  100
+          - text:     60-90% 
+            hodnota:  75
+          - text:     30-60% 
+            hodnota:  45
+          - text:     10-30% 
+            hodnota:  20
+          - text:     Menej ako 10%.
+            hodnota:  0
+      position:   5
+      
     - nazov:  Odporúčanie predmetu
-      text:   Odporučili by ste tento predmet kolegom?
+      text:   Odporučili by ste tento predmet ostatným študentom?
       popis:
       kategoria:  predmety
       komentar:   No
       hviezdicky: No
       moznosti:
           - text: Áno.
+          - text: Áno s výhradami.
           - text: Nie.
       position:   6
 
@@ -120,15 +140,6 @@ otazky:
       ucitel:     Yes
       position:   8
 
-    - nazov:  Diskusia
-      text:   Ohodnoťte schopnosť vyučujúceho odpovedať na otázky študentov.
-      popis:
-      kategoria:  predmety_ucitel
-      komentar:   No
-      hviezdicky: Yes
-      ucitel:     Yes
-      position:   9
-
     - nazov:  Prezentácia
       text:   Ohodnoťte ústny prejav a prezentačné schopnosti vyučujúceho.
       popis:
@@ -139,19 +150,20 @@ otazky:
       position:   10
 
     - nazov:  Odporúčanie učiteľa
-      text:   Odporučili by ste tohto učiteľa kolegom?
+      text:   Odporučili by ste tohto učiteľa ostatným študentom?
       popis:
       kategoria:  predmety_ucitel
       komentar:   No
       hviezdicky: No
       moznosti:
           - text: Áno.
+          - text: Áno s výhradami.
           - text: Nie.
       ucitel:     Yes
       position:   11
 
     - nazov:  Pripomienky k vyučujúcemu
-      text:   Napíšte Váš názor alebo pripomienky k učiteľovi. Zdôvodnite, prečo by ste ho odporúčali/neodporúčali.
+      text:   Napíšte Váš názor alebo pripomienky k učiteľovi. Zdôvodnite, prečo by ste ho odporúčali/neodporúčali. Ohodnoťte schopnosť vyučujúceho odpovedať na otázky študentov.
       popis:
       kategoria:  predmety_ucitel
       komentar:   Yes
