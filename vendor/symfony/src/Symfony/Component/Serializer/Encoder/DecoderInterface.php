@@ -14,7 +14,7 @@ use Symfony\Component\Serializer\SerializerInterface;
  */
 
 /**
- * Defines the interface of encoders
+ * Defines the interface of encoders that are able to decode their own format
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
@@ -26,7 +26,6 @@ interface DecoderInterface
      * @param string $data data to decode
      * @param string $format format to decode from
      * @return mixed
-     * @api
      */
     function decode($data, $format);
 }

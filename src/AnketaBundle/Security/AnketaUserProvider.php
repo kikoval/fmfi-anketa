@@ -55,7 +55,7 @@ class AnketaUserProvider implements UserProviderInterface
      * @return User the reloaded user
      * @throws UnsupportedUserException if the UserInstance given is not User
      */
-    public function loadUser(UserInterface $user) {
+    public function refreshUser(UserInterface $user) {
         if (!($user instanceof User)) {
             throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', get_class($user)));
         }

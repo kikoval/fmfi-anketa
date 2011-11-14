@@ -6,7 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * @orm:Entity(repositoryClass="AnketaBundle\Entity\Repository\UserRepository")
+ * @orm:Entity(repositoryClass="AnketaBundle\Entity\UserRepository")
  */
 class User implements UserInterface {
 

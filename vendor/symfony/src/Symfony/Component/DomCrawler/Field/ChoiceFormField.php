@@ -47,6 +47,8 @@ class ChoiceFormField extends FormField
      * @param string $value The value of the field
      *
      * @throws \InvalidArgumentException When value type provided is not correct
+     *
+     * @api
      */
     public function select($value)
     {
@@ -205,7 +207,7 @@ class ChoiceFormField extends FormField
 
             $found = false;
             foreach ($this->xpath->query('descendant::option', $this->node) as $option) {
-                $this->options[] = $option->getAttribute('value');
+                $this->options[] = $option->hasAttribute('value') ? $option->getAttribute('value') : $option->nodeValue;
 
                 if ($option->getAttribute('selected')) {
                     $found = true;
