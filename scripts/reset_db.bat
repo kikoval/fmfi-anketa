@@ -5,3 +5,4 @@ php %CONSOLE% doctrine:database:create
 php %CONSOLE% doctrine:schema:create
 php %CONSOLE% doctrine:data:load
 php %CONSOLE% anketa:import-otazky other/anketa.yml
+REM TODO tuto asi chyba importovanie other/teacher_subjects.sql
