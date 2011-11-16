@@ -12,12 +12,12 @@
 /app/config/config.yml
 
 # /db/
-/db/anketa.sqlite
-
-# /scripts/
-/scripts/restart_db.sh
-
-# /vendor/libfajr/fajr/
+/db/*
 
 # /web/bundles/
 /web/bundles/*
+
+*~
+.DS_Store
+.*.sw[a-z]
+Thumbs.db
