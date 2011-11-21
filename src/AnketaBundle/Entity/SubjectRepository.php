@@ -34,7 +34,7 @@ class SubjectRepository extends EntityRepository {
         $user = $this->getEntityManager()->find('AnketaBundle\Entity\User',
                                                 $userId);
         $attendedSubjects = $user->getSubjects()->toArray();
-        \usort($attendedSubjects, array('\AnketaBundle\Entity\Repository\SubjectRepository', 'compareSubjects'));
+        \usort($attendedSubjects, array('\AnketaBundle\Entity\SubjectRepository', 'compareSubjects'));
         return $attendedSubjects;
     }
 
@@ -45,7 +45,7 @@ class SubjectRepository extends EntityRepository {
         $subjects = $this->getEntityManager()
                          ->getRepository('AnketaBundle\Entity\Subject')
                          ->findAll();
-        \usort($subjects, array('\AnketaBundle\Entity\Repository\SubjectRepository', 'compareSubjects'));
+        \usort($subjects, array('\AnketaBundle\Entity\SubjectRepository', 'compareSubjects'));
         return $subjects;
     }
 
@@ -60,7 +60,7 @@ class SubjectRepository extends EntityRepository {
             'WHERE a.subject = s';
         $subjects = $this->getEntityManager()
                          ->createQuery($dql)->execute();
-        \usort($subjects, array('\AnketaBundle\Entity\Repository\SubjectRepository', 'compareSubjects'));
+        \usort($subjects, array('\AnketaBundle\Entity\SubjectRepository', 'compareSubjects'));
         return $subjects;
     }
 

@@ -2,29 +2,32 @@
 
 namespace AnketaBundle\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @orm:Entity(repositoryClass="AnketaBundle\Entity\Repository\TeacherRepository")
- * @orm:Table(name="teacher")
+ * @ORM\Entity(repositoryClass="AnketaBundle\Entity\TeacherRepository")
+ * @ORM\Table(name="teacher")
  */
 class Teacher {
     
     /**
-     * @orm:Id @orm:GeneratedValue @orm:Column(type="integer")
+     * @ORM\Id 
+     * @ORM\GeneratedValue 
+     * @ORM\Column(type="integer")
      */
     private $id;
 
     /**
-     * @orm:Column(type="string")
+     * @ORM\Column(type="string")
      */
     private $name;
 
     /**
-     * @orm:ManyToMany(targetEntity="Subject")
-     * @orm:JoinTable(name="teachers_subjects",
-     *      joinColumns={@orm:JoinColumn(name="teacher_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@orm:JoinColumn(name="subject_id", referencedColumnName="id")}
+     * @ORM\ManyToMany(targetEntity="Subject")
+     * @ORM\JoinTable(name="teachers_subjects",
+     *      joinColumns={@ORM\JoinColumn(name="teacher_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="subject_id", referencedColumnName="id")}
      *      )
      *
      * @var ArrayCollection $subjects

@@ -46,9 +46,9 @@
                          id="question_{{ question.id }}_empty"
                          name="question[{{ question.id }}][answer]"
                          value="-1"
-                      {# Warning: "x.y is not defined" or "not x.y is defined" does not work, see
+                      {# Warning: "x.y is not defined" or "not x.y is not none" does not work, see
                          https://github.com/fabpot/Twig/issues/319 #}
-                      {% if answers[question.id] is defined %}
+                      {% if answers[question.id] is not none %}
                         {% if not answers[question.id].hasOption %}
                           checked="checked"
                         {% endif %}
@@ -66,7 +66,7 @@
                            id="question_{{ question.id }}_{{ option.id }}"
                            name="question[{{ question.id }}][answer]"
                            value="{{ option.id }}"
-                        {% if answers[question.id] is defined and answers[question.id].hasOption and answers[question.id].option.id == option.id %}
+                        {% if answers[question.id] is not none and answers[question.id].hasOption and answers[question.id].option.id == option.id %}
                             checked="checked"
                         {% endif %} />
                     {{ option.option }}
@@ -82,7 +82,7 @@
                           name="question[{{ question.id }}][comment]"
                           cols="40"
                           rows="4"
-                    >{{ answers[question.id] is defined ? answers[question.id].comment : "" }}</textarea>
+                    >{{ answers[question.id] is not none ? answers[question.id].comment : "" }}</textarea>
             </div>
             {% endif %}
         </div>

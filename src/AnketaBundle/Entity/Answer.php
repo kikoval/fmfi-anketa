@@ -177,4 +177,8 @@ class Answer {
     public function getAuthor() {
         return $this->author;
     }
+    
+    public function __toString() {
+        return "LOLOL".$this->author;
+    }
 }

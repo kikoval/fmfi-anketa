@@ -2,49 +2,52 @@
 
 namespace AnketaBundle\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use fajr\libfajr\base\Preconditions;
 
 /**
- * @orm:Entity()
+ * @ORM\Entity()
  */
 class TeachingAssociation {
     
     /**
-     * @orm:Id @orm:GeneratedValue @orm:Column(type="integer")
+     * @ORM\Id 
+     * @ORM\GeneratedValue 
+     * @ORM\Column(type="integer")
      */
     private $id;
     
     /**
-     * @orm:ManyToOne(targetEntity="Season")
+     * @ORM\ManyToOne(targetEntity="Season")
      *
      * @var Season $season
      */
     private $season;
     
     /**
-     * @orm:ManyToOne(targetEntity="User")
+     * @ORM\ManyToOne(targetEntity="User")
      *
      * @var User $requestedBy
      */
     private $requestedBy;
     
     /**
-     * @orm:ManyToOne(targetEntity="Subject")
+     * @ORM\ManyToOne(targetEntity="Subject")
      *
      * @var Subject $subject
      */
     private $subject;
     
     /**
-     * @orm:ManyToOne(targetEntity="Teacher")
+     * @ORM\ManyToOne(targetEntity="Teacher")
      *
      * @var Teacher $teacher
      */
     private $teacher;
     
     /**
-     * @orm:Column(type="text")
+     * @ORM\Column(type="text")
      * @var string $note 
      */
     private $note;
