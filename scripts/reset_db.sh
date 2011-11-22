@@ -27,7 +27,7 @@ sprav app/console doctrine:database:drop --force
 sprav app/console doctrine:database:create
 
 sprav app/console doctrine:schema:create
-sprav app/console doctrine:data:load
+sprav app/console doctrine:fixtures:load
 sprav app/console anketa:import-otazky other/anketa.yml
 
 echo "${bold}> importujem other/teachers_subjects.sql..."

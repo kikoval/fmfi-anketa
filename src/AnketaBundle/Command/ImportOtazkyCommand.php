@@ -18,13 +18,16 @@ use AnketaBundle\Entity\Question;
 use AnketaBundle\Entity\Option;
 use AnketaBundle\Entity\Season;
 use Doctrine\ORM\EntityManager;
-use Symfony\Bundle\FrameworkBundle\Command\Command;
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Yaml\Yaml;
+use Doctrine\Common\DataFixtures\FixtureInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Class functioning as command/task for importing questions and categories
@@ -33,10 +36,15 @@ use Symfony\Component\Yaml\Yaml;
  * @package    Anketa
  * @author     Jakub Marek <jakub.marek@gmail.com>
  */
-class ImportOtazkyCommand extends Command {
+class ImportOtazkyCommand extends ContainerAwareCommand implements ContainerAwareInterface {
+
+private $container;
+function setContainer(ContainerInterface $container = null) {
+    $this->container = $container;
+}
 
     protected function configure() {
-        parent::configure();
+        //parent::configure();
 
         $this
                 ->setName('anketa:import-otazky')
@@ -57,12 +65,12 @@ class ImportOtazkyCommand extends Command {
      * @throws \LogicException When this abstract class is not implemented
      */
     protected function execute(InputInterface $input, OutputInterface $output) {
+        $manager = $this->getContainer()->get('doctrine')->getEntityManager();
         $filename = $input->getArgument('file');
         $checkDuplicatesOption = $input->getOption('duplicates');
 
 
-        $manager = $this->container->get('doctrine.orm.entity_manager');
-        $input_array = Yaml::load($filename);
+        $input_array = Yaml::parse($filename);
 
         /**
          * @todo Spravit v anketa.yml nejaky parameter na season, zatial iba takto

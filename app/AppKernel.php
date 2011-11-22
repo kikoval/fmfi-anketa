@@ -20,6 +20,7 @@ class AppKernel extends Kernel
             new SVT\CosignBundle\SVTCosignBundle(),
             new SVT\LibfajrBundle\SVTLibfajrBundle(),
             new AnketaBundle\AnketaBundle(),
+            new Symfony\Bundle\DoctrineFixturesBundle\DoctrineFixturesBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
