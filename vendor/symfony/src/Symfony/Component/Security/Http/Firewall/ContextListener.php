@@ -93,11 +93,18 @@ class ContextListener implements ListenerInterface
             return;
         }
 
-        if (null === $token = $this->context->getToken()) {
-            return;
-        }
+        $token = $this->context->getToken();
 
         if (null === $token || $token instanceof AnonymousToken) {
+            $request = $event->getRequest();
+            $session = $request->hasSession() ? $request->getSession() : null;
+            $sessionHasContext = (null !== $session && $session->has('_security_'.$this->contextKey));
+            if ($sessionHasContext) {
+                if (null !== $this->logger) {
+                    $this->logger->debug('Remove SecurityContext from the session');
+                }
+                $session->remove('_security_'.$this->contextKey);
+            }
             return;
         }
 
