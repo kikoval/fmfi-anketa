@@ -39,10 +39,12 @@ interface DataTransformerInterface
      * By convention, transform() should return an empty string if NULL is
      * passed.
      *
-     * @param  mixed $value               The value in the original representation
-     * @return mixed                      The value in the transformed representation
-     * @throws UnexpectedTypeException    when the argument is no string
-     * @throws DataTransformerException  when the transformation fails
+     * @param  mixed $value              The value in the original representation
+     *
+     * @return mixed                     The value in the transformed representation
+     *
+     * @throws UnexpectedTypeException   when the argument is not a string
+     * @throws TransformationFailedException  when the transformation fails
      */
     function transform($value);
 
@@ -64,10 +66,12 @@ interface DataTransformerInterface
      * By convention, reverseTransform() should return NULL if an empty string
      * is passed.
      *
-     * @param  mixed $value               The value in the transformed representation
-     * @throws UnexpectedTypeException    when the argument is not of the
-     *                                    expected type
-     * @throws DataTransformerException  when the transformation fails
+     * @param  mixed $value              The value in the transformed representation
+     *
+     * @return mixed                     The value in the original representation
+     *
+     * @throws UnexpectedTypeException   when the argument is not of the expected type
+     * @throws TransformationFailedException  when the transformation fails
      */
     function reverseTransform($value);
 }

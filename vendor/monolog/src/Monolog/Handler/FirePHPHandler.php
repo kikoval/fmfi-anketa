@@ -19,7 +19,7 @@ use Monolog\Formatter\WildfireFormatter;
  *
  * @author Eric Clemmons (@ericclemmons) <eric@uxdriven.com>
  */
-class FirePHPHandler extends AbstractHandler
+class FirePHPHandler extends AbstractProcessingHandler
 {
     /**
      * WildFire JSON header message format
@@ -34,7 +34,7 @@ class FirePHPHandler extends AbstractHandler
     /**
      * Must reference a "known" plugin, otherwise headers won't display in FirePHP
      */
-    const PLUGIN_URI = 'http://meta.firephp.org/Wildfire/Plugin/ZendFramework/FirePHP/1.6.2';
+    const PLUGIN_URI = 'http://meta.firephp.org/Wildfire/Plugin/FirePHP/Library-FirePHPCore/0.3';
 
     /**
      * Header prefix for Wildfire to recognize & parse headers
@@ -52,22 +52,14 @@ class FirePHPHandler extends AbstractHandler
      */
     protected static $messageIndex = 1;
 
-    /**
-     * @param integer $level  The minimum logging level at which this handler will be triggered
-     * @param Boolean $bubble Whether the messages that are handled can bubble up the stack or not
-     */
-    public function __construct($level = Logger::DEBUG, $bubble = false)
-    {
-        $this->level = $level;
-        $this->bubble = $bubble;
-    }
+    protected $sendHeaders = true;
 
     /**
      * Base header creation function used by init headers & record headers
      *
      * @param array $meta Wildfire Plugin, Protocol & Structure Indexes
      * @param string $message Log message
-     * @return string Complete header string ready for the client
+     * @return array Complete header string ready for the client as key and message as value
      */
     protected function createHeader(array $meta, $message)
     {
@@ -81,6 +73,7 @@ class FirePHPHandler extends AbstractHandler
      *
      * @see createHeader()
      * @param array $record
+     * @return string
      */
     protected function createRecordHeader(array $record)
     {
@@ -88,10 +81,13 @@ class FirePHPHandler extends AbstractHandler
         // but we're not taking advantage of that (yet), so we're using "1" for simplicity's sake.
         return $this->createHeader(
             array(1, 1, 1, self::$messageIndex++),
-            $record['message']
+            $record['formatted']
         );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     protected function getDefaultFormatter()
     {
         return new WildfireFormatter();
@@ -102,7 +98,7 @@ class FirePHPHandler extends AbstractHandler
      *
      * @see createHeader()
      * @see sendHeader()
-     * @return Array
+     * @return array
      */
     protected function getInitHeaders()
     {
@@ -122,7 +118,7 @@ class FirePHPHandler extends AbstractHandler
      */
     protected function sendHeader($header, $content)
     {
-        if (!headers_sent()) {
+        if (!headers_sent() && $this->sendHeaders) {
             header(sprintf('%s: %s', $header, $content));
         }
     }
@@ -138,6 +134,8 @@ class FirePHPHandler extends AbstractHandler
     {
         // WildFire-specific headers must be sent prior to any messages
         if (!self::$initialized) {
+            $this->sendHeaders = $this->headersAccepted();
+
             foreach ($this->getInitHeaders() as $header => $content) {
                 $this->sendHeader($header, $content);
             }
@@ -147,5 +145,15 @@ class FirePHPHandler extends AbstractHandler
 
         $header = $this->createRecordHeader($record);
         $this->sendHeader(key($header), current($header));
+    }
+
+    /**
+     * Verifies if the headers are accepted by the current user agent
+     *
+     * @return Boolean
+     */
+    protected function headersAccepted()
+    {
+        return !isset($_SERVER['HTTP_USER_AGENT']) || preg_match('{\bFirePHP/\d+\.\d+\b}', $_SERVER['HTTP_USER_AGENT']);
     }
 }

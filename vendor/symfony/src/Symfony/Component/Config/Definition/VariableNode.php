@@ -12,7 +12,6 @@
 namespace Symfony\Component\Config\Definition;
 
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
-use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 
 /**
  * This node represents a variable value in the config tree.
@@ -84,11 +83,14 @@ class VariableNode extends BaseNode implements PrototypeNodeInterface
     protected function finalizeValue($value)
     {
         if (!$this->allowEmptyValue && empty($value)) {
-            throw new InvalidConfigurationException(sprintf(
+            $ex = new InvalidConfigurationException(sprintf(
                 'The path "%s" cannot contain an empty value, but got %s.',
                 $this->getPath(),
                 json_encode($value)
             ));
+            $ex->setPath($this->getPath());
+
+            throw $ex;
         }
 
         return $value;

@@ -1,0 +1,38 @@
+[parameters]
+    db_backend=mysql
+
+    db_allow_reset=true
+
+    db_sqlite_driver=pdo_sqlite
+    db_sqlite_host=localhost
+    db_sqlite_name=anketa
+    db_sqlite_file=anketa.sqlite
+    db_sqlite_user=root
+    db_sqlite_password=
+
+    db_mysql_driver=pdo_mysql
+    db_mysql_host=localhost
+    db_mysql_name=anketa
+    db_mysql_user=anketa
+    db_mysql_password=beeliyaebNeShoot
+    db_mysql_port=3396
+    db_mysql_charset=utf8
+
+    mailer_transport=smtp
+    mailer_host=smtp.gmail.com
+    mailer_user=fmfi.svt
+    mailer_password=********
+    mailer_auth_mode=login
+    mailer_encryption=ssl
+    mailer_port=465
+
+    mail_sender=anketa@anketa.fmph.uniba.sk
+    mail_dest_new_teaching_association=fmfi-anketa-devel@googlegroups.com
+
+    locale=en
+    secret=417ceb1c3737e1d3bfcd995b67c3bf8c
+
+
+    ais_cookie=napisSem
+
+    google_analytics_tracking_code=

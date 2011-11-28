@@ -2,7 +2,6 @@
 
 namespace Symfony\Component\Serializer\Encoder;
 
-use Symfony\Component\Serializer\SerializerInterface;
 
 /*
  * This file is part of the Symfony framework.
@@ -26,7 +25,6 @@ interface EncoderInterface
      * @param mixed $data data to encode
      * @param string $format format to encode to
      * @return string
-     * @api
      */
     function encode($data, $format);
 }

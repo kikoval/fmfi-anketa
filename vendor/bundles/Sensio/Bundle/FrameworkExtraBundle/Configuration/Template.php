@@ -2,6 +2,8 @@
 
 namespace Sensio\Bundle\FrameworkExtraBundle\Configuration;
 
+use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
+
 /*
  * This file is part of the Symfony package.
  *
@@ -12,18 +14,27 @@ namespace Sensio\Bundle\FrameworkExtraBundle\Configuration;
  */
 
 /**
- * The Template class handles the @extra:Template annotation parts.
+ * The Template class handles the @Template annotation parts.
  *
  * @author Fabien Potencier <fabien@symfony.com>
+ * @Annotation
  */
-class Template implements ConfigurationInterface
+class Template extends ConfigurationAnnotation
 {
     /**
-     * The template logic name.
+     * The template reference.
+     *
+     * @var TemplateReference
+     */
+    protected $template;
+
+    /**
+     * The template engine used when a specific template isnt specified
      *
      * @var string
      */
-    protected $template;
+    protected $engine = 'twig';
+
     /**
      * The associative array of template variables.
      *
@@ -52,6 +63,26 @@ class Template implements ConfigurationInterface
     }
 
     /**
+     * Returns the engine used when guessing template names
+     *
+     * @return string
+     */
+    public function getEngine()
+    {
+        return $this->engine;
+    }
+
+    /**
+     * Sets the engine used when guessing template names
+     *
+     * @param string
+     */
+    public function setEngine($engine)
+    {
+        $this->engine = $engine;
+    }
+
+    /**
      * Sets the template logic name.
      *
      * @param string $template The template logic name
@@ -62,9 +93,9 @@ class Template implements ConfigurationInterface
     }
 
     /**
-     * Returns the template logic name.
+     * Returns the template reference.
      *
-     * @return string
+     * @return TemplateReference
      */
     public function getTemplate()
     {
@@ -72,9 +103,9 @@ class Template implements ConfigurationInterface
     }
 
     /**
-     * Sets the template logic name.
+     * Sets the template reference.
      *
-     * @param string $template The template logic name
+     * @param TemplateReference|string $template The template reference
      */
     public function setTemplate($template)
     {

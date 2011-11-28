@@ -12,7 +12,6 @@
 namespace Symfony\Bundle\FrameworkBundle\Validator;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\DependencyInjection\TaggedContainerInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidatorFactoryInterface;
 
@@ -34,7 +33,7 @@ use Symfony\Component\Validator\ConstraintValidatorFactoryInterface;
  *         return 'some_alias';
  *     }
  *
- * @author Kris Wallsmith <kris.wallsmith@symfony.com>
+ * @author Kris Wallsmith <kris@symfony.com>
  */
 class ConstraintValidatorFactory implements ConstraintValidatorFactoryInterface
 {

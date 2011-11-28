@@ -2,6 +2,7 @@
 
 namespace AnketaBundle\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
 use fajr\libfajr\base\Preconditions;
 
 class CategoryType {

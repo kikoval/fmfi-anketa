@@ -2,32 +2,34 @@
 
 namespace AnketaBundle\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @orm:Entity(repositoryClass="AnketaBundle\Entity\Repository\SubjectRepository")
- * @orm:Table(name="subject")
+ * @ORM\Entity(repositoryClass="AnketaBundle\Entity\SubjectRepository")
+ * @ORM\Table(name="subject")
  */
 class Subject {
     
     /**
-     * @orm:Id @orm:GeneratedValue @orm:Column(type="integer")
+     * @ORM\Id @ORM\GeneratedValue 
+     * @ORM\Column(type="integer")
      */
     private $id;
 
     /**
      * Uniquely identifies the subject
-     * @orm:Column(type="string", nullable="false", unique="true")
+     * @ORM\Column(type="string", nullable="false", unique="true")
      */
     private $code;
 
     /**
-     * @orm:Column(type="string")
+     * @ORM\Column(type="string")
      */
     private $name;
 
     /**
-     * @orm:ManyToMany(targetEntity="Teacher", mappedBy="subjects")
+     * @ORM\ManyToMany(targetEntity="Teacher", mappedBy="subjects")
      *
      * @var ArrayCollection $teachers
      */

@@ -10,8 +10,6 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Exception\CookieTheftException;
-use Symfony\Component\Security\Core\User\UserProviderInterface;
-use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Cookie;
@@ -112,7 +110,7 @@ abstract class AbstractRememberMeServices implements RememberMeServicesInterface
             }
 
             if (null !== $this->logger) {
-                $this->logger->debug('Remember-me cookie accepted.');
+                $this->logger->info('Remember-me cookie accepted.');
             }
 
             return new RememberMeToken($user, $this->providerKey, $this->key);
@@ -122,11 +120,11 @@ abstract class AbstractRememberMeServices implements RememberMeServicesInterface
             throw $theft;
         } catch (UsernameNotFoundException $notFound) {
             if (null !== $this->logger) {
-                $this->logger->debug('User for remember-me cookie not found.');
+                $this->logger->info('User for remember-me cookie not found.');
             }
         } catch (UnsupportedUserException $unSupported) {
             if (null !== $this->logger) {
-                $this->logger->debug('User class for remember-me cookie not supported.');
+                $this->logger->warn('User class for remember-me cookie not supported.');
             }
         } catch (AuthenticationException $invalid) {
             if (null !== $this->logger) {
@@ -178,7 +176,7 @@ abstract class AbstractRememberMeServices implements RememberMeServicesInterface
     {
         if (!$token->getUser() instanceof UserInterface) {
             if (null !== $this->logger) {
-                $this->logger->debug('Remember-me ignores token since it does not contain an UserInterface implementation.');
+                $this->logger->debug('Remember-me ignores token since it does not contain a UserInterface implementation.');
             }
 
             return;
@@ -285,7 +283,7 @@ abstract class AbstractRememberMeServices implements RememberMeServicesInterface
             return true;
         }
 
-        $parameter = $request->request->get($this->options['remember_me_parameter']);
+        $parameter = $request->request->get($this->options['remember_me_parameter'], null, true);
 
         if ($parameter === null && null !== $this->logger) {
             $this->logger->debug(sprintf('Did not send remember-me cookie (remember-me parameter "%s" was not sent).', $this->options['remember_me_parameter']));

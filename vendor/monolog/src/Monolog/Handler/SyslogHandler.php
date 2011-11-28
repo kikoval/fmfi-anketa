@@ -27,16 +27,18 @@ use Monolog\Logger;
  *
  * @author Sven Paulus <sven@karlsruhe.org>
  */
-class SyslogHandler extends AbstractHandler
+class SyslogHandler extends AbstractProcessingHandler
 {
     /**
      * Translates Monolog log levels to syslog log priorities.
      */
     private $logLevels = array(
-        Logger::DEBUG   => LOG_DEBUG,
-        Logger::INFO    => LOG_INFO,
-        Logger::WARNING => LOG_WARNING,
-        Logger::ERROR   => LOG_ERR,
+        Logger::DEBUG    => LOG_DEBUG,
+        Logger::INFO     => LOG_INFO,
+        Logger::WARNING  => LOG_WARNING,
+        Logger::ERROR    => LOG_ERR,
+        Logger::CRITICAL => LOG_CRIT,
+        Logger::ALERT    => LOG_ALERT,
     );
 
     /**
@@ -66,7 +68,7 @@ class SyslogHandler extends AbstractHandler
     {
         parent::__construct($level, $bubble);
 
-        if (false === strpos(PHP_OS, 'WIN')) {
+        if (!defined('PHP_WINDOWS_VERSION_BUILD')) {
             $this->facilities['local0'] = LOG_LOCAL0;
             $this->facilities['local1'] = LOG_LOCAL1;
             $this->facilities['local2'] = LOG_LOCAL2;
@@ -102,6 +104,6 @@ class SyslogHandler extends AbstractHandler
      */
     protected function write(array $record)
     {
-        syslog($this->logLevels[$record['level']], (string) $record['message']);
+        syslog($this->logLevels[$record['level']], (string) $record['formatted']);
     }
 }

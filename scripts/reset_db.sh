@@ -28,7 +28,7 @@ sprav app/console doctrine:database:drop --force
 [ "$db_backend" == "mysql" ] && echo "${bold}Vytvaram novu databazu${normal}" && echo "CREATE DATABASE `zisti db_mysql_name` CHARSET utf8;" | "$mysql_client" -u"`zisti db_mysql_user`" -p"`zisti db_mysql_pass`" "`zisti d_mysql_name`"
 
 sprav app/console doctrine:schema:create
-sprav app/console doctrine:data:load
+sprav app/console doctrine:fixtures:load
 sprav app/console anketa:import-otazky other/anketa.yml
 
 echo "${bold}> importujem other/teachers_subjects.sql..."

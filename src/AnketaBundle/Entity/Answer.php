@@ -2,72 +2,70 @@
 
 namespace AnketaBundle\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @orm:Entity(repositoryClass="AnketaBundle\Entity\Repository\AnswerRepository")
+ * @ORM\Entity(repositoryClass="AnketaBundle\Entity\AnswerRepository")
  */
 class Answer {
     
     /**
-     * @orm:Id @orm:GeneratedValue @orm:Column(type="integer")
+     * @ORM\Id 
+     * @ORM\GeneratedValue 
+     * @ORM\Column(type="integer")
      */
     private $id;
 
     /**
-     * @orm:Column(type="integer", nullable="true")
+     * @ORM\Column(type="integer", nullable="true")
      */
     private $evaluation;
 
     /**
-     * @orm:Column(type="text", nullable="true")
+     * @ORM\Column(type="text", nullable="true")
      */
     private $comment;
 
     /**
-     * @orm:Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     private $attended = false;
 
     /**
-     * @orm:ManyToOne(targetEntity="Question")
+     * @ORM\ManyToOne(targetEntity="Question")
      *
      * @var Question $question
      */
     private $question;
 
     /**
-     * @orm:ManyToOne(targetEntity="Option")
+     * @ORM\ManyToOne(targetEntity="Option")
      *
      * @var Option $option
      */
     private $option;
 
     /**
-     * @orm:ManyToOne(targetEntity="Teacher")
+     * @ORM\ManyToOne(targetEntity="Teacher")
      *
      * @var Teacher $teacher
      */
     private $teacher;
 
     /**
-     * @orm:ManyToOne(targetEntity="Subject")
+     * @ORM\ManyToOne(targetEntity="Subject")
      *
      * @var Subject $subject
      */
     private $subject;
 
     /**
-     * @orm:ManyToOne(targetEntity="User")
+     * @ORM\ManyToOne(targetEntity="User")
      *
      * @var User $user
      */
     private $author;
-
-    /**
-     * @orm:Column(type="boolean")
-     */
-    private $inappropriate = false;
 
     public function getId() {
         return $this->id;
@@ -100,14 +98,6 @@ class Answer {
 
     public function getAttended() {
         return $this->attended;
-    }
-
-    public function setInappropriate($value) {
-        $this->inappropriate = $value;
-    }
-
-    public function getInappropriate() {
-        return $this->inappropriate;
     }
 
     /**
@@ -186,5 +176,9 @@ class Answer {
      */
     public function getAuthor() {
         return $this->author;
+    }
+    
+    public function __toString() {
+        return "LOLOL".$this->author;
     }
 }

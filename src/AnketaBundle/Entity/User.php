@@ -2,55 +2,58 @@
 
 namespace AnketaBundle\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * @orm:Entity(repositoryClass="AnketaBundle\Entity\Repository\UserRepository")
+ * @ORM\Entity(repositoryClass="AnketaBundle\Entity\UserRepository")
  */
 class User implements UserInterface {
 
     /**
-     * @orm:Id @orm:GeneratedValue @orm:Column(type="integer")
+     * @ORM\Id 
+     * @ORM\GeneratedValue 
+     * @ORM\Column(type="integer")
      */
     private $id;
 
     /**
-     * @orm:Column(type="string", unique=true)
+     * @ORM\Column(type="string", unique=true)
      */
     private $userName;
 
     /**
-     * @orm:Column(type="string")
+     * @ORM\Column(type="string")
      */
     private $displayName;
 
     /**
-     * @orm:Column(type="boolean")
+     * @ORM\Column(type="boolean")
      * @var boolean
      */
     private $hasVote;
 
     /**
-     * @orm:Column(type="boolean")
+     * @ORM\Column(type="boolean")
      * @var boolean
      */
     private $participated;
 
     /**
-     * @orm:ManyToMany(targetEntity="Subject")
-     * @orm:JoinTable(name="users_subjects",
-     *      joinColumns={@orm:JoinColumn(name="user_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@orm:JoinColumn(name="subject_id", referencedColumnName="id")}
+     * @ORM\ManyToMany(targetEntity="Subject")
+     * @ORM\JoinTable(name="users_subjects",
+     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="subject_id", referencedColumnName="id")}
      *      )
      */
     private $subjects;
 
     /**
-     * @orm:ManyToMany(targetEntity="Role")
-     * @orm:JoinTable(name="users_roles",
-     *      joinColumns={@orm:JoinColumn(name="user_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@orm:JoinColumn(name="role_id", referencedColumnName="id")}
+     * @ORM\ManyToMany(targetEntity="Role")
+     * @ORM\JoinTable(name="users_roles",
+     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")}
      *      )
      */
     private $roles;

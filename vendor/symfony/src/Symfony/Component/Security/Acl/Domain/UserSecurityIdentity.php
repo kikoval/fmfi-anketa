@@ -20,7 +20,7 @@ use Symfony\Component\Security\Acl\Model\SecurityIdentityInterface;
  *
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
  */
-class UserSecurityIdentity implements SecurityIdentityInterface
+final class UserSecurityIdentity implements SecurityIdentityInterface
 {
     private $username;
     private $class;
@@ -40,17 +40,17 @@ class UserSecurityIdentity implements SecurityIdentityInterface
             throw new \InvalidArgumentException('$class must not be empty.');
         }
 
-        $this->username = $username;
+        $this->username = (string) $username;
         $this->class = $class;
     }
 
     /**
-     * Creates a user security identity from an UserInterface
+     * Creates a user security identity from a UserInterface
      *
      * @param UserInterface $user
      * @return UserSecurityIdentity
      */
-    public static function fromAccount(UserInterface $user)
+    static public function fromAccount(UserInterface $user)
     {
         return new self($user->getUsername(), get_class($user));
     }
@@ -61,7 +61,7 @@ class UserSecurityIdentity implements SecurityIdentityInterface
      * @param TokenInterface $token
      * @return UserSecurityIdentity
      */
-    public static function fromToken(TokenInterface $token)
+    static public function fromToken(TokenInterface $token)
     {
         $user = $token->getUser();
 

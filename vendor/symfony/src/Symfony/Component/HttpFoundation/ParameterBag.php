@@ -15,6 +15,8 @@ namespace Symfony\Component\HttpFoundation;
  * ParameterBag is a container for key/value pairs.
  *
  * @author Fabien Potencier <fabien@symfony.com>
+ *
+ * @api
  */
 class ParameterBag
 {
@@ -24,6 +26,8 @@ class ParameterBag
      * Constructor.
      *
      * @param array $parameters An array of parameters
+     *
+     * @api
      */
     public function __construct(array $parameters = array())
     {
@@ -34,6 +38,8 @@ class ParameterBag
      * Returns the parameters.
      *
      * @return array An array of parameters
+     *
+     * @api
      */
     public function all()
     {
@@ -44,6 +50,8 @@ class ParameterBag
      * Returns the parameter keys.
      *
      * @return array An array of parameter keys
+     *
+     * @api
      */
     public function keys()
     {
@@ -54,6 +62,8 @@ class ParameterBag
      * Replaces the current parameters by a new set.
      *
      * @param array $parameters An array of parameters
+     *
+     * @api
      */
     public function replace(array $parameters = array())
     {
@@ -64,6 +74,8 @@ class ParameterBag
      * Adds parameters.
      *
      * @param array $parameters An array of parameters
+     *
+     * @api
      */
     public function add(array $parameters = array())
     {
@@ -73,24 +85,16 @@ class ParameterBag
     /**
      * Returns a parameter by name.
      *
-     * @param string $key     The key
-     * @param mixed  $default The default value
-     */
-    public function get($key, $default = null)
-    {
-        return array_key_exists($key, $this->parameters) ? $this->parameters[$key] : $default;
-    }
-
-    /**
-     * Returns a parameter by name allowing to specify a path with arbitrary depth.
+     * @param string  $path    The key
+     * @param mixed   $default The default value
+     * @param boolean $deep
      *
-     * @param string $path   The path, e.g. foo[bar]
-     * @param mixed $default The default value
+     * @api
      */
-    public function getDeep($path, $default = null)
+    public function get($path, $default = null, $deep = false)
     {
-        if (false === $pos = strpos($path, '[')) {
-            return $this->get($path, $default);
+        if (!$deep || false === $pos = strpos($path, '[')) {
+            return array_key_exists($path, $this->parameters) ? $this->parameters[$path] : $default;
         }
 
         $root = substr($path, 0, $pos);
@@ -141,6 +145,8 @@ class ParameterBag
      *
      * @param string $key   The key
      * @param mixed  $value The value
+     *
+     * @api
      */
     public function set($key, $value)
     {
@@ -153,6 +159,8 @@ class ParameterBag
      * @param string $key The key
      *
      * @return Boolean true if the parameter exists, false otherwise
+     *
+     * @api
      */
     public function has($key)
     {
@@ -163,6 +171,8 @@ class ParameterBag
      * Removes a parameter.
      *
      * @param string $key The key
+     *
+     * @api
      */
     public function remove($key)
     {
@@ -172,52 +182,64 @@ class ParameterBag
     /**
      * Returns the alphabetic characters of the parameter value.
      *
-     * @param string $key     The parameter key
-     * @param mixed  $default The default value
+     * @param string  $key     The parameter key
+     * @param mixed   $default The default value
+     * @param boolean $deep
      *
      * @return string The filtered value
+     *
+     * @api
      */
-    public function getAlpha($key, $default = '')
+    public function getAlpha($key, $default = '', $deep = false)
     {
-        return preg_replace('/[^[:alpha:]]/', '', $this->get($key, $default));
+        return preg_replace('/[^[:alpha:]]/', '', $this->get($key, $default, $deep));
     }
 
     /**
      * Returns the alphabetic characters and digits of the parameter value.
      *
-     * @param string $key     The parameter key
-     * @param mixed  $default The default value
+     * @param string  $key     The parameter key
+     * @param mixed   $default The default value
+     * @param boolean $deep
      *
      * @return string The filtered value
+     *
+     * @api
      */
-    public function getAlnum($key, $default = '')
+    public function getAlnum($key, $default = '', $deep = false)
     {
-        return preg_replace('/[^[:alnum:]]/', '', $this->get($key, $default));
+        return preg_replace('/[^[:alnum:]]/', '', $this->get($key, $default, $deep));
     }
 
     /**
      * Returns the digits of the parameter value.
      *
-     * @param string $key     The parameter key
-     * @param mixed  $default The default value
+     * @param string  $key     The parameter key
+     * @param mixed   $default The default value
+     * @param boolean $deep
      *
      * @return string The filtered value
+     *
+     * @api
      */
-    public function getDigits($key, $default = '')
+    public function getDigits($key, $default = '', $deep = false)
     {
-        return preg_replace('/[^[:digit:]]/', '', $this->get($key, $default));
+        return preg_replace('/[^[:digit:]]/', '', $this->get($key, $default, $deep));
     }
 
     /**
      * Returns the parameter value converted to integer.
      *
-     * @param string $key     The parameter key
-     * @param mixed  $default The default value
+     * @param string  $key     The parameter key
+     * @param mixed   $default The default value
+     * @param boolean $deep
      *
      * @return string The filtered value
+     *
+     * @api
      */
-    public function getInt($key, $default = 0)
+    public function getInt($key, $default = 0, $deep = false)
     {
-        return (int) $this->get($key, $default);
+        return (int) $this->get($key, $default, $deep);
     }
 }

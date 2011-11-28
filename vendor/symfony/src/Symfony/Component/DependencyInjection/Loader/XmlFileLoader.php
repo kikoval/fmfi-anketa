@@ -17,7 +17,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Alias;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\SimpleXMLElement;
 use Symfony\Component\Config\Resource\FileResource;
 
@@ -31,7 +30,7 @@ class XmlFileLoader extends FileLoader
     /**
      * Loads an XML file.
      *
-     * @param mixed  $resource The resource
+     * @param mixed  $file The resource
      * @param string $type The resource type
      */
     public function load($file, $type = null)
@@ -44,19 +43,19 @@ class XmlFileLoader extends FileLoader
         $this->container->addResource(new FileResource($path));
 
         // anonymous services
-        $xml = $this->processAnonymousServices($xml, $file);
+        $xml = $this->processAnonymousServices($xml, $path);
 
         // imports
-        $this->parseImports($xml, $file);
+        $this->parseImports($xml, $path);
 
         // parameters
-        $this->parseParameters($xml, $file);
+        $this->parseParameters($xml, $path);
 
         // extensions
         $this->loadFromExtensions($xml);
 
         // services
-        $this->parseDefinitions($xml, $file);
+        $this->parseDefinitions($xml, $path);
     }
 
     /**
@@ -209,7 +208,7 @@ class XmlFileLoader extends FileLoader
     {
         $dom = new \DOMDocument();
         libxml_use_internal_errors(true);
-        if (!$dom->load($file, LIBXML_COMPACT)) {
+        if (!$dom->load($file, defined('LIBXML_COMPACT') ? LIBXML_COMPACT : 0)) {
             throw new \InvalidArgumentException(implode("\n", $this->getXmlErrors()));
         }
         $dom->validateOnParse = true;
@@ -259,6 +258,9 @@ class XmlFileLoader extends FileLoader
         // resolve definitions
         krsort($definitions);
         foreach ($definitions as $id => $def) {
+            // anonymous services are always private
+            $def[0]['public'] = false;
+
             $this->parseDefinition($id, $def[0], $def[1]);
 
             $oNode = dom_import_simplexml($def[0]);
@@ -323,10 +325,10 @@ class XmlFileLoader extends FileLoader
         $imports = '';
         foreach ($schemaLocations as $namespace => $location) {
             $parts = explode('/', $location);
-            if (preg_match('#^phar://#i', $location)) {
+            if (0 === stripos($location, 'phar://')) {
                 $tmpfile = tempnam(sys_get_temp_dir(), 'sf2');
                 if ($tmpfile) {
-                    file_put_contents($tmpfile, file_get_contents($location));
+                    copy($location, $tmpfile);
                     $tmpfiles[] = $tmpfile;
                     $parts = explode('/', str_replace('\\', '/', $tmpfile));
                 }
@@ -379,7 +381,14 @@ EOF
 
             // can it be handled by an extension?
             if (!$this->container->hasExtension($node->namespaceURI)) {
-                throw new \InvalidArgumentException(sprintf('There is no extension able to load the configuration for "%s" (in %s).', $node->tagName, $file));
+                $extensionNamespaces = array_filter(array_map(function ($ext) { return $ext->getNamespace(); }, $this->container->getExtensions()));
+                throw new \InvalidArgumentException(sprintf(
+                    'There is no extension able to load the configuration for "%s" (in %s). Looked for namespace "%s", found %s',
+                    $node->tagName,
+                    $file,
+                    $node->namespaceURI,
+                    $extensionNamespaces ? sprintf('"%s"', implode('", "', $extensionNamespaces)) : 'none'
+                ));
             }
         }
     }

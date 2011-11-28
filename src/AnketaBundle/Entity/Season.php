@@ -2,22 +2,24 @@
 
 namespace AnketaBundle\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use \DateTime;
 
 /**
- * @orm:Entity(repositoryClass="AnketaBundle\Entity\Repository\SeasonRepository")
+ * @ORM\Entity(repositoryClass="AnketaBundle\Entity\SeasonRepository")
  */
 class Season {
 
     /**
-     * @orm:Id @orm:GeneratedValue @orm:Column(type="integer")
+     * @ORM\Id @ORM\GeneratedValue 
+     * @ORM\Column(type="integer")
      */
     private $id;
 
     /**
      * Start of the season
-     * @orm:Column(type="datetime")
+     * @ORM\Column(type="datetime")
      *
      * @var DateTime $start
      */
@@ -25,21 +27,21 @@ class Season {
 
     /**
      * End of the season
-     * @orm:Column(type="datetime")
+     * @ORM\Column(type="datetime")
      *
      * @var DateTime $end
      */
     private $end;
 
     /**
-     * @orm:Column(type="boolean")
+     * @ORM\Column(type="boolean")
      *
      * @var Boolean $winterSemester
      */
     private $winterSemester;
 
     /**
-     * @orm:Column(type="boolean")
+     * @ORM\Column(type="boolean")
      *
      * @var Boolean $summerSemester
      */
@@ -47,13 +49,13 @@ class Season {
 
     /**
      * Full name, i.e. 2010/2011
-     * @orm:Column(type="string")
+     * @ORM\Column(type="string")
      */
     private $description;
     
     /**
      * Total number of students in this season
-     * @orm:Column(type="integer")
+     * @ORM\Column(type="integer")
      * @var int $studentCount
      */
     private $studentCount;
@@ -63,7 +65,7 @@ class Season {
      *
      * For example 2010-2011
      *
-     * @orm:Column(type="string", nullable="false", unique="true")
+     * @ORM\Column(type="string", nullable="false", unique="true")
      * @var string $slug
      */
     private $slug;

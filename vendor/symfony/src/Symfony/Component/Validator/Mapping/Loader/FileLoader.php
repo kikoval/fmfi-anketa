@@ -12,7 +12,6 @@
 namespace Symfony\Component\Validator\Mapping\Loader;
 
 use Symfony\Component\Validator\Exception\MappingException;
-use Symfony\Component\Validator\Mapping\ClassMetadata;
 
 abstract class FileLoader implements LoaderInterface
 {
@@ -24,6 +23,14 @@ abstract class FileLoader implements LoaderInterface
      */
     protected $namespaces;
 
+    /**
+     * Constructor.
+     *
+     * @param string $file The mapping file to load
+     *
+     * @throws MappingException if the mapping file does not exist
+     * @throws MappingException if the mapping file is not readable
+     */
     public function __construct($file)
     {
         if (!file_exists($file)) {

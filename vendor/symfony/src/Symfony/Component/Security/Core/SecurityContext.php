@@ -11,12 +11,10 @@
 
 namespace Symfony\Component\Security\Core;
 
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Acl\Voter\FieldVote;
 
 /**
  * SecurityContext is the main entry point of the Security component.
@@ -58,7 +56,7 @@ class SecurityContext implements SecurityContextInterface
     public final function isGranted($attributes, $object = null)
     {
         if (null === $this->token) {
-            throw new AuthenticationCredentialsNotFoundException('The security context contains no authentication token.');
+            throw new AuthenticationCredentialsNotFoundException('The security context contains no authentication token. One possible reason may be that there is no firewall configured for this URL.');
         }
 
         if ($this->alwaysAuthenticate || !$this->token->isAuthenticated()) {

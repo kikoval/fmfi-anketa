@@ -31,7 +31,7 @@ class TwigFormulaLoader implements FormulaLoaderInterface
     public function load(ResourceInterface $resource)
     {
         try {
-            $tokens = $this->twig->tokenize($resource->getContent());
+            $tokens = $this->twig->tokenize($resource->getContent(), (string) $resource);
             $nodes  = $this->twig->parse($tokens);
         } catch (\Exception $e) {
             return array();
@@ -54,13 +54,17 @@ class TwigFormulaLoader implements FormulaLoaderInterface
                 $node->getAttribute('inputs'),
                 $node->getAttribute('filters'),
                 array(
-                    'output' => $node->getAttribute('asset')->getTargetUrl(),
-                    'name'   => $node->getAttribute('name'),
-                    'debug'  => $node->getAttribute('debug'),
+                    'output'  => $node->getAttribute('asset')->getTargetPath(),
+                    'name'    => $node->getAttribute('name'),
+                    'debug'   => $node->getAttribute('debug'),
+                    'combine' => $node->getAttribute('combine'),
                 ),
             );
         } elseif ($node instanceof \Twig_Node_Expression_Function) {
-            $name = $node->getNode('name')->getAttribute('name');
+            $name = version_compare(\Twig_Environment::VERSION, '1.2.0-DEV', '<')
+                ? $node->getNode('name')->getAttribute('name')
+                : $node->getAttribute('name');
+
             if ($this->twig->getFunction($name) instanceof AsseticFilterFunction) {
                 $arguments = array();
                 foreach ($node->getNode('arguments') as $argument) {
@@ -74,7 +78,7 @@ class TwigFormulaLoader implements FormulaLoaderInterface
                 $options = array_replace($invoker->getOptions(), isset($arguments[1]) ? $arguments[1] : array());
 
                 if (!isset($options['name'])) {
-                    $options['name'] = $invoker->getFactory()->generateAssetName($inputs, $filters);
+                    $options['name'] = $invoker->getFactory()->generateAssetName($inputs, $filters, $options);
                 }
 
                 $formulae[$options['name']] = array($inputs, $filters, $options);

@@ -2,21 +2,24 @@
 
 namespace AnketaBundle\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
 use fajr\libfajr\base\Preconditions;
 
 /**
- * @orm:Entity(repositoryClass="AnketaBundle\Entity\Repository\OptionRepository")
- * @orm:Table(name="Choice")
+ * @ORM\Entity(repositoryClass="AnketaBundle\Entity\OptionRepository")
+ * @ORM\Table(name="Choice")
  */
 class Option {
     
     /**
-     * @orm:Id @orm:GeneratedValue @orm:Column(type="integer")
+     * @ORM\Id 
+     * @ORM\GeneratedValue 
+     * @ORM\Column(type="integer")
      */
     private $id;
 
     /**
-     * @orm:Column(type="integer", name="position")
+     * @ORM\Column(type="integer", name="position")
      * Describes position of current choice in the choice list.
      * Smallest position means top of the list.
      * Note: the positions need not to be continuous.
@@ -24,18 +27,18 @@ class Option {
     private $position;
 
     /**
-     * @orm:Column(type="string", name="choice")
+     * @ORM\Column(type="string", name="choice")
      */
     private $option;
 
     /**
-     * @orm:Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     private $evaluation;
 
     /**
-     * @orm:ManyToOne(targetEntity="Question", inversedBy="options")
-     * @orm:JoinColumn(name="question_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Question", inversedBy="options")
+     * @ORM\JoinColumn(name="question_id", referencedColumnName="id")
      *
      * @var Question $question
      */

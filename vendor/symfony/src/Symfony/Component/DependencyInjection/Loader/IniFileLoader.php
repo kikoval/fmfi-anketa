@@ -11,7 +11,6 @@
 
 namespace Symfony\Component\DependencyInjection\Loader;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\Resource\FileResource;
 
 /**
@@ -24,7 +23,7 @@ class IniFileLoader extends FileLoader
     /**
      * Loads a resource.
      *
-     * @param mixed  $resource The resource
+     * @param mixed  $file     The resource
      * @param string $type     The resource type
      *
      * @throws \InvalidArgumentException When ini file is not valid
@@ -37,7 +36,7 @@ class IniFileLoader extends FileLoader
 
         $result = parse_ini_file($path, true);
         if (false === $result || array() === $result) {
-            throw new \InvalidArgumentException(sprintf('The %s file is not valid.', $file));
+            throw new \InvalidArgumentException(sprintf('The "%s" file is not valid.', $file));
         }
 
         if (isset($result['parameters']) && is_array($result['parameters'])) {

@@ -16,16 +16,24 @@ use Symfony\Component\Config\Resource\ResourceInterface;
 /**
  * A RouteCollection represents a set of Route instances.
  *
+ * When adding a route, it overrides existing routes with the
+ * same name defined in theinstance or its children and parents.
+ *
  * @author Fabien Potencier <fabien@symfony.com>
+ *
+ * @api
  */
 class RouteCollection implements \IteratorAggregate
 {
     private $routes;
     private $resources;
     private $prefix;
+    private $parent;
 
     /**
      * Constructor.
+     *
+     * @api
      */
     public function __construct()
     {
@@ -34,6 +42,41 @@ class RouteCollection implements \IteratorAggregate
         $this->prefix = '';
     }
 
+    public function __clone()
+    {
+        foreach ($this->routes as $name => $route) {
+            $this->routes[$name] = clone $route;
+            if ($route instanceof RouteCollection) {
+                $this->routes[$name]->setParent($this);
+            }
+        }
+    }
+
+    /**
+     * Gets the parent RouteCollection.
+     *
+     * @return RouteCollection The parent RouteCollection
+     */
+    public function getParent()
+    {
+        return $this->parent;
+    }
+
+    /**
+     * Sets the parent RouteCollection.
+     *
+     * @param RouteCollection $parent The parent RouteCollection
+     */
+    public function setParent(RouteCollection $parent)
+    {
+        $this->parent = $parent;
+    }
+
+    /**
+     * Gets the current RouteCollection as an Iterator.
+     *
+     * @return \ArrayIterator An \ArrayIterator interface
+     */
     public function getIterator()
     {
         return new \ArrayIterator($this->routes);
@@ -46,11 +89,22 @@ class RouteCollection implements \IteratorAggregate
      * @param Route  $route A Route instance
      *
      * @throws \InvalidArgumentException When route name contains non valid characters
+     *
+     * @api
      */
     public function add($name, Route $route)
     {
         if (!preg_match('/^[a-z0-9A-Z_.]+$/', $name)) {
             throw new \InvalidArgumentException(sprintf('Name "%s" contains non valid characters for a route name.', $name));
+        }
+
+        $parent = $this;
+        while ($parent->getParent()) {
+            $parent = $parent->getParent();
+        }
+
+        if ($parent) {
+            $parent->remove($name);
         }
 
         $this->routes[$name] = $route;
@@ -97,7 +151,25 @@ class RouteCollection implements \IteratorAggregate
 
         if (isset($this->routes[$name])) {
             return $this->routes[$name];
-        };
+        }
+    }
+
+    /**
+     * Removes a route by name.
+     *
+     * @param string $name The route name
+     */
+    public function remove($name)
+    {
+        if (isset($this->routes[$name])) {
+            unset($this->routes[$name]);
+        }
+
+        foreach ($this->routes as $routes) {
+            if ($routes instanceof RouteCollection) {
+                $routes->remove($name);
+            }
+        }
     }
 
     /**
@@ -105,10 +177,18 @@ class RouteCollection implements \IteratorAggregate
      *
      * @param RouteCollection $collection A RouteCollection instance
      * @param string          $prefix     An optional prefix to add before each pattern of the route collection
+     *
+     * @api
      */
     public function addCollection(RouteCollection $collection, $prefix = '')
     {
+        $collection->setParent($this);
         $collection->addPrefix($prefix);
+
+        // remove all routes with the same name in all existing collections
+        foreach (array_keys($collection->all()) as $name) {
+            $this->remove($name);
+        }
 
         $this->routes[] = $collection;
     }
@@ -117,6 +197,8 @@ class RouteCollection implements \IteratorAggregate
      * Adds a prefix to all routes in the current set.
      *
      * @param string          $prefix     An optional prefix to add before each pattern of the route collection
+     *
+     * @api
      */
     public function addPrefix($prefix)
     {
@@ -134,8 +216,12 @@ class RouteCollection implements \IteratorAggregate
 
         $this->prefix = $prefix.$this->prefix;
 
-        foreach ($this->all() as $route) {
-            $route->setPattern($prefix.$route->getPattern());
+        foreach ($this->routes as $name => $route) {
+            if ($route instanceof RouteCollection) {
+                $route->addPrefix($prefix);
+            } else {
+                $route->setPattern($prefix.$route->getPattern());
+            }
         }
     }
 

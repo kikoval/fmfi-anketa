@@ -14,7 +14,6 @@ namespace Symfony\Component\DependencyInjection\Dumper;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\Parameter;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -30,6 +29,14 @@ class GraphvizDumper extends Dumper
 {
     private $nodes;
     private $edges;
+    private $options = array(
+            'graph' => array('ratio' => 'compress'),
+            'node'  => array('fontsize' => 11, 'fontname' => 'Arial', 'shape' => 'record'),
+            'edge'  => array('fontsize' => 9, 'fontname' => 'Arial', 'color' => 'grey', 'arrowhead' => 'open', 'arrowsize' => 0.5),
+            'node.instance' => array('fillcolor' => '#9999ff', 'style' => 'filled'),
+            'node.definition' => array('fillcolor' => '#eeeeee'),
+            'node.missing' => array('fillcolor' => '#ff9999', 'style' => 'filled'),
+        );
 
     /**
      * Dumps the service container as a graphviz graph.
@@ -49,15 +56,6 @@ class GraphvizDumper extends Dumper
      */
     public function dump(array $options = array())
     {
-        $this->options = array(
-            'graph' => array('ratio' => 'compress'),
-            'node'  => array('fontsize' => 11, 'fontname' => 'Arial', 'shape' => 'record'),
-            'edge'  => array('fontsize' => 9, 'fontname' => 'Arial', 'color' => 'grey', 'arrowhead' => 'open', 'arrowsize' => 0.5),
-            'node.instance' => array('fillcolor' => '#9999ff', 'style' => 'filled'),
-            'node.definition' => array('fillcolor' => '#eeeeee'),
-            'node.missing' => array('fillcolor' => '#ff9999', 'style' => 'filled'),
-        );
-
         foreach (array('graph', 'node', 'edge', 'node.instance', 'node.definition', 'node.missing') as $key) {
             if (isset($options[$key])) {
                 $this->options[$key] = array_merge($this->options[$key], $options[$key]);
@@ -200,7 +198,7 @@ class GraphvizDumper extends Dumper
     /**
      * Returns the end dot.
      *
-     * @return void
+     * @return string
      */
     private function endDot()
     {
