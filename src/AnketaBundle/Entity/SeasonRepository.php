@@ -16,17 +16,21 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
-use DateTime;
 
 class SeasonRepository extends EntityRepository {
 
-    public function getActiveSeason(DateTime $date) {
+    public function getActiveSeason() {
+        // TODO(anty): Toto je docasne riesenie, kedze som vyhodil datumy
+        // zo season (datumy sa budu riesit vo fazach)
+        // MIN je z toho dovodu, ze ked niekto nahodou vlozi do season
+        // dalsi zaznam, aktivna zostane rovnaka season,
+        // ked budeme chciet oficialne podporovat viac season
+        // v tabulke, tak bud pridame slpec active alebo nieco take
         $dql = 'SELECT s FROM AnketaBundle\Entity\Season s ' .
-               'WHERE (s.start <= :date) AND (s.end >= :date)';
+               'WHERE s.id = ' .
+                    '(SELECT MIN(s2.id) ' .
+                    ' FROM AnketaBundle\Entity\Season s2)';
         $query = $this->getEntityManager()->createQuery($dql);
-        // the explicit type is required, see bug
-        // http://www.doctrine-project.org/jira/browse/DDC-697
-        $query->setParameter('date', $date, \Doctrine\DBAL\Types\Type::DATETIME);
         $result = $query->execute();
 
         if (count($result) > 1) {
@@ -37,27 +41,5 @@ class SeasonRepository extends EntityRepository {
         }
         return array_shift($result);
     }
-
-    public function getLastActiveSeason(DateTime $date) {
-        $dql = 'SELECT s FROM AnketaBundle\Entity\Season s ' .
-               'WHERE s.start = ' .
-                    '(SELECT MAX(s2.start) ' .
-                    ' FROM AnketaBundle\Entity\Season s2' .
-                    ' WHERE s2.start <= :date)';
-        $query = $this->getEntityManager()->createQuery($dql);
-        // the explicit type is required, see bug
-        // http://www.doctrine-project.org/jira/browse/DDC-697
-        $query->setParameter('date', $date, \Doctrine\DBAL\Types\Type::DATETIME);
-        $result = $query->execute();
-
-        if (count($result) > 1) {
-            throw new NonUniqueResultException();
-        }
-        if (count($result) == 0) {
-            throw new NoResultException();
-        }
-        return array_shift($result);
-    }
-
 
 }

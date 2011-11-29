@@ -21,6 +21,8 @@ use AnketaBundle\Entity\Teacher;
 use AnketaBundle\Entity\Subject;
 use AnketaBundle\Entity\User;
 use AnketaBundle\Entity\Role;
+use AnketaBundle\Entity\Season;
+use DateTime;
 
 /**
  * Class for loading basic development data
@@ -101,6 +103,11 @@ class FixtureLoader implements FixtureInterface {
         $manager->persist($question4);
         $manager->persist($question5);
 */
+        // Vytvorime defaultnu Season
+        $season = new Season('Zima 2011/2012', '2011-2012-zima');
+        $season->setStudentCount(1800);
+        $manager->persist($season);
+        
         // create teacher + subject
         $teacher1 = new Teacher('Ucitel');
         $teacher2 = new Teacher('Profesor');

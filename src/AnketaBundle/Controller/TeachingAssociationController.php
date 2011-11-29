@@ -32,7 +32,7 @@ class TeachingAssociationController extends Controller
         $subjectRepository = $em->getRepository('AnketaBundle\Entity\Subject');
         $seasonRepository = $em->getRepository('AnketaBundle\Entity\Season');
         
-        $season = $seasonRepository->getActiveSeason(new DateTime());
+        $season = $seasonRepository->getActiveSeason();
         $subject = $subjectRepository->findOneBy(array('code' => $subject_code));
         if ($subject === null) {
             throw new NotFoundHttpException('Chybny kod: ' . $subject_code);

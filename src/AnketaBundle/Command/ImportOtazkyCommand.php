@@ -17,6 +17,7 @@ use AnketaBundle\Entity\CategoryType;
 use AnketaBundle\Entity\Question;
 use AnketaBundle\Entity\Option;
 use AnketaBundle\Entity\Season;
+use AnketaBundle\Entity\SeasonRepository;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputDefinition;
@@ -72,19 +73,13 @@ function setContainer(ContainerInterface $container = null) {
 
         $input_array = Yaml::parse($filename);
 
-        /**
-         * @todo Spravit v anketa.yml nejaky parameter na season, zatial iba takto
-         */
-        // month/day/year
-        $start = new DateTime("9/1/2010");
-        $end = new DateTime("6/31/2011");
-        $season = new Season($start, $end, '2010/2011');
-        $season->setWinterSemester(true);
-        $season->setSummerSemester(true);
-        // interni 1814 + externi 621
-        // TODO: chceme ratat aj externych?
-        $season->setStudentCount(1814);
-        $manager->persist($season);
+        /** @var SeasonRepository seasonRepository */
+        $seasonRepository = $manager->getRepository('AnketaBundle:Season');
+        $season = $seasonRepository->getActiveSeason();
+        if ($season == null) {
+            $output->writeln("<error>V databaze sa nenasla aktivna Season</error>");
+            return;
+        }
 
         // checkDuplicates
         if ($checkDuplicatesOption != null) {

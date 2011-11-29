@@ -25,7 +25,7 @@ class StatisticsController extends Controller {
         $em = $this->get('doctrine.orm.entity_manager');
         $repository = $em->getRepository('AnketaBundle\Entity\Season');
         if ($season_slug === null) {
-            $season = $repository->getLastActiveSeason(new DateTime("now"));
+            $season = $repository->getActiveSeason();
         } else {
             $season = $repository->findOneBy(array('slug' => $season_slug));
         }

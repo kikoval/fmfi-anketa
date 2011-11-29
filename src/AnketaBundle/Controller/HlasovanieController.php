@@ -168,7 +168,7 @@ class HlasovanieController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
 
         $total = $em->getRepository('AnketaBundle\Entity\Season')
-                    ->getLastActiveSeason(new \DateTime())
+                    ->getActiveSeason()
                     ->getStudentCount();
         $voters = $em->getRepository('AnketaBundle\Entity\User')
                      ->getNumberOfVoters();
