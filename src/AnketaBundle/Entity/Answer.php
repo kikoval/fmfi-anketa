@@ -75,9 +75,9 @@ class Answer {
     private $author;
     
     /**
-     * @orm:ManyToOne(targetEntity="studyProgram")
+     * @orm:ManyToOne(targetEntity="StudyProgram")
      *
-     * @var studyProgram $studyProgram
+     * @var StudyProgram $studyProgram
      */
     private $studyProgram;
 
@@ -198,14 +198,14 @@ class Answer {
     
     
     /**
-     * @param studyProgram $value
+     * @param StudyProgram $value
      */
     public function setStudyProgram($value) {
         $this->studyProgram = $value;
     }
 
     /**
-     * @return studyProgram study studyProgram
+     * @return StudyProgram study program
      */
     public function getStudyProgram() {
         return $this->studyProgram;

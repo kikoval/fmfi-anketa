@@ -41,8 +41,8 @@ class User implements UserInterface {
     private $participated;
 
     /**
-     * @ORM\ManyToOne(targetEntity="studyProgram")
-     * @var studyProgram $studyProgram
+     * @ORM\ManyToOne(targetEntity="StudyProgram")
+     * @var StudyProgram $studyProgram
      */
     private $studyProgram;
     
@@ -190,16 +190,16 @@ class User implements UserInterface {
     }
     
     /**
-     * @param studyProgram $value
+     * @param StudyProgram $value
      */
-    public function setstudyProgram($value) {
+    public function setStudyProgram($value) {
         $this->studyProgram = $value;
     }
 
     /**
-     * @return studyProgram study studyProgram
+     * @return StudyProgram study program
      */
-    public function getstudyProgram() {
+    public function getStudyProgram() {
         return $this->studyProgram;
     }
 
