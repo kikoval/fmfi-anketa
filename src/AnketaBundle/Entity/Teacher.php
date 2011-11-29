@@ -7,7 +7,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass="AnketaBundle\Entity\TeacherRepository")
- * @ORM\Table(name="teacher")
  */
 class Teacher {
     
