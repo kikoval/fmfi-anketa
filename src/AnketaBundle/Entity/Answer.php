@@ -192,11 +192,6 @@ class Answer {
         return $this->author;
     }
     
-    public function __toString() {
-        return "LOLOL".$this->author;
-    }
-    
-    
     /**
      * @param StudyProgram $value
      */
