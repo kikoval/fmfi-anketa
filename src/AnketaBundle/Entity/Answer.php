@@ -38,7 +38,14 @@ class Answer {
      * @var Question $question
      */
     private $question;
-
+   
+    /**
+     * @ORM\ManyToOne(targetEntity="Season")
+     *
+     * @var Season $season
+     */
+    private $season;
+    
     /**
      * @ORM\ManyToOne(targetEntity="Option")
      *
@@ -66,6 +73,13 @@ class Answer {
      * @var User $user
      */
     private $author;
+    
+    /**
+     * @orm:ManyToOne(targetEntity="studyProgram")
+     *
+     * @var studyProgram $studyProgram
+     */
+    private $studyProgram;
 
     public function getId() {
         return $this->id;
@@ -180,5 +194,20 @@ class Answer {
     
     public function __toString() {
         return "LOLOL".$this->author;
+    }
+    
+    
+    /**
+     * @param studyProgram $value
+     */
+    public function setStudyProgram($value) {
+        $this->studyProgram = $value;
+    }
+
+    /**
+     * @return studyProgram study studyProgram
+     */
+    public function getStudyProgram() {
+        return $this->studyProgram;
     }
 }

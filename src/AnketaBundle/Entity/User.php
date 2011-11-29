@@ -41,14 +41,20 @@ class User implements UserInterface {
     private $participated;
 
     /**
+     * @ORM\ManyToOne(targetEntity="studyProgram")
+     * @var studyProgram $studyProgram
+     */
+    private $studyProgram;
+    
+    /**
      * @ORM\ManyToMany(targetEntity="Subject")
      * @ORM\JoinTable(name="users_subjects",
      *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="subject_id", referencedColumnName="id")}
      *      )
      */
-    private $subjects;
-
+    private $subjects; //FIXME ZMAZAT
+    
     /**
      * @ORM\ManyToMany(targetEntity="Role")
      * @ORM\JoinTable(name="users_roles",
@@ -110,28 +116,28 @@ class User implements UserInterface {
     /**
      * @param ArrayCollection $value
      */
-    public function setSubjects($value) {
+    public function setSubjects($value) { //FIXME REIMPLEMENTOVAT
         $this->subjects = $value;
     }
 
     /**
      * @param Subject $value
      */
-    public function addSubject($value) {
+    public function addSubject($value) { //FIXME REIMPLEMENTOVAT
         $this->subjects[] = $value;
     }
 
     /**
      * @return ArrayCollection subjects
      */
-    public function getSubjects() {
+    public function getSubjects() { //FIXME REIMPLEMENTOVAT
         return $this->subjects;
     }
 
     /**
      * @return integer
      */
-    public function getSubjectsCount() {
+    public function getSubjectsCount() { //FIXME REIMPLEMENTOVAT
         return $this->subjects->count();
     }
 
@@ -181,6 +187,20 @@ class User implements UserInterface {
 
     public function __toString() {
         return $this->getUserName();
+    }
+    
+    /**
+     * @param studyProgram $value
+     */
+    public function setstudyProgram($value) {
+        $this->studyProgram = $value;
+    }
+
+    /**
+     * @return studyProgram study studyProgram
+     */
+    public function getstudyProgram() {
+        return $this->studyProgram;
     }
 
 }

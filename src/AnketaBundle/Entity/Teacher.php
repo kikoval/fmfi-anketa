@@ -32,7 +32,7 @@ class Teacher {
      *
      * @var ArrayCollection $subjects
      */
-    private $subjects;
+    private $subjects; //FIXME ZMAZAT
 
     /**
      * @param String $name
@@ -57,14 +57,14 @@ class Teacher {
     /**
      * @param ArrayCollection $value
      */
-    public function setSubjects($value) {
+    public function setSubjects($value) { //FIXME REIMPLEMENTOVAT
         $this->subjects = $value;
     }
 
     /**
      * @param Subject $value
      */
-    public function addSubject($value) {
+    public function addSubject($value) { //FIXME REIMPLEMENTOVAT
         $value->addTeacher($this);
         $this->subjects[] = $value;
     }
@@ -72,7 +72,7 @@ class Teacher {
     /**
      * @return ArrayCollection subjects
      */
-    public function getSubjects() {
+    public function getSubjects() { //FIXME REIMPLEMENTOVAT
         return $this->subjects;
     }
 
