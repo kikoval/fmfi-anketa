@@ -88,6 +88,7 @@ class QuestionRepository extends EntityRepository {
      */
     public function getProgressForSubjectsByUser(User $user) {
         $em = $this->getEntityManager();
+        $season = $em->getRepository('AnketaBundle:Season')->getActiveSeason();
         $query = $em->createQuery('SELECT s.code AS subject_code, COUNT(a.id) AS num
                                    FROM AnketaBundle\Entity\Answer a
                                    JOIN a.subject s
@@ -106,9 +107,11 @@ class QuestionRepository extends EntityRepository {
         {
             return \max(\array_map(function($value){return $value['answered'];}, $array));
         };
+        
+        $subjectRepository = $em->getRepository('AnketaBundle:Subject');
 
         $result = array();
-        foreach ($user->getSubjects() as $subject) {
+        foreach ($subjectRepository->getAttendedSubjectsForUser($user, $season) as $subject) {
                 $result[$subject->getCode()] = array(
                     'answered' => 0,
                     'total' => $subjectQuestions
@@ -134,6 +137,7 @@ class QuestionRepository extends EntityRepository {
      */
     public function getProgressForSubjectTeachersByUser(User $user) {
         $em = $this->getEntityManager();
+        $season = $em->getRepository('AnketaBundle:Season')->getActiveSeason();
         $query = $em->createQuery('SELECT s.code AS subject_code, t.id AS teacher_id, COUNT(a.id) AS num
                                    FROM AnketaBundle\Entity\Answer a
                                         JOIN a.subject s
@@ -145,8 +149,10 @@ class QuestionRepository extends EntityRepository {
 
         $subjectTeachersQuestions = $this->getNumberOfQuestionsForCategoryType(CategoryType::TEACHER_SUBJECT);
 
+        $subjectRepository = $em->getRepository('AnketaBundle:Subject');
         $result = array();
-        foreach ($user->getSubjects() as $subject) {
+        $subjects = $subjectRepository->getAttendedSubjectsForUser($user, $season);
+        foreach ($subjects as $subject) {
             foreach ($subject->getTeachers() as $teacher) {
                 $result[$subject->getCode()][$teacher->getId()] = array(
                     'answered' => 0,

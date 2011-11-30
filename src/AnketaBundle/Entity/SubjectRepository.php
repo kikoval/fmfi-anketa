@@ -30,12 +30,17 @@ class SubjectRepository extends EntityRepository {
         return \strcmp($a->getName(), $b->getName());
     }
 
-    public function getAttendedSubjectForUser($userId) {
-        $user = $this->getEntityManager()->find('AnketaBundle\Entity\User',
-                                                $userId);
-        $attendedSubjects = $user->getSubjects()->toArray();
-        \usort($attendedSubjects, array('\AnketaBundle\Entity\SubjectRepository', 'compareSubjects'));
-        return $attendedSubjects;
+    public function getAttendedSubjectsForUser($user, $season) {
+        $dql = 'SELECT s FROM AnketaBundle\Entity\Subject s, ' .
+                  'AnketaBundle\Entity\UsersSubjects us WHERE s = us.subject ' .
+                  ' AND us.user = :user ' .
+                  ' AND us.season = :season ' .
+                  ' ORDER BY s.name';
+        
+        $subjects = $this->getEntityManager()
+                         ->createQuery($dql)->execute(array('user' => $user,
+                             'season' => $season));
+        return $subjects;
     }
 
     /**

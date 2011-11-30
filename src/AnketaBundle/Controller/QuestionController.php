@@ -98,8 +98,9 @@ class QuestionController extends Controller {
      */
     public function getAttendedSubjectByCode($user, $code) {
         $em = $this->get('doctrine.orm.entity_manager');
+        $season = $em->getRepository('AnketaBundle:Season')->getActiveSeason();
         $attendedSubjects = $em->getRepository('AnketaBundle\Entity\Subject')
-                               ->getAttendedSubjectForUser($user->getId());
+                               ->getAttendedSubjectsForUser($user, $season);
 
         if (count($attendedSubjects) == 0) {
             throw new \RuntimeException ('Nemas ziadne predmety.');
