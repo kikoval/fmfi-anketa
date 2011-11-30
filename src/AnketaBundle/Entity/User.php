@@ -39,12 +39,6 @@ class User implements UserInterface {
      * @var boolean
      */
     private $participated;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="StudyProgram")
-     * @var StudyProgram $studyProgram
-     */
-    private $studyProgram;
     
     /**
      * @ORM\ManyToMany(targetEntity="Subject")
@@ -187,20 +181,6 @@ class User implements UserInterface {
 
     public function __toString() {
         return $this->getUserName();
-    }
-    
-    /**
-     * @param StudyProgram $value
-     */
-    public function setStudyProgram($value) {
-        $this->studyProgram = $value;
-    }
-
-    /**
-     * @return StudyProgram study program
-     */
-    public function getStudyProgram() {
-        return $this->studyProgram;
     }
 
 }

@@ -37,6 +37,12 @@ class UsersSubjects {
      * @var Season $season
      */
     private $season;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="StudyProgram")
+     * @var StudyProgram $studyProgram
+     */
+    private $studyProgram;
 
     public function getId() {
         return $this->id;
@@ -70,5 +76,19 @@ class UsersSubjects {
      */
     public function getSeason() {
         return $this->season;
+    }
+    
+    /**
+     * @param StudyProgram $value
+     */
+    public function setStudyProgram($value) {
+        $this->studyProgram = $value;
+    }
+
+    /**
+     * @return StudyProgram study program
+     */
+    public function getStudyProgram() {
+        return $this->studyProgram;
     }
 }
