@@ -150,10 +150,13 @@ class QuestionRepository extends EntityRepository {
         $subjectTeachersQuestions = $this->getNumberOfQuestionsForCategoryType(CategoryType::TEACHER_SUBJECT);
 
         $subjectRepository = $em->getRepository('AnketaBundle:Subject');
+        $teacherRepository = $em->getRepository('AnketaBundle:Teacher');
         $result = array();
         $subjects = $subjectRepository->getAttendedSubjectsForUser($user, $season);
+        // TODO: optimalizovat selectovanie
         foreach ($subjects as $subject) {
-            foreach ($subject->getTeachers() as $teacher) {
+            $teachers = $teacherRepository->getTeachersForSubject($subject, $season);
+            foreach ($teachers as $teacher) {
                 $result[$subject->getCode()][$teacher->getId()] = array(
                     'answered' => 0,
                     'total' => $subjectTeachersQuestions

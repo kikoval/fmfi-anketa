@@ -24,6 +24,7 @@ use AnketaBundle\Entity\Role;
 use AnketaBundle\Entity\Season;
 use AnketaBundle\Entity\StudyProgram;
 use AnketaBundle\Entity\UsersSubjects;
+use AnketaBundle\Entity\TeachersSubjects;
 use DateTime;
 
 /**
@@ -126,11 +127,11 @@ class FixtureLoader implements FixtureInterface {
         $sub4 = new Subject('FMFI volno');
         $sub4->setCode('fmfi');
         
-        // znova, teacher sa postara o update Subjectu
-        $teacher1->addSubject($sub1);
-        $teacher2->addSubject($sub2);
-        $teacher2->addSubject($sub3);
-        $teacher3->addSubject($sub3);
+        // priradenie ucitelov k predmetom
+        $manager->persist(new TeachersSubjects($teacher1, $sub1, $season));
+        $manager->persist(new TeachersSubjects($teacher2, $sub2, $season));
+        $manager->persist(new TeachersSubjects($teacher2, $sub3, $season));
+        $manager->persist(new TeachersSubjects($teacher3, $sub3, $season));
 
         // neni nastavene cascadovanie, kedze neviem ktorym smerom sa to
         // bude castejsie generovat - ci sa budu vyrabat predmety a k nim

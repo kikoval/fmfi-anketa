@@ -58,14 +58,15 @@ class HlasovanieController extends Controller
         }
         $subjects = $em->getRepository('AnketaBundle\Entity\Subject')
                        ->getAttendedSubjectsForUser($user, $season);
+        $teacherRepository = $em->getRepository('AnketaBundle:Teacher');
         foreach($subjects as $subject) {
             $subjectMenu = 
                 new MenuItem(
                 $subject->getName(),
                 $this->generateUrl('answer_subject', array('code' => $subject->getCode()))
                 );
-            // TODO: season
-            $teachers = $subject->getTeachers();
+            // TODO: optimalizovat selecty
+            $teachers = $teacherRepository->getTeachersForSubject($subject, $season);
             foreach ($teachers as $teacher) {
                 $subjectMenu->children[$teacher->getId()] =
                     new MenuItem(

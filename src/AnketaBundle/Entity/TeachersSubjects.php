@@ -35,6 +35,12 @@ class TeachersSubjects {
      * @var Season $season
      */
     private $season;
+    
+    public function __construct($teacher, $subject, $season) {
+        $this->setTeacher($teacher);
+        $this->setSubject($subject);
+        $this->setSeason($season);
+    }
 
     public function getId() {
         return $this->id;
@@ -60,7 +66,7 @@ class TeachersSubjects {
      * @param Season $season
      */
     public function setSeason($value) {
-        $this->question = $value;
+        $this->season = $value;
     }
 
     /**

@@ -483,7 +483,8 @@ class StatisticsController extends Controller {
                 if ($subject == null) {
                     throw new NotFoundHttpException("Subject not found");
                 }
-                $teachers = $subject->getTeachers();
+                $teacherRepository = $em->getRepository('AnketaBundle:Teacher');
+                $teachers = $teacherRepository->getTeachersForSubject($subject, $season);
                 foreach ($teachers as $teacher) {
                     $subject_menu->children[$teacher->getId()] = new MenuItem(
                             $teacher->getName(),

@@ -21,18 +21,7 @@ class Teacher {
      * @ORM\Column(type="string")
      */
     private $name;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="Subject")
-     * @ORM\JoinTable(name="teachers_subjects",
-     *      joinColumns={@ORM\JoinColumn(name="teacher_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="subject_id", referencedColumnName="id")}
-     *      )
-     *
-     * @var ArrayCollection $subjects
-     */
-    private $subjects; //FIXME ZMAZAT
-
+    
     /**
      * @param String $name
      */
@@ -52,27 +41,5 @@ class Teacher {
     public function getName() {
         return $this->name;
     }
-
-    /**
-     * @param ArrayCollection $value
-     */
-    public function setSubjects($value) { //FIXME REIMPLEMENTOVAT
-        $this->subjects = $value;
-    }
-
-    /**
-     * @param Subject $value
-     */
-    public function addSubject($value) { //FIXME REIMPLEMENTOVAT
-        $value->addTeacher($this);
-        $this->subjects[] = $value;
-    }
-
-    /**
-     * @return ArrayCollection subjects
-     */
-    public function getSubjects() { //FIXME REIMPLEMENTOVAT
-        return $this->subjects;
-    }
-
+    
 }

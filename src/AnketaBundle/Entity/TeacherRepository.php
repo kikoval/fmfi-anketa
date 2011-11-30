@@ -19,4 +19,18 @@ use Doctrine\ORM\EntityRepository;
 
 class TeacherRepository extends EntityRepository {
     
+    public function getTeachersForSubject($subject, $season) {
+        $dql = 'SELECT t FROM AnketaBundle\Entity\Teacher t, ' .
+                  'AnketaBundle\Entity\TeachersSubjects ts WHERE t = ts.teacher ' .
+                  ' AND ts.subject = :subject ' .
+                  ' AND ts.season = :season ' .
+                  ' ORDER BY t.name';
+        // TODO: lepsi order by
+        
+        $teachers = $this->getEntityManager()
+                         ->createQuery($dql)->execute(array('subject' => $subject,
+                             'season' => $season));
+        return $teachers;
+    }
+    
 }
