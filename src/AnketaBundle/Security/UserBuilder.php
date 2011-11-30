@@ -16,6 +16,7 @@ namespace AnketaBundle\Security;
 use AnketaBundle\Entity\Role;
 use AnketaBundle\Entity\User;
 use AnketaBundle\Entity\Subject;
+use AnketaBundle\Entity\StudyProgram;
 
 class UserBuilder
 {
@@ -87,9 +88,13 @@ class UserBuilder
      *
      * @param Subject $subject
      */
-    public function addSubject(Subject $subject)
+    public function addSubject(Subject $subject, StudyProgram $studyProgram)
     {
-        $this->subjects[] = $subject;
+        $this->subjects[] = array('subject' => $subject, 'studyProgram' => $studyProgram);
+    }
+    
+    public function getSubjects() {
+        return $this->subjects;
     }
 
     /**
@@ -117,9 +122,6 @@ class UserBuilder
         $user->setHasVote($this->isStudent);
         foreach ($this->roles as $role) {
             $user->addRole($role);
-        }
-        foreach ($this->subjects as $subject) {
-            $user->addSubject($subject);
         }
 
         return $user;

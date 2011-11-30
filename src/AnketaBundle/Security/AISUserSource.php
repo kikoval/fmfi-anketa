@@ -25,13 +25,19 @@ class AISUserSource implements UserSourceInterface
 
     /**
      * Doctrine repository for Subject entity
-     * @var AnketaBundle\Entity\Repository\SubjectRepository
+     * @var AnketaBundle\Entity\SubjectRepository
      */
     private $subjectRepository;
+    
+    /**
+     * Doctrine repository for StudyProgram entity
+     * @var AnketaBundle\Entity\StudyProgramRepository
+     */
+    private $studyProgramRepository;
 
     /**
      * Doctrine repository for Role entity
-     * @var AnketaBundle\Entity\Repository\RoleRepository
+     * @var AnketaBundle\Entity\RoleRepository
      */
     private $roleRepository;
 
@@ -57,6 +63,7 @@ class AISUserSource implements UserSourceInterface
         $this->entityManager = $em;
         $this->subjectRepository = $em->getRepository('AnketaBundle:Subject');
         $this->roleRepository = $em->getRepository('AnketaBundle:Role');
+        $this->studyProgramRepository = $em->getRepository('AnketaBundle:StudyProgram');
         $this->aisRetriever = $aisRetriever;
         $this->semestre = $semestre;
         $this->loadAuth = $loadAuth;
@@ -111,8 +118,22 @@ class AISUserSource implements UserSourceInterface
             if ($subject == null) {
                 throw new \Exception("Nepodarilo sa pridať predmet do DB");
             }
+            $stmt = null;
+            
+            // Vytvorime studijny program v DB ak neexistuje
+            // podobne ako predmet vyssie
+            $stmt = $this->dbConn->prepare("INSERT INTO StudyProgram (code, name) VALUES (:code, :name) ON DUPLICATE KEY UPDATE code=code");
+            $stmt->bindValue('code', $aisPredmet['studijnyProgram']['skratka']);
+            $stmt->bindValue('name', $aisPredmet['studijnyProgram']['nazov']);
+            $stmt->execute();
 
-            $builder->addSubject($subject);
+            $studyProgram = $this->studyProgramRepository->findOneBy(array('code' => $aisPredmet['studijnyProgram']['skratka']));
+            if ($studyProgram == null) {
+                throw new \Exception("Nepodarilo sa pridať študijný program do DB");
+            }
+            $stmt = null;
+
+            $builder->addSubject($subject, $studyProgram);
         }
     }
 

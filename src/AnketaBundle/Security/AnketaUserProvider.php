@@ -19,21 +19,28 @@ use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Doctrine\ORM\EntityManager;
 use AnketaBundle\Entity\User;
+use AnketaBundle\Entity\UsersSubjects;
 
 class AnketaUserProvider implements UserProviderInterface
 {
 
     /**
      * Doctrine repository for User entity
-     * @var AnketaBundle\Entity\Repository\UserRepository
+     * @var AnketaBundle\Entity\UserRepository
      */
     private $userRepository;
 
     /**
      * Doctrine repository for Role entity
-     * @var AnketaBundle\Entity\Repository\RoleRepository
+     * @var AnketaBundle\Entity\RoleRepository
      */
     private $roleRepository;
+    
+    /**
+     * Doctrine repository for Role entity
+     * @var AnketaBundle\Entity\SeasonRepository
+     */
+    private $seasonRepository;
 
     /** @var EntityManager */
     private $entityManager;
@@ -46,6 +53,7 @@ class AnketaUserProvider implements UserProviderInterface
         $this->entityManager = $em;
         $this->userRepository = $em->getRepository('AnketaBundle:User');
         $this->roleRepository = $em->getRepository('AnketaBundle:Role');
+        $this->seasonRepository = $em->getRepository('AnketaBundle:Season');
         $this->userSources = $userSources;
     }
 
@@ -91,6 +99,18 @@ class AnketaUserProvider implements UserProviderInterface
             $user = $builder->createUser();
 
             $this->entityManager->persist($user);
+            
+            $season = $this->seasonRepository->getActiveSeason();
+            
+            foreach ($builder->getSubjects() as $record) {
+                $usersSubjects = new UsersSubjects();
+                $usersSubjects->setSeason($season);
+                $usersSubjects->setSubject($record['subject']);
+                $usersSubjects->setStudyProgram($record['studyProgram']);
+                $usersSubjects->setUser($user);
+                $this->entityManager->persist($usersSubjects);
+            }
+            
             $this->entityManager->flush();
 
         } 
