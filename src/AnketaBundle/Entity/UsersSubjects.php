@@ -68,7 +68,7 @@ class UsersSubjects {
      * @param Season $season
      */
     public function setSeason($value) {
-        $this->question = $value;
+        $this->season = $value;
     }
 
     /**
