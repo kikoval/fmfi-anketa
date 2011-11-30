@@ -26,15 +26,21 @@ class DemoUserSource implements UserSourceInterface
 
     /**
      * Doctrine repository for Subject entity
-     * @var AnketaBundle\Entity\Repository\SubjectRepository
+     * @var AnketaBundle\Entity\SubjectRepository
      */
     private $subjectRepository;
 
     /**
      * Doctrine repository for Role entity
-     * @var AnketaBundle\Entity\Repository\RoleRepository
+     * @var AnketaBundle\Entity\RoleRepository
      */
     private $roleRepository;
+    
+    /**
+     * Doctrine repository for StudyProgram entity
+     * @var AnketaBundle\Entity\StudyProgramRepository
+     */
+    private $studyProgramRepository;
 
     /** @var EntityManager */
     private $entityManager;
@@ -43,14 +49,19 @@ class DemoUserSource implements UserSourceInterface
     {
         $this->entityManager = $em;
         $this->subjectRepository = $em->getRepository('AnketaBundle:Subject');
+        $this->studyProgramRepository = $em->getRepository('AnketaBundle:StudyProgram');
         $this->roleRepository = $em->getRepository('AnketaBundle:Role');
     }
 
     public function load(UserBuilder $builder)
     {
         $subjects = $this->subjectRepository->findAll();
+        $studyPrograms = $this->studyProgramRepository->findAll();
+        if (count($studyPrograms) == 0) {
+            throw new \Exception('Chyba studijny program');
+        }
         foreach ($subjects as $subject) {
-            $builder->addSubject($subject);
+            $builder->addSubject($subject, $studyPrograms[0]);
         }
         $builder->addRole($this->roleRepository->findOrCreateRole('ROLE_DEMO_USER'));
         $builder->markStudent();
