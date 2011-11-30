@@ -18,6 +18,7 @@ use AnketaBundle\Entity\User;
 use AnketaBundle\Entity\Subject;
 use AnketaBundle\Integration\AISRetriever;
 use AnketaBundle\Entity\Role;
+use Doctrine\DBAL\Connection;
 
 class AISUserSource implements UserSourceInterface
 {
@@ -37,6 +38,9 @@ class AISUserSource implements UserSourceInterface
     /** @var EntityManager */
     private $entityManager;
 
+    /** @var Connection */
+    private $dbConn;
+
     /** @var AISRetriever */
     private $aisRetriever;
 
@@ -46,9 +50,10 @@ class AISUserSource implements UserSourceInterface
     /** @var boolean */
     private $loadAuth;
 
-    public function __construct(EntityManager $em, AISRetriever $aisRetriever,
+    public function __construct(Connection $dbConn, EntityManager $em, AISRetriever $aisRetriever,
                                 array $semestre, $loadAuth)
     {
+        $this->dbConn = $dbConn;
         $this->entityManager = $em;
         $this->subjectRepository = $em->getRepository('AnketaBundle:Subject');
         $this->roleRepository = $em->getRepository('AnketaBundle:Role');
@@ -94,11 +99,17 @@ class AISUserSource implements UserSourceInterface
             }
             $kody[] = $kratkyKod;
 
+            // vytvorime subject v DB ak neexistuje
+            // pouzijeme INSERT ON DUPLICATE KEY UPDATE
+            // aby sme nedostavali vynimky pri raceoch
+            $stmt = $this->dbConn->prepare("INSERT INTO Subject (code, name) VALUES (:code, :name) ON DUPLICATE KEY UPDATE code=code");
+            $stmt->bindValue('code', $kratkyKod);
+            $stmt->bindValue('name', $aisPredmet['nazov']);
+            $stmt->execute();
+
             $subject = $this->subjectRepository->findOneBy(array('code' => $kratkyKod));
             if ($subject == null) {
-                $subject = new Subject($aisPredmet['nazov']);
-                $subject->setCode($kratkyKod);
-                $this->entityManager->persist($subject);
+                throw new \Exception("Nepodarilo sa pridať predmet do DB");
             }
 
             $builder->addSubject($subject);
