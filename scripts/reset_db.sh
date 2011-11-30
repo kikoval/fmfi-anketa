@@ -31,8 +31,11 @@ sprav app/console doctrine:schema:create
 sprav app/console doctrine:fixtures:load
 sprav app/console anketa:import-otazky other/anketa.yml
 
-echo "${bold}> importujem other/teachers_subjects.sql..."
-[ "$db_backend" == "sqlite" ] && sqlite3 "db/$db_sqlite_file" <other/teachers_subjects.sql
-[ "$db_backend" == "mysql" ] && "$mysql_client" -u"`zisti db_mysql_user`" -p"`zisti db_mysql_pass`" "`zisti db_mysql_name`" <other/teachers_subjects.sql
+if [ "$1" != "clean" ]
+then
+  echo "${bold}> importujem other/teachers_subjects.sql..."
+  [ "$db_backend" == "sqlite" ] && sqlite3 "db/$db_sqlite_file" <other/teachers_subjects.sql
+  [ "$db_backend" == "mysql" ] && "$mysql_client" -u"`zisti db_mysql_user`" -p"`zisti db_mysql_pass`" "`zisti db_mysql_name`" <other/teachers_subjects.sql
+fi
 
 echo "${bold}databaza resetnuta${normal}"

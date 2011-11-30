@@ -16,6 +16,6 @@ fi
 
 ./scripts/clear_cache.sh
 #./scripts/clear_logs.sh
-./scripts/reset_db.sh
+./scripts/reset_db.sh "$1"
 ./scripts/clear_cache.sh
 #./scripts/clear_logs.sh
