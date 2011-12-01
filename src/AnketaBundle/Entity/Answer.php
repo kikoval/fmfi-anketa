@@ -205,4 +205,12 @@ class Answer {
     public function getStudyProgram() {
         return $this->studyProgram;
     }
+    
+    public function getSeason() {
+        return $this->season;
+    }
+
+    public function setSeason($season) {
+        $this->season = $season;
+    }
 }

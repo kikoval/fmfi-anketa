@@ -30,6 +30,8 @@ class HlasovanieController extends Controller
      * @return array menu array of categories and their subcategories
      */
     private function buildMenu($em, $user) {
+        $season = $em->getRepository('AnketaBundle:Season')->getActiveSeason();
+
         $menu = array(
             'subject' => new MenuItem(
                 'Predmety',
@@ -54,17 +56,17 @@ class HlasovanieController extends Controller
                     $this->generateUrl('answer_general', array('id' => $subcategory->getId()))
                     );
         }
-        // TODO: season
         $subjects = $em->getRepository('AnketaBundle\Entity\Subject')
-                       ->getAttendedSubjectForUser($user->getId());
+                       ->getAttendedSubjectsForUser($user, $season);
+        $teacherRepository = $em->getRepository('AnketaBundle:Teacher');
         foreach($subjects as $subject) {
             $subjectMenu = 
                 new MenuItem(
                 $subject->getName(),
                 $this->generateUrl('answer_subject', array('code' => $subject->getCode()))
                 );
-            // TODO: season
-            $teachers = $subject->getTeachers();
+            // TODO: optimalizovat selecty
+            $teachers = $teacherRepository->getTeachersForSubject($subject, $season);
             foreach ($teachers as $teacher) {
                 $subjectMenu->children[$teacher->getId()] =
                     new MenuItem(

@@ -94,9 +94,10 @@ services:
     anketa.ais_user_source:
         class: AnketaBundle\Security\AISUserSource
         arguments:
+            - "@database_connection"
             - "@doctrine.orm.entity_manager"
             - "@anketa.ais_retriever"
-            - [["2010/2011", "Z"], ["2010/2011", "L"]] # brat iba tieto semestre
+            - [["2011/2012", "Z"]] # brat iba tieto semestre
             - Yes # pouzit AIS ako zdroj opravneni?
     anketa.demo_user_source:
         class: AnketaBundle\Security\DemoUserSource

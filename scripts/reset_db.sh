@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# Usage: reset_db.sh
+#        reset_db.sh clean
+#        reset_db.sh fixtures
+#        reset_db.sh otazky
+#        reset_db.sh import <sql-file>
+
 cd "`dirname "$0"`/.."
 bold=$'\e[37;40;1m'
 normal=$'\e[0m'
@@ -28,11 +34,19 @@ sprav app/console doctrine:database:drop --force
 [ "$db_backend" == "mysql" ] && echo "${bold}Vytvaram novu databazu${normal}" && echo "CREATE DATABASE `zisti db_mysql_name` CHARSET utf8;" | "$mysql_client" -u"`zisti db_mysql_user`" -p"`zisti db_mysql_pass`" "`zisti d_mysql_name`"
 
 sprav app/console doctrine:schema:create
-sprav app/console doctrine:fixtures:load
-sprav app/console anketa:import-otazky other/anketa.yml
-
-echo "${bold}> importujem other/teachers_subjects.sql..."
-[ "$db_backend" == "sqlite" ] && sqlite3 "db/$db_sqlite_file" <other/teachers_subjects.sql
-[ "$db_backend" == "mysql" ] && "$mysql_client" -u"`zisti db_mysql_user`" -p"`zisti db_mysql_pass`" "`zisti db_mysql_name`" <other/teachers_subjects.sql
+if [ "$1" == "fixtures" ] || [ "$1" == "otazky" ] || [ "$1" == "" ]
+then
+  sprav app/console doctrine:fixtures:load
+  if [ "$1" == "otazky" ] || [ "$1" == "" ]
+  then
+    sprav app/console anketa:import-otazky other/anketa.yml
+  fi
+fi
+if [ "$1" == "import" ]
+then
+  echo "${bold}> importujem $2..."
+  [ "$db_backend" == "sqlite" ] && sqlite3 "db/$db_sqlite_file" <"$2"
+  [ "$db_backend" == "mysql" ] && "$mysql_client" -u"`zisti db_mysql_user`" -p"`zisti db_mysql_pass`" "`zisti db_mysql_name`" <"$2"
+fi
 
 echo "${bold}databaza resetnuta${normal}"

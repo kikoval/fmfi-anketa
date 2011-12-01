@@ -20,59 +20,71 @@ class Teacher {
     /**
      * @ORM\Column(type="string")
      */
-    private $name;
+    private $givenName;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Subject")
-     * @ORM\JoinTable(name="teachers_subjects",
-     *      joinColumns={@ORM\JoinColumn(name="teacher_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="subject_id", referencedColumnName="id")}
-     *      )
-     *
-     * @var ArrayCollection $subjects
+     * @ORM\Column(type="string")
      */
-    private $subjects; //FIXME ZMAZAT
+    private $familyName;
 
+    /**
+     * @ORM\Column(type="string")
+     */
+    private $displayName;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    private $login;
+    
     /**
      * @param String $name
      */
-    public function __construct($name) {
-        $this->subjects = new ArrayCollection();
-        $this->name = $name;
+    public function __construct($givenName, $familyName, $displayName, $login) {
+        $this->setGivenName($givenName);
+        $this->setFamilyName($familyName);
+        $this->setDisplayName($displayName);
+        $this->setLogin($login);
     }
 
     public function getId() {
         return $this->id;
     }
 
-    public function setName($value) {
-        $this->name = $value;
-    }
-
     public function getName() {
-        return $this->name;
+        return trim($this->getGivenName() . ' ' . $this->getFamilyName());
     }
 
-    /**
-     * @param ArrayCollection $value
-     */
-    public function setSubjects($value) { //FIXME REIMPLEMENTOVAT
-        $this->subjects = $value;
+    public function getGivenName() {
+        return $this->givenName;
     }
 
-    /**
-     * @param Subject $value
-     */
-    public function addSubject($value) { //FIXME REIMPLEMENTOVAT
-        $value->addTeacher($this);
-        $this->subjects[] = $value;
+    public function setGivenName($givenName) {
+        $this->givenName = $givenName;
     }
 
-    /**
-     * @return ArrayCollection subjects
-     */
-    public function getSubjects() { //FIXME REIMPLEMENTOVAT
-        return $this->subjects;
+    public function getFamilyName() {
+        return $this->familyName;
     }
 
+    public function setFamilyName($familyName) {
+        $this->familyName = $familyName;
+    }
+
+    public function getDisplayName() {
+        return $this->displayName;
+    }
+
+    public function setDisplayName($displayName) {
+        $this->displayName = $displayName;
+    }
+
+    public function getLogin() {
+        return $this->login;
+    }
+
+    public function setLogin($login) {
+        $this->login = $login;
+    }
+    
 }

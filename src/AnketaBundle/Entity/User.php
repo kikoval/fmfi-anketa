@@ -39,25 +39,10 @@ class User implements UserInterface {
      * @var boolean
      */
     private $participated;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="StudyProgram")
-     * @var StudyProgram $studyProgram
-     */
-    private $studyProgram;
-    
-    /**
-     * @ORM\ManyToMany(targetEntity="Subject")
-     * @ORM\JoinTable(name="users_subjects",
-     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="subject_id", referencedColumnName="id")}
-     *      )
-     */
-    private $subjects; //FIXME ZMAZAT
     
     /**
      * @ORM\ManyToMany(targetEntity="Role")
-     * @ORM\JoinTable(name="users_roles",
+     * @ORM\JoinTable(name="UsersRoles",
      *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")}
      *      )
@@ -116,34 +101,6 @@ class User implements UserInterface {
     /**
      * @param ArrayCollection $value
      */
-    public function setSubjects($value) { //FIXME REIMPLEMENTOVAT
-        $this->subjects = $value;
-    }
-
-    /**
-     * @param Subject $value
-     */
-    public function addSubject($value) { //FIXME REIMPLEMENTOVAT
-        $this->subjects[] = $value;
-    }
-
-    /**
-     * @return ArrayCollection subjects
-     */
-    public function getSubjects() { //FIXME REIMPLEMENTOVAT
-        return $this->subjects;
-    }
-
-    /**
-     * @return integer
-     */
-    public function getSubjectsCount() { //FIXME REIMPLEMENTOVAT
-        return $this->subjects->count();
-    }
-
-    /**
-     * @param ArrayCollection $value
-     */
     public function setRoles($value) {
         $this->roles = $value;
     }
@@ -187,20 +144,6 @@ class User implements UserInterface {
 
     public function __toString() {
         return $this->getUserName();
-    }
-    
-    /**
-     * @param StudyProgram $value
-     */
-    public function setStudyProgram($value) {
-        $this->studyProgram = $value;
-    }
-
-    /**
-     * @return StudyProgram study program
-     */
-    public function getStudyProgram() {
-        return $this->studyProgram;
     }
 
 }

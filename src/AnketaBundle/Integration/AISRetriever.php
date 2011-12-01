@@ -173,6 +173,8 @@ class AISRetriever
                 foreach ($hodnotenia as $hodnotenie) {
                     if ($semestre !== null && !in_array($hodnotenie['semester'], $roky[$akadRok])) continue;
                     $hodnotenie['akRok'] = $akadRok;
+                    $hodnotenie['studijnyProgram'] = array('skratka' => $studiumInfo['studijnyProgramSkratka'],
+                        'nazov' => $studiumInfo['studijnyProgramPopis']);
                     $vsetky_predmety[] = $hodnotenie;
                 }
                 

@@ -30,11 +30,31 @@ class TeachersSubjects {
     private $subject;
 
     /**
+     * @ORM\Column(type="boolean")
+     * @var boolean ci prednasa(l) k danemu predmetu
+     */
+    private $lecturer;
+
+    /**
+     * @ORM\Column(type="boolean")
+     * @var boolean ci cvici(l) 
+     */
+    private $trainer;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Season")
      *
      * @var Season $season
      */
     private $season;
+    
+    public function __construct($teacher, $subject, $season, $lecturer = false, $trainer = false) {
+        $this->setTeacher($teacher);
+        $this->setSubject($subject);
+        $this->setSeason($season);
+        $this->setLecturer($lecturer);
+        $this->setTrainer($trainer);
+    }
 
     public function getId() {
         return $this->id;
@@ -60,7 +80,7 @@ class TeachersSubjects {
      * @param Season $season
      */
     public function setSeason($value) {
-        $this->question = $value;
+        $this->season = $value;
     }
 
     /**
@@ -69,4 +89,21 @@ class TeachersSubjects {
     public function getSeason() {
         return $this->season;
     }
+
+    public function getLecturer() {
+        return $this->lecturer;
+    }
+
+    public function setLecturer($lecturer) {
+        $this->lecturer = $lecturer;
+    }
+
+    public function getTrainer() {
+        return $this->trainer;
+    }
+
+    public function setTrainer($trainer) {
+        $this->trainer = $trainer;
+    }
+
 }

@@ -254,8 +254,7 @@ class StatisticsController extends Controller {
     // TODO:nahrad celu tuto saskaren studijnymi programmi ked budu k dispozicii
     public function getCategorizedSubjects(Season $season) {
         $em = $this->get('doctrine.orm.entity_manager');
-        // TODO: pouzi $season
-        $subjects = $em->getRepository('AnketaBundle\Entity\Subject')->getSortedSubjectsWithAnswers();
+        $subjects = $em->getRepository('AnketaBundle\Entity\Subject')->getSortedSubjectsWithAnswers($season);
         $categorized = array();
         $uncategorized = array();
         foreach ($subjects as $subject) {
@@ -279,7 +278,6 @@ class StatisticsController extends Controller {
         $em = $this->get('doctrine.orm.entity_manager');
 
         $season = $this->getSeason($season_slug);
-        // TODO: subjects by Season
         $templateParams = array();
         $subjects = $this->getCategorizedSubjects($season);
 
@@ -483,7 +481,8 @@ class StatisticsController extends Controller {
                 if ($subject == null) {
                     throw new NotFoundHttpException("Subject not found");
                 }
-                $teachers = $subject->getTeachers();
+                $teacherRepository = $em->getRepository('AnketaBundle:Teacher');
+                $teachers = $teacherRepository->getTeachersForSubject($subject, $season);
                 foreach ($teachers as $teacher) {
                     $subject_menu->children[$teacher->getId()] = new MenuItem(
                             $teacher->getName(),

@@ -9,6 +9,8 @@
             <th>Kód</th>
             <th>Rok</th>
             <th>Semester</th>
+            <th>ŠP skratka</th>
+            <th>ŠP názov</th>
         </tr>
     {% for row in predmety %}
         <tr>
@@ -16,6 +18,8 @@
             <td>{{ row.skratka }}</td>
             <td>{{ row.akRok }}</td>
             <td>{{ row.semester }}</td>
+            <td>{{ row.studijnyProgram.skratka }}</td>
+            <td>{{ row.studijnyProgram.nazov }}</td>
         </tr>
     {% endfor %}
     </table>

@@ -36,7 +36,7 @@ class QuestionController extends Controller {
      * @param ArrayCollection $answers answers already filled before
      * @return array array of updated or created answers
      */
-    private function processForm($request, $user, $questions, $answers) {
+    private function processForm($request, $user, $questions, $answers, $season) {
 
         $em = $this->get('doctrine.orm.entity_manager');
 
@@ -61,6 +61,7 @@ class QuestionController extends Controller {
                 $answer = new Answer();
                 $answer->setQuestion($question);
                 $answer->setAuthor($user);
+                $answer->setSeason($season);
             }
 
             if (isset($questionArray[$id]['answer'])) {
@@ -98,8 +99,9 @@ class QuestionController extends Controller {
      */
     public function getAttendedSubjectByCode($user, $code) {
         $em = $this->get('doctrine.orm.entity_manager');
+        $season = $em->getRepository('AnketaBundle:Season')->getActiveSeason();
         $attendedSubjects = $em->getRepository('AnketaBundle\Entity\Subject')
-                               ->getAttendedSubjectForUser($user->getId());
+                               ->getAttendedSubjectsForUser($user, $season);
 
         if (count($attendedSubjects) == 0) {
             throw new \RuntimeException ('Nemas ziadne predmety.');
@@ -134,8 +136,12 @@ class QuestionController extends Controller {
 
         $questions = $em->getRepository('AnketaBundle\Entity\Question')
                         ->getOrderedQuestionsByCategoryType(CategoryType::TEACHER_SUBJECT);
-        // TODO: by Season
-        $teachers = $subject->getTeachers();
+        
+        $teacherRepository = $em->getRepository('AnketaBundle:Teacher');
+        $season = $em->getRepository('AnketaBundle:Season')->getActiveSeason();
+        // TODO: opravit nasledovne, nech to nacitava a kontroluje ucitelopredmet
+        // z databazy naraz v jednom kroku
+        $teachers = $teacherRepository->getTeachersForSubject($subject, $season);
         $teacher = null;
         foreach ($teachers as $tmp) {
             if ($tmp->getId() == $teacher_code) $teacher = $tmp;
@@ -148,7 +154,7 @@ class QuestionController extends Controller {
                       ->getAnswersByCriteria($questions, $user, $subject, $teacher);
 
         if ('POST' == $request->getMethod()) {
-            $answerArray = $this->processForm($request, $user, $questions, $answers);
+            $answerArray = $this->processForm($request, $user, $questions, $answers, $season);
 
             foreach ($answerArray AS $answer) {
                 // chceme nastavit este teacher + subject
@@ -198,9 +204,10 @@ class QuestionController extends Controller {
                         ->getOrderedQuestionsByCategoryType(CategoryType::SUBJECT);
         $answers = $em->getRepository('AnketaBundle\Entity\Answer')
                       ->getAnswersByCriteria($questions, $user, $subject);
-
+        $season = $em->getRepository('AnketaBundle:Season')->getActiveSeason();
+        
         if ('POST' == $request->getMethod()) {
-            $answerArray = $this->processForm($request, $user, $questions, $answers);
+            $answerArray = $this->processForm($request, $user, $questions, $answers, $season);
 
             foreach ($answerArray AS $answer) {
                 // chceme nastavit este teacher + subject
@@ -275,9 +282,10 @@ class QuestionController extends Controller {
                         ->getOrderedQuestions($category);
         $answers = $em->getRepository('AnketaBundle\Entity\Answer')
                       ->getAnswersByCriteria($questions, $user);
-
+        $season = $em->getRepository('AnketaBundle:Season')->getActiveSeason();
+        
         if ('POST' == $request->getMethod()) {
-            $answerArray = $this->processForm($request, $user, $questions, $answers);
+            $answerArray = $this->processForm($request, $user, $questions, $answers, $season);
             foreach ($answerArray AS $answer) {
                 $em->persist($answer);
             }

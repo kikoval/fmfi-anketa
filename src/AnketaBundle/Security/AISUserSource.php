@@ -18,24 +18,34 @@ use AnketaBundle\Entity\User;
 use AnketaBundle\Entity\Subject;
 use AnketaBundle\Integration\AISRetriever;
 use AnketaBundle\Entity\Role;
+use Doctrine\DBAL\Connection;
 
 class AISUserSource implements UserSourceInterface
 {
 
     /**
      * Doctrine repository for Subject entity
-     * @var AnketaBundle\Entity\Repository\SubjectRepository
+     * @var AnketaBundle\Entity\SubjectRepository
      */
     private $subjectRepository;
+    
+    /**
+     * Doctrine repository for StudyProgram entity
+     * @var AnketaBundle\Entity\StudyProgramRepository
+     */
+    private $studyProgramRepository;
 
     /**
      * Doctrine repository for Role entity
-     * @var AnketaBundle\Entity\Repository\RoleRepository
+     * @var AnketaBundle\Entity\RoleRepository
      */
     private $roleRepository;
 
     /** @var EntityManager */
     private $entityManager;
+
+    /** @var Connection */
+    private $dbConn;
 
     /** @var AISRetriever */
     private $aisRetriever;
@@ -46,12 +56,14 @@ class AISUserSource implements UserSourceInterface
     /** @var boolean */
     private $loadAuth;
 
-    public function __construct(EntityManager $em, AISRetriever $aisRetriever,
+    public function __construct(Connection $dbConn, EntityManager $em, AISRetriever $aisRetriever,
                                 array $semestre, $loadAuth)
     {
+        $this->dbConn = $dbConn;
         $this->entityManager = $em;
         $this->subjectRepository = $em->getRepository('AnketaBundle:Subject');
         $this->roleRepository = $em->getRepository('AnketaBundle:Role');
+        $this->studyProgramRepository = $em->getRepository('AnketaBundle:StudyProgram');
         $this->aisRetriever = $aisRetriever;
         $this->semestre = $semestre;
         $this->loadAuth = $loadAuth;
@@ -94,14 +106,34 @@ class AISUserSource implements UserSourceInterface
             }
             $kody[] = $kratkyKod;
 
+            // vytvorime subject v DB ak neexistuje
+            // pouzijeme INSERT ON DUPLICATE KEY UPDATE
+            // aby sme nedostavali vynimky pri raceoch
+            $stmt = $this->dbConn->prepare("INSERT INTO Subject (code, name) VALUES (:code, :name) ON DUPLICATE KEY UPDATE code=code");
+            $stmt->bindValue('code', $kratkyKod);
+            $stmt->bindValue('name', $aisPredmet['nazov']);
+            $stmt->execute();
+
             $subject = $this->subjectRepository->findOneBy(array('code' => $kratkyKod));
             if ($subject == null) {
-                $subject = new Subject($aisPredmet['nazov']);
-                $subject->setCode($kratkyKod);
-                $this->entityManager->persist($subject);
+                throw new \Exception("Nepodarilo sa pridať predmet do DB");
             }
+            $stmt = null;
+            
+            // Vytvorime studijny program v DB ak neexistuje
+            // podobne ako predmet vyssie
+            $stmt = $this->dbConn->prepare("INSERT INTO StudyProgram (code, name) VALUES (:code, :name) ON DUPLICATE KEY UPDATE code=code");
+            $stmt->bindValue('code', $aisPredmet['studijnyProgram']['skratka']);
+            $stmt->bindValue('name', $aisPredmet['studijnyProgram']['nazov']);
+            $stmt->execute();
 
-            $builder->addSubject($subject);
+            $studyProgram = $this->studyProgramRepository->findOneBy(array('code' => $aisPredmet['studijnyProgram']['skratka']));
+            if ($studyProgram == null) {
+                throw new \Exception("Nepodarilo sa pridať študijný program do DB");
+            }
+            $stmt = null;
+
+            $builder->addSubject($subject, $studyProgram);
         }
     }
 

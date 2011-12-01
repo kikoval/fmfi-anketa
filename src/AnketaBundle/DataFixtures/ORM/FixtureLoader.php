@@ -22,6 +22,9 @@ use AnketaBundle\Entity\Subject;
 use AnketaBundle\Entity\User;
 use AnketaBundle\Entity\Role;
 use AnketaBundle\Entity\Season;
+use AnketaBundle\Entity\StudyProgram;
+use AnketaBundle\Entity\UsersSubjects;
+use AnketaBundle\Entity\TeachersSubjects;
 use DateTime;
 
 /**
@@ -109,9 +112,9 @@ class FixtureLoader implements FixtureInterface {
         $manager->persist($season);
         
         // create teacher + subject
-        $teacher1 = new Teacher('Ucitel');
-        $teacher2 = new Teacher('Profesor');
-        $teacher3 = new Teacher('Plavcik');
+        $teacher1 = new Teacher('Janko', 'Hraško', 'RNDr. Janko Hraško, PhD.', 'hrasko1');
+        $teacher2 = new Teacher('Jožko', 'Mrkvička', 'Mgr. Jožko Mrkvička', 'mrkvicka47');
+        $teacher3 = new Teacher('James', 'Burton', 'Mgr. Art. James Burton', 'burton42');
 
 
         $sub1 = new Subject('Metalyza');
@@ -124,11 +127,11 @@ class FixtureLoader implements FixtureInterface {
         $sub4 = new Subject('FMFI volno');
         $sub4->setCode('fmfi');
         
-        // znova, teacher sa postara o update Subjectu
-        $teacher1->addSubject($sub1);
-        $teacher2->addSubject($sub2);
-        $teacher2->addSubject($sub3);
-        $teacher3->addSubject($sub3);
+        // priradenie ucitelov k predmetom
+        $manager->persist(new TeachersSubjects($teacher1, $sub1, $season, true));
+        $manager->persist(new TeachersSubjects($teacher2, $sub2, $season));
+        $manager->persist(new TeachersSubjects($teacher2, $sub3, $season, true));
+        $manager->persist(new TeachersSubjects($teacher3, $sub3, $season, true, true));
 
         // neni nastavene cascadovanie, kedze neviem ktorym smerom sa to
         // bude castejsie generovat - ci sa budu vyrabat predmety a k nim
@@ -165,29 +168,52 @@ class FixtureLoader implements FixtureInterface {
         $roleAdmin = new Role('ROLE_ADMIN');
         $roleUser = new Role('ROLE_USER');
         $roleSuperAdmin = new Role('ROLE_SUPER_ADMIN');
+        
+        $studyProgramINF = new StudyProgram();
+        $studyProgramINF->setCode('INF');
+        $studyProgramINF->setName('informatika');
+        $manager->persist($studyProgramINF);
+        
+        $studyProgramMINF = new StudyProgram();
+        $studyProgramMINF->setCode('mINF');
+        $studyProgramMINF->setName('informatika');
+        $manager->persist($studyProgramMINF);
 	
-        $developers = array('sucha14'   =>  'Martin Sucha',
-                            'trancik1'  =>  'Ivan Trančík',
-                            'peresini1' =>  'Bc. Peter Perešíni',
-                            'marek11'   =>  'Jakub Marek',
+        $developers = array('sucha14'   =>  'Bc. Martin Sucha',
+                            'trancik1'  =>  'Bc. Ivan Trančík',
+                            'marek11'   =>  'Bc. Jakub Marek',
                             'belan14'   =>  'Tomáš Belan',
-                            'markos1'   =>  'Jakub Markoš',
                             'kralik3'   =>  'Bc. Martin Králik');
+        
+        $subs = array($sub1, $sub2, $sub3);
         
         foreach ($developers as $userName => $displayName) {
             $user = new User($userName, $displayName);
             $user->addRole($roleSuperAdmin);
-            $user->addSubject($sub1);
-            $user->addSubject($sub2);
-            $user->addSubject($sub3);
+            
+            foreach ($subs as $idx=>$sub) {
+                $usersSubjects = new UsersSubjects();
+                $usersSubjects->setSeason($season);
+                $usersSubjects->setStudyProgram(($idx%2==0)?$studyProgramMINF:$studyProgramINF);
+                $usersSubjects->setSubject($sub);
+                $usersSubjects->setUser($user);
+                $manager->persist($usersSubjects);
+            }
+            
             $user->setHasVote(true);
             $manager->persist($user);
         }
-
+        
 //
-        $userFoo->addSubject($sub1);
-        $userFoo->addSubject($sub2);
-        $userFoo->addSubject($sub3);
+        foreach ($subs as $idx=>$sub) {
+            $usersSubjects = new UsersSubjects();
+            $usersSubjects->setSeason($season);
+            $usersSubjects->setStudyProgram($studyProgramINF);
+            $usersSubjects->setSubject($sub);
+            $usersSubjects->setUser($userFoo);
+            $manager->persist($usersSubjects);
+        }
+            
         $userFoo->addRole($roleUser);
 
         $userAdmin->addRole($roleAdmin);
