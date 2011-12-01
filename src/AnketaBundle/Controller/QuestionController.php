@@ -137,7 +137,7 @@ class QuestionController extends Controller {
                         ->getOrderedQuestionsByCategoryType(CategoryType::TEACHER_SUBJECT);
         
         $teacherRepository = $em->getRepository('AnketaBundle:Teacher');
-        $season = $em->getRepository('AnketaBundle:Teacher')->getActiveSeason();
+        $season = $em->getRepository('AnketaBundle:Season')->getActiveSeason();
         $teachers = $teacherRepository->getTeachersForSubject($subject, $season);
         $teacher = null;
         foreach ($teachers as $tmp) {
