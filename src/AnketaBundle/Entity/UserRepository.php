@@ -77,4 +77,17 @@ class UserRepository extends EntityRepository {
         return $result[0]['anon'];
     }
 
+    public function getStudyProgrammes($userId) {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery("SELECT DISTINCT(sp.id)
+                           FROM AnketaBundle\\Entity\\UsersSubjects us
+                           JOIN us.studyProgram sp
+                           WHERE us.user = :userId
+                           ORDER BY sp.code ASC");
+        $query->setParameter('userId', $userId);
+
+        $helper = function($item){return $item['id'];};
+        return array_map($helper, $query->getArrayResult());
+    }
+
 }
