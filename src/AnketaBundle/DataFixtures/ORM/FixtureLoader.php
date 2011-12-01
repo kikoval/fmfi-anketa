@@ -128,10 +128,10 @@ class FixtureLoader implements FixtureInterface {
         $sub4->setCode('fmfi');
         
         // priradenie ucitelov k predmetom
-        $manager->persist(new TeachersSubjects($teacher1, $sub1, $season));
+        $manager->persist(new TeachersSubjects($teacher1, $sub1, $season, true));
         $manager->persist(new TeachersSubjects($teacher2, $sub2, $season));
-        $manager->persist(new TeachersSubjects($teacher2, $sub3, $season));
-        $manager->persist(new TeachersSubjects($teacher3, $sub3, $season));
+        $manager->persist(new TeachersSubjects($teacher2, $sub3, $season, true));
+        $manager->persist(new TeachersSubjects($teacher3, $sub3, $season, true, true));
 
         // neni nastavene cascadovanie, kedze neviem ktorym smerom sa to
         // bude castejsie generovat - ci sa budu vyrabat predmety a k nim
