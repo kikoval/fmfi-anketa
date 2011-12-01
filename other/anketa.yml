@@ -26,7 +26,46 @@ kategorie:
       kategoria:  vseobecne
 
 otazky:
-# ako prve su tu otazky ku predmetom
+# otazky k studijnemu programu
+    - nazov:  Hodnotenie študijného programu
+      text:   Celkové hodnotenie kvality študijného programu.
+      popis:
+      kategoria:  studijnyprogram
+      komentar:   No
+      hviezdicky: Yes
+      position:   1
+
+    - nazov:  Náročnosť štúdia
+      text:   Aký náročný je pre vás študijný program?
+      popis:
+      kategoria:  studijnyprogram
+      komentar:   No
+      hviezdicky: No
+      moznosti:
+          - text: Totálny zabijak
+          - text: Nadsadený
+          - text: Akurát
+          - text: Nenáročný
+          - text: Triviálny
+      position:   2
+
+    - nazov:  Zaujímavosť študijného programu
+      text:   Ako zaujímavá je pre vás náplň študijného programu?
+      popis:
+      kategoria:  studijnyprogram
+      komentar:   No
+      hviezdicky: Yes
+      position:   3
+
+    - nazov:  Hodnotenie študijného programu
+      text:   Napíšte váš názor na študijný program.
+      popis:  Môžete sa vyjadriť napríklad ku skladbe predmetov, ku celkovej kvalite kľúčových učiteľov, ku prístupu garanta alebo tútora ku študentom a pod. Uveďte, prípadne, prečo by ste tento program odporúčali/neodporúčali záujemcom o štúdium.
+      kategoria:  studijnyprogram
+      komentar:   Yes
+      hviezdicky: No
+      position:   4
+
+# otazky ku predmetom
     - nazov:  Hodnotenie predmetu
       text:   Celkové hodnotenie kvality predmetu.
       popis:  
@@ -36,16 +75,16 @@ otazky:
       position:   1
 
     - nazov:  Zložitosť predmetu
-      text:   Ako náročná bola podľa Vás preberaná látka?
+      text:   Ako náročná bola podľa vás preberaná látka?
       popis:  
       kategoria:  predmety
       komentar:   No
       hviezdicky: No
       moznosti:
           - text: Nepochopiteľná.
-          - text: Mierne nadsadená.
+          - text: Nadsadená.
           - text: Akurát.
-          - text: Príliš jednoduchá.
+          - text: Nenáročná.
           - text: Triviálna.
       position:   2
 
@@ -73,8 +112,21 @@ otazky:
           - text: Aká práca?
       position:   4
 
+    - nazov:  Jasné stanovenie požiadavok a hodnotenia
+      text:   Boli jasne stanovené požiadavky a spôsob hodnotenia predmetu?
+      popis:
+      kategoria:  predmety
+      komentar:   No
+      hviezdicky: No
+      moznosti:
+          - text: Určite áno.
+          - text: Skôr áno.
+          - text: Skôr nie.
+          - text: Určite nie.
+      position:   5
+
     - nazov:  Absolvovanie predmetu
-      text:   Zhruba akú časť prednášok a cvičení ste absolvovali?
+      text:   Zhruba akú časť kontaktnej výučby (prednášky, cvičenia a pod.) ste absolvovali?
       popis:
       kategoria:  predmety
       komentar:   No
@@ -90,142 +142,72 @@ otazky:
             hodnota:  20
           - text:     Menej ako 10%.
             hodnota:  0
-      position:   5
+      position:   6
 
     - nazov:  Odporúčanie predmetu
-      text:   Odporučili by ste tento predmet kolegom?
+      text:   Odporučili by ste tento predmet ostatným študentom?
       popis:
       kategoria:  predmety
       komentar:   No
       hviezdicky: No
       moznosti:
-          - text: Áno.
-          - text: Nie.
-      position:   6
+          - text: Určite áno
+          - text: Skôr áno
+          - text: Skôr nie
+          - text: Určite nie
+      position:   7
 
     - nazov:  Textový komentár ku predmetu
       text:   Napíšte Váš názor na tento predmet. Zdôvodnite, prečo by ste ho odporúčali/neodporúčali.
-      popis:
+      popis:  >
+        Popíšte, čo by ste navrhli zmeniť v organizácii a obsahu tohto predmetu. Ktorá časť výučby nebola dostatočne pokrytá vhodným študijným materiálom. Môžete uviesť, prečo by ste ho odporúčali/neodporúčali ďalším študentom.
       kategoria:  predmety
       komentar:   Yes
       hviezdicky: No
-      position:   7
-
-    - nazov:  Hodnotenie učiteľa
-      text:   Celkový dojem z vyučujúceho.
-      popis:
-      kategoria:  predmety_ucitel
-      komentar:   No
-      hviezdicky: Yes
-      ucitel:     Yes
       position:   8
 
-    - nazov:  Diskusia
-      text:   Ohodnoťte schopnosť vyučujúceho odpovedať na otázky študentov.
+# otazky ku kombinacii predmet-ucitel
+
+    - nazov:  Hodnotenie učiteľa
+      text:   Celkové hodnotenie vyučujúceho v tomto predmete.
       popis:
       kategoria:  predmety_ucitel
       komentar:   No
       hviezdicky: Yes
       ucitel:     Yes
-      position:   9
-
-    - nazov:  Prezentácia
-      text:   Ohodnoťte ústny prejav a prezentačné schopnosti vyučujúceho.
-      popis:
-      kategoria:  predmety_ucitel
-      komentar:   No
-      hviezdicky: Yes
-      ucitel:     Yes
-      position:   10
-
-    - nazov:  Odporúčanie učiteľa
-      text:   Odporučili by ste tohto učiteľa kolegom?
-      popis:
-      kategoria:  predmety_ucitel
-      komentar:   No
-      hviezdicky: No
-      moznosti:
-          - text: Áno.
-          - text: Nie.
-      ucitel:     Yes
-      position:   11
-
-    - nazov:  Pripomienky k vyučujúcemu
-      text:   Napíšte Váš názor alebo pripomienky k učiteľovi. Zdôvodnite, prečo by ste ho odporúčali/neodporúčali.
-      popis:
-      kategoria:  predmety_ucitel
-      komentar:   Yes
-      hviezdicky: No
-      ucitel:     Yes
-      position:   12
-
-# otazky k studijnemu programu
-    - nazov:  Hodnotenie študijného programu
-      text:   Napíšte, čo si myslíte o Vašom študíjnom programe.
-      popis:  (Váš študijný program bude zobrazený pri prípadnej textovej odpovedi)
-      kategoria:  studijnyprogram
-      komentar:   Yes
-      hviezdicky: Yes
       position:   1
 
-    - nazov:  Náročnosť štúdia
-      text:   Nakoľko je Váš študijný program pre Vás náročný?
+    - nazov:  Diskusia
+      text:   Schopnosť a ochota vyučujúceho komunikovať so študentmi a odpovedať na ich otázky.
       popis:
-      kategoria:  studijnyprogram
+      kategoria:  predmety_ucitel
       komentar:   No
-      hviezdicky: No
-      moznosti:
-          - text: Veľmi náročný.
-          - text: Adekvátne náročný.
-          - text: Nenáročný.
-          - text: Aký študijný program?
+      hviezdicky: Yes
+      ucitel:     Yes
       position:   2
 
-    - nazov:  Zmena študijného programu
-      text:   Čo by ste zmenili na Vašom študijnom programe?
-      popis:   >
-        Predstavte si, že by sa prodekan pre štúdium rozhodol, že pokusne spraví
-        jeden vážny zásah do štúdia. V tej chvíli by ale nemal žiadny dobrý nápad.
-        Ako by tak išiel po chodbe, stretol by práve Vás. Opýtal by sa úplne
-        vážnym tónom hlasu: "Povedzte mi jednu zmenu týkajúcu sa jedného predmetu
-        alebo jedného vyučujúceho a pokiaľ to bude uskutočniteľné, tak hneď ju
-        vykonám!" Navrhnite niečo.
-      kategoria:  studijnyprogram
-      komentar:   Yes
-      hviezdicky: No
+    - nazov:  Prezentácia
+      text:   Ústny prejav a prezentačné zručnosti vyučujúceho.
+      popis:
+      kategoria:  predmety_ucitel
+      komentar:   No
+      hviezdicky: Yes
+      ucitel:     Yes
       position:   3
 
-    - nazov:  Predmety študijného programu
-      text:   Zhodnoťte, či sú vo Vašom študijnom programe zaradené vhodné predmety.
+    - nazov:  Pripomienky k vyučujúcemu
+      text:   Napíšte Váš názor alebo pripomienky k učiteľovi a jeho pôsobeniu v tomto predmete.
       popis:  >
-        Zohľadnite, či sú podľa Vás niektoré predmety zbytočné alebo naopak
-        Vám nejaké chýbajú. Prihliadnite aj na využitie nadobudnutých znalostí
-        vo vašom ďalšom štúdiu a v praxi.
-      kategoria:  studijnyprogram
+        Zdôvodnite, prečo by ste ho odporúčali/neodporúčali.
+      kategoria:  predmety_ucitel
       komentar:   Yes
       hviezdicky: No
+      ucitel:     Yes
       position:   4
 
-    - nazov:  Očakávania a realita
-      text:   >
-        Aké boli Vaše predstavy o Vašom študijnom programe,
-        a ako sa tieto predstavy naplnili, resp. nenaplnili?
-      popis:
-      kategoria:  studijnyprogram
-      komentar:   Yes
-      hviezdicky: No
-      position:   7
-
-    - nazov:  Očakávania a realita
-      text:   Kvalita kľúčových učiteľov, tútora, garanta.
-      popis:
-      kategoria:  studijnyprogram
-      komentar:   Yes
-      hviezdicky: No
-      position:   7
 
 # vseobecne otazky - fakulta
-    - nazov:  Hodnotenie ankety
+    - nazov:  Hodnotenie fakulty
       text:   Váš celkový dojem z fakulty na základe doterajších skúseností.
       popis:  
       kategoria:  fakulta
@@ -233,69 +215,77 @@ otazky:
       hviezdicky: Yes
       position:   1
 
-    - nazov:  Hodnotenie ankety
-      text:   Ohodnoťte prístup administratívnych zamestnancov ku študentom.
+    - nazov:  Prístup študijných referentiek
+      text:   Prístup študijných referentiek ku študentom.
       popis:
       kategoria:  fakulta
       komentar:   Yes
       hviezdicky: Yes
       position:   2
-      
-    - nazov:  Hodnotenie ankety
-      text:   Zhodnoťte vybavenosť učební a celkové podmienky na výučbu.
+
+    - nazov:  Podmienky na výučbu
+      text:   Vybavenosť učební a celkové podmienky na výučbu.
       popis:
       kategoria:  fakulta
       komentar:   Yes
       hviezdicky: Yes
       position:   3
 
+    - nazov:  Knižnica
+      text:   Vybavenosť knižnice a prístup pracovníkov knižnice ku študentom.
+      popis:
+      kategoria:  fakulta
+      komentar:   Yes
+      hviezdicky: No
+      moznosti:
+          - text: Super
+          - text: OK
+          - text: Nič moc
+          - text: Aká knižnica?
+      position:   4
+
+    - nazov:  Činnosť ŠKAS
+      text:   Činnosť Študentskej komory Akademického senátu (ŠKAS).
+      popis:
+      kategoria:  fakulta
+      komentar:   Yes
+      hviezdicky: No
+      moznosti:
+          - text: Super
+          - text: OK
+          - text: Nič moc
+          - text: Aká komora?
+      position:   5
+
+    - nazov:  Hodnotenie ankety
+      text:   Čo by sme mali urobiť pre to, aby študenti venovali viac času prednáškam a tvorivým aktivitám na fakulte?
+      popis:
+      kategoria:  anketa
+      komentar:   Yes
+      hviezdicky: No
+      position:   6
 
 # vseobecne otazky - anketa
-    - nazov:  Hodnotenie ankety
-      text:   Čo si myslíte o forme súčasnej ankety?
+
+    - nazov:  Študentská anketa
+      text:   Študentská anketa
       popis:  >
-        Páči sa Vám? Čo je riešené lepšie, čo horšie ako
-        v starej ankete?
+        Môžete sa tiež vyjadriť k tomu, čo by mali zodpovední podľa vás urobiť s výsledkami ankety
       kategoria:  anketa
       komentar:   Yes
       hviezdicky: Yes
-      position:   1
-
-    - nazov:  Otázky, pripomienky a návrhy pre organizátorov ankety.
-      text:   Čo si myslíte o anketových otázkach?
-      popis: >
-        Páčia sa Vám? Pripomienky ku pravopisným chybám,
-        návrhy na nové otázky, návrhy na odstránenie otázok.
-      kategoria:  anketa
-      komentar:   Yes
-      hviezdicky: Yes
-      position:   2
-
-    - nazov:  Čo by mali zodpovední urobiť s výsledkami ankety?
-      text:   Čo by mali zodpovední urobiť s výsledkami ankety?
-      popis:  
-      kategoria:  anketa
-      komentar:   Yes
-      hviezdicky: No
-      position:   3
-
-    - nazov:  Čo očakávate od ankety?
-      text:   Aké zmeny by ste navrhli do budúcich ročníkov ankety?
-      popis:
-      kategoria:  anketa
-      komentar:   Yes
-      hviezdicky: No
-      position:   4
+      position:   6
 
 # vseobecne otazky - ostatne
     - nazov:  Všeobecná otázka
       text:   Chcete sa ešte k niečomu vyjadriť?
-      popis:  
+      popis:  >
+        Privítame napr. návrhy na zmeny v skladbe ponúkaných študijných programov, názory na rozšírenie ponuky študijných programov o programy v cudzom jazyku, príp. akékoľvek ďalšie návrhy a pripomienky k činnosti fakulty. 
       kategoria:  ostatne
       moznosti:
           - text: Áno.
           - text: Nie.
       komentar:   Yes
       hviezdicky: No
-      position:   1
+      position:   7
 ...
