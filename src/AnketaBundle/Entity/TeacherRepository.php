@@ -24,9 +24,8 @@ class TeacherRepository extends EntityRepository {
                   'AnketaBundle\Entity\TeachersSubjects ts WHERE t = ts.teacher ' .
                   ' AND ts.subject = :subject ' .
                   ' AND ts.season = :season ' .
-                  ' ORDER BY t.name';
-        // TODO: lepsi order by
-        
+                  ' ORDER BY t.familyName, t.givenName';
+
         $teachers = $this->getEntityManager()
                          ->createQuery($dql)->execute(array('subject' => $subject,
                              'season' => $season));
