@@ -172,11 +172,13 @@ class FixtureLoader implements FixtureInterface {
         $studyProgramINF = new StudyProgram();
         $studyProgramINF->setCode('INF');
         $studyProgramINF->setName('informatika');
+        $studyProgramINF->setSlug('INF');
         $manager->persist($studyProgramINF);
         
         $studyProgramMINF = new StudyProgram();
         $studyProgramMINF->setCode('mINF');
         $studyProgramMINF->setName('informatika');
+        $studyProgramMINF->setSlug('mINF');
         $manager->persist($studyProgramMINF);
 	
         $developers = array('sucha14'   =>  'Bc. Martin Sucha',
