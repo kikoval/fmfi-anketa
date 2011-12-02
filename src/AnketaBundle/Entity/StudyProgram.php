@@ -29,6 +29,11 @@ class StudyProgram {
      */
     private $code;
 
+    /**
+     * @ORM\Column(type="string", unique="true")
+     * @var string $slug
+     */
+    private $slug;
 
     public function getId() {
         return $this->id;
@@ -49,4 +54,13 @@ class StudyProgram {
     public function getCode() {
         return $this->code;
     }
+
+    public function getSlug() {
+        return $this->slug;
+    }
+
+    public function setSlug($slug) {
+        $this->slug = $slug;
+    }
+
 }

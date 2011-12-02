@@ -21,8 +21,8 @@ answer_subject_teacher:
     defaults: { _controller: AnketaBundle:Question:answerSubjectTeacher }
 
 answer_study_program:
-    pattern: /hlasuj/program/{code}
-    defaults: { _controller: AnketaBundle:Question:answerStudyProgram, code: -1 }
+    pattern: /hlasuj/program/{slug}
+    defaults: { _controller: AnketaBundle:Question:answerStudyProgram, slug: -1 }
 
 assoc_teacher_with_subject:
     pattern: /hlasuj/predmet/{subject_code}/pridaj-ucitela

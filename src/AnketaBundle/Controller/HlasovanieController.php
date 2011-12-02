@@ -95,7 +95,7 @@ class HlasovanieController extends Controller
             $menu['study_program']->children[$studyProgramme->getCode()] =
                 new MenuItem(
                     $studyProgramme->getName().' ('.$studyProgramme->getCode().')',
-                    $this->generateUrl('answer_study_program', array('code' => $studyProgramme->getCode()))
+                    $this->generateUrl('answer_study_program', array('slug' => $studyProgramme->getSlug()))
                     );
         }
         

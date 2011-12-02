@@ -125,9 +125,9 @@ class QuestionController extends Controller {
     }
 
     /**
-     * Note: code may be "-1" meaning default first subject
+     * Note: slug may be "-1" meaning default first subject
      */
-    public function getAttendedStudyProgrammeByCode($user, $code) {
+    public function getAttendedStudyProgrammeBySlug($user, $slug) {
         $em = $this->get('doctrine.orm.entity_manager');
         $season = $em->getRepository('AnketaBundle:Season')->getActiveSeason();
         $attendedStudyProgrammes = $em->getRepository('AnketaBundle\Entity\StudyProgram')
@@ -138,16 +138,16 @@ class QuestionController extends Controller {
         }
 
         // defaultne vraciame abecedne prvy predmet
-        if ($code == -1) {
+        if ($slug == -1) {
             $studyProgramme = $attendedStudyProgrammes[0];
         } else {
             $studyProgramme = null;
-            foreach ($attendedStudyProgrammes as $asp) if ($asp->getCode() == $code) {
+            foreach ($attendedStudyProgrammes as $asp) if ($asp->getSlug() == $slug) {
                 $studyProgramme = $asp;
                 break;
             }
             if (empty($studyProgramme)) {
-                throw new \RuntimeException('Studijny program ' . $code . ' nestudujes.');
+                throw new \RuntimeException('Studijny program ' . $slug . ' nestudujes.');
             }
         }
 
@@ -279,13 +279,13 @@ class QuestionController extends Controller {
         return $this->render('AnketaBundle:Question:index.html.twig', $templateParams);
     }
 
-    public function answerStudyProgramAction($code) {
+    public function answerStudyProgramAction($slug) {
         
         $request = $this->get('request');
         $user = $this->get('security.context')->getToken()->getUser();
         $em = $this->get('doctrine.orm.entity_manager');
         try {
-            $studyProgramme = $this->getAttendedStudyProgrammeByCode($user, $code);
+            $studyProgramme = $this->getAttendedStudyProgrammeBySlug($user, $slug);
         } catch (\RuntimeException $e) {
             throw new NotFoundHttpException($e->getMessage());
         }

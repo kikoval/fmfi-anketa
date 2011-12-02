@@ -122,9 +122,12 @@ class AISUserSource implements UserSourceInterface
             
             // Vytvorime studijny program v DB ak neexistuje
             // podobne ako predmet vyssie
-            $stmt = $this->dbConn->prepare("INSERT INTO StudyProgram (code, name) VALUES (:code, :name) ON DUPLICATE KEY UPDATE code=code");
+            $stmt = $this->dbConn->prepare("INSERT INTO StudyProgram (code, name, slug) VALUES (:code, :name, :slug) ON DUPLICATE KEY UPDATE code=code");
             $stmt->bindValue('code', $aisPredmet['studijnyProgram']['skratka']);
             $stmt->bindValue('name', $aisPredmet['studijnyProgram']['nazov']);
+            // TODO(anty): toto nezarucuje, ze to je vhodny string
+            // treba pouzivat whitelist namiesto blacklistu!
+            $stmt->bindValue('slug', $this->generateSlug($aisPredmet['studijnyProgram']['skratka']));
             $stmt->execute();
 
             $studyProgram = $this->studyProgramRepository->findOneBy(array('code' => $aisPredmet['studijnyProgram']['skratka']));
@@ -135,6 +138,16 @@ class AISUserSource implements UserSourceInterface
 
             $builder->addSubject($subject, $studyProgram);
         }
+    }
+
+    /**
+     * @todo presunut do samostatnej triedy a spravit lepsie
+     */
+    private function generateSlug($slug)
+    {
+        $slug = str_replace(array(' ', '/'),'-', $slug);
+        $slug = trim($slug, '-');
+        return $slug;
     }
 
     private function getKratkyKod($dlhyKod)
