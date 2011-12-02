@@ -20,6 +20,25 @@ use AnketaBundle\Entity\StudyProgram;
 
 class StudyProgramRepository extends EntityRepository {
 
+    public function getStudyProgrammesForUser($user, $season) {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery("SELECT sp
+                           FROM AnketaBundle\\Entity\\UsersSubjects us,
+                           AnketaBundle\\Entity\\StudyProgram sp
+                           WHERE us.user = :user
+                           AND us.studyProgram = sp
+                           AND us.season = :season
+                           ORDER BY sp.code ASC");
+        $query->setParameter('user', $user);
+        $query->setParameter('season', $season);
 
+        return $query->getResult();
+    }
+
+    public function getFirstStudyProgrammeForUser($user, $season) {
+        $result = $this->getStudyProgrammesForUser($user, $season);
+        if (!empty($result[0])) return $result[0];
+        else return null;
+    }
 
 }

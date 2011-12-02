@@ -37,6 +37,10 @@ class HlasovanieController extends Controller
                 'Predmety',
                 $this->generateUrl('answer_subject')
             ),
+            'study_program' => new MenuItem(
+                'Študijné programy',
+                $this->generateUrl('answer_study_program')
+            ),
             'general' => new MenuItem(
                 'Všeobecné otázky',
                 $this->generateUrl('answer_general')
@@ -47,6 +51,7 @@ class HlasovanieController extends Controller
             )
         );
 
+        // pridame menu pre vseobecne otazky
         $subcategories = $em->getRepository('AnketaBundle\Entity\Category')
                        ->getOrderedGeneral();
         foreach ($subcategories as $subcategory) {
@@ -56,6 +61,8 @@ class HlasovanieController extends Controller
                     $this->generateUrl('answer_general', array('id' => $subcategory->getId()))
                     );
         }
+
+        // pridame menu pre predmety
         $subjects = $em->getRepository('AnketaBundle\Entity\Subject')
                        ->getAttendedSubjectsForUser($user, $season);
         $teacherRepository = $em->getRepository('AnketaBundle:Teacher');
@@ -66,6 +73,7 @@ class HlasovanieController extends Controller
                 $this->generateUrl('answer_subject', array('code' => $subject->getCode()))
                 );
             // TODO: optimalizovat selecty
+            // pridame vnorene menu pre predmetoucitelov
             $teachers = $teacherRepository->getTeachersForSubject($subject, $season);
             foreach ($teachers as $teacher) {
                 $subjectMenu->children[$teacher->getId()] =
@@ -80,7 +88,19 @@ class HlasovanieController extends Controller
             $menu['subject']->children[$subject->getCode()] = $subjectMenu;
         }
 
+        // pridame menu pre studijne programy
+        $studyProgrammes = $em->getRepository('AnketaBundle\Entity\StudyProgram')
+                       ->getStudyProgrammesForUser($user, $season);
+        foreach ($studyProgrammes as $studyProgramme) {
+            $menu['study_program']->children[$studyProgramme->getCode()] =
+                new MenuItem(
+                    $studyProgramme->getName().' ('.$studyProgramme->getCode().')',
+                    $this->generateUrl('answer_study_program', array('code' => $studyProgramme->getCode()))
+                    );
+        }
+        
 
+        // nastavime progress
         $questionRepository = $em->getRepository('AnketaBundle\Entity\Question');
         
         foreach ($questionRepository->getProgressForSubjectTeachersByUser($user) as $subject => $rest) {

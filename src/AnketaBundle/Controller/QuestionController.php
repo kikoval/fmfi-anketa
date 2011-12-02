@@ -124,6 +124,36 @@ class QuestionController extends Controller {
         return $subject;
     }
 
+    /**
+     * Note: code may be "-1" meaning default first subject
+     */
+    public function getAttendedStudyProgrammeByCode($user, $code) {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $season = $em->getRepository('AnketaBundle:Season')->getActiveSeason();
+        $attendedStudyProgrammes = $em->getRepository('AnketaBundle\Entity\StudyProgram')
+                                      ->getStudyProgrammesForUser($user, $season);
+
+        if (count($attendedStudyProgrammes) == 0) {
+            throw new \RuntimeException ('Nemas ziadne studijne programy.');
+        }
+
+        // defaultne vraciame abecedne prvy predmet
+        if ($code == -1) {
+            $studyProgramme = $attendedStudyProgrammes[0];
+        } else {
+            $studyProgramme = null;
+            foreach ($attendedStudyProgrammes as $asp) if ($asp->getCode() == $code) {
+                $studyProgramme = $asp;
+                break;
+            }
+            if (empty($studyProgramme)) {
+                throw new \RuntimeException('Studijny program ' . $code . ' nestudujes.');
+            }
+        }
+
+        return $studyProgramme;
+    }
+
     public function answerSubjectTeacherAction($subject_code, $teacher_code) {
         $request = $this->get('request');
         $user = $this->get('security.context')->getToken()->getUser();
@@ -162,6 +192,9 @@ class QuestionController extends Controller {
                 $answer->setSubject($subject);
                 // ako ucitela zatial zoberieme prveho... co asi urcite nechceme
                 $answer->setTeacher($teacher);
+                // k odpovedi pridame prvy studijny odbor, co user ma
+                $ur = $em->getRepository('AnketaBundle\Entity\StudyProgram');
+                $answer->setStudyProgram($ur->getFirstStudyProgrammeForUser($user, $season));
                 $answer->setAttended(true);
 
                 $em->persist($answer);
@@ -214,6 +247,9 @@ class QuestionController extends Controller {
                 // predpokladame ze subject je to co prislo v parametri kodu
                 $answer->setSubject($subject);
                 $answer->setTeacher(null);
+                // k odpovedi pridame prvy studijny odbor, co user ma
+                $ur = $em->getRepository('AnketaBundle\Entity\StudyProgram');
+                $answer->setStudyProgram($ur->getFirstStudyProgrammeForUser($user, $season));
                 // aktualne sa daju vyplnat iba predmety ktore sme navstevovali 
                 $answer->setAttended(true);
 
@@ -240,6 +276,58 @@ class QuestionController extends Controller {
         $templateParams['answers'] = $answers;
         $templateParams['categoryType'] = 'subject';
         $templateParams['subject'] = $subject;
+        return $this->render('AnketaBundle:Question:index.html.twig', $templateParams);
+    }
+
+    public function answerStudyProgramAction($code) {
+        
+        $request = $this->get('request');
+        $user = $this->get('security.context')->getToken()->getUser();
+        $em = $this->get('doctrine.orm.entity_manager');
+        try {
+            $studyProgramme = $this->getAttendedStudyProgrammeByCode($user, $code);
+        } catch (\RuntimeException $e) {
+            throw new NotFoundHttpException($e->getMessage());
+        }
+        $questions = $em->getRepository('AnketaBundle\Entity\Question')
+                        ->getOrderedQuestionsByCategoryType(CategoryType::STUDY_PROGRAMME);
+        $answers = $em->getRepository('AnketaBundle\Entity\Answer')
+                      ->getAnswersByCriteria($questions, $user, null, null, $studyProgramme);
+        $season = $em->getRepository('AnketaBundle:Season')->getActiveSeason();
+
+        if ('POST' == $request->getMethod()) {
+            $answerArray = $this->processForm($request, $user, $questions, $answers, $season);
+
+            foreach ($answerArray AS $answer) {
+                $answer->setStudyProgram($studyProgramme);
+                $answer->setSubject(null);
+                $answer->setTeacher(null);
+                // aktualne sa daju vyplnat iba predmety ktore sme navstevovali
+                $answer->setAttended(true);
+
+                $em->persist($answer);
+            }
+
+            $user->setParticipated(true);
+
+            $em->flush();
+
+            if ($request->request->get('next')) {
+                return $this->forward('AnketaBundle:Hlasovanie:menuNext',
+                    array('activeItems' => array('study_program', $studyProgramme->getCode())));
+            }
+            else {
+                return new RedirectResponse($request->getRequestUri());
+            }
+        }
+
+        $templateParams = array();
+        $templateParams['title'] = $studyProgramme->getName().' ('.$studyProgramme->getCode().')';
+        $templateParams['activeItems'] = array('study_program', $studyProgramme->getCode());
+        $templateParams['questions'] = $questions;
+        $templateParams['answers'] = $answers;
+        $templateParams['categoryType'] = 'general'; // @TODO(majak): co to tu ma byt?
+        $templateParams['subject'] = null;
         return $this->render('AnketaBundle:Question:index.html.twig', $templateParams);
     }
 
@@ -287,6 +375,10 @@ class QuestionController extends Controller {
         if ('POST' == $request->getMethod()) {
             $answerArray = $this->processForm($request, $user, $questions, $answers, $season);
             foreach ($answerArray AS $answer) {
+                // k odpovedi pridame prvy studijny odbor, co user ma
+                $ur = $em->getRepository('AnketaBundle\Entity\StudyProgram');
+                $answer->setStudyProgram($ur->getFirstStudyProgrammeForUser($user, $season));
+                
                 $em->persist($answer);
             }
 

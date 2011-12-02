@@ -32,12 +32,13 @@ class AnswerRepository extends EntityRepository {
      */
     public function getAnswersByCriteria(
             array $questions, User $user,
-            Subject $subject = null, Teacher $teacher = null)
+            Subject $subject = null, Teacher $teacher = null,
+            StudyProgram $studyProgramme = null)
     {
         // odpoved je jednoznacne identifikovana autorom, id otazky, id predmetu
         // mozno by bolo fajn vytvorit nad tym teda unique index
         $result = array();
-        $questionRep = $this->getEntityManager()->getRepository('AnketaBundle\Entity\Answer');
+        $answerRep = $this->getEntityManager()->getRepository('AnketaBundle\Entity\Answer');
         $criteria = array('author' => $user->getId());
         if ($subject != null) {
             $criteria['subject'] = $subject->getId();
@@ -45,9 +46,12 @@ class AnswerRepository extends EntityRepository {
         if ($teacher != null) {
             $criteria['teacher'] = $teacher->getId();
         }
+        if ($studyProgramme != null) {
+            $criteria['studyProgram'] = $studyProgramme->getId();
+        }
         foreach ($questions AS $question) {
             $criteria['question'] = $question->getId();
-            $answer = $questionRep->findOneBy($criteria);
+            $answer = $answerRep->findOneBy($criteria);
             $result[$question->getId()] = $answer;
         }
         return $result;

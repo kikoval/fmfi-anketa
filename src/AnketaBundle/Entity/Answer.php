@@ -75,7 +75,7 @@ class Answer {
     private $author;
     
     /**
-     * @orm:ManyToOne(targetEntity="StudyProgram")
+     * @ORM\ManyToOne(targetEntity="StudyProgram")
      *
      * @var StudyProgram $studyProgram
      */
