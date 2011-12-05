@@ -203,4 +203,42 @@ class QuestionRepository extends EntityRepository {
 
         return $result;
     }
+    
+/**
+     * Returned array contains progress for provided user in following format:
+     * - result[subject_code][teacher_id]['answered'] = number of answers for subject and teacher
+     * - result[subject_code][teacher_id]['total'] = number of questions for subject and teacher
+     * @param User $user
+     * @return array
+     */
+    public function getProgressForStudyProgramsByUser(User $user) {
+        $em = $this->getEntityManager();
+        $season = $em->getRepository('AnketaBundle:Season')->getActiveSeason();
+        $query = $em->createQuery('SELECT sp.code AS sp_code, COUNT(a.id) AS num
+                                   FROM AnketaBundle\Entity\Answer a
+                                        JOIN a.studyProgram sp
+                                        JOIN a.question q
+                                        JOIN q.category c
+                                   WHERE a.author = :authorID
+                                         AND c.type = \'studijnyProgram\'
+                                         AND (a.option IS NOT NULL OR a.comment IS NOT NULL)
+                                   GROUP BY sp.id');
+        $rows = $query->setParameter('authorID', $user->getId())->getResult();
+
+
+        $result = array();
+        $studyRepository = $em->getRepository('AnketaBundle\Entity\StudyProgram');
+        foreach ($studyRepository->getStudyProgrammesForUser($user, $season) as $studyProgram) {
+                $result[$studyProgram->getCode()] = array(
+                    'answered' => 0,
+                    'total' => $this->getNumberOfQuestionsForCategoryType(CategoryType::STUDY_PROGRAMME)
+                );
+        }
+
+        foreach ($rows as $row) {
+            $result[$row['sp_code']]['answered'] = $row['num'];
+        }
+
+        return $result;
+    }
 }

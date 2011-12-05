@@ -92,6 +92,7 @@ class HlasovanieController extends Controller
         $studyProgrammes = $em->getRepository('AnketaBundle\Entity\StudyProgram')
                        ->getStudyProgrammesForUser($user, $season);
         foreach ($studyProgrammes as $studyProgramme) {
+            //print_r($studyProgramme->getCode());
             $menu['study_program']->children[$studyProgramme->getCode()] =
                 new MenuItem(
                     $studyProgramme->getName().' ('.$studyProgramme->getCode().')',
@@ -127,6 +128,15 @@ class HlasovanieController extends Controller
         foreach ($questionRepository->getProgressForCategoriesByUser($user) as $categoryId => $progress) {
             if (array_key_exists($categoryId, $menu['general']->children)) {
                 $menu['general']->children[$categoryId]
+                                ->getProgressbar()
+                                ->setProgress((int)$progress['answered'],
+                                              (int)$progress['total']);
+            }
+        }
+
+        foreach ($questionRepository->getProgressForStudyProgramsByUser($user) as $studyProgramId => $progress) {
+            if (array_key_exists($studyProgramId, $menu['study_program']->children)) {
+                $menu['study_program']->children[$studyProgramId]
                                 ->getProgressbar()
                                 ->setProgress((int)$progress['answered'],
                                               (int)$progress['total']);
