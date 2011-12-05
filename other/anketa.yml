@@ -18,9 +18,6 @@ kategorie:
     - id:         fakulta
       popis:      Otázky ku fakulte
       kategoria:  vseobecne
-    - id:         anketa
-      popis:      Anketa
-      kategoria:  vseobecne
     - id:         ostatne
       popis:      Ostatné
       kategoria:  vseobecne
@@ -257,24 +254,22 @@ otazky:
           - text: Aká komora?
       position:   5
 
-    - nazov:  Hodnotenie ankety
-      text:   Čo by sme mali urobiť pre to, aby študenti venovali viac času prednáškam a tvorivým aktivitám na fakulte?
-      popis:
-      kategoria:  anketa
-      komentar:   Yes
-      hviezdicky: No
-      position:   6
-
-# vseobecne otazky - anketa
-
-    - nazov:  Študentská anketa
-      text:   Študentská anketa
+    - nazov:  Študentská anketa.
+      text:   Študentská anketa.
       popis:  >
         Môžete sa tiež vyjadriť k tomu, čo by mali zodpovední podľa vás urobiť s výsledkami ankety
-      kategoria:  anketa
+      kategoria:  fakulta
       komentar:   Yes
       hviezdicky: Yes
       position:   6
+
+    - nazov:  Hodnotenie ankety
+      text:   Čo by sme mali urobiť pre to, aby študenti venovali viac času prednáškam a tvorivým aktivitám na fakulte?
+      popis:
+      kategoria:  fakulta
+      komentar:   Yes
+      hviezdicky: No
+      position:   7
 
 # vseobecne otazky - ostatne
     - nazov:  Všeobecná otázka
