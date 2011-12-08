@@ -18,7 +18,7 @@ class AnonymizaciaController extends Controller {
                ->anonymizeAnswersByUserId($user->getId());
             $em->flush();
 
-            $this->get('session')->setFlash('anonymizacia', 'Vaše hlasovanie v Ankete 2011 bolo úspešne ukončené.');
+            $this->get('session')->setFlash('anonymizacia', 'Vaše hlasovanie v ankete bolo úspešne ukončené.');
 
             // Remove the token, but keep the session
             // as the user is not changing and we want
