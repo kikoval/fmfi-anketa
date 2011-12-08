@@ -53,6 +53,13 @@ class LogTrace implements Trace
     public function tlogVariable($name, $variable) {
         if ($this->logger !== null) {
             $value = preg_replace("@\\\\'@", "'", var_export($variable, true));
+            // premenne tiez urveme, kedze niektore mozu obsahovat pomerne velke data
+            // to je bug v libfajr, na data by sa malo pouzivat tlogData
+            if (strlen($value) >= 100) {
+                $value = substr($value, 0, 97).'...';
+            }
+            // escapneme nove riadky atd. nech sa da dobre grepovat
+            $value = addcslashes($value, "\r\n\t[]");
             $this->logger->debug(sprintf('Trace: %s = %s', $name, $value));
         }
     }
