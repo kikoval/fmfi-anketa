@@ -21,6 +21,10 @@
     {% if categoryType == 'teacher_subject' %}
         <p>Ak vás tento učiteľ neučil, môžete otázky preskočiť a zvoliť <em>Ulož a choď ďalej</em>.</p>
     {% elseif categoryType == 'subject' %}
+        <p style="color: #888;">
+            Ak tento predmet nepodlieha priamej vyučbe, ale splneniu určitých povinností (ako napr. diplomová práca,
+vedecká činnosť, samostatné štúdium odbornej literatúry a pod.), prípadne ste tento predmet v aktuálnom semestri neobsolvovali lebo Vám bol uznaný, hodnotenie predmetu prosím preskočte.
+        </p>
         <p>Chýba v menu nejaký učiteľ k tomuto predmetu?
         <a href="{{ path('assoc_teacher_with_subject', {'subject_code': subject.code}) }}"
            >Dajte nám vedieť a my to napravíme</a>.
