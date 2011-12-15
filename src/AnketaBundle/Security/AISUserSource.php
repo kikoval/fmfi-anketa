@@ -19,6 +19,7 @@ use AnketaBundle\Entity\Subject;
 use AnketaBundle\Integration\AISRetriever;
 use AnketaBundle\Entity\Role;
 use Doctrine\DBAL\Connection;
+use Symfony\Component\HttpKernel\Log\LoggerInterface;
 
 class AISUserSource implements UserSourceInterface
 {
@@ -55,9 +56,12 @@ class AISUserSource implements UserSourceInterface
 
     /** @var boolean */
     private $loadAuth;
+    
+    /** @var LoggerInterface */
+    private $logger;
 
     public function __construct(Connection $dbConn, EntityManager $em, AISRetriever $aisRetriever,
-                                array $semestre, $loadAuth)
+                                array $semestre, $loadAuth, LoggerInterface $logger = null)
     {
         $this->dbConn = $dbConn;
         $this->entityManager = $em;
@@ -67,6 +71,7 @@ class AISUserSource implements UserSourceInterface
         $this->aisRetriever = $aisRetriever;
         $this->semestre = $semestre;
         $this->loadAuth = $loadAuth;
+        $this->logger = $logger;
     }
 
     public function load(UserBuilder $builder)
@@ -152,10 +157,19 @@ class AISUserSource implements UserSourceInterface
 
     private function getKratkyKod($dlhyKod)
     {
+        if ($dlhyKod == 'FMFI.KI/2-INF-130/00') {
+            $dlhyKod = 'B-FJKka131';
+        }
         $matches = array();
         if (preg_match('@^[^/]*/([^/]+)/@', $dlhyKod, $matches) !== 1) {
-            // TODO(anty): ignorovat vynimku?
-            throw new \Exception('Nepodarilo sa zistit kratky kod predmetu');
+            // Sice nevieme zistit kratky kod,
+            // to ale neznamena, ze k tomu predmetu nemozu hlasovat
+            // kazdopadne si to ale chceme zalogovat
+            if ($this->logger !== null) {
+                $this->logger->warn('Nepodarilo sa zistit kratky kod predmetu',
+                        array('dlhyKod'=>$dlhyKod));
+            }
+            return $dlhyKod;
         }
 
         $kratkyKod = $matches[1];
