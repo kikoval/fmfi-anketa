@@ -157,9 +157,6 @@ class AISUserSource implements UserSourceInterface
 
     private function getKratkyKod($dlhyKod)
     {
-        if ($dlhyKod == 'FMFI.KI/2-INF-130/00') {
-            $dlhyKod = 'B-FJKka131';
-        }
         $matches = array();
         if (preg_match('@^[^/]*/([^/]+)/@', $dlhyKod, $matches) !== 1) {
             // Sice nevieme zistit kratky kod,
