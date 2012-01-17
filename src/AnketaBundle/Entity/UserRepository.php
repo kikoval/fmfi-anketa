@@ -71,7 +71,7 @@ class UserRepository extends EntityRepository {
         $query = $em->createQuery("SELECT COUNT(u.id) as anon
                                    FROM AnketaBundle\\Entity\\User u
                                    JOIN u.roles r
-                                   WHERE u.hasVote = 0 AND 'ROLE_AIS_STUDENT' = r.name
+                                   WHERE u.hasVote = 0 AND 'ROLE_AIS_STUDENT' = r.name AND u.participated = 1
                                    ");
         $result = $query->getResult();
         return $result[0]['anon'];

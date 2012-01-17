@@ -6,10 +6,11 @@
 
 {% block section_bar %}
     {{ parent() }}
+{#
     {% if is_granted('ROLE_HAS_VOTE') %}
         <a href="{{ path('answer') }}" class="section">Hlasuj</a>
     {% endif %}
-
+#}
     <a href="/vysledky/2010-2011" class="section">Výsledky 2010/2011</a>
 {% endblock %}
 
