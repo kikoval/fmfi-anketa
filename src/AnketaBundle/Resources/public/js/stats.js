@@ -35,6 +35,11 @@
         $details.show();
         return false;
       }));
+      $details.append($('<a href="#">Menej detailov</a>').click(function () {
+        $p.show();
+        $details.hide();
+        return false;
+      }));
       $p.insertBefore($details);
     });
   });
