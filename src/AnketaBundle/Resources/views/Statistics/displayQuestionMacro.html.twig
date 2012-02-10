@@ -11,7 +11,7 @@
     {% if not data.hasAnswer %}
         Na túto otázku nikto neodpovedal.
     {% else %}
-        {% if data.chart is defined %}
+        {% if data.chart is not null %}
             <img src="{{ data.chart.url }}" width="{{ data.chart.width }}" height="{{ data.chart.height }}" alt="">
         {% endif %}
         {% if data.histogram is not empty %}

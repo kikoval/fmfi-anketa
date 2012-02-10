@@ -35,6 +35,13 @@ class Response {
     private $subject;
 
     /**
+     * @ORM\ManyToOne(targetEntity="StudyProgram")
+     *
+     * @var StudyProgram $studyProgram
+     */
+    private $studyProgram;
+
+    /**
      * @ORM\Column(type="text")
      */
     private $author_text;
@@ -93,6 +100,20 @@ class Response {
      */
     public function getSubject() {
         return $this->subject;
+    }
+
+    /**
+     * @param StudyProgram $value
+     */
+    public function setStudyProgram($value) {
+        $this->studyProgram = $value;
+    }
+
+    /**
+     * @return StudyProgram the subject
+     */
+    public function getStudyProgram() {
+        return $this->studyProgram;
     }
 
     /**

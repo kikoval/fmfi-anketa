@@ -1,0 +1,20 @@
+{% extends 'AnketaBundle:Statistics:index.html.twig' %}
+{% import 'AnketaBundle:Statistics:displayQuestionMacro.html.twig' as questionMacro %}
+{% import 'AnketaBundle:Statistics:displayTeacherResponseMacro.html.twig' as responseMacro %}
+{% block navigation %}
+    {% render "AnketaBundle:Statistics:menuStudijneOdbory" with {
+        'season' : season,
+        'program_code' : studyProgram.code
+        }
+    %}
+{% endblock %}
+{% block content %}
+    <h1> {{ studyProgram.code }} {{ studyProgram.name }}</h1>
+    {{ responseMacro.displayResponse(responses) }}
+    {% for result in results %}
+        {% if not loop.first %}
+            <hr />
+        {% endif %}
+        {{ questionMacro.displayResults(result) }}
+    {% endfor %}
+{% endblock %}

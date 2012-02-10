@@ -294,6 +294,20 @@ class StatisticsController extends Controller {
         return $this->render('AnketaBundle:Statistics:subjects.html.twig', $templateParams);
     }
 
+    public function studyProgramsAction($season_slug) {
+        $em = $this->get('doctrine.orm.entity_manager');
+
+        $season = $this->getSeason($season_slug);
+        $templateParams = array();
+
+        $studyPrograms = $em->getRepository('AnketaBundle:StudyProgram')->findBy(array(), array('name' => 'ASC'));
+        
+        $templateParams['study_programs'] = $studyPrograms;
+        $templateParams['season'] = $season;
+
+        return $this->render('AnketaBundle:Statistics:studyPrograms.html.twig', $templateParams);
+    }
+
     public function resultsSubjectAction($season_slug, $subject_code) {
         $em = $this->get('doctrine.orm.entity_manager');
         $season = $this->getSeason($season_slug);
@@ -323,16 +337,59 @@ class StatisticsController extends Controller {
         }
 
         $responses = $em->getRepository('AnketaBundle:Response')
-                        ->findBy(array('subject' => $subject->getId(), 'teacher' => null));
+                        ->findBy(array('subject' => $subject->getId(), 'teacher' => null, 'studyProgram' => null));
         $templateParams['responses'] = $this->createUsernameFromLogin($responses);
         $templateParams['season'] = $season;
         $templateParams['category'] = $category;
         $templateParams['subject'] = $subject;
-        
+
         if ($maxCnt >= self::MIN_VOTERS_FOR_PUBLIC ||
             $this->get('security.context')->isGranted('ROLE_FULL_RESULTS')) {
             $templateParams['results'] = $results;
             return $this->render('AnketaBundle:Statistics:resultsSubject.html.twig',
+                                 $templateParams);
+        } else {
+            $templateParams['limit'] = self::MIN_VOTERS_FOR_PUBLIC;
+            return $this->render('AnketaBundle:Statistics:requestResults.html.twig',
+                                 $templateParams);
+        }
+    }
+
+    public function resultsStudyProgramAction($season_slug, $program_slug) {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $season = $this->getSeason($season_slug);
+        // TODO: check ci predmet s tym id patri do tejto sezony
+        $spRepository = $em->getRepository('AnketaBundle:StudyProgram');
+        $studyProgram = $spRepository->findOneBy(array('slug' => $program_slug));
+        if ($studyProgram === null) {
+            throw new NotFoundHttpException('Studijny odbor so skratkou ' . $program_slug . ' neexistuje.');
+        }
+
+        $maxCnt = 0;
+        $results = array();
+
+        $questions = $em->getRepository('AnketaBundle\Entity\Question')
+                       ->getOrderedQuestionsByCategoryType(CategoryType::STUDY_PROGRAMME);
+        foreach ($questions as $question) {
+            $answers = $em->getRepository('AnketaBundle\Entity\Answer')
+                          ->findBy(array('question' => $question->getId(),
+                                      'studyProgram' => $studyProgram->getId()));
+            $data = $this->processQuestion($question, $answers);
+            $maxCnt = max($maxCnt, $data['stats']['cnt']);
+            $results[] = $data;
+        }
+
+        $responses = $em->getRepository('AnketaBundle:Response')
+                        ->findBy(array('studyProgram' => $studyProgram->getId(), 'teacher' => null, 'subject' => null));
+        $templateParams['responses'] = $this->createUsernameFromLogin($responses);
+ 
+        $templateParams['season'] = $season;
+        $templateParams['studyProgram'] = $studyProgram;
+        
+        if ($maxCnt >= self::MIN_VOTERS_FOR_PUBLIC ||
+            $this->get('security.context')->isGranted('ROLE_FULL_RESULTS')) {
+            $templateParams['results'] = $results;
+            return $this->render('AnketaBundle:Statistics:resultsStudyProgram.html.twig',
                                  $templateParams);
         } else {
             $templateParams['limit'] = self::MIN_VOTERS_FOR_PUBLIC;
@@ -374,7 +431,7 @@ class StatisticsController extends Controller {
         }
         
         $responses = $em->getRepository('AnketaBundle:Response')
-                        ->findBy(array('subject' => $subject->getId(), 'teacher' => $teacher_id));
+                        ->findBy(array('subject' => $subject->getId(), 'teacher' => $teacher_id, 'studyProgram' => null));
         $templateParams['responses'] = $this->createUsernameFromLogin($responses);
         $templateParams['season'] = $season;
         $templateParams['category'] = $category;
@@ -400,6 +457,10 @@ class StatisticsController extends Controller {
                 'general' => new MenuItem(
                     'Všeobecné otázky',
                     $this->generateUrl('statistics_general',
+                        array('season_slug' => $season->getSlug()))),
+                'study_programs' => new MenuItem(
+                    'Študijné odbory',
+                    $this->generateUrl('statistics_study_programs',
                         array('season_slug' => $season->getSlug()))),
                 'subjects' => new MenuItem(
                     'Predmety',
@@ -432,6 +493,32 @@ class StatisticsController extends Controller {
     public function menuVseobecneAction($season) {
         $menu = $this->getMenuRoot($season);
         $menu[$season->getId()]->children['general']->active = true;
+        $templateParams = array('menu' => $menu);
+        return $this->render('AnketaBundle:Hlasovanie:menu.html.twig',
+                             $templateParams);
+
+    }
+
+     public function menuStudijneOdboryAction($season, $program_code = null) {
+        $menu = $this->getMenuRoot($season);
+        $studyProgramsMenu = $menu[$season->getId()]->children['study_programs'];
+        $studyProgramsMenu->expanded = true;
+
+        $em = $this->get('doctrine.orm.entity_manager');
+        $studyPrograms = $em->getRepository('AnketaBundle:StudyProgram')->findBy(array(), array('name' => 'ASC'));
+        $studyProgramsMenu->children = array();
+        foreach ($studyPrograms as $sp) {
+            $studyProgramsMenu->children[$sp->getCode()] = new MenuItem(
+                    $sp->getCode(),
+                    $this->generateUrl('statistics_study_program',
+                        array('season_slug' => $season->getSlug(), 'program_slug' => $sp->getSlug())));
+        }
+
+        if ($program_code == null) {
+            $studyProgramsMenu->active = true;
+        } else {
+            $studyProgramsMenu->children[$program_code]->active = true;
+        }
         $templateParams = array('menu' => $menu);
         return $this->render('AnketaBundle:Hlasovanie:menu.html.twig',
                              $templateParams);

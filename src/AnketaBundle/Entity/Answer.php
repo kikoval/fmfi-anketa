@@ -81,6 +81,11 @@ class Answer {
      */
     private $studyProgram;
 
+    /**
+     * @orm:Column(type="boolean")
+     */
+    private $inappropriate = false;
+
     public function getId() {
         return $this->id;
     }
@@ -113,6 +118,15 @@ class Answer {
     public function getAttended() {
         return $this->attended;
     }
+
+    public function setInappropriate($value) {
+        $this->inappropriate = $value;
+    }
+
+    public function getInappropriate() {
+        return $this->inappropriate;
+    }
+
 
     /**
      * @param Question $value
