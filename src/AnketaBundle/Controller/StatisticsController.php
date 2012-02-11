@@ -459,7 +459,7 @@ class StatisticsController extends Controller {
                     $this->generateUrl('statistics_general',
                         array('season_slug' => $currentSeason->getSlug()))),
                 'study_programs' => new MenuItem(
-                    'Študijné odbory',
+                    'Študijné programy',
                     $this->generateUrl('statistics_study_programs',
                         array('season_slug' => $currentSeason->getSlug()))),
                 'subjects' => new MenuItem(

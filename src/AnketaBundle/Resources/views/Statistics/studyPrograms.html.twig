@@ -4,7 +4,7 @@
     {% render "AnketaBundle:Statistics:menuStudijneOdbory" with { 'season' : season } %}
 {% endblock %}
 {% block content %}
-    <h3> Študijné odbory </h3>
+    <h3> Študijné programy </h3>
     <ul class="programs-listing">
     {% for program in study_programs %}
         <li><a href="{{ path('statistics_study_program', { 'season_slug': season.slug, 'program_slug': program.slug }) }}">
