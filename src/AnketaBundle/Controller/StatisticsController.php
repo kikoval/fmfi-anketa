@@ -505,7 +505,7 @@ class StatisticsController extends Controller {
         $studyProgramsMenu->expanded = true;
 
         $em = $this->get('doctrine.orm.entity_manager');
-        $studyPrograms = $em->getRepository('AnketaBundle:StudyProgram')->findBy(array(), array('name' => 'ASC'));
+        $studyPrograms = $em->getRepository('AnketaBundle:StudyProgram')->findBy(array(), array('code' => 'ASC'));
         $studyProgramsMenu->children = array();
         foreach ($studyPrograms as $sp) {
             $studyProgramsMenu->children[$sp->getCode()] = new MenuItem(
