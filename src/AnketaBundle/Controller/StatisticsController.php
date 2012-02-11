@@ -101,6 +101,9 @@ class StatisticsController extends Controller {
         else if (count($histogram) == 5) {
             $palette = 'd40000|f1792a|b3b3b3|bae11e|338000';   // the last choice is the best
         }
+        else if (count($histogram) == 4 && $histogram[0]['value'] > $histogram[3]['value']) {
+            $palette = '338000|bae11e|f1792a|d40000';   // the first choice is the best
+        }
         else {
             $palette = '';
         }
