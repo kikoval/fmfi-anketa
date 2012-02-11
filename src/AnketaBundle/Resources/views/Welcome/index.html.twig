@@ -14,12 +14,12 @@
 
 <p>
 Hlasovanie v ankete je ukončené. Ďakujeme všetkým zúčastneným za vyplnenie :)<br/>
-<strong>Výsledky budú k dispozícii po ukončení skúškového obdobia.</strong>
+{# <strong>Výsledky budú k dispozícii po ukončení skúškového obdobia.</strong> #}
 </p>
-{#
+
 <p><a class="bigbtn" id="uvod_prihlas" href="{{ path('statistics') }}">
 <span class="bigbtn_middle"><span class="bigbtn_left"><span class="bigbtn_right bigbtn_in">Výsledky</span></span></span></a></p>
-#}
+
 
 {% render "AnketaBundle:Hlasovanie:globalProgressbar" with { 'mode': 'finished' } %}
 
