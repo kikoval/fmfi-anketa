@@ -1,0 +1,25 @@
+{% extends 'AnketaBundle:Statistics:index.html.twig' %}
+
+{% block navigation %}
+    {# TODO menu #}
+{% endblock %}
+
+{% block content %}
+
+    <p><a href="{{ link_back }}">&laquo; Späť na výsledky</a></p>
+
+    <h2>Nahlásiť nevhodný komentár</h2>
+
+    <p>Komentár #{{ answer_id }}:</p>
+    <blockquote><em>{{ comment_body|escape|replace({"\n":"<br>"})|raw }}</em></blockquote>
+
+    <form method="POST" acton="{{ path('statistics_report', {'season_slug': season_slug, 'answer_id': answer_id}) }}">
+
+        <div><label for="note">Dôvod, prečo je komentár nevhodný:</label></div>
+        <textarea id="note" name="note" cols="40" rows="2"></textarea>
+
+        <p><input type="submit" value="Odoslať"></p>
+
+    </form>
+
+{% endblock %}

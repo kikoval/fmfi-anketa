@@ -82,7 +82,7 @@ class Answer {
     private $studyProgram;
 
     /**
-     * @orm:Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     private $inappropriate = false;
 

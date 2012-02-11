@@ -654,7 +654,62 @@ class StatisticsController extends Controller {
     }
 
     public function reportInappropriateAction($season_slug, $answer_id) {
-        return null;
+        $em = $this->get('doctrine.orm.entity_manager');
+        $request = $this->get('request');
+
+        $answer = $em->getRepository('AnketaBundle\Entity\Answer')->find($answer_id);
+        if ($answer === null) {
+            throw new NotFoundHttpException("Odpoveď s daným ID neexistuje");
+        }
+        if ($answer->getInappropriate()) {
+            throw new NotFoundHttpException("Odpoveď s daným ID je už skrytá");
+        }
+        $comment = $answer->getComment();
+        if (empty($comment)) {
+            throw new NotFoundHttpException("Odpoveď s daným ID nemá komentár");
+        }
+
+        $linkBack = $request->getPathInfo();   // TODO
+
+        if ('POST' == $request->getMethod()) {
+            $user = $this->get('security.context')->getToken()->getUser();
+            $note = $request->get('note', '');
+
+            $emailTpl = array(
+                    'answer_id' => $answer_id,
+                    'comment_body' => $comment,
+                    'note' => $note,
+                    'user' => $user);
+            $sender = $this->container->getParameter('mail_sender');
+            $to = $this->container->getParameter('mail_dest_new_teaching_association');    // ten isty e-mail ako teaching associations
+            $body = $this->renderView('AnketaBundle:Statistics:reportMail.txt.twig', $emailTpl);
+
+            $this->get('mailer'); // DO NOT DELETE THIS LINE
+            // it autoloads required things before Swift_Message can be used
+
+            $message = \Swift_Message::newInstance()
+                            ->setSubject('FMFI ANKETA -- nevhodný komentár')
+                            ->setFrom($sender)
+                            ->setTo($to)
+                            ->setBody($body);
+            $this->get('mailer')->send($message);
+
+            $session = $this->get('session');
+            $session->setFlash('success',
+                    'Ďakujeme. Vaše hlásenie spracujeme v priebehu niekoľkých dní.');
+
+            return new RedirectResponse($linkBack);
+        }
+        else {
+            return $this->render('AnketaBundle:Statistics:reportForm.html.twig', array(
+                'link_back' => $linkBack,
+                'season_slug' => $season_slug,
+                'answer_id' => $answer_id,
+                'comment_body' => $comment,
+            ));
+        }
+
+
     }
 
 }
