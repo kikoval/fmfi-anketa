@@ -40,10 +40,15 @@ otazky:
       hviezdicky: No
       moznosti:
           - text: Totálny zabijak
+            hodnota: 2
           - text: Nadsadený
+            hodnota: 1
           - text: Akurát
+            hodnota: 0
           - text: Nenáročný
+            hodnota: -1
           - text: Triviálny
+            hodnota: -2
       position:   2
 
     - nazov:  Zaujímavosť študijného programu
@@ -79,10 +84,15 @@ otazky:
       hviezdicky: No
       moznosti:
           - text: Nepochopiteľná.
+            hodnota: 2
           - text: Nadsadená.
+            hodnota: 1
           - text: Akurát.
+            hodnota: 0
           - text: Nenáročná.
+            hodnota: -1
           - text: Triviálna.
+            hodnota: -2
       position:   2
 
     - nazov:  Zaujímavosť predmetu
@@ -103,10 +113,15 @@ otazky:
       hviezdicky: No
       moznosti:
           - text: Totálny zabijak.
+            hodnota: 2
           - text: Pomerne veľké.
+            hodnota: 1
           - text: Akurát.
+            hodnota: 0
           - text: Pomerne malé.
+            hodnota: -1
           - text: Aká práca?
+            hodnota: -2
       position:   4
 
     - nazov:  Jasné stanovenie požiadavok a hodnotenia
@@ -117,9 +132,13 @@ otazky:
       hviezdicky: No
       moznosti:
           - text: Určite áno.
+            hodnota: 2
           - text: Skôr áno.
+            hodnota: 1
           - text: Skôr nie.
+            hodnota: -1
           - text: Určite nie.
+            hodnota: -2
       position:   5
 
     - nazov:  Absolvovanie predmetu
@@ -149,9 +168,13 @@ otazky:
       hviezdicky: No
       moznosti:
           - text: Určite áno
+            hodnota: 2
           - text: Skôr áno
+            hodnota: 1
           - text: Skôr nie
+            hodnota: -1
           - text: Určite nie
+            hodnota: -2
       position:   7
 
     - nazov:  Textový komentár ku predmetu
@@ -279,7 +302,9 @@ otazky:
       kategoria:  ostatne
       moznosti:
           - text: Áno.
+            hodnota: 1
           - text: Nie.
+            hodnota: -1
       komentar:   Yes
       hviezdicky: No
       position:   7
