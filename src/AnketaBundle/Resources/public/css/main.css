@@ -344,6 +344,21 @@ div.faq {
     background: #E0EFFF;
 }
 
+.results-comments .report-link {
+    color: #7F9CBA;
+    float: right;
+    visibility: hidden;
+}
+
+.results-comments div.comment:hover .report-link {
+    visibility: visible;
+}
+
+.results-comments div.comment .report-link:hover {
+    color: #003A76;
+    visibility: visible;
+}
+
 .results-comments div.comment:target,
 h2:target {
     border-top: 1px solid black;

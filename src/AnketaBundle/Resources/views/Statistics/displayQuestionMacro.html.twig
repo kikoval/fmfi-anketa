@@ -1,5 +1,5 @@
 {# TODO(ppershing): make title, description, chart, histogram and comments as parameters #}
-{% macro displayResults(data) %}
+{% macro displayResults(data, season) %}
     <h2 class="fragment" id="otazka{{ data.id }}"> <a href="#otazka{{ data.id }}">{{ data.title }}</a> </h2>
     <div>
     {# nasledujuci if je nutny, lebo aj polozka pola je null, twig hadze
@@ -68,12 +68,10 @@
                 {% for comment in data.comments %}
                     <div class='comment' id="komentar{{ comment.answer_id }}">
                     <div class="comment-top"><a class="comment-link" href="#komentar{{ comment.answer_id }}">#{{ comment.answer_id }}</a>:
+                        <a href="{{ path('statistics_report', {'season_slug': season.slug, 'answer_id': comment.answer_id}) }}" class="report-link"
+                            >Nahlásiť nevhodný komentár</a>
                     </div>
-                    <p class="comment-comment">{{ comment.comment }}</p>
-        {# TODO(ppershing): uncomment when controller is available:
-                    <a href="{{ path('report_unappropriate', {'answer_id' : comment.answer_id}) }}"
-                        >Report unappropriate</a>
-        #}
+                    <p class="comment-comment">{{ comment.comment|escape|replace({"\n":"<br>"})|raw }}</p>
                     </div>
                 {% endfor %}
                 </div>

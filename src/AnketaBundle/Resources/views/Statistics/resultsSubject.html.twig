@@ -16,6 +16,6 @@
         {% if not loop.first %}
             <hr />
         {% endif %}
-        {{ questionMacro.displayResults(result) }}
+        {{ questionMacro.displayResults(result, season) }}
     {% endfor %}
 {% endblock %}

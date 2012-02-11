@@ -14,7 +14,7 @@
     <h1>{{ subject.code }} {{ subject.name }} - {{ teacher.name }}</h1>
     {{ responseMacro.displayResponse(responses) }}
     {% for result in results %}
-        {{ questionMacro.displayResults(result) }}
+        {{ questionMacro.displayResults(result, season) }}
         <hr/>
     {% endfor %}
 {% endblock %}

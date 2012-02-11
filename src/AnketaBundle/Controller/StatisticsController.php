@@ -653,4 +653,8 @@ class StatisticsController extends Controller {
         return $responses;
     }
 
+    public function reportInappropriateAction($season_slug, $answer_id) {
+        return null;
+    }
+
 }
