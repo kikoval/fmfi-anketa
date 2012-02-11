@@ -653,6 +653,39 @@ class StatisticsController extends Controller {
         return $responses;
     }
 
+    public function getStatisticsPathForAnswer($season_slug, $answer, $absolute = false) {
+        // TODO cele odrefaktorovat
+        $type = $answer->getQuestion()->getCategory()->getType();
+        if ($type === 'subject_teacher' && $answer->getTeacher() !== null && $answer->getSubject() !== null) {
+            return $this->generateUrl('results_subject_teacher', array(
+                'season_slug' => $season_slug,
+                'subject_code' => $answer->getSubject()->getCode(),
+                'teacher_id' => $answer->getTeacher()->getId(),
+            ), $absolute);
+        }
+        if ($type === 'subject' && $answer->getSubject() !== null) {
+            return $this->generateUrl('results_subject', array(
+                'season_slug' => $season_slug,
+                'subject_code' => $answer->getSubject()->getCode(),
+            ), $absolute);
+        }
+        if ($type === 'studijnyprogram' && $answer->getStudyProgram() !== null) {
+            return $this->generateUrl('statistics_study_program', array(
+                'season_slug' => $season_slug,
+                'program_slug' => $answer->getStudyProgram()->getSlug(),
+            ), $absolute);
+        }
+        if ($type === 'general') {
+            return $this->generateUrl('statistics_results_general', array(
+                'season_slug' => $season_slug,
+                'question_id' => $answer->getQuestion()->getId(),
+            ), $absolute);
+        }
+        return $this->generateUrl('statistics_season', array(
+            'season_slug' => $season_slug
+        ), $absolute);
+    }
+
     public function reportInappropriateAction($season_slug, $answer_id) {
         $em = $this->get('doctrine.orm.entity_manager');
         $request = $this->get('request');
@@ -669,7 +702,7 @@ class StatisticsController extends Controller {
             throw new NotFoundHttpException("Odpoveď s daným ID nemá komentár");
         }
 
-        $linkBack = $request->getPathInfo();   // TODO
+        $linkBack = $this->getStatisticsPathForAnswer($season_slug, $answer);
 
         if ('POST' == $request->getMethod()) {
             $user = $this->get('security.context')->getToken()->getUser();
@@ -677,6 +710,7 @@ class StatisticsController extends Controller {
 
             $emailTpl = array(
                     'answer_id' => $answer_id,
+                    'comment_page' => $this->getStatisticsPathForAnswer($season_slug, $answer, true),
                     'comment_body' => $comment,
                     'note' => $note,
                     'user' => $user);
@@ -703,7 +737,7 @@ class StatisticsController extends Controller {
         else {
             return $this->render('AnketaBundle:Statistics:reportForm.html.twig', array(
                 'link_back' => $linkBack,
-                'season_slug' => $season_slug,
+                'season' => $this->getSeason($season_slug),
                 'answer_id' => $answer_id,
                 'comment_body' => $comment,
             ));
