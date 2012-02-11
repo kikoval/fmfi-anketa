@@ -24,10 +24,12 @@
       var cnt = $details.find('[data-cnt]').data('cnt');
       var avg = $details.find('[data-avg]').data('avg');
 
-      var text = "Priemerná hodnota: " + avg +
-        (cnt == 1 ? " (dokopy 1 hlas)" :
-        cnt >= 2 && cnt <= 4 ? "(dokopy "+cnt+" hlasy)" :
-        " (dokopy "+cnt+" hlasov)") + " ";
+      var text = '';
+      if (avg !== undefined) {
+        text = "Priemerná hodnota: " + avg + " (dokopy " + cnt + " " +
+          (cnt == 1 ? "hlas" : cnt > 1 && cnt < 5 ? "hlasy" : "hlasov") +
+          ") ";
+      }
 
       var $p = $('<p />').text(text);
       $p.append($('<a href="#">Viac detailov</a>').click(function () {
