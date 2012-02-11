@@ -450,35 +450,35 @@ class StatisticsController extends Controller {
         }
     }
 
-    public function getMenuRoot($season) {
+    public function getMenuRoot($currentSeason) {
         $em = $this->get('doctrine.orm.entity_manager');
         
-        $current = array(
+        $currentMenu = array(
                 'general' => new MenuItem(
                     'Všeobecné otázky',
                     $this->generateUrl('statistics_general',
-                        array('season_slug' => $season->getSlug()))),
+                        array('season_slug' => $currentSeason->getSlug()))),
                 'study_programs' => new MenuItem(
                     'Študijné odbory',
                     $this->generateUrl('statistics_study_programs',
-                        array('season_slug' => $season->getSlug()))),
+                        array('season_slug' => $currentSeason->getSlug()))),
                 'subjects' => new MenuItem(
                     'Predmety',
                     $this->generateUrl('statistics_subjects',
-                        array('season_slug' => $season->getSlug()))),
+                        array('season_slug' => $currentSeason->getSlug()))),
                 );
 
         $seasons = $em->getRepository('AnketaBundle\Entity\Season')
                     ->findAll(array());
         $menu = array();
-        foreach ($seasons as $tmp) {
-            $menu[$tmp->getId()] = new MenuItem($tmp->getDescription(),
+        foreach ($seasons as $season) {
+            $menu[$season->getId()] = new MenuItem($season->getDescription(),
                     $this->generateUrl('statistics_general',
                         array('season_slug' => $season->getSlug())));
         }
         
-        $menu[$season->getId()]->children = $current;
-        $menu[$season->getId()]->expanded = true;
+        $menu[$currentSeason->getId()]->children = $currentMenu;
+        $menu[$currentSeason->getId()]->expanded = true;
         return $menu;
     }
 
