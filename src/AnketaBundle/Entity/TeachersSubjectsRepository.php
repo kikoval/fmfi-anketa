@@ -29,5 +29,15 @@ class TeachersSubjectsRepository extends EntityRepository {
                             'subject' => $subject, 'season' => $season));
         return $result[0][1] == 1;
     }
+    
+    public function teaches($teacher, $subject, $season) {
+        $dql = 'SELECT COUNT(ts) ';
+        $dql .= ' FROM AnketaBundle\Entity\TeachersSubjects ts';
+        $dql .= ' WHERE ts.season = :season AND ts.subject = :subject AND ts.teacher = :teacher';
+        $result = $this->getEntityManager()
+                        ->createQuery($dql)->execute(array('teacher' => $teacher,
+                            'subject' => $subject, 'season' => $season));
+        return $result[0][1] == 1;
+    }
 
 }
