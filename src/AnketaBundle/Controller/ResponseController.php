@@ -141,7 +141,7 @@ class ResponseController extends Controller {
                     $em->flush();
                     $session = $this->get('session');
                     $session->setFlash('success',
-                        'Vaša odpoveď bola uložená');
+                        'Vaša odpoveď bola uložená.');
                     return new RedirectResponse($resultsLink);
                 }
             }
@@ -150,7 +150,7 @@ class ResponseController extends Controller {
                 $em->flush();
                 $session = $this->get('session');
                 $session->setFlash('success',
-                    'Vaša odpoveď bola zmazaná');
+                    'Vaša odpoveď bola zmazaná.');
                 $myListLink = $this->generateUrl('response');
                 return new RedirectResponse($myListLink);
             }
