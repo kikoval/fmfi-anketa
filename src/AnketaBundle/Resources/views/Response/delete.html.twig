@@ -10,7 +10,7 @@ Učiteľ: {{ teacher.displayName }}<br />
 {% endif %}
 </p>
 <p>Text odpovede:</p>
-<p>{{ responseText }}</p>
+<p>{{ responseText|escape|replace({"\n": "<br />"})|raw }}</p>
 <form action="{{ submitLink }}" method="POST">
 <button type="submit">Zmazať</button>
 <a href="{{ path('response') }}">Nič nemazať</a>
