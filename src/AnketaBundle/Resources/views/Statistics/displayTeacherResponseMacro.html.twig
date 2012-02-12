@@ -7,7 +7,7 @@
             <div class="comment-top">
             <b>{{ item.author }}</b>:
             </div>
-            <p class="comment-comment">{{ item.response.comment }}</p>
+            <p class="comment-comment">{{ item.response.comment|escape|replace({"\n": "<br />"})|raw }}</p>
             {% if item.editable %}
             <div>
                 <a href="{{ path('response_edit', {'response_id': item.response.id}) }}">Uprav odpoveď</a>

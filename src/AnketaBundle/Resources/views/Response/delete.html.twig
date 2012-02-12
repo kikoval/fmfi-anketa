@@ -13,5 +13,6 @@ Učiteľ: {{ teacher.displayName }}<br />
 <p>{{ responseText }}</p>
 <form action="{{ submitLink }}" method="POST">
 <button type="submit">Zmazať</button>
+<a href="{{ path('response') }}">Nič nemazať</a>
 </form>
 {% endblock %}
