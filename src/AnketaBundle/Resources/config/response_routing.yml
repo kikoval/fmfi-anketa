@@ -1,6 +1,6 @@
 response:
     pattern: /odpovede
-    defaults: { _controller: AnketaBundle:Response:general, season_slug: null}
+    defaults: { _controller: AnketaBundle:Response:listMine, season_slug: null}
 
 response_new:
     pattern: /odpovede/nova-odpoved/{season_slug}

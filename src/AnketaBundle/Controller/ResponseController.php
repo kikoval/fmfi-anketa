@@ -147,7 +147,36 @@ class ResponseController extends Controller {
         
         return $this->render('AnketaBundle:Response:edit.html.twig',
                 array('subject' => $subject, 'teacher' => $teacher,
-                    'submitLink' => $submitLink, 'responseText' => $responseText));
+                    'submitLink' => $submitLink, 'responseText' => $responseText,
+                    'responsePage' => null));
+    }
+    
+    public function listMineAction($season_slug = null) {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $security = $this->get('security.context');
+        if (!$security->isGranted('ROLE_TEACHER')) {
+            throw new AccessDeniedException();
+        }
+        $user = $security->getToken()->getUser();
+        
+        $season = null;
+        if ($season_slug !== null) {
+            $seasonRepo = $em->getRepository('AnketaBundle\Entity\Season');
+            $season = $seasonRepo->findOneBy(array('slug' => $season_slug));
+            if ($season == null) {
+                throw new NotFoundHttpException('Chybna sezona: ' . $season_slug);
+            }
+        }
+        
+        $responseRepo = $em->getRepository('AnketaBundle:Response');
+        $query = array('author_login' => $user->getUserName());
+        if ($season !== null) {
+            $query['season'] = $season;
+        }
+        $responses = $responseRepo->findBy($query);
+        
+        return $this->render('AnketaBundle:Response:list.html.twig',
+                array('responses' => $responses, 'responsePage' => 'myList'));
     }
     
 }

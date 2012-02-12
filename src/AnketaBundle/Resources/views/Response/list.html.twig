@@ -1,0 +1,21 @@
+{% extends 'AnketaBundle:Response:layout.html.twig' %}
+
+{% block navigation %}
+
+{% endblock %}
+{% block content %}
+<h1>Moje odpovede</h1>
+<div class="results-comments results-comments-official">
+{% for response in responses %}
+    <div class='comment' id="odpoved{{ response.id }}">
+        <div class="comment-top">
+        <b>{{ response.subject.name }}{% if response.teacher is not null %}/{{response.teacher.displayName}}{% endif %}</b>:
+        </div>
+        <p class="comment-comment">{{ response.comment }}</p>
+        <div>
+            <a href="{{ path('response_edit', {'response_id': response.id}) }}">Uprav odpoveď</a>
+        </div>
+    </div>
+{% endfor %}
+</div>
+{% endblock %}
