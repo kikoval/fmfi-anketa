@@ -1,4 +1,7 @@
 {% macro displayResponse(responses, editable, newResponseLink) %}
+{# TODO: tento velky if je hack, kontrolu, kto moze vidiet komentare ucitelov chceme spravit
+         cez fazy (ktore este ale nie su implementovane) #}
+{% if is_granted('ROLE_TEACHER') %}
     {% if editable or responses is not empty %}
         <div class="results-comments results-comments-official">
         <h2>Oficiálne vyjadrenie k odpovediam:</h2>
@@ -23,4 +26,5 @@
         {% endif %}
         </div>
     {% endif %}
+{% endif %}
 {% endmacro %}
