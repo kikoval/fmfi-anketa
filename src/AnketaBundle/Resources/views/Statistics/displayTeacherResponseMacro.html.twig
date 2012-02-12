@@ -11,6 +11,7 @@
             {% if item.editable %}
             <div>
                 <a href="{{ path('response_edit', {'response_id': item.response.id}) }}">Uprav odpoveď</a>
+                <a href="{{ path('response_delete', {'response_id': item.response.id}) }}">Zmaž odpoveď</a>
             </div>
             {% endif %}
             </div>

@@ -16,6 +16,7 @@ z príslušnej stránky výsledkov.</p>
         <p class="comment-comment">{{ response.comment }}</p>
         <div>
             <a href="{{ path('response_edit', {'response_id': response.id}) }}">Uprav odpoveď</a>
+            <a href="{{ path('response_delete', {'response_id': response.id}) }}">Zmaž odpoveď</a>
         </div>
     </div>
 {% endfor %}

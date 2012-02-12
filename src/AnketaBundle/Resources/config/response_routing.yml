@@ -10,7 +10,12 @@ response_new:
     
 response_edit:
     pattern: /odpovede/{response_id}/uprav
-    defaults: { _controller: AnketaBundle:Response:editResponse }
+    defaults: { _controller: AnketaBundle:Response:editResponse, delete: false }
     requirements:
-      season_slug:   "[a-z0-9-]+"
+      response_id:   \d+
+
+response_delete:
+    pattern: /odpovede/{response_id}/zmaz
+    defaults: { _controller: AnketaBundle:Response:editResponse, delete: true }
+    requirements:
       response_id:   \d+

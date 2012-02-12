@@ -66,7 +66,7 @@ class ResponseController extends Controller {
         return $this->updateResponse($response, $currentTeacher);
     }
     
-    public function editResponseAction($response_id) {
+    public function editResponseAction($response_id, $delete) {
         $em = $this->get('doctrine.orm.entity_manager');
         $security = $this->get('security.context');
         if (!$security->isGranted('ROLE_TEACHER')) {
@@ -82,10 +82,10 @@ class ResponseController extends Controller {
             throw new NotFoundHttpException('Neznama odpoved: ' . $response_id);
         }
         
-        return $this->updateResponse($response, $currentTeacher);
+        return $this->updateResponse($response, $currentTeacher, $delete);
     }
     
-    private function updateResponse(Response $response, Teacher $currentTeacher = null) {
+    private function updateResponse(Response $response, Teacher $currentTeacher = null, $delete = false) {
         $em = $this->get('doctrine.orm.entity_manager');
         $request = $this->get('request');
         
@@ -123,29 +123,48 @@ class ResponseController extends Controller {
         if ($response->getId() === null) {
             $submitLink = $this->generateUrl('response_new', $params);
         }
+        else if ($delete) {
+            $submitLink = $this->generateUrl('response_delete', array('response_id' => $response->getId()));
+        }
         else {
             $submitLink = $this->generateUrl('response_edit', array('response_id' => $response->getId()));
         }
         
         if ($request->getMethod() == 'POST') {
-            $responseText = $request->get('text', '');
-            if ($responseText !== '') {
-                $response->setComment($responseText);
-                if ($response->getId() === null) {
-                    $em->persist($response);
+            if (!$delete) {
+                $responseText = $request->get('text', '');
+                if ($responseText !== '') {
+                    $response->setComment($responseText);
+                    if ($response->getId() === null) {
+                        $em->persist($response);
+                    }
+                    $em->flush();
+                    $session = $this->get('session');
+                    $session->setFlash('success',
+                        'Vaša odpoveď bola uložená');
+                    return new RedirectResponse($resultsLink);
                 }
+            }
+            else {
+                $em->remove($response);
                 $em->flush();
                 $session = $this->get('session');
                 $session->setFlash('success',
-                    'Vaša odpoveď bola uložená');
-                return new RedirectResponse($resultsLink);
+                    'Vaša odpoveď bola zmazaná');
+                $myListLink = $this->generateUrl('response');
+                return new RedirectResponse($myListLink);
             }
         }
         else {
             $responseText = $response->getComment();
         }
         
-        return $this->render('AnketaBundle:Response:edit.html.twig',
+        $template = 'AnketaBundle:Response:edit.html.twig';
+        if ($delete) {
+            $template = 'AnketaBundle:Response:delete.html.twig';
+        }
+        
+        return $this->render($template,
                 array('subject' => $subject, 'teacher' => $teacher,
                     'submitLink' => $submitLink, 'responseText' => $responseText,
                     'responsePage' => null));
