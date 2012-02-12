@@ -6,7 +6,11 @@
 {% block content %}
 <h1>Moje odpovede</h1>
 <p>Tu sa nachádza zoznam odpovedí, ktorých ste autormi. Pridať odpoveď môžete
-z príslušnej stránky výsledkov.</p>
+z príslušnej stránky výsledkov
+{%- if is_granted('ROLE_TEACHER') -%}
+, kde sa nachádza aj <a href="{{ path('statistics_mySubjects', {'season_slug': season.slug}) }}">zoznam Vašich predmetov</a>
+{%- endif %}.
+</p>
 <div class="results-comments results-comments-official">
 {% if responses|length == 0 %}
 <p>Zatiaľ ste nepridali žiadnu odpoveď</p>

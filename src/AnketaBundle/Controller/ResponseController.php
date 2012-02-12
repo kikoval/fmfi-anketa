@@ -179,23 +179,26 @@ class ResponseController extends Controller {
         $user = $security->getToken()->getUser();
         
         $season = null;
+        $seasonRepo = $em->getRepository('AnketaBundle\Entity\Season');
         if ($season_slug !== null) {
-            $seasonRepo = $em->getRepository('AnketaBundle\Entity\Season');
             $season = $seasonRepo->findOneBy(array('slug' => $season_slug));
             if ($season == null) {
                 throw new NotFoundHttpException('Chybna sezona: ' . $season_slug);
             }
         }
+        else {
+            $season = $seasonRepo->getActiveSeason();
+        }
         
         $responseRepo = $em->getRepository('AnketaBundle:Response');
         $query = array('author_login' => $user->getUserName());
         if ($season !== null) {
-            $query['season'] = $season;
+            $query['season'] = $season->getId();
         }
         $responses = $responseRepo->findBy($query);
         
         return $this->render('AnketaBundle:Response:list.html.twig',
-                array('responses' => $responses, 'responsePage' => 'myList'));
+                array('responses' => $responses, 'responsePage' => 'myList', 'season' => $season));
     }
     
 }
