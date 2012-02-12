@@ -1,15 +1,25 @@
-{% macro displayResponse(responses) %}
-    {% if responses is not empty %}
+{% macro displayResponse(responses, editable, newResponseLink) %}
+    {% if editable or responses is not empty %}
         <div class="results-comments results-comments-official">
         <h2>Oficiálne vyjadrenie k odpovediam:</h2>
-        {% for response in responses %}
-            <div class='comment' id="odpoved{{ response.id }}">
+        {% for item in responses %}
+            <div class='comment' id="odpoved{{ item.response.id }}">
             <div class="comment-top">
-            <b>{{ response.authorText }}</b>:
+            <b>{{ item.author }}</b>:
             </div>
-            <p class="comment-comment">{{ response.comment }}</p>
+            <p class="comment-comment">{{ item.response.comment }}</p>
+            {% if item.editable %}
+            <div>
+                <a href="{{ path('response_edit', {'response_id': item.response.id}) }}">Uprav odpoveď</a>
+            </div>
+            {% endif %}
             </div>
         {% endfor %}
+        {% if editable %}
+            <div>
+                <a href="{{ newResponseLink }}">Nová odpoveď</a>
+            </div>
+        {% endif %}
         </div>
     {% endif %}
 {% endmacro %}

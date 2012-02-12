@@ -10,7 +10,7 @@
 {% endblock %}
 {% block content %}
     <h1> {{ studyProgram.code }} {{ studyProgram.name }}</h1>
-    {{ responseMacro.displayResponse(responses) }}
+    {{ responseMacro.displayResponse(responses, responseEditable, newResponseLink) }}
     {% for result in results %}
         {% if not loop.first %}
             <hr />

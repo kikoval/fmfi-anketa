@@ -1,0 +1,16 @@
+response:
+    pattern: /odpovede
+    defaults: { _controller: AnketaBundle:Response:general, season_slug: null}
+
+response_new:
+    pattern: /odpovede/nova-odpoved/{season_slug}
+    defaults: { _controller: AnketaBundle:Response:newResponse }
+    requirements:
+      season_slug:   "[a-z0-9-]+"
+    
+response_edit:
+    pattern: /odpovede/{response_id}/uprav
+    defaults: { _controller: AnketaBundle:Response:editResponse }
+    requirements:
+      season_slug:   "[a-z0-9-]+"
+      response_id:   \d+

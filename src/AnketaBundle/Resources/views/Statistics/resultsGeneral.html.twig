@@ -7,6 +7,6 @@
 {% endblock %}
 
 {% block content %}
-    {{ responseMacro.displayResponse(responses) }}
+    {{ responseMacro.displayResponse(responses, responseEditable, newResponseLink) }}
     {{ questionMacro.displayResults(result, season) }}
 {% endblock %}

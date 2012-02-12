@@ -19,7 +19,7 @@ results_subject:
     requirements:
       season_slug:   "[a-z0-9-]+"
       subject_code:  "[a-zA-Z0-9-_]+"
-
+      
 results_subject_teacher:
     pattern: /vysledky/{season_slug}/predmet/{subject_code}/ucitel/{teacher_id}
     defaults: { _controller: AnketaBundle:Statistics:resultsSubjectTeacher}
