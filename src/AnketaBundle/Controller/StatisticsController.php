@@ -12,6 +12,7 @@ use AnketaBundle\Entity\Subject;
 use AnketaBundle\Entity\Response;
 use DateTime;
 use AnketaBundle\Lib\StatisticalFunctions;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class StatisticsController extends Controller {
     const MIN_VOTERS_FOR_PUBLIC = 0;
@@ -297,6 +298,30 @@ class StatisticsController extends Controller {
         $templateParams['category'] = $category;
         return $this->render('AnketaBundle:Statistics:subjects.html.twig', $templateParams);
     }
+    
+    public function mySubjectsAction($season_slug) {
+        $security = $this->get('security.context');
+        if (!$security->isGranted('ROLE_TEACHER')) {
+            throw new AccessDeniedException();
+        }
+        $user = $security->getToken()->getUser();
+        
+        $em = $this->get('doctrine.orm.entity_manager');
+        $teacher = $em->getRepository('AnketaBundle:Teacher')->findOneBy(array('login' => $user->getUserName()));
+        
+        if ($teacher === null) {
+            throw new NotFoundHttpException('Ucitel sa nenasiel');
+        }
+
+        $season = $this->getSeason($season_slug);
+        $templateParams = array();
+        $subjects = $em->getRepository('AnketaBundle:Subject')->getSubjectsForTeacher($teacher, $season);
+
+        $templateParams['season'] = $season;
+        $templateParams['subjects'] = $subjects;
+        
+        return $this->render('AnketaBundle:Statistics:mySubjects.html.twig', $templateParams);
+    }
 
     public function studyProgramsAction($season_slug) {
         $em = $this->get('doctrine.orm.entity_manager');
@@ -499,6 +524,12 @@ class StatisticsController extends Controller {
                     $this->generateUrl('statistics_subjects',
                         array('season_slug' => $currentSeason->getSlug()))),
                 );
+        if ($this->get('security.context')->isGranted('ROLE_TEACHER')) {
+            $currentMenu['my_subjects'] = new MenuItem(
+                    'Moje predmety',
+                    $this->generateUrl('statistics_mySubjects',
+                        array('season_slug' => $currentSeason->getSlug())));
+        }
 
         $seasons = $em->getRepository('AnketaBundle\Entity\Season')
                     ->findAll(array());
@@ -530,8 +561,17 @@ class StatisticsController extends Controller {
                              $templateParams);
 
     }
+    
+    public function menuMojePredmetyAction($season) {
+        $menu = $this->getMenuRoot($season);
+        $menu[$season->getId()]->children['my_subjects']->active = true;
+        $templateParams = array('menu' => $menu);
+        return $this->render('AnketaBundle:Hlasovanie:menu.html.twig',
+                             $templateParams);
 
-     public function menuStudijneOdboryAction($season, $program_code = null) {
+    }
+
+    public function menuStudijneOdboryAction($season, $program_code = null) {
         $menu = $this->getMenuRoot($season);
         $studyProgramsMenu = $menu[$season->getId()]->children['study_programs'];
         $studyProgramsMenu->expanded = true;
