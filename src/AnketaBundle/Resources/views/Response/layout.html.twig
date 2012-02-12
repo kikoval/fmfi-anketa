@@ -1,0 +1,16 @@
+{% extends 'AnketaBundle::layout.html.twig' %}
+
+{% block sidebar %}
+    <div class="menu">
+        <ul class="menu-level-0">
+            <li class="menu-level-0 leaf"><a href="{{ path('response') }}"
+                class="menu-level-0 leaf{% if responsePage is not null and responsePage == 'myList' %} active{% endif %}"
+                >Moje odpovede</a></li>
+        </ul>
+    </div>
+    {% block navigation %}
+        
+    {% endblock %}
+{% endblock %}
+{% block content %}
+{% endblock %}

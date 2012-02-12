@@ -12,7 +12,7 @@
 {% endblock %}
 {% block content %}
     <h1>{{ subject.code }} {{ subject.name }} - {{ teacher.name }}</h1>
-    {{ responseMacro.displayResponse(responses) }}
+    {{ responseMacro.displayResponse(responses, responseEditable, newResponseLink) }}
     {% for result in results %}
         {{ questionMacro.displayResults(result, season) }}
         <hr/>

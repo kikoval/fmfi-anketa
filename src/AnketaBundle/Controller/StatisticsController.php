@@ -9,8 +9,10 @@ use AnketaBundle\Entity\Question;
 use AnketaBundle\Entity\CategoryType;
 use AnketaBundle\Entity\Season;
 use AnketaBundle\Entity\Subject;
+use AnketaBundle\Entity\Response;
 use DateTime;
 use AnketaBundle\Lib\StatisticalFunctions;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class StatisticsController extends Controller {
     const MIN_VOTERS_FOR_PUBLIC = 0;
@@ -296,6 +298,30 @@ class StatisticsController extends Controller {
         $templateParams['category'] = $category;
         return $this->render('AnketaBundle:Statistics:subjects.html.twig', $templateParams);
     }
+    
+    public function mySubjectsAction($season_slug) {
+        $security = $this->get('security.context');
+        if (!$security->isGranted('ROLE_TEACHER')) {
+            throw new AccessDeniedException();
+        }
+        $user = $security->getToken()->getUser();
+        
+        $em = $this->get('doctrine.orm.entity_manager');
+        $teacher = $em->getRepository('AnketaBundle:Teacher')->findOneBy(array('login' => $user->getUserName()));
+        
+        if ($teacher === null) {
+            throw new NotFoundHttpException('Ucitel sa nenasiel');
+        }
+
+        $season = $this->getSeason($season_slug);
+        $templateParams = array();
+        $subjects = $em->getRepository('AnketaBundle:Subject')->getSubjectsForTeacher($teacher, $season);
+
+        $templateParams['season'] = $season;
+        $templateParams['subjects'] = $subjects;
+        
+        return $this->render('AnketaBundle:Statistics:mySubjects.html.twig', $templateParams);
+    }
 
     public function studyProgramsAction($season_slug) {
         $em = $this->get('doctrine.orm.entity_manager');
@@ -341,7 +367,19 @@ class StatisticsController extends Controller {
 
         $responses = $em->getRepository('AnketaBundle:Response')
                         ->findBy(array('subject' => $subject->getId(), 'teacher' => null, 'studyProgram' => null));
-        $templateParams['responses'] = $this->createUsernameFromLogin($responses);
+        $templateParams['responses'] = $this->processResponses($responses);
+        // TODO: refaktorovat zistovanie pristupovych prav do modelu!
+        $security = $this->get('security.context');
+        if ($security->isGranted('ROLE_TEACHER')) {
+            $userName = $security->getToken()->getUser()->getUserName();
+            $teachesSubject = $em->getRepository('AnketaBundle:TeachersSubjects')->teachesByLogin($userName, $subject, $season);
+            $templateParams['responseEditable'] = $teachesSubject;
+        }
+        else {
+            $templateParams['responseEditable'] = false;
+        }
+        $templateParams['newResponseLink'] = $this->generateUrl('response_new',
+                array('subject_code' => $subject->getCode(), 'season_slug' => $season->getSlug()));
         $templateParams['season'] = $season;
         $templateParams['category'] = $category;
         $templateParams['subject'] = $subject;
@@ -384,7 +422,10 @@ class StatisticsController extends Controller {
 
         $responses = $em->getRepository('AnketaBundle:Response')
                         ->findBy(array('studyProgram' => $studyProgram->getId(), 'teacher' => null, 'subject' => null));
-        $templateParams['responses'] = $this->createUsernameFromLogin($responses);
+        $templateParams['responses'] = $this->processResponses($responses);
+        $templateParams['responseEditable'] = false; // TODO
+        $templateParams['newResponseLink'] = $this->generateUrl('response_new',
+                array('program_slug' => $studyProgram->getSlug(), 'season_slug' => $season->getSlug()));
  
         $templateParams['season'] = $season;
         $templateParams['studyProgram'] = $studyProgram;
@@ -435,7 +476,20 @@ class StatisticsController extends Controller {
         
         $responses = $em->getRepository('AnketaBundle:Response')
                         ->findBy(array('subject' => $subject->getId(), 'teacher' => $teacher_id, 'studyProgram' => null));
-        $templateParams['responses'] = $this->createUsernameFromLogin($responses);
+        $templateParams['responses'] = $this->processResponses($responses);
+        // TODO: refaktorovat zistovanie pristupovych prav do modelu!
+        $security = $this->get('security.context');
+        if ($security->isGranted('ROLE_TEACHER')) {
+            $currentUsername = $security->getToken()->getUser()->getUserName();
+            $teacherLogin = $teacher->getLogin();
+            $templateParams['responseEditable'] = $teacherLogin !== null && $teacherLogin === $currentUsername;
+        }
+        else {
+            $templateParams['responseEditable'] = false;
+        }
+        $templateParams['newResponseLink'] = $this->generateUrl('response_new',
+                array('subject_code' => $subject->getCode(), 'teacher_id' => $teacher->getId(),
+                    'season_slug' => $season->getSlug()));
         $templateParams['season'] = $season;
         $templateParams['category'] = $category;
         $templateParams['subject'] = $subject;
@@ -470,6 +524,12 @@ class StatisticsController extends Controller {
                     $this->generateUrl('statistics_subjects',
                         array('season_slug' => $currentSeason->getSlug()))),
                 );
+        if ($this->get('security.context')->isGranted('ROLE_TEACHER')) {
+            $currentMenu['my_subjects'] = new MenuItem(
+                    'Moje predmety',
+                    $this->generateUrl('statistics_mySubjects',
+                        array('season_slug' => $currentSeason->getSlug())));
+        }
 
         $seasons = $em->getRepository('AnketaBundle\Entity\Season')
                     ->findAll(array());
@@ -501,8 +561,17 @@ class StatisticsController extends Controller {
                              $templateParams);
 
     }
+    
+    public function menuMojePredmetyAction($season) {
+        $menu = $this->getMenuRoot($season);
+        $menu[$season->getId()]->children['my_subjects']->active = true;
+        $templateParams = array('menu' => $menu);
+        return $this->render('AnketaBundle:Hlasovanie:menu.html.twig',
+                             $templateParams);
 
-     public function menuStudijneOdboryAction($season, $program_code = null) {
+    }
+
+    public function menuStudijneOdboryAction($season, $program_code = null) {
         $menu = $this->getMenuRoot($season);
         $studyProgramsMenu = $menu[$season->getId()]->children['study_programs'];
         $studyProgramsMenu->expanded = true;
@@ -632,25 +701,42 @@ class StatisticsController extends Controller {
 
         $responses = $em->getRepository('AnketaBundle:Response')
                         ->findBy(array('question' => $question_id));
-        $templateParams['responses'] = $this->createUsernameFromLogin($responses);
+        $templateParams['responses'] = $this->processResponses($responses);
         $templateParams['result'] = $this->processQuestion($question, $answers);
         $templateParams['season'] = $season;
+        $templateParams['responseEditable'] = false; // TODO
+        $templateParams['newResponseLink'] = $this->generateUrl('response_new', array('season_slug' => $season->getSlug()));
         return $this->render('AnketaBundle:Statistics:resultsGeneral.html.twig', $templateParams);
     }
-
-    private function createUsernameFromLogin($responses)
+    
+    /** Return true, if the current user can edit a response */
+    private function userCanEditResponse(Response $response)
     {
+        $user = $this->get('security.context')->getToken()->getUser();
+        return $user->getUserName() === $response->getAuthorLogin();
+    }
+
+    private function processResponses($responses)
+    {
+        $result = array();
+        $em = $this->get('doctrine.orm.entity_manager');
+        $userRepository = $em->getRepository('AnketaBundle:User');
         foreach ($responses as $response)
         {
+            $item = array();
+            $item['response'] = $response;
+            $item['editable'] = $this->userCanEditResponse($response);
+            // TODO: zjednotit nejak spravanie
+            $item['author'] = $response->getAuthorText();
             if ($response->getAuthorLogin())
             {
-                $em = $this->get('doctrine.orm.entity_manager');
-                $user = $em->getRepository('AnketaBundle:User')
+                $user = $userRepository
                            ->findOneBy(array('userName' => $response->getAuthorLogin()));
-                if (!empty($user)) $response->setAuthorText($user->getDisplayName());
+                if (!empty($user)) $item['author'] = $user->getDisplayName();
             }
+            $result[] = $item;
         }
-        return $responses;
+        return $result;
     }
 
     public function getStatisticsPathForAnswer($season_slug, $answer, $absolute = false) {

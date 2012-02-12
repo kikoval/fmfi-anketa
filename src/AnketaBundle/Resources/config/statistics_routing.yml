@@ -13,13 +13,19 @@ statistics_subjects:
       season_slug:   "[a-z0-9-]+"
       category:      "[a-zA-Z0-9-]*"
 
+statistics_mySubjects:
+    pattern: /vysledky/{season_slug}/moje-predmety
+    defaults: { _controller: AnketaBundle:Statistics:mySubjects }
+    requirements:
+      season_slug:   "[a-z0-9-]+"
+
 results_subject:
     pattern: /vysledky/{season_slug}/predmet/{subject_code}
     defaults: { _controller: AnketaBundle:Statistics:resultsSubject}
     requirements:
       season_slug:   "[a-z0-9-]+"
       subject_code:  "[a-zA-Z0-9-_]+"
-
+      
 results_subject_teacher:
     pattern: /vysledky/{season_slug}/predmet/{subject_code}/ucitel/{teacher_id}
     defaults: { _controller: AnketaBundle:Statistics:resultsSubjectTeacher}

@@ -50,6 +50,12 @@ class User implements UserInterface {
     private $roles;
     
     /**
+     * Roles that are not persisted in the database
+     * @var array(string)
+     */
+    private $nonPersistentRoles = array(); // inicializator musi byt tu! (doctrine nevola konstruktor)
+
+    /**
      * @param String $username
      * @param String $realname
      */
@@ -113,14 +119,33 @@ class User implements UserInterface {
     }
 
     /**
-     * @return Role[] roles
+     * Add a role that is not persisted in the database
+     * @param string $value
+     */
+    public function addNonPersistentRole($value) {
+        $this->nonPersistentRoles[] = $value;
+    }
+
+    /**
+     * @return string[] roles
      */
     public function getRoles() {
-        $roles = $this->roles->toArray();
+        $roles = array();
+        foreach ($this->roles as $role) {
+            $roles[] = $role->getRole();
+        }
         if ($this->getHasVote()) {
             $roles[] = 'ROLE_HAS_VOTE';
         }
+        $roles = array_merge($roles, $this->nonPersistentRoles);
         return $roles;
+    }
+
+    public function hasRole($role) {
+        if ($role instanceof Role) {
+            $role = $role->getRole();
+        }
+        return array_search($role, $this->getRoles()) !== false;
     }
 
     public function equals(UserInterface $user) {

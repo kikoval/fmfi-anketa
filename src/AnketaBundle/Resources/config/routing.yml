@@ -22,6 +22,10 @@ statistics:
     pattern: /vysledky/
     resource: "@AnketaBundle/Resources/config/statistics_routing.yml"
 
+response:
+    pattern: /odpovede/
+    resource: "@AnketaBundle/Resources/config/response_routing.yml"
+
 anonymizuj:
     pattern: /anonymizuj/
     defaults: { _controller: AnketaBundle:Anonymizacia:anonymizuj }

@@ -4,6 +4,7 @@ namespace AnketaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use AnketaBundle\Entity\Season;
 
 /**
  * @ORM\Entity()
@@ -40,6 +41,13 @@ class Response {
      * @var StudyProgram $studyProgram
      */
     private $studyProgram;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="Season")
+     *
+     * @var Season $season
+     */
+    private $season;
 
     /**
      * @ORM\Column(type="text")
@@ -157,4 +165,19 @@ class Response {
     public function getQuestion() {
         return $this->question;
     }
+    
+    /**
+     * @return Season
+     */
+    public function getSeason() {
+        return $this->season;
+    }
+
+    /**
+     * @param Season $season 
+     */
+    public function setSeason(Season $season) {
+        $this->season = $season;
+    }
+    
 }

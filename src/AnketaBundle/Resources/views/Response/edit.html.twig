@@ -1,0 +1,16 @@
+{% extends 'AnketaBundle:Response:layout.html.twig' %}
+
+{% block content %}
+<h1>Odpoveď</h1>
+<p>
+Odpovedať na:<br />
+Predmet: {{ subject.code }} {{ subject.name }}<br />
+{% if teacher is not null %}
+Učiteľ: {{ teacher.displayName }}<br />
+{% endif %}
+</p>
+<form action="{{ submitLink }}" method="POST">
+<textarea name="text" id="text" rows="10">{{ responseText }}</textarea>
+<button type="submit">Odoslať</button>
+</form>
+{% endblock %}

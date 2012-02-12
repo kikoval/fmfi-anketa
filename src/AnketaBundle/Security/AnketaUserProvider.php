@@ -37,10 +37,16 @@ class AnketaUserProvider implements UserProviderInterface
     private $roleRepository;
     
     /**
-     * Doctrine repository for Role entity
+     * Doctrine repository for Season entity
      * @var AnketaBundle\Entity\SeasonRepository
      */
     private $seasonRepository;
+
+    /**
+     * Doctrine repository for Teacher entity
+     * @var AnketaBundle\Entity\SeasonRepository
+     */
+    private $teacherRepository;
 
     /** @var EntityManager */
     private $entityManager;
@@ -54,6 +60,7 @@ class AnketaUserProvider implements UserProviderInterface
         $this->userRepository = $em->getRepository('AnketaBundle:User');
         $this->roleRepository = $em->getRepository('AnketaBundle:Role');
         $this->seasonRepository = $em->getRepository('AnketaBundle:Season');
+        $this->teacherRepository = $em->getRepository('AnketaBundle:Teacher');
         $this->userSources = $userSources;
     }
 
@@ -113,12 +120,19 @@ class AnketaUserProvider implements UserProviderInterface
             
             $this->entityManager->flush();
 
-        } 
+        }
         
         if ($user === null) {
             throw new UsernameNotFoundException(sprintf('User "%s" not found.', $username));
         }
         
+        $teacher = $this->teacherRepository->findOneBy(array('login' => $username));
+        if ($teacher !== null) {
+            if (!$user->hasRole('ROLE_TEACHER')) {
+                $user->addNonPersistentRole('ROLE_TEACHER');
+            }
+        }
+
         return $user;
     }
 
