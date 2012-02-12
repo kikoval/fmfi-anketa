@@ -9,6 +9,7 @@ use AnketaBundle\Entity\Season;
 use AnketaBundle\Entity\Subject;
 use AnketaBundle\Entity\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use AnketaBundle\Entity\Teacher;
 
 class ResponseController extends Controller {
     
@@ -55,6 +56,43 @@ class ResponseController extends Controller {
             }
         }
         
+        $response = new Response();
+        $response->setAuthorLogin($user->getUserName());
+        $response->setAuthorText($user->getDisplayName());
+        $response->setSubject($subject);
+        $response->setTeacher($teacher);
+        $response->setSeason($season);
+        
+        return $this->updateResponse($response, $currentTeacher);
+    }
+    
+    public function editResponseAction($response_id) {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $security = $this->get('security.context');
+        if (!$security->isGranted('ROLE_TEACHER')) {
+            throw new AccessDeniedException();
+        }
+        $user = $security->getToken()->getUser();
+        $teacherRepo = $em->getRepository('AnketaBundle\Entity\Teacher');
+        $currentTeacher = $teacherRepo->findOneBy(array('login' => $user->getUserName()));
+        
+        $responseRepo = $em->getRepository('AnketaBundle\Entity\Response');
+        $response = $responseRepo->findOneBy(array('id' => $response_id));
+        if ($response == null) {
+            throw new NotFoundHttpException('Neznama odpoved: ' . $response_id);
+        }
+        
+        return $this->updateResponse($response, $currentTeacher);
+    }
+    
+    private function updateResponse(Response $response, Teacher $currentTeacher = null) {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $request = $this->get('request');
+        
+        $teacher = $response->getTeacher();
+        $subject = $response->getSubject();
+        $season = $response->getSeason();
+        
         if ($teacher !== null && $subject === null) {
             throw new NotFoundHttpException('Neznama kategoria');
         }
@@ -71,7 +109,6 @@ class ResponseController extends Controller {
             }
             $params = array('subject_code' => $subject->getCode(), 'teacher_id' => $teacher->getId(),
                         'season_slug' => $season->getSlug());
-            $submitLink = $this->generateUrl('response_new', $params);
             $resultsLink = $this->generateUrl('results_subject_teacher', $params);
         }
         else {
@@ -80,20 +117,23 @@ class ResponseController extends Controller {
                 throw new AccessDeniedException();
             }
             $params = array('subject_code' => $subject->getCode(), 'season_slug' => $season->getSlug());
-            $submitLink = $this->generateUrl('response_new', $params);
             $resultsLink = $this->generateUrl('results_subject', $params);
+        }
+        
+        if ($response->getId() === null) {
+            $submitLink = $this->generateUrl('response_new', $params);
+        }
+        else {
+            $submitLink = $this->generateUrl('response_edit', array('response_id' => $response->getId()));
         }
         
         if ($request->getMethod() == 'POST') {
             $responseText = $request->get('text', '');
             if ($responseText !== '') {
-                $response = new Response();
-                $response->setAuthorLogin($user->getUserName());
-                $response->setAuthorText($user->getDisplayName());
                 $response->setComment($responseText);
-                $response->setSubject($subject);
-                $response->setTeacher($teacher);
-                $em->persist($response);
+                if ($response->getId() === null) {
+                    $em->persist($response);
+                }
                 $em->flush();
                 $session = $this->get('session');
                 $session->setFlash('success',
@@ -102,7 +142,7 @@ class ResponseController extends Controller {
             }
         }
         else {
-            $responseText = '';
+            $responseText = $response->getComment();
         }
         
         return $this->render('AnketaBundle:Response:edit.html.twig',
