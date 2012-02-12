@@ -27,7 +27,7 @@ class TeachersSubjectsRepository extends EntityRepository {
         $result = $this->getEntityManager()
                         ->createQuery($dql)->execute(array('login' => $login,
                             'subject' => $subject, 'season' => $season));
-        return $result[0] == 1;
+        return $result[0][1] == 1;
     }
 
 }
