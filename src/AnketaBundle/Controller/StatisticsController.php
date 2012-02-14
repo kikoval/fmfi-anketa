@@ -16,7 +16,6 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class StatisticsController extends Controller {
     const MIN_VOTERS_FOR_PUBLIC = 0;
-    const INTERVAL_CONFIDENCE = 0.9;
     const NO_CATEGORY = 'XXX-nekategorizovane';
 
     /**
@@ -143,9 +142,8 @@ class StatisticsController extends Controller {
      * @returns array with following items:
      *  - cnt count
      *  - avg (optional) average value
+     *  - median (optional) mean value
      *  - sigma (optional) standard deviation
-     *  - confidence_value (optional) confidence for estimating interval
-     *  - confidence_interval_{low,high} confidence interval range
      */
     public function getStatistics(array $histogram) {
         $data = array_map(function ($x) {return array($x['value'], $x['cnt']);}, $histogram);
@@ -157,15 +155,6 @@ class StatisticsController extends Controller {
         }
         if ($cnt > 1) {
             $stats['sigma'] = StatisticalFunctions::stddev($data);
-            if (function_exists('stats_cdf_t')) {
-                $confHalf = StatisticalFunctions::confidenceHalf($data, self::INTERVAL_CONFIDENCE);
-                // Warning: we do not want to do this in statistical functions, as we need to get
-                // minimum/maximum also of histogram items with count 0
-                $values = array_map(function ($x) {return $x[0];}, $data);
-                $stats['confidence_value'] = self::INTERVAL_CONFIDENCE;
-                $stats['confidence_interval_low'] = max(min($values), $stats['avg'] - $confHalf);
-                $stats['confidence_interval_high'] = min(max($values), $stats['avg'] + $confHalf);
-            }
         }
         return $stats;
     }

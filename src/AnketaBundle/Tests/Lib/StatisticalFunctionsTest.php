@@ -19,13 +19,6 @@ use AnketaBundle\Lib\StatisticalFunctions;
 
 class StatisticalFunctionsTest extends PHPUnit_Framework_TestCase
 {
-    public function testConfidenceC() {
-        // cdf_t(deg=9, -inf, c) = 0.975 => c = 2.262
-        $this->assertEquals(2.262,
-                StatisticalFunctions::_confidenceC(9, 0.975),
-                '', 0.001);
-    }
-
     public function testCountSimple() {
         $data = array(0.86, 1.53, 1.57, 1.81, 0.99, 1.09, 1.29, 1.78, 1.29, 1.58);
         $this->assertEquals(10, StatisticalFunctions::cnt($data));
@@ -86,15 +79,6 @@ class StatisticalFunctionsTest extends PHPUnit_Framework_TestCase
         $data = array(0.86, 1.53, 1.57, 1.81, 0.99, 1.09, 1.29, 1.78, 1.29, 1.58);
         $this->assertEquals(0.327, StatisticalFunctions::stddev($data),
                 '', 0.001);
-    }
-
-    public function testConfidenceHalf() {
-        $data = array(0.86, 1.53, 1.57, 1.81, 0.99, 1.09, 1.29, 1.78, 1.29, 1.58);
-        // We compute the estimates
-        $this->assertEquals(0.2343, StatisticalFunctions::confidenceHalf($data, 0.95),
-                '', 0.0001);
-        // u = 1.379, 1.1446 < u < 1.6134 (90% confidence)
-
     }
 
     public function testAverageNoPoint() {
