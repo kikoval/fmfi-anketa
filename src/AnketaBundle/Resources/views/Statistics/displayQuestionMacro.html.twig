@@ -49,15 +49,6 @@
                     {% if data.stats.sigma is defined %} 
                         <li>Smerodajná odchýlka: {{ "%.2f" | format(data.stats.sigma) }} </li>
                     {% endif %}
-                    {% if data.stats.confidence_interval_low is defined %} 
-                        <li> <span title="Skutočná hodnota sa od vypočítaného priemeru môže líšiť. {#
-                                   #}Čím viac údajov a čím menší rozptyl, tým menší bude interval kde {#
-                                   #}sa reálny priemer môže nachádzať." class="help-tooltip">Odhadovaný interval skutočnej hodnoty</span>
-                            ({{ "%.0f" | format(data.stats.confidence_value * 100) }}% spoľahlivosti):
-                        [{{ "%.2f" | format(data.stats.confidence_interval_low) }},
-                         {{ "%.2f" | format(data.stats.confidence_interval_high) }}]
-                        </li>
-                    {% endif %}
                 </ul>
             </div>
         {% endif %}
