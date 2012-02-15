@@ -99,12 +99,8 @@ class ResponseController extends Controller {
         
         $tsRepo = $em->getRepository('AnketaBundle\Entity\TeachersSubjects');
         if ($teacher !== null) {
-            // Skontrolujeme, ci moze pridat novy response ako $teacher
-            if ($teacher->getId() !== $currentTeacher->getId()) {
-                throw new AccessDeniedException();
-            }
             // Skontrolujeme, ci $teacher uci $subject
-            if (!$tsRepo->teaches($teacher, $subject, $season)) {
+            if ($tsRepo->findOneBy(array('teacher' => $teacher->getId(), 'subject' => $subject->getId(), 'season' => $season->getId())) === null) {
                 throw new NotFoundHttpException('Zla kombinacia vyucby');
             }
             $params = array('subject_code' => $subject->getCode(), 'teacher_id' => $teacher->getId(),
@@ -112,10 +108,6 @@ class ResponseController extends Controller {
             $resultsLink = $this->generateUrl('results_subject_teacher', $params);
         }
         else {
-            // Skontrolujeme, ci moze pridat response pre dany predmet
-            if (!$tsRepo->teaches($currentTeacher, $subject, $season)) {
-                throw new AccessDeniedException();
-            }
             $params = array('subject_code' => $subject->getCode(), 'season_slug' => $season->getSlug());
             $resultsLink = $this->generateUrl('results_subject', $params);
         }
