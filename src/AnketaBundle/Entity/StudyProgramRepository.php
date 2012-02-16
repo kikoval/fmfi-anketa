@@ -41,4 +41,20 @@ class StudyProgramRepository extends EntityRepository {
         else return null;
     }
 
+    public function getAllWithAnswers($season) {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery("SELECT sp
+                           FROM AnketaBundle\\Entity\\StudyProgram sp,
+                           AnketaBundle\\Entity\\Answer a
+                           WHERE sp.id = a.studyProgram
+                           AND a.teacher IS NULL
+                           AND a.subject IS NULL
+                           AND a.season = :season
+                           GROUP BY sp.id
+                           HAVING COUNT(a) > 0
+                           ORDER BY sp.code ASC");
+        $query->setParameter('season', $season);
+        return $query->getResult();
+    }
+
 }
