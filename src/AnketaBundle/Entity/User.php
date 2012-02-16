@@ -31,12 +31,14 @@ class User implements UserInterface {
     /**
      * @ORM\Column(type="boolean")
      * @var boolean
+     * @deprecated nahradene v UserSeason
      */
     private $hasVote;
 
     /**
      * @ORM\Column(type="boolean")
      * @var boolean
+     * @deprecated nahradene v UserSeason
      */
     private $participated;
     
