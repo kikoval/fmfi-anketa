@@ -12,7 +12,7 @@ Učiteľ: {{ teacher.displayName }}<br />
 <form action="{{ submitLink }}" method="POST">
 <textarea name="text" id="text" rows="10">{{ responseText }}</textarea>
 {% if new %}
-<p>(Text komentáru budete môcť upraviť aj po jeho odoslaní.)</p>
+<p>(Odoslaný komentár si môžu prečítať všetci študenti a učitelia. Text komentáru budete môcť dodatočne upravovať.)</p>
 {% endif %}
 <button type="submit">Odoslať</button>
 </form>
