@@ -1,7 +1,7 @@
 {% macro displayResponse(responses, editable, newResponseLink) %}
     {% if editable or responses is not empty %}
         <div class="results-comments results-comments-official">
-        <h2>Oficiálne vyjadrenie k odpovediam:</h2>
+        <h2>Vyjadrenia učiteľov k výsledkom:</h2>
         {% for item in responses %}
             <div class='comment' id="odpoved{{ item.response.id }}">
             <div class="comment-top">
@@ -10,15 +10,15 @@
             <p class="comment-comment">{{ item.response.comment|escape|replace({"\n": "<br />"})|raw }}</p>
             {% if item.editable %}
             <div>
-                <a href="{{ path('response_edit', {'response_id': item.response.id}) }}">Uprav odpoveď</a>
-                <a href="{{ path('response_delete', {'response_id': item.response.id}) }}">Zmaž odpoveď</a>
+                <a href="{{ path('response_edit', {'response_id': item.response.id}) }}">Upraviť komentár</a>
+                <a href="{{ path('response_delete', {'response_id': item.response.id}) }}">Zmazať komentár</a>
             </div>
             {% endif %}
             </div>
         {% endfor %}
         {% if editable %}
             <div>
-                <a href="{{ newResponseLink }}">Nová odpoveď</a>
+                <a href="{{ newResponseLink }}">Nový komentár</a>
             </div>
         {% endif %}
         </div>

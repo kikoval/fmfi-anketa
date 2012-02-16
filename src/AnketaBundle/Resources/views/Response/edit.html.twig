@@ -1,9 +1,9 @@
 {% extends 'AnketaBundle:Response:layout.html.twig' %}
 
 {% block content %}
-<h1>Odpoveď</h1>
+<h1>Komentár</h1>
 <p>
-Odpovedať na:<br />
+Komentár ku:<br />
 Predmet: {{ subject.code }} {{ subject.name }}<br />
 {% if teacher is not null %}
 Učiteľ: {{ teacher.displayName }}<br />

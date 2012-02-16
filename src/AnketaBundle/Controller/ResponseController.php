@@ -133,7 +133,7 @@ class ResponseController extends Controller {
                     $em->flush();
                     $session = $this->get('session');
                     $session->setFlash('success',
-                        'Vaša odpoveď bola uložená.');
+                        'Váš komentár bol uložený.');
                     return new RedirectResponse($resultsLink);
                 }
             }
@@ -142,7 +142,7 @@ class ResponseController extends Controller {
                 $em->flush();
                 $session = $this->get('session');
                 $session->setFlash('success',
-                    'Vaša odpoveď bola zmazaná.');
+                    'Váš komentár bol zmazaný.');
                 $myListLink = $this->generateUrl('response');
                 return new RedirectResponse($myListLink);
             }
