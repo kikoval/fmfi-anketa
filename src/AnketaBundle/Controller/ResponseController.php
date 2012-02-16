@@ -20,8 +20,6 @@ class ResponseController extends Controller {
             throw new AccessDeniedException();
         }
         $user = $security->getToken()->getUser();
-        $teacherRepo = $em->getRepository('AnketaBundle\Entity\Teacher');
-        $currentTeacher = $teacherRepo->findOneBy(array('login' => $user->getUserName()));
         
         $seasonRepo = $em->getRepository('AnketaBundle\Entity\Season');
         $season = $seasonRepo->findOneBy(array('slug' => $season_slug));
@@ -50,6 +48,7 @@ class ResponseController extends Controller {
         $teacher_id = $request->get('teacher_id');
         $teacher = null;
         if ($teacher_id !== null) {
+            $teacherRepo = $em->getRepository('AnketaBundle\Entity\Teacher');
             $teacher = $teacherRepo->findOneBy(array('id' => $teacher_id));
             if ($teacher === null) {
                 throw new NotFoundHttpException('Ucitel nenajdeny');
@@ -63,18 +62,14 @@ class ResponseController extends Controller {
         $response->setTeacher($teacher);
         $response->setSeason($season);
         
-        return $this->updateResponse($response, $currentTeacher);
+        return $this->updateResponse($response);
     }
     
     public function editResponseAction($response_id, $delete) {
         $em = $this->get('doctrine.orm.entity_manager');
-        $security = $this->get('security.context');
-        if (!$security->isGranted('ROLE_TEACHER')) {
+        if (!$this->get('security.context')->isGranted('ROLE_TEACHER')) {
             throw new AccessDeniedException();
         }
-        $user = $security->getToken()->getUser();
-        $teacherRepo = $em->getRepository('AnketaBundle\Entity\Teacher');
-        $currentTeacher = $teacherRepo->findOneBy(array('login' => $user->getUserName()));
         
         $responseRepo = $em->getRepository('AnketaBundle\Entity\Response');
         $response = $responseRepo->findOneBy(array('id' => $response_id));
@@ -82,16 +77,20 @@ class ResponseController extends Controller {
             throw new NotFoundHttpException('Neznama odpoved: ' . $response_id);
         }
         
-        return $this->updateResponse($response, $currentTeacher, $delete);
+        return $this->updateResponse($response, $delete);
     }
     
-    private function updateResponse(Response $response, Teacher $currentTeacher = null, $delete = false) {
+    private function updateResponse(Response $response, $delete = false) {
         $em = $this->get('doctrine.orm.entity_manager');
         $request = $this->get('request');
         
         $teacher = $response->getTeacher();
         $subject = $response->getSubject();
         $season = $response->getSeason();
+
+        if ($response->getAuthorLogin() !== $this->get('security.context')->getToken()->getUser()->getUserName()) {
+            throw new AccessDeniedException();
+        }
         
         if ($teacher !== null && $subject === null) {
             throw new NotFoundHttpException('Neznama kategoria');
