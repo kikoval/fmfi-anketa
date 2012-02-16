@@ -159,6 +159,7 @@ class ResponseController extends Controller {
         return $this->render($template,
                 array('subject' => $subject, 'teacher' => $teacher,
                     'submitLink' => $submitLink, 'responseText' => $responseText,
+                    'new' => $response->getId() === null,
                     'responsePage' => null));
     }
     
