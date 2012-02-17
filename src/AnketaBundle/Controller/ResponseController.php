@@ -149,14 +149,16 @@ class ResponseController extends Controller {
         else {
             $responseText = $response->getComment();
         }
+
+        $section = StatisticsSection::getSectionOfResponse($this->container, $response);
         
         $template = 'AnketaBundle:Response:edit.html.twig';
         if ($delete) {
             $template = 'AnketaBundle:Response:delete.html.twig';
         }
-        
+
         return $this->render($template,
-                array('subject' => $subject, 'teacher' => $teacher,
+                array('section' => $section,
                     'submitLink' => $submitLink, 'responseText' => $responseText,
                     'new' => $response->getId() === null,
                     'responsePage' => null));
@@ -188,9 +190,17 @@ class ResponseController extends Controller {
             $query['season'] = $season->getId();
         }
         $responses = $responseRepo->findBy($query);
+        $processedResponses = array();
+        foreach ($responses as $response) {
+            $processedResponses[] = array(
+                'id' => $response->getId(),
+                'comment' => $response->getComment(),
+                'section' => StatisticsSection::getSectionOfResponse($this->container, $response)
+            );
+        }
         
         return $this->render('AnketaBundle:Response:list.html.twig',
-                array('responses' => $responses, 'responsePage' => 'myList', 'season' => $season));
+                array('responses' => $processedResponses, 'responsePage' => 'myList', 'season' => $season));
     }
     
 }
