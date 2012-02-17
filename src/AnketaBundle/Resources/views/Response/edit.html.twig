@@ -1,9 +1,9 @@
 {% extends 'AnketaBundle:Response:layout.html.twig' %}
 
 {% block content %}
-<h1>Odpoveď</h1>
+<h1>{{ new ? 'Nový komentár' : 'Upraviť komentár' }}</h1>
 <p>
-Odpovedať na:<br />
+Komentár ku:<br />
 Predmet: {{ subject.code }} {{ subject.name }}<br />
 {% if teacher is not null %}
 Učiteľ: {{ teacher.displayName }}<br />
@@ -11,6 +11,9 @@ Učiteľ: {{ teacher.displayName }}<br />
 </p>
 <form action="{{ submitLink }}" method="POST">
 <textarea name="text" id="text" rows="10">{{ responseText }}</textarea>
+{% if new %}
+<p>(Odoslaný komentár si môžu prečítať všetci študenti a učitelia. Text komentáru budete môcť dodatočne upravovať.)</p>
+{% endif %}
 <button type="submit">Odoslať</button>
 </form>
 {% endblock %}

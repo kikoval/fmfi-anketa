@@ -20,8 +20,6 @@ class ResponseController extends Controller {
             throw new AccessDeniedException();
         }
         $user = $security->getToken()->getUser();
-        $teacherRepo = $em->getRepository('AnketaBundle\Entity\Teacher');
-        $currentTeacher = $teacherRepo->findOneBy(array('login' => $user->getUserName()));
         
         $seasonRepo = $em->getRepository('AnketaBundle\Entity\Season');
         $season = $seasonRepo->findOneBy(array('slug' => $season_slug));
@@ -50,6 +48,7 @@ class ResponseController extends Controller {
         $teacher_id = $request->get('teacher_id');
         $teacher = null;
         if ($teacher_id !== null) {
+            $teacherRepo = $em->getRepository('AnketaBundle\Entity\Teacher');
             $teacher = $teacherRepo->findOneBy(array('id' => $teacher_id));
             if ($teacher === null) {
                 throw new NotFoundHttpException('Ucitel nenajdeny');
@@ -63,18 +62,14 @@ class ResponseController extends Controller {
         $response->setTeacher($teacher);
         $response->setSeason($season);
         
-        return $this->updateResponse($response, $currentTeacher);
+        return $this->updateResponse($response);
     }
     
     public function editResponseAction($response_id, $delete) {
         $em = $this->get('doctrine.orm.entity_manager');
-        $security = $this->get('security.context');
-        if (!$security->isGranted('ROLE_TEACHER')) {
+        if (!$this->get('security.context')->isGranted('ROLE_TEACHER')) {
             throw new AccessDeniedException();
         }
-        $user = $security->getToken()->getUser();
-        $teacherRepo = $em->getRepository('AnketaBundle\Entity\Teacher');
-        $currentTeacher = $teacherRepo->findOneBy(array('login' => $user->getUserName()));
         
         $responseRepo = $em->getRepository('AnketaBundle\Entity\Response');
         $response = $responseRepo->findOneBy(array('id' => $response_id));
@@ -82,16 +77,20 @@ class ResponseController extends Controller {
             throw new NotFoundHttpException('Neznama odpoved: ' . $response_id);
         }
         
-        return $this->updateResponse($response, $currentTeacher, $delete);
+        return $this->updateResponse($response, $delete);
     }
     
-    private function updateResponse(Response $response, Teacher $currentTeacher = null, $delete = false) {
+    private function updateResponse(Response $response, $delete = false) {
         $em = $this->get('doctrine.orm.entity_manager');
         $request = $this->get('request');
         
         $teacher = $response->getTeacher();
         $subject = $response->getSubject();
         $season = $response->getSeason();
+
+        if ($response->getAuthorLogin() !== $this->get('security.context')->getToken()->getUser()->getUserName()) {
+            throw new AccessDeniedException();
+        }
         
         if ($teacher !== null && $subject === null) {
             throw new NotFoundHttpException('Neznama kategoria');
@@ -99,12 +98,8 @@ class ResponseController extends Controller {
         
         $tsRepo = $em->getRepository('AnketaBundle\Entity\TeachersSubjects');
         if ($teacher !== null) {
-            // Skontrolujeme, ci moze pridat novy response ako $teacher
-            if ($teacher->getId() !== $currentTeacher->getId()) {
-                throw new AccessDeniedException();
-            }
             // Skontrolujeme, ci $teacher uci $subject
-            if (!$tsRepo->teaches($teacher, $subject, $season)) {
+            if ($tsRepo->findOneBy(array('teacher' => $teacher->getId(), 'subject' => $subject->getId(), 'season' => $season->getId())) === null) {
                 throw new NotFoundHttpException('Zla kombinacia vyucby');
             }
             $params = array('subject_code' => $subject->getCode(), 'teacher_id' => $teacher->getId(),
@@ -112,10 +107,6 @@ class ResponseController extends Controller {
             $resultsLink = $this->generateUrl('results_subject_teacher', $params);
         }
         else {
-            // Skontrolujeme, ci moze pridat response pre dany predmet
-            if (!$tsRepo->teaches($currentTeacher, $subject, $season)) {
-                throw new AccessDeniedException();
-            }
             $params = array('subject_code' => $subject->getCode(), 'season_slug' => $season->getSlug());
             $resultsLink = $this->generateUrl('results_subject', $params);
         }
@@ -141,7 +132,7 @@ class ResponseController extends Controller {
                     $em->flush();
                     $session = $this->get('session');
                     $session->setFlash('success',
-                        'Vaša odpoveď bola uložená.');
+                        'Váš komentár bol uložený.');
                     return new RedirectResponse($resultsLink);
                 }
             }
@@ -150,7 +141,7 @@ class ResponseController extends Controller {
                 $em->flush();
                 $session = $this->get('session');
                 $session->setFlash('success',
-                    'Vaša odpoveď bola zmazaná.');
+                    'Váš komentár bol zmazaný.');
                 $myListLink = $this->generateUrl('response');
                 return new RedirectResponse($myListLink);
             }
@@ -167,6 +158,7 @@ class ResponseController extends Controller {
         return $this->render($template,
                 array('subject' => $subject, 'teacher' => $teacher,
                     'submitLink' => $submitLink, 'responseText' => $responseText,
+                    'new' => $response->getId() === null,
                     'responsePage' => null));
     }
     

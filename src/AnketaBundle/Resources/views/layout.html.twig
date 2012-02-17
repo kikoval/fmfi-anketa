@@ -14,7 +14,7 @@
     <a href="{{ path('statistics') }}" class="section">Výsledky</a>
     
     {% if is_granted('ROLE_TEACHER') %}
-       <a href="{{ path('response') }}" class="section">Moje odpovede</a>
+       <a href="{{ path('response') }}" class="section">Moje komentáre</a>
     {% endif %}
 {% endblock %}
 

@@ -357,16 +357,7 @@ class StatisticsController extends Controller {
         $responses = $em->getRepository('AnketaBundle:Response')
                         ->findBy(array('subject' => $subject->getId(), 'teacher' => null, 'studyProgram' => null));
         $templateParams['responses'] = $this->processResponses($responses);
-        // TODO: refaktorovat zistovanie pristupovych prav do modelu!
-        $security = $this->get('security.context');
-        if ($security->isGranted('ROLE_TEACHER')) {
-            $userName = $security->getToken()->getUser()->getUserName();
-            $teachesSubject = $em->getRepository('AnketaBundle:TeachersSubjects')->teachesByLogin($userName, $subject, $season);
-            $templateParams['responseEditable'] = $teachesSubject;
-        }
-        else {
-            $templateParams['responseEditable'] = false;
-        }
+        $templateParams['responseEditable'] = $this->get('security.context')->isGranted('ROLE_TEACHER');
         $templateParams['newResponseLink'] = $this->generateUrl('response_new',
                 array('subject_code' => $subject->getCode(), 'season_slug' => $season->getSlug()));
         $templateParams['season'] = $season;
@@ -466,16 +457,7 @@ class StatisticsController extends Controller {
         $responses = $em->getRepository('AnketaBundle:Response')
                         ->findBy(array('subject' => $subject->getId(), 'teacher' => $teacher_id, 'studyProgram' => null));
         $templateParams['responses'] = $this->processResponses($responses);
-        // TODO: refaktorovat zistovanie pristupovych prav do modelu!
-        $security = $this->get('security.context');
-        if ($security->isGranted('ROLE_TEACHER')) {
-            $currentUsername = $security->getToken()->getUser()->getUserName();
-            $teacherLogin = $teacher->getLogin();
-            $templateParams['responseEditable'] = $teacherLogin !== null && $teacherLogin === $currentUsername;
-        }
-        else {
-            $templateParams['responseEditable'] = false;
-        }
+        $templateParams['responseEditable'] = $this->get('security.context')->isGranted('ROLE_TEACHER');
         $templateParams['newResponseLink'] = $this->generateUrl('response_new',
                 array('subject_code' => $subject->getCode(), 'teacher_id' => $teacher->getId(),
                     'season_slug' => $season->getSlug()));
@@ -694,7 +676,8 @@ class StatisticsController extends Controller {
         $templateParams['result'] = $this->processQuestion($question, $answers);
         $templateParams['season'] = $season;
         $templateParams['responseEditable'] = false; // TODO
-        $templateParams['newResponseLink'] = $this->generateUrl('response_new', array('season_slug' => $season->getSlug()));
+        $templateParams['newResponseLink'] = $this->generateUrl('response_new',
+                array('season_slug' => $season->getSlug(), 'question_id' => $question_id));
         return $this->render('AnketaBundle:Statistics:resultsGeneral.html.twig', $templateParams);
     }
     
