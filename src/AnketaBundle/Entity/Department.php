@@ -33,6 +33,12 @@ class Department {
     private $code;
     
     /**
+     * @ORM\Column(type="string")
+     * @var string
+     */
+    private $name;
+    
+    /**
      * Homepage URL
      * @ORM\Column(type="string", nullable="true")
      * @var string
@@ -51,6 +57,14 @@ class Department {
         return $this->id;
     }
     
+    public function getName() {
+        return $this->name;
+    }
+
+    public function setName($name) {
+        $this->name = $name;
+    }
+
     public function getHomepage() {
         return $this->homepage;
     }
