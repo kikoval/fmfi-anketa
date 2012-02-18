@@ -3,10 +3,10 @@ response:
     defaults: { _controller: AnketaBundle:Response:listMine, season_slug: null}
 
 response_new:
-    pattern: /odpovede/nova-odpoved/{season_slug}
+    pattern: /odpovede/nova-odpoved/{section_slug}
     defaults: { _controller: AnketaBundle:Response:newResponse }
     requirements:
-      season_slug:   "[a-z0-9-]+"
+      section_slug:   ".+"
     
 response_edit:
     pattern: /odpovede/{response_id}/uprav

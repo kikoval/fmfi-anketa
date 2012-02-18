@@ -68,13 +68,13 @@ class StatisticsSection extends ContainerAware {
         $result->setContainer($container);
         $result->season = $season;
         $result->generalQuestion = $generalQuestion;
-        $result->title = $generalQuestion->getTitle();
+        $result->title = $generalQuestion->getQuestion();
         $result->headingVisible = false;
-        $result->responsesQuery = array('season' => $season->getId(), 'question' => $question->getId());
+        $result->responsesQuery = array('season' => $season->getId(), 'question' => $generalQuestion->getId());
         $result->statisticsRoute = 'statistics_results_general';
         $result->statisticsRouteParameters =
                 array('season_slug' => $season->getSlug(), 'question_id' => $generalQuestion->getId());
-        $result->slug = $season->getSlug() . '/vseobecne/' . $question->getId();
+        $result->slug = $season->getSlug() . '/vseobecne/' . $generalQuestion->getId();
         return $result;
     }
 
