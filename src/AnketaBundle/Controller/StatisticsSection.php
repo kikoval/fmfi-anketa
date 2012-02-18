@@ -113,7 +113,7 @@ class StatisticsSection extends ContainerAware {
     // TODO: mozno nie vracat null ale hadzat rozne exceptiony, nech sa da zistit co sa stalo
     public static function getSectionFromSlug(ContainerInterface $container, $slug) {
         $em = $container->get('doctrine.orm.entity_manager');
-        if (!preg_match('@^([a-z0-9-]+)/(.*)$@', $slug, $matches)) {
+        if (!preg_match('@^([a-z0-9-]+)/(.*[^/])/*$@', $slug, $matches)) {
             throw new \Exception('Section not found: Section slug doesn\'t start with season slug.');
         }
         $season = $em->getRepository('AnketaBundle:Season')->findOneBy(array('slug' => $matches[1]));
