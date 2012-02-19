@@ -46,6 +46,7 @@ class UserSeason {
     /**
      * Do ktorej katedry pouzivatel patri (ktora ho zamestnava, etc.).
      * Studenti (asi okrem doktorandov) nepatria do ziadnej katedry a preto tu maju null.
+     * 
      * @ORM\ManyToOne(targetEntity="Department")
      *
      * @var Department $department
@@ -56,14 +57,18 @@ class UserSeason {
      * Ci je/bol pouzivatel opravneny hlasovat v tejto sezone.
      * Null, ak sa este nerozhodlo (napr. sa v tejto sezone neprihlasil).
      * Pri anonymizacii sa tento flag necha na povodnej hodnote.
+     * 
      * @ORM\Column(type="boolean", nullable="true")
+     * 
      * @var boolean
      */
     private $eligible;
     
     /**
      * Ci pouzivatel vyplnil odpoved na aspon jednu otazku
+     * 
      * @ORM\Column(type="boolean")
+     * 
      * @var boolean
      */
     private $participated;
@@ -72,7 +77,9 @@ class UserSeason {
      * Ci pouzivatel dohlasoval (anonymizoval) v tejto sezone.
      * Akonahle je nastavene na true, tak uz nemoze hlasovat.
      * Pri anonymizacii sa nastavi na true.
+     * 
      * @ORM\Column(type="boolean")
+     * 
      * @var boolean
      */
     private $finished;
