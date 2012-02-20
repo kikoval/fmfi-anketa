@@ -1,8 +1,16 @@
 {% extends 'AnketaBundle:Reports:layout.html.twig' %}
 
 {% block navigation %}
-
+    {% render "AnketaBundle:Statistics:menuMojeReporty" with { 'season' : season } %}
 {% endblock %}
 {% block content %}
-<h1>Moje reporty</h1>
+
+{% if is_granted('ROLE_DEPARTMENT_REPORT') or is_granted('ROLE_ALL_REPORTS') %}
+<h2>Katedry</h2>
+{% endif %}
+
+
+{% if is_granted('ROLE_STUDY_PROGRAMME_REPORT') or is_granted('ROLE_ALL_REPORTS') %}
+<h2>Študijné Programy</h2>
+{% endif %}
 {% endblock %}

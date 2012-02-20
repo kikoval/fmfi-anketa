@@ -31,5 +31,21 @@ class TeacherRepository extends EntityRepository {
                              'season' => $season));
         return $teachers;
     }
+
+    public function getTeachersForStudyProgramme($studyProgramme, $season) {
+        $dql = 'SELECT DISTINCT t FROM AnketaBundle\Entity\UsersSubjects us, ' .
+                'AnketaBundle\Entity\Subject s ' .
+                'AnketaBundle\Entity\TeachersSubject ts ' .
+                'AnketaBundle\Entity\Teachers t ' .
+                'WHERE us.subject = s ' .
+                'AND ts.subject = s ' .
+                'AND ts.teacher = t ' .
+                'AND us.season = :season ' .
+                'AND us.studyProgram = :studyProgramme ' . 
+                'ORDER BY t.displayName';
+        $subjects = $this->getEntityManager()
+                        ->createQuery($dql)->execute(array('studyProgramme' => $studyProgramme, 'season' => $season));
+        return $subjects;
+    }
     
 }

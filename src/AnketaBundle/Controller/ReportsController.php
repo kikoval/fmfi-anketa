@@ -36,6 +36,11 @@ class ReportsController extends Controller {
     }
     
     public function myReportsAction($season_slug = null) {
-        return $this->render('AnketaBundle:Reports:myReports.html.twig');
+        $em = $this->get('doctrine.orm.entity_manager');
+            $season = $em->getRepository('AnketaBundle:Season')->findOneBy(array('slug' => $season_slug));
+    if ($season === null) {
+        throw new NotFoundHttpException();
+    }
+        return $this->render('AnketaBundle:Reports:myReports.html.twig', array('season' => $season));
     }
 }

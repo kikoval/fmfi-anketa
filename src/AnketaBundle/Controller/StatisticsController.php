@@ -565,6 +565,15 @@ class StatisticsController extends Controller {
                              $templateParams);
 
     }
+//TODO UGLY HACK
+    public function menuMojeReportyAction($season) {
+        $menu = $this->getMenuRoot($season);
+        $menu[$season->getId()]->children['my_reports']->active = true;
+        $templateParams = array('menu' => $menu);
+        return $this->render('AnketaBundle:Hlasovanie:menu.html.twig',
+                             $templateParams);
+
+    }
 
     public function menuStudijneOdboryAction($season, $program_code = null) {
         $menu = $this->getMenuRoot($season);
