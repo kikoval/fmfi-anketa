@@ -45,6 +45,7 @@ class StatisticsSection extends ContainerAware {
         $result->statisticsRouteParameters =
                 array('season_slug' => $season->getSlug(), 'subject_code' => $subject->getCode(), 'teacher_id' => $teacher->getId());
         $result->slug = $season->getSlug() . '/predmet/' . $subject->getCode() . '/ucitel/' . $teacher->getId();
+        $result->associationExamples = 'prednášajúci, cvičiaci, garant predmetu';
         return $result;
     }
 
@@ -60,6 +61,7 @@ class StatisticsSection extends ContainerAware {
         $result->statisticsRouteParameters =
                 array('season_slug' => $season->getSlug(), 'subject_code' => $subject->getCode());
         $result->slug = $season->getSlug() . '/predmet/' . $subject->getCode();
+        $result->associationExamples = 'prednášajúci, cvičiaci, garant predmetu';
         return $result;
     }
 
@@ -75,6 +77,7 @@ class StatisticsSection extends ContainerAware {
         $result->statisticsRouteParameters =
                 array('season_slug' => $season->getSlug(), 'question_id' => $generalQuestion->getId());
         $result->slug = $season->getSlug() . '/vseobecne/' . $generalQuestion->getId();
+        $result->associationExamples = 'vedenie fakulty, vedúci katedry, vyučujúci';
         return $result;
     }
 
@@ -90,6 +93,7 @@ class StatisticsSection extends ContainerAware {
         $result->statisticsRouteParameters =
                 array('season_slug' => $season->getSlug(), 'program_slug' => $studyProgram->getSlug());
         $result->slug = $season->getSlug() . '/program/' . $studyProgram->getSlug();
+        $result->associationExamples = 'garant, tútor, vedúci katedry, vyučujúci niektorého predmetu';
         return $result;
     }
 
@@ -221,6 +225,12 @@ class StatisticsSection extends ContainerAware {
 
     public function getSlug() {
         return $this->slug;
+    }
+
+    private $associationExamples = null;
+
+    public function getAssociationExamples() {
+        return $this->associationExamples;
     }
 
 }

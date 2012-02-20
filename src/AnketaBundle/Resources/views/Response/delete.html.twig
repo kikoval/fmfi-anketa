@@ -4,6 +4,9 @@
 <h1>Zmazať komentár</h1>
 <p>Ste si istí, že chcete zmazať tento komentár?</p>
 <p>Komentár ku: <a href="{{ section.statisticsPath }}">{{ section.title }}</a></p>
+{% if association is not null %}
+    <p>Vaša funkcia: {{ association }}</p>
+{% endif %}
 <p>Text komentáru:</p>
 <p>{{ responseText|escape|replace({"\n": "<br />"})|raw }}</p>
 <form action="{{ submitLink }}" method="POST">

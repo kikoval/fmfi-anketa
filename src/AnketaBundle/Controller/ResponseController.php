@@ -62,17 +62,17 @@ class ResponseController extends Controller {
         
         if ($request->getMethod() == 'POST') {
             if (!$delete) {
-                $responseText = $request->get('text', '');
-                if ($responseText !== '') {
-                    $response->setComment($responseText);
-                    if ($response->getId() === null) {
-                        $em->persist($response);
-                    }
-                    $em->flush();
-                    $session = $this->get('session');
-                    $this->get('session')->setFlash('success', 'Váš komentár bol uložený.');
-                    return new RedirectResponse($section->getStatisticsPath());
+                if ($request->get('text', '') === '') {
+                    return new RedirectResponse($request->getRequestUri());
                 }
+                $response->setComment($request->get('text', ''));
+                $response->setAssociation($request->get('association', ''));
+                if ($response->getId() === null) {
+                    $em->persist($response);
+                }
+                $em->flush();
+                $this->get('session')->setFlash('success', 'Váš komentár bol uložený.');
+                return new RedirectResponse($section->getStatisticsPath());
             }
             else {
                 $em->remove($response);
@@ -89,6 +89,7 @@ class ResponseController extends Controller {
                 'section' => $section,
                 'submitLink' => $request->getRequestUri(),
                 'responseText' => $response->getComment(),
+                'association' => $response->getAssociation(),
                 'new' => $response->getId() === null,
                 'responsePage' => null
             ));
