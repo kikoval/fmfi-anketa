@@ -5,7 +5,7 @@
         {% for item in responses %}
             <div class='comment' id="odpoved{{ item.response.id }}">
             <div class="comment-top">
-            <b>{{ item.author }}</b>:
+            <b>{{ item.author ~ (item.response.association is not empty ? " (" ~ item.response.association ~ ")" : "") }}</b>:
             </div>
             <p class="comment-comment">{{ item.response.comment|escape|replace({"\n": "<br />"})|raw }}</p>
             {% if item.editable %}
