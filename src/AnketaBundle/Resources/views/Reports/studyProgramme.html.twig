@@ -1,5 +1,7 @@
 {% extends 'AnketaBundle:Reports:layout.html.twig' %}
-
+{% block navigation %}
+    {% render "AnketaBundle:Statistics:menuMojeReporty" with { 'season' : season } %}
+{% endblock %}
 {% block content %}
 <h1>Študijný program</h1>
 <h2>Hodnotenia učiteľov:

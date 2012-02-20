@@ -28,11 +28,16 @@ class ReportsController extends Controller {
     
         
     return $this->render('AnketaBundle:Reports:studyProgramme.html.twig', 
-            array('subjects' => $subjects, 'teachers' => array(1, 2, 3)));
+            array('subjects' => $subjects, 'teachers' => array(1, 2, 3), 'season' => $season));
     }
 
     public function departmentAction($department_id, $season_slug = null) {
-        return $this->render('AnketaBundle:Reports:department.html.twig');
+        $em = $this->get('doctrine.orm.entity_manager');
+            $season = $em->getRepository('AnketaBundle:Season')->findOneBy(array('slug' => $season_slug));
+    if ($season === null) {
+        throw new NotFoundHttpException();
+    }
+        return $this->render('AnketaBundle:Reports:department.html.twig', array('season' => $season));
     }
     
     public function myReportsAction($season_slug = null) {
