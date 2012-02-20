@@ -1,0 +1,44 @@
+{% extends 'AnketaBundle:Reports:layout.html.twig' %}
+
+{% block navigation %}
+
+{% endblock %}
+{% block content %}
+<h1>Študijný program</h1>
+<h2>Hodnotenia učiteľov:
+</h2>
+<div class="results-comments">
+{% for subject in subjects %}
+    <div class="comment">
+        <table>
+<tr><td>MENO PRIEZVISKO</td> <td>Hodnotenie: PRIEMER</td> <td>(POCET hodnoteni)</td></tr>
+        </table>
+        <ul>
+<li>
+LINK
+</li>
+<li>
+LINK
+</li>
+<li>
+LINK
+</li>
+        </ul>
+    </div>
+{% endfor %}
+</div>
+<h2>Hodnotenia predmetov:
+</h2>
+<div class="results-comments">
+{% for teacher in teachers %}
+    <div class="comment">
+        <table>
+<tr><td>KOD PREDMETU</td><td>NAZOV</td> <td>Hodnotenie: PRIEMER</td> <td>(POCET hodnoteni)</td><td>(MENO UCITELA)</td></tr>
+        </table>
+        <div>
+LINK
+        </div>
+    </div>
+{% endfor %}
+</div>
+{% endblock %}

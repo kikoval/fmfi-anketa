@@ -18,6 +18,11 @@ answer:
     pattern: /hlasuj/
     resource: "@AnketaBundle/Resources/config/answer_routing.yml"
 
+reports:
+    pattern: /reports/
+    resource: "@AnketaBundle/Resources/config/reports_routing.yml"
+
+
 statistics:
     pattern: /vysledky/
     resource: "@AnketaBundle/Resources/config/statistics_routing.yml"

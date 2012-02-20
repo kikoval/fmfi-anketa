@@ -1,0 +1,13 @@
+report_study_programme:
+    pattern: /reports/studijny-program/{study_programme_id}
+    defaults: { _controller: AnketaBundle:Reports:studyProgramme, study_programme_id : 1, season_slug: null}
+    requirements:
+      study_programme_id:   \d+
+report_department:
+    pattern: /reports/department/{department_id}
+    defaults: { _controller: AnketaBundle:Reports:department, department_id : 1, season_slug: null}
+    requirements:
+      department_id:   \d+
+reports_all:
+    pattern: /reports/all
+    defaults: { _controller: AnketaBundle:Reports:all, season_slug: null}

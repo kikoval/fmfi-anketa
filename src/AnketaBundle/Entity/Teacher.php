@@ -44,8 +44,8 @@ class Teacher {
      * ale najprv treba zmigrovat ucitelov do userov (je tam par corner-cases)
      */
     private $department;
-    
-    /**
+
+   /**
      * @param String $name
      */
     public function __construct($givenName, $familyName, $displayName, $login) {
