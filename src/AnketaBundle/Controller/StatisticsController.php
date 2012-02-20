@@ -704,6 +704,9 @@ class StatisticsController extends Controller {
                            ->findOneBy(array('userName' => $response->getAuthorLogin()));
                 if (!empty($user)) $item['author'] = $user->getDisplayName();
             }
+            if ($response->getAssociation()) {
+                $item['author'] .= ' (' . $response->getAssociation() . ')';
+            }
             $result[] = $item;
         }
         return $result;
