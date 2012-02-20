@@ -519,7 +519,13 @@ class StatisticsController extends Controller {
                     $this->generateUrl('statistics_mySubjects',
                         array('season_slug' => $currentSeason->getSlug())));
         }
-
+        $secCon = $this->get('security.context');
+        if (($secCon->isGranted('ROLE_STUDY_PROGRAMME_REPORT')) || ($secCon->isGranted('	ROLE_DEPARTMENT_REPORT')) || ($secCon->isGranted('ROLE_ALL_REPORTS'))) {
+            $currentMenu['my_reports'] = new MenuItem(
+                    'Moje reporty',
+                    $this->generateUrl('reports_my_reports',
+                        array('season_slug' => $currentSeason->getSlug())));
+        }
         $seasons = $em->getRepository('AnketaBundle\Entity\Season')
                     ->findAll(array());
         $menu = array();
