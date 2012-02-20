@@ -13,54 +13,25 @@ use AnketaBundle\Entity\Teacher;
 
 class ResponseController extends Controller {
     
-    public function newResponseAction($season_slug) {
-        $em = $this->get('doctrine.orm.entity_manager');
+    public function newResponseAction($section_slug) {
         $security = $this->get('security.context');
         if (!$security->isGranted('ROLE_TEACHER')) {
             throw new AccessDeniedException();
         }
         $user = $security->getToken()->getUser();
-        
-        $seasonRepo = $em->getRepository('AnketaBundle\Entity\Season');
-        $season = $seasonRepo->findOneBy(array('slug' => $season_slug));
-        if ($season == null) {
-            throw new NotFoundHttpException('Chybna sezona: ' . $season_slug);
-        }
-        
-        $request = $this->get('request');
-        
-        $subject_code = $request->get('subject_code');
-        $subject = null;
-        
-        if ($subject_code !== null) {
-            $subjectRepo = $em->getRepository('AnketaBundle\Entity\Subject');
-            $subject = $subjectRepo->findOneBy(array('code' => $subject_code));
-            if ($subject === null) {
-                throw new NotFoundHttpException('Predmet nenajdeny');
-            }
-        }
-        
-        if ($subject === null) {
-            // Ine veci ako predmet a predmet/ucitel su zatial neimplementovane
-            throw new NotFoundHttpException();
-        }
-        
-        $teacher_id = $request->get('teacher_id');
-        $teacher = null;
-        if ($teacher_id !== null) {
-            $teacherRepo = $em->getRepository('AnketaBundle\Entity\Teacher');
-            $teacher = $teacherRepo->findOneBy(array('id' => $teacher_id));
-            if ($teacher === null) {
-                throw new NotFoundHttpException('Ucitel nenajdeny');
-            }
-        }
+
+        $em = $this->get('doctrine.orm.entity_manager');
+
+        $section = StatisticsSection::getSectionFromSlug($this->container, $section_slug);
         
         $response = new Response();
         $response->setAuthorLogin($user->getUserName());
         $response->setAuthorText($user->getDisplayName());
-        $response->setSubject($subject);
-        $response->setTeacher($teacher);
-        $response->setSeason($season);
+        $response->setSeason($section->getSeason());
+        $response->setTeacher($section->getTeacher());
+        $response->setSubject($section->getSubject());
+        $response->setStudyProgram($section->getStudyProgram());
+        $response->setQuestion($section->getGeneralQuestion());
         
         return $this->updateResponse($response);
     }
@@ -71,8 +42,7 @@ class ResponseController extends Controller {
             throw new AccessDeniedException();
         }
         
-        $responseRepo = $em->getRepository('AnketaBundle\Entity\Response');
-        $response = $responseRepo->findOneBy(array('id' => $response_id));
+        $response = $em->find('AnketaBundle:Response', $response_id);
         if ($response == null) {
             throw new NotFoundHttpException('Neznama odpoved: ' . $response_id);
         }
@@ -83,43 +53,12 @@ class ResponseController extends Controller {
     private function updateResponse(Response $response, $delete = false) {
         $em = $this->get('doctrine.orm.entity_manager');
         $request = $this->get('request');
-        
-        $teacher = $response->getTeacher();
-        $subject = $response->getSubject();
-        $season = $response->getSeason();
 
         if ($response->getAuthorLogin() !== $this->get('security.context')->getToken()->getUser()->getUserName()) {
             throw new AccessDeniedException();
         }
-        
-        if ($teacher !== null && $subject === null) {
-            throw new NotFoundHttpException('Neznama kategoria');
-        }
-        
-        $tsRepo = $em->getRepository('AnketaBundle\Entity\TeachersSubjects');
-        if ($teacher !== null) {
-            // Skontrolujeme, ci $teacher uci $subject
-            if ($tsRepo->findOneBy(array('teacher' => $teacher->getId(), 'subject' => $subject->getId(), 'season' => $season->getId())) === null) {
-                throw new NotFoundHttpException('Zla kombinacia vyucby');
-            }
-            $params = array('subject_code' => $subject->getCode(), 'teacher_id' => $teacher->getId(),
-                        'season_slug' => $season->getSlug());
-            $resultsLink = $this->generateUrl('results_subject_teacher', $params);
-        }
-        else {
-            $params = array('subject_code' => $subject->getCode(), 'season_slug' => $season->getSlug());
-            $resultsLink = $this->generateUrl('results_subject', $params);
-        }
-        
-        if ($response->getId() === null) {
-            $submitLink = $this->generateUrl('response_new', $params);
-        }
-        else if ($delete) {
-            $submitLink = $this->generateUrl('response_delete', array('response_id' => $response->getId()));
-        }
-        else {
-            $submitLink = $this->generateUrl('response_edit', array('response_id' => $response->getId()));
-        }
+
+        $section = StatisticsSection::getSectionOfResponse($this->container, $response);
         
         if ($request->getMethod() == 'POST') {
             if (!$delete) {
@@ -131,35 +70,29 @@ class ResponseController extends Controller {
                     }
                     $em->flush();
                     $session = $this->get('session');
-                    $session->setFlash('success',
-                        'Váš komentár bol uložený.');
-                    return new RedirectResponse($resultsLink);
+                    $this->get('session')->setFlash('success', 'Váš komentár bol uložený.');
+                    return new RedirectResponse($section->getStatisticsPath());
                 }
             }
             else {
                 $em->remove($response);
                 $em->flush();
-                $session = $this->get('session');
-                $session->setFlash('success',
-                    'Váš komentár bol zmazaný.');
-                $myListLink = $this->generateUrl('response');
-                return new RedirectResponse($myListLink);
+                $this->get('session')->setFlash('success', 'Váš komentár bol zmazaný.');
+                return new RedirectResponse($this->generateUrl('response'));
             }
         }
         else {
-            $responseText = $response->getComment();
+            $template = $delete ?
+                'AnketaBundle:Response:delete.html.twig' :
+                'AnketaBundle:Response:edit.html.twig';
+            return $this->render($template, array(
+                'section' => $section,
+                'submitLink' => $request->getRequestUri(),
+                'responseText' => $response->getComment(),
+                'new' => $response->getId() === null,
+                'responsePage' => null
+            ));
         }
-        
-        $template = 'AnketaBundle:Response:edit.html.twig';
-        if ($delete) {
-            $template = 'AnketaBundle:Response:delete.html.twig';
-        }
-        
-        return $this->render($template,
-                array('subject' => $subject, 'teacher' => $teacher,
-                    'submitLink' => $submitLink, 'responseText' => $responseText,
-                    'new' => $response->getId() === null,
-                    'responsePage' => null));
     }
     
     public function listMineAction($season_slug = null) {
@@ -188,9 +121,17 @@ class ResponseController extends Controller {
             $query['season'] = $season->getId();
         }
         $responses = $responseRepo->findBy($query);
+        $processedResponses = array();
+        foreach ($responses as $response) {
+            $processedResponses[] = array(
+                'id' => $response->getId(),
+                'comment' => $response->getComment(),
+                'section' => StatisticsSection::getSectionOfResponse($this->container, $response)
+            );
+        }
         
         return $this->render('AnketaBundle:Response:list.html.twig',
-                array('responses' => $responses, 'responsePage' => 'myList', 'season' => $season));
+                array('responses' => $processedResponses, 'responsePage' => 'myList', 'season' => $season));
     }
     
 }

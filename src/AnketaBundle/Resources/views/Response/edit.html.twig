@@ -2,13 +2,7 @@
 
 {% block content %}
 <h1>{{ new ? 'Nový komentár' : 'Upraviť komentár' }}</h1>
-<p>
-Komentár ku:<br />
-Predmet: {{ subject.code }} {{ subject.name }}<br />
-{% if teacher is not null %}
-Učiteľ: {{ teacher.displayName }}<br />
-{% endif %}
-</p>
+<p>Komentár ku: <a href="{{ section.statisticsPath }}">{{ section.title }}</a></p>
 <form action="{{ submitLink }}" method="POST">
 <textarea name="text" id="text" rows="10">{{ responseText }}</textarea>
 {% if new %}

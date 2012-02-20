@@ -10,7 +10,7 @@
             <p class="comment-comment">{{ item.response.comment|escape|replace({"\n": "<br />"})|raw }}</p>
             {% if item.editable %}
             <div>
-                <a href="{{ path('response_edit', {'response_id': item.response.id}) }}">Upraviť komentár</a>
+                <a href="{{ path('response_edit', {'response_id': item.response.id}) }}">Upraviť komentár</a> |
                 <a href="{{ path('response_delete', {'response_id': item.response.id}) }}">Zmazať komentár</a>
             </div>
             {% endif %}
