@@ -19,7 +19,7 @@ answer:
     resource: "@AnketaBundle/Resources/config/answer_routing.yml"
 
 reports:
-    pattern: /reports/
+    pattern: /reporty/
     resource: "@AnketaBundle/Resources/config/reports_routing.yml"
 
 
