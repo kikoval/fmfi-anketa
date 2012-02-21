@@ -19,7 +19,7 @@ class ReportsController extends Controller {
 }
 
     
-    public function studyProgrammeAction($study_programme_id, $season_slug = null) {
+    public function studyProgrammeAction($study_programme_slug, $season_slug = null) {
 
                $em = $this->get('doctrine.orm.entity_manager');
         $security = $this->get('security.context');
@@ -30,6 +30,12 @@ class ReportsController extends Controller {
     if ($season === null) {
         throw new NotFoundHttpException();
     } 
+
+    $study_programme_id = $em->getRepository('AnketaBundle:StudyProgram')->findOneBy(array('slug' => $study_programme_slug));
+    if ($season === null) {
+        throw new NotFoundHttpException();
+    } 
+    //$study_programme_id = $study_programme->id;
     $teachers = $em->getRepository('AnketaBundle:Teacher')->getTeachersForStudyProgramme($study_programme_id, $season);
     foreach ($teachers as $teacher) {
         $teacher->subjects = $em->getRepository('AnketaBundle:Subject')->getSubjectsForTeacher($teacher, $season);

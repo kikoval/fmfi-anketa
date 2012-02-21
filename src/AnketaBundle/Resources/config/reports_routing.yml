@@ -1,5 +1,5 @@
 report_study_programme:
-    pattern: /reports/{season_slug}/studijny-program/{study_programme_id}
+    pattern: /reports/{season_slug}/studijny-program/{study_programme_slug}
     defaults: { _controller: AnketaBundle:Reports:studyProgramme, season_slug: null}
     requirements:
       study_programme_id:   \d+

@@ -27,9 +27,15 @@
 {% for subject in subjects %}
     <div class="comment">
         <table>
-<tr> <td> {{ subject.evaluation[1] }} </td> <td>({{ subject.evaluation[2] }} hodnotení)</td><td>(MENO UCITELA)</td></tr>
+<tr> <td colspan="2"><a href="{{ path('results_subject', {'season_slug' : season.slug, 'subject_code' : subject.code } ) }}">{{ subject.code }} {{  subject.name  }}</a></td></tr><tr> <td> {{ subject.evaluation[1] }} </td> <td>({{ subject.evaluation[2] }} hodnotení)</td></tr>
         </table>
-<ul><li><a href="{{ path('results_subject', {'season_slug' : season.slug, 'subject_code' : subject.code } ) }}">{{ subject.code }} {{  subject.name  }}</a></li></ul>
+<ul>
+{% for subjectTeacher in subject.teacher %}
+<li>
+<a href="{{ path('results_subject_teacher', {'season_slug' : season.slug, 'subject_code' : subject.code, 'teacher_id' : subjectTeacher.id} ) }}">{{ subjectTeacher.displayName }}</a>
+</li>
+{% endfor %}
+</ul>
     </div>
 {% endfor %}
 </div>
