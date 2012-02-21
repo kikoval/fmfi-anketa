@@ -92,4 +92,23 @@ class SubjectRepository extends EntityRepository {
         return $subjects;
     }
 
+    public function getSubjectsForDepartment($department, $season) {
+        $dql = 'SELECT DISTINCT s FROM AnketaBundle\Entity\Department d, ' .
+                'AnketaBundle\Entity\Subject s, ' .
+                'AnketaBundle\Entity\SubjectSeason ss, ' .
+                'AnketaBundle\Entity\SubjectSeasonDepartment ssd, ' .
+                'AnketaBundle\Entity\Answer a ' .
+                'WHERE d = ssd.department ' .
+                'AND a.subject = s ' .
+                'AND ss = ssd.subjectSeason ' .
+                'AND ss.subject = s ' .
+                'AND ss.season = :season ' .
+                'AND a.season = :season ' .
+                'AND d = :department ' . 
+                'ORDER BY s.name';
+        $subjects = $this->getEntityManager()
+                        ->createQuery($dql)->execute(array('department' => $department, 'season' => $season));
+        return $subjects;
+    }
+
 }
