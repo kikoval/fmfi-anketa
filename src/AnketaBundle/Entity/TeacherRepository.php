@@ -50,5 +50,6 @@ class TeacherRepository extends EntityRepository {
                         ->createQuery($dql)->execute(array('studyProgramme' => $studyProgramme, 'season' => $season));
         return $subjects;
     }
-    
+
+
 }

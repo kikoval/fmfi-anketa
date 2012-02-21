@@ -12,6 +12,12 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use AnketaBundle\Entity\Teacher;
 
 class ReportsController extends Controller {
+
+    public static function compareAverageEvaluation($teacher1, $teacher2)
+{
+    return $teacher1->evaluation[1] > $teacher2->evaluation[1];
+}
+
     
     public function studyProgrammeAction($study_programme_id, $season_slug = null) {
 
@@ -23,10 +29,21 @@ class ReportsController extends Controller {
     $season = $em->getRepository('AnketaBundle:Season')->findOneBy(array('slug' => $season_slug));
     if ($season === null) {
         throw new NotFoundHttpException();
-    }
-    $subjects = $em->getRepository('AnketaBundle:Subject')->getSubjectsForStudyProgramme($study_programme_id, $season);
+    } 
     $teachers = $em->getRepository('AnketaBundle:Teacher')->getTeachersForStudyProgramme($study_programme_id, $season);
-        
+    foreach ($teachers as $teacher) {
+        $teacher->subjects = $em->getRepository('AnketaBundle:Subject')->getSubjectsForTeacher($teacher, $season);
+        $teacher->evaluation = $em->getRepository('AnketaBundle:Answer')->getAverageEvaluationForTeacher($teacher, $season);
+    }
+    usort($teachers, array('AnketaBundle\Controller\ReportsController','compareAverageEvaluation'));    
+    
+    $subjects = $em->getRepository('AnketaBundle:Subject')->getSubjectsForStudyProgramme($study_programme_id, $season);
+    foreach ($subjects as $subject) {
+        $subject->teacher = $em->getRepository('AnketaBundle:Teacher')->getTeachersForSubject($subject, $season);
+        $subject->evaluation = $em->getRepository('AnketaBundle:Answer')->getAverageEvaluationForSubject($subject, $season);
+    }
+    usort($subjects, array('AnketaBundle\Controller\ReportsController','compareAverageEvaluation'));
+    
     return $this->render('AnketaBundle:Reports:studyProgramme.html.twig', 
             array('subjects' => $subjects, 'teachers' => $teachers, 'season' => $season));
     }

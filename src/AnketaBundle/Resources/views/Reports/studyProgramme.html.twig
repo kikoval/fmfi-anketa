@@ -3,25 +3,20 @@
     {% render "AnketaBundle:Statistics:menuMojeReporty" with { 'season' : season } %}
 {% endblock %}
 {% block content %}
-<h1>Študijný program</h1>
 <h2>Hodnotenia učiteľov:
 </h2>
 <div class="results-comments">
 {% for teacher in teachers %}
     <div class="comment">
         <table>
-<tr><td> {{ teacher.formattedName }}</td> <td>Hodnotenie: PRIEMER</td> <td>(POCET hodnoteni)</td></tr>
+<tr><td> {{ teacher.formattedName }}</td> <td>{{ teacher.evaluation[1] }}</td> <td>({{ teacher.evaluation[2] }} hodnotení)</td></tr>
         </table>
         <ul>
+{% for teacherSubject in teacher.subjects %}
 <li>
-LINK
+<a href="{{ path('results_subject_teacher', {'season_slug' : season.slug, 'subject_code' : teacherSubject.code, 'teacher_id' : teacher.id} ) }}">{{ teacherSubject.code }} {{ teacherSubject.name }}</a>
 </li>
-<li>
-LINK
-</li>
-<li>
-LINK
-</li>
+{% endfor %}
         </ul>
     </div>
 {% endfor %}
@@ -32,11 +27,9 @@ LINK
 {% for subject in subjects %}
     <div class="comment">
         <table>
-<tr><td>{{ subject.code }}</td><td>{{ subject.name }}</td> <td>Hodnotenie: PRIEMER</td> <td>(POCET hodnoteni)</td><td>(MENO UCITELA)</td></tr>
+<tr> <td> {{ subject.evaluation[1] }} </td> <td>({{ subject.evaluation[2] }} hodnotení)</td><td>(MENO UCITELA)</td></tr>
         </table>
-        <div>
-LINK
-        </div>
+<ul><li><a href="{{ path('results_subject', {'season_slug' : season.slug, 'subject_code' : subject.code } ) }}">{{ subject.code }} {{  subject.name  }}</a></li></ul>
     </div>
 {% endfor %}
 </div>

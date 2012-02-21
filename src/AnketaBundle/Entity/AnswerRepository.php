@@ -72,4 +72,31 @@ class AnswerRepository extends EntityRepository {
         $query->setParameter('userId', $user->getId());
         return $query->getSingleScalarResult();
     }
+
+    
+    public function getAverageEvaluationForTeacher($teacher, $season) {
+        $dql = 'SELECT AVG(a.evaluation), COUNT(a.evaluation)  FROM ' .
+                'AnketaBundle\Entity\Answer a ' .
+                'WHERE ' .
+                'a.teacher = :teacher ' .
+                'AND a.question = 13 ' .
+                'AND a.option is not null ' .
+                'AND a.season = :season ';
+        $priemer = $this->getEntityManager()
+                        ->createQuery($dql)->execute(array('teacher' => $teacher, 'season' => $season));
+        return $priemer[0];
+    }
+    
+    public function getAverageEvaluationForSubject($subject, $season) {
+        $dql = 'SELECT AVG(a.evaluation), COUNT(a.evaluation)  FROM ' .
+                'AnketaBundle\Entity\Answer a ' .
+                'WHERE ' .
+                'a.subject = :subject ' .
+                'AND a.question = 5 ' .
+                'AND a.option is not null ' .
+                'AND a.season = :season ';
+        $priemer = $this->getEntityManager()
+                        ->createQuery($dql)->execute(array('subject' => $subject, 'season' => $season));
+        return $priemer[0];
+    }
 }
