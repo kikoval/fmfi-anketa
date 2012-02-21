@@ -34,15 +34,18 @@ class TeacherRepository extends EntityRepository {
 
     public function getTeachersForStudyProgramme($studyProgramme, $season) {
         $dql = 'SELECT DISTINCT t FROM AnketaBundle\Entity\UsersSubjects us, ' .
-                'AnketaBundle\Entity\Subject s ' .
-                'AnketaBundle\Entity\TeachersSubject ts ' .
-                'AnketaBundle\Entity\Teachers t ' .
+                'AnketaBundle\Entity\Subject s, ' .
+                'AnketaBundle\Entity\TeachersSubjects ts, ' .
+                'AnketaBundle\Entity\Teacher t, ' .
+                'AnketaBundle\Entity\Answer a ' .
                 'WHERE us.subject = s ' .
                 'AND ts.subject = s ' .
                 'AND ts.teacher = t ' .
+                'AND a.teacher = t ' .
                 'AND us.season = :season ' .
+                'AND ts.season = :season ' .
                 'AND us.studyProgram = :studyProgramme ' . 
-                'ORDER BY t.displayName';
+                'ORDER BY t.familyName';
         $subjects = $this->getEntityManager()
                         ->createQuery($dql)->execute(array('studyProgramme' => $studyProgramme, 'season' => $season));
         return $subjects;

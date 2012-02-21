@@ -10,7 +10,7 @@
 {% for teacher in teachers %}
     <div class="comment">
         <table>
-<tr><td>MENO PRIEZVISKO</td> <td>Hodnotenie: PRIEMER</td> <td>(POCET hodnoteni)</td></tr>
+<tr><td> {{ teacher.formattedName }}</td> <td>Hodnotenie: PRIEMER</td> <td>(POCET hodnoteni)</td></tr>
         </table>
         <ul>
 <li>

@@ -87,6 +87,13 @@ class Teacher {
         $this->displayName = $displayName;
     }
 
+    public function getFormattedName() {
+        if ($this->getDisplayName() === null) {
+            return $this->getName();
+        }
+        return $this->getDisplayName();
+    }
+
     public function getLogin() {
         return $this->login;
     }

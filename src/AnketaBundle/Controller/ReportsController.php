@@ -25,10 +25,10 @@ class ReportsController extends Controller {
         throw new NotFoundHttpException();
     }
     $subjects = $em->getRepository('AnketaBundle:Subject')->getSubjectsForStudyProgramme($study_programme_id, $season);
-    
+    $teachers = $em->getRepository('AnketaBundle:Teacher')->getTeachersForStudyProgramme($study_programme_id, $season);
         
     return $this->render('AnketaBundle:Reports:studyProgramme.html.twig', 
-            array('subjects' => $subjects, 'teachers' => array(1, 2, 3), 'season' => $season));
+            array('subjects' => $subjects, 'teachers' => $teachers, 'season' => $season));
     }
 
     public function departmentAction($department_id, $season_slug = null) {
