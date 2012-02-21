@@ -69,6 +69,7 @@ class ReportsController extends Controller {
             throw new NotFoundHttpException();
         }
         
+        // TODO: create separate slug column in entity
         $department_code = str_replace('-', '.', $department_slug);
         $department = $em->getRepository('AnketaBundle:Department')->findOneBy(array('code' => $department_code));
         if ($department === null) {
@@ -96,11 +97,41 @@ class ReportsController extends Controller {
 
     public function myReportsAction($season_slug = null) {
         $em = $this->get('doctrine.orm.entity_manager');
+        $security = $this->get('security.context');
         $season = $em->getRepository('AnketaBundle:Season')->findOneBy(array('slug' => $season_slug));
         if ($season === null) {
             throw new NotFoundHttpException();
         }
-        return $this->render('AnketaBundle:Reports:myReports.html.twig', array('season' => $season));
+        
+        $user = $security->getToken()->getUser();
+        
+        // katedry
+        $deptRepository = $em->getRepository('AnketaBundle:Department');
+        if ($security->isGranted('ROLE_ALL_REPORTS')) {
+            $departments = $deptRepository->findBy(array(), array('name' => 'ASC'));
+        }
+        else if ($security->isGranted('ROLE_DEPARTMENT_REPORT')) {
+            $departments = $deptRepository->findByTeacherLogin($user->getUserName());
+        }
+        else {
+            $departments = null;
+        }
+        
+        // studijne programy
+        $spRepository = $em->getRepository('AnketaBundle:StudyProgram');
+        if ($security->isGranted('ROLE_ALL_REPORTS')) {
+            $studyPrograms = $spRepository->findBy(array(), array('name' => 'ASC', 'code' => 'ASC'));
+        }
+        else if ($security->isGranted('ROLE_STUDY_PROGRAMME_REPORT')) {
+            $studyPrograms = $spRepository->findByReportsUser($user, $season);
+        }
+        else {
+            $studyPrograms = null;
+        }
+        
+        return $this->render('AnketaBundle:Reports:myReports.html.twig',
+                array('season' => $season, 'studyPrograms' => $studyPrograms,
+                    'departments' => $departments));
     }
 
 }

@@ -73,4 +73,9 @@ class Department {
         $this->homepage = $homepage;
     }
     
+    public function getSlug() {
+        // TODO make slug a real column
+        return str_replace('.', '-', $this->getCode());
+    }
+    
 }

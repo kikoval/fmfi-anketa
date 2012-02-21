@@ -5,12 +5,23 @@
 {% endblock %}
 {% block content %}
 
-{% if is_granted('ROLE_DEPARTMENT_REPORT') or is_granted('ROLE_ALL_REPORTS') %}
+{% if departments is not null %}
 <h2>Katedry</h2>
+<ul>
+{% for department in departments %}
+<li><a href="{{ path('report_department', {'season_slug': season.slug, 'department_slug': department.slug}) }}">{{ department.name }}</a></li>
+{% endfor %}
+</ul>
 {% endif %}
 
 
-{% if is_granted('ROLE_STUDY_PROGRAMME_REPORT') or is_granted('ROLE_ALL_REPORTS') %}
+{% if studyPrograms is not null%}
 <h2>Študijné Programy</h2>
+<ul>
+{% for studyProgram in studyPrograms %}
+<li><a href="{{ path('report_study_programme', {'season_slug': season.slug, 'study_programme_slug': studyProgram.slug}) }}"
+>{{ studyProgram.name }} ({{ studyProgram.code }})</a></li>
+{% endfor %}
+</ul>
 {% endif %}
 {% endblock %}

@@ -40,5 +40,20 @@ class StudyProgramRepository extends EntityRepository {
         if (!empty($result[0])) return $result[0];
         else return null;
     }
+    
+    public function findByReportsUser($user, $season) {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery("SELECT sp
+                           FROM AnketaBundle\\Entity\\UserStudyProgram usp,
+                           AnketaBundle\\Entity\\StudyProgram sp
+                           WHERE usp.user = :user
+                           AND usp.studyProgram = sp
+                           AND usp.season = :season
+                           ORDER BY sp.name, sp.code ASC");
+        $query->setParameter('user', $user);
+        $query->setParameter('season', $season);
+
+        return $query->getResult();
+    }
 
 }
