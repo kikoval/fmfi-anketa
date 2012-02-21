@@ -111,7 +111,7 @@ class ReportsController extends Controller {
             $departments = $deptRepository->findBy(array(), array('name' => 'ASC'));
         }
         else if ($security->isGranted('ROLE_DEPARTMENT_REPORT')) {
-            $departments = $deptRepository->findByTeacherLogin($user->getUserName());
+            $departments = $deptRepository->findByUser($user, $season);
         }
         else {
             $departments = null;

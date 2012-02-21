@@ -21,21 +21,34 @@ use AnketaBundle\Entity\Department;
 class DepartmentRepository extends EntityRepository {
 
     public function findByUser($user, $season) {
-        // TODO
         $em = $this->getEntityManager();
         $query = $em->createQuery("SELECT d
-                           FROM AnketaBundle\\Entity\\UserSeasonDepartment usd,
-                           AnketaBundle\\Entity\\Department d,
+                           FROM AnketaBundle\\Entity\\Department d,
                            AnketaBundle\\Entity\\UserSeason us
                            WHERE us.user = :user
                            AND us.season = :season
-                           AND usd.userSeason = us
-                           AND usd.department = d
+                           AND us.department = d
                            ORDER BY d.name ASC");
         $query->setParameter('user', $user);
         $query->setParameter('season', $season);
-
-        return $query->getResult();
+        
+        // TODO odstranit hack: zmergujeme z teachera
+        $depts = $query->getResult();
+        $teacherDepts = $this->findByTeacherLogin($user->getUserName());
+        foreach ($teacherDepts as $teacherDept) {
+            $found = false;
+            foreach ($depts as $dept) {
+                if ($teacherDept->getId() == $dept->getId()) {
+                    $found = true;
+                    break;
+                }
+            }
+            if (!$found) {
+                $depts[] = $teacherDept;
+            }
+        }
+        
+        return $depts;
     }
     
     public function findByTeacherLogin($login) {
