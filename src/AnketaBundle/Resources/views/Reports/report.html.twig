@@ -7,6 +7,7 @@
 </h2>
 <div class="results-comments">
 {% for teacher in teachers %}
+{% if teacher.evaluation[2] != 0 %}
     <div class="comment">
         <table>
 <tr><td> {{ teacher.formattedName }}</td> <td>{{ teacher.evaluation[1] }}</td> <td>({{ teacher.evaluation[2] }} hodnotení)</td></tr>
@@ -19,12 +20,14 @@
 {% endfor %}
         </ul>
     </div>
+{% endif %}
 {% endfor %}
 </div>
 <h2>Hodnotenia predmetov:
 </h2>
 <div class="results-comments">
 {% for subject in subjects %}
+{% if subject.evaluation[2] != 0 %}
     <div class="comment">
         <table>
 <tr> <td colspan="2"><a href="{{ path('results_subject', {'season_slug' : season.slug, 'subject_code' : subject.code } ) }}">{{ subject.code }} {{  subject.name  }}</a></td></tr><tr> <td> {{ subject.evaluation[1] }} </td> <td>({{ subject.evaluation[2] }} hodnotení)</td></tr>
@@ -37,6 +40,7 @@
 {% endfor %}
 </ul>
     </div>
+{% endif %}
 {% endfor %}
 </div>
 {% endblock %}

@@ -21,7 +21,7 @@ class ReportsController extends Controller {
 
         $em = $this->get('doctrine.orm.entity_manager');
         $security = $this->get('security.context');
-        //TODO uprsnit na konkretne studijne programy
+        //TODO uprsnit na konkretnE studijnE programy
         if (!$security->isGranted('ROLE_STUDY_PROGRAMME_REPORT') && !$security->isGranted('ROLE_ALL_REPORTS')) {
             throw new AccessDeniedException();
         }
@@ -60,9 +60,9 @@ class ReportsController extends Controller {
         $em = $this->get('doctrine.orm.entity_manager');
         $security = $this->get('security.context');
         //TODO uprsnit na konkretnU katedrU
-//        if (!$security->isGranted('ROLE_STUDY_DEPARTMENT_REPORT') && !$security->isGranted('ROLE_ALL_REPORTS')) {
-//            throw new AccessDeniedException();
-//        }
+        if (!$security->isGranted('ROLE_STUDY_DEPARTMENT_REPORT') && !$security->isGranted('ROLE_ALL_REPORTS')) {
+            throw new AccessDeniedException();
+        }
         
         $season = $em->getRepository('AnketaBundle:Season')->findOneBy(array('slug' => $season_slug));
         if ($season === null) {
