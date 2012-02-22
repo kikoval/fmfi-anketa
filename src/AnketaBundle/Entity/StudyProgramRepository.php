@@ -56,7 +56,7 @@ class StudyProgramRepository extends EntityRepository {
         return $query->getResult();
     }
 
-    public function getAllWithAnswers($season) {
+    public function getAllWithAnswers($season, $orderByName = false) {
         $em = $this->getEntityManager();
         $query = $em->createQuery("SELECT DISTINCT sp
                            FROM AnketaBundle\\Entity\\StudyProgram sp,
@@ -65,7 +65,7 @@ class StudyProgramRepository extends EntityRepository {
                            AND a.teacher IS NULL
                            AND a.subject IS NULL
                            AND a.season = :season
-                           ORDER BY sp.code ASC");
+                           ORDER BY " . ($orderByName ? "sp.name, " : "") . "sp.code ASC");
         $query->setParameter('season', $season);
         return $query->getResult();
     }

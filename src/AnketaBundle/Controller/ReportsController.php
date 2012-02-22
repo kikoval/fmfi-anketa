@@ -120,7 +120,7 @@ class ReportsController extends Controller {
         // studijne programy
         $spRepository = $em->getRepository('AnketaBundle:StudyProgram');
         if ($security->isGranted('ROLE_ALL_REPORTS')) {
-            $studyPrograms = $spRepository->findBy(array(), array('name' => 'ASC', 'code' => 'ASC'));
+            $studyPrograms = $spRepository->getAllWithAnswers($season, true);
         }
         else if ($security->isGranted('ROLE_STUDY_PROGRAMME_REPORT')) {
             $studyPrograms = $spRepository->findByReportsUser($user, $season);
