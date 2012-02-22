@@ -37,6 +37,7 @@ class TeacherRepository extends EntityRepository {
                   'AnketaBundle\Entity\TeachersSubjects ts, ' .
                   'AnketaBundle\Entity\Answer a ' .
                   'WHERE t = ts.teacher ' .
+                  ' AND t.displayName IS NOT NULL ' .
                   ' AND ts.subject = :subject ' .
                   ' AND ts.season = :season ' .
                   ' AND a.subject = :subject ' .
