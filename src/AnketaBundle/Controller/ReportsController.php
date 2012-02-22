@@ -38,7 +38,7 @@ class ReportsController extends Controller {
         
         $teachers = $em->getRepository('AnketaBundle:Teacher')->getTeachersForStudyProgramme($study_programme_id, $season);
         foreach ($teachers as $teacher) {
-            $teacher->subjects = $em->getRepository('AnketaBundle:Subject')->getSubjectsForTeacher($teacher, $season);
+            $teacher->subjects = $em->getRepository('AnketaBundle:Subject')->getSubjectsForTeacherWithAnswers($teacher, $season);
             $teacher->evaluation = $em->getRepository('AnketaBundle:Answer')->getAverageEvaluationForTeacher($teacher, $season);
         }
 
@@ -46,13 +46,13 @@ class ReportsController extends Controller {
 
         $subjects = $em->getRepository('AnketaBundle:Subject')->getSubjectsForStudyProgramme($study_programme_id, $season);
         foreach ($subjects as $subject) {
-            $subject->teacher = $em->getRepository('AnketaBundle:Teacher')->getTeachersForSubject($subject, $season);
+            $subject->teacher = $em->getRepository('AnketaBundle:Teacher')->getTeachersForSubjectWithAnswers($subject, $season);
             $subject->evaluation = $em->getRepository('AnketaBundle:Answer')->getAverageEvaluationForSubject($subject, $season);
         }
 
         usort($subjects, array('AnketaBundle\Controller\ReportsController', 'compareAverageEvaluation'));
 
-        return $this->render('AnketaBundle:Reports:report.html.twig', array('subjects' => $subjects, 'teachers' => $teachers, 'season' => $season));
+        return $this->render('AnketaBundle:Reports:report.html.twig', array('subjects' => $subjects, 'teachers' => $teachers, 'season' => $season, 'title' => "Študijný program ". $study_programme_id->getName()));
     }
 
     public function departmentAction($department_slug, $season_slug = null) {
@@ -78,7 +78,7 @@ class ReportsController extends Controller {
         
         $teachers = $em->getRepository('AnketaBundle:Teacher')->getTeachersForDepartment($department, $season);
         foreach ($teachers as $teacher) {
-            $teacher->subjects = $em->getRepository('AnketaBundle:Subject')->getSubjectsForTeacher($teacher, $season);
+            $teacher->subjects = $em->getRepository('AnketaBundle:Subject')->getSubjectsForTeacherWithAnswers($teacher, $season);
             $teacher->evaluation = $em->getRepository('AnketaBundle:Answer')->getAverageEvaluationForTeacher($teacher, $season);
         }
 
@@ -86,13 +86,13 @@ class ReportsController extends Controller {
 
         $subjects = $em->getRepository('AnketaBundle:Subject')->getSubjectsForDepartment($department, $season);
         foreach ($subjects as $subject) {
-            $subject->teacher = $em->getRepository('AnketaBundle:Teacher')->getTeachersForSubject($subject, $season);
+            $subject->teacher = $em->getRepository('AnketaBundle:Teacher')->getTeachersForSubjectWithAnswers($subject, $season);
             $subject->evaluation = $em->getRepository('AnketaBundle:Answer')->getAverageEvaluationForSubject($subject, $season);
         }
 
         usort($subjects, array('AnketaBundle\Controller\ReportsController', 'compareAverageEvaluation'));
 
-        return $this->render('AnketaBundle:Reports:report.html.twig', array('subjects' => $subjects, 'teachers' => $teachers, 'season' => $season));
+        return $this->render('AnketaBundle:Reports:report.html.twig', array('subjects' => $subjects, 'teachers' => $teachers, 'season' => $season, 'title' => $department->getName()));
     }
 
     public function myReportsAction($season_slug = null) {

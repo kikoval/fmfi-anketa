@@ -31,7 +31,26 @@ class TeacherRepository extends EntityRepository {
                              'season' => $season));
         return $teachers;
     }
+    
+    public function getTeachersForSubjectWithAnswers($subject, $season) {
+        $dql = 'SELECT t FROM AnketaBundle\Entity\Teacher t, ' .
+                  'AnketaBundle\Entity\TeachersSubjects ts, ' .
+                  'AnketaBundle\Entity\Answer a ' .
+                  'WHERE t = ts.teacher ' .
+                  ' AND ts.subject = :subject ' .
+                  ' AND ts.season = :season ' .
+                  ' AND a.subject = :subject ' .
+                  ' AND a.teacher = t ' .
+                  ' AND a.season = :season ' .
+                  ' AND a.option is not null ' .
+                  ' ORDER BY t.familyName, t.givenName';
 
+        $teachers = $this->getEntityManager()
+                         ->createQuery($dql)->execute(array('subject' => $subject,
+                             'season' => $season));
+        return $teachers;
+    }
+    
     public function getTeachersForStudyProgramme($studyProgramme, $season) {
         $dql = 'SELECT DISTINCT t FROM AnketaBundle\Entity\UsersSubjects us, ' .
                 'AnketaBundle\Entity\Subject s, ' .
@@ -42,6 +61,7 @@ class TeacherRepository extends EntityRepository {
                 'AND ts.subject = s ' .
                 'AND ts.teacher = t ' .
                 'AND a.teacher = t ' .
+                'AND a.season = :season ' .
                 'AND us.season = :season ' .
                 'AND ts.season = :season ' .
                 'AND us.studyProgram = :studyProgramme ' . 

@@ -3,6 +3,8 @@
     {% render "AnketaBundle:Statistics:menuMojeReporty" with { 'season' : season } %}
 {% endblock %}
 {% block content %}
+<h1>{{ title }}
+</h1>
 <h2>Hodnotenia učiteľov:
 </h2>
 <div class="results-comments">
@@ -31,6 +33,7 @@
     <div class="comment">
         <table>
 <tr> <td colspan="2"><a href="{{ path('results_subject', {'season_slug' : season.slug, 'subject_code' : subject.code } ) }}">{{ subject.code }} {{  subject.name  }}</a></td></tr><tr> <td> {{ subject.evaluation[1] }} </td> <td>({{ subject.evaluation[2] }} hodnotení)</td></tr>
+{% if subject.teacher | length != 0 %}
 <tr>
 <td colspan="2">
 (&nbsp;
@@ -40,6 +43,7 @@
 )
 </td>
 </tr>
+{% endif %}
         </table>
     </div>
 {% endif %}
