@@ -65,6 +65,7 @@ class StudyProgramRepository extends EntityRepository {
                            AND a.teacher IS NULL
                            AND a.subject IS NULL
                            AND a.season = :season
+                           AND ((a.option IS NOT NULL) OR (a.comment IS NOT NULL))
                            ORDER BY " . ($orderByName ? "sp.name, " : "") . "sp.code ASC");
         $query->setParameter('season', $season);
         return $query->getResult();
