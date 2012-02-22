@@ -1,18 +1,16 @@
 {% extends 'AnketaBundle:Response:layout.html.twig' %}
 
 {% block content %}
-<h1>Zmazať odpoveď</h1>
-<p>
-Ste si istí, že chcete vymazať odpoveď na:<br />
-Predmet: {{ subject.code }} {{ subject.name }}<br />
-{% if teacher is not null %}
-Učiteľ: {{ teacher.displayName }}<br />
+<h1>Zmazať komentár</h1>
+<p>Ste si istí, že chcete zmazať tento komentár?</p>
+<p>Komentár ku: <a href="{{ section.statisticsPath }}">{{ section.title }}</a></p>
+{% if association is not null %}
+    <p>Vaša funkcia: {{ association }}</p>
 {% endif %}
-</p>
-<p>Text odpovede:</p>
+<p>Text komentáru:</p>
 <p>{{ responseText|escape|replace({"\n": "<br />"})|raw }}</p>
 <form action="{{ submitLink }}" method="POST">
 <button type="submit">Zmazať</button>
-<a href="{{ path('response') }}">Nič nemazať</a>
+<a href="{{ section.statisticsPath }}">Nič nemazať</a>
 </form>
 {% endblock %}

@@ -60,6 +60,11 @@ class Response {
     private $author_login;
 
     /**
+     * @ORM\Column(type="text", nullable="true")
+     */
+    private $association;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Question")
      *
      * @var Question $question
@@ -150,6 +155,20 @@ class Response {
      */
     public function getAuthorLogin() {
         return $this->author_login;
+    }
+
+    /**
+     * @param string $value
+     */
+    public function setAssociation($value) {
+        $this->association = $value;
+    }
+
+    /**
+     * @return string the association
+     */
+    public function getAssociation() {
+        return $this->association;
     }
 
     /**

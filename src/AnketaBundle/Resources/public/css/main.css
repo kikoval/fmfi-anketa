@@ -54,6 +54,10 @@ th {
   border-bottom: solid #CCC 1px;
 }
 
+input[type="text"], input[type="password"] {
+  width: 15em;
+}
+
 /*** HEADER + FOOTER ***/
 
 #user-bar {
@@ -282,6 +286,14 @@ div.faq {
 
 #content .submit input {
   padding: 0 0.5em;
+}
+
+#content .association-description {
+  text-align: left;
+}
+
+#content .association-description span {
+  color: #888;
 }
 
 /*** FLASHES ***/

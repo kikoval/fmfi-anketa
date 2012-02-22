@@ -1,16 +1,17 @@
 {% extends 'AnketaBundle:Response:layout.html.twig' %}
 
 {% block content %}
-<h1>Odpoveď</h1>
-<p>
-Odpovedať na:<br />
-Predmet: {{ subject.code }} {{ subject.name }}<br />
-{% if teacher is not null %}
-Učiteľ: {{ teacher.displayName }}<br />
-{% endif %}
-</p>
+<h1>{{ new ? 'Nový komentár' : 'Upraviť komentár' }}</h1>
+<p>Komentár ku: <a href="{{ section.statisticsPath }}">{{ section.title }}</a></p>
 <form action="{{ submitLink }}" method="POST">
+<p class="association-description">Vaša funkcia: <input type="text" class="association" name="association" value="{{ association }}">
+<br><span>(Napríklad: {{ section.associationExamples }}. Zobrazí sa pri vašom mene.)</span></p>
+<p>Telo komentáru:<br>
 <textarea name="text" id="text" rows="10">{{ responseText }}</textarea>
+</p>
+{% if new %}
+<p>(Odoslaný komentár si môžu prečítať všetci študenti a učitelia. Text komentáru budete môcť dodatočne upravovať.)</p>
+{% endif %}
 <button type="submit">Odoslať</button>
 </form>
 {% endblock %}

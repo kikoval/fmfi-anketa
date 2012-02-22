@@ -20,24 +20,6 @@ use AnketaBundle\Entity\TeachersSubjects;
 
 class TeachersSubjectsRepository extends EntityRepository {
 
-    public function teachesByLogin($login, $subject, $season) {
-        $dql = 'SELECT COUNT(ts) ';
-        $dql .= ' FROM AnketaBundle\Entity\TeachersSubjects ts, AnketaBundle\Entity\Teacher t ';
-        $dql .= ' WHERE ts.season = :season AND ts.subject = :subject AND ts.teacher = t.id AND t.login = :login';
-        $result = $this->getEntityManager()
-                        ->createQuery($dql)->execute(array('login' => $login,
-                            'subject' => $subject, 'season' => $season));
-        return $result[0][1] == 1;
-    }
-    
-    public function teaches($teacher, $subject, $season) {
-        $dql = 'SELECT COUNT(ts) ';
-        $dql .= ' FROM AnketaBundle\Entity\TeachersSubjects ts';
-        $dql .= ' WHERE ts.season = :season AND ts.subject = :subject AND ts.teacher = :teacher';
-        $result = $this->getEntityManager()
-                        ->createQuery($dql)->execute(array('teacher' => $teacher,
-                            'subject' => $subject, 'season' => $season));
-        return $result[0][1] == 1;
-    }
+
 
 }
