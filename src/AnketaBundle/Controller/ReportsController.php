@@ -60,7 +60,7 @@ class ReportsController extends Controller {
         $em = $this->get('doctrine.orm.entity_manager');
         $security = $this->get('security.context');
         //TODO uprsnit na konkretnU katedrU
-        if (!$security->isGranted('ROLE_STUDY_DEPARTMENT_REPORT') && !$security->isGranted('ROLE_ALL_REPORTS')) {
+        if (!$security->isGranted('ROLE_DEPARTMENT_REPORT') && !$security->isGranted('ROLE_ALL_REPORTS')) {
             throw new AccessDeniedException();
         }
         
