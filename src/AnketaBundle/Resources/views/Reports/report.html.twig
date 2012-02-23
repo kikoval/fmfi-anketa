@@ -5,6 +5,9 @@
 {% block content %}
 <h1>{{ title }}
 </h1>
+{% if studyProgramme %}
+<a href="{{ path('statistics_study_program', {'season_slug': season.slug, 'program_slug': studyProgramme.slug }) }}">Výsledky študijného programu</a>
+{% endif %}
 <h2>Hodnotenia učiteľov:
 </h2>
 <div class="results-comments">

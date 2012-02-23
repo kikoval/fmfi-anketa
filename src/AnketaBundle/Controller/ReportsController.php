@@ -31,12 +31,12 @@ class ReportsController extends Controller {
             throw new NotFoundHttpException();
         }
 
-        $study_programme_id = $em->getRepository('AnketaBundle:StudyProgram')->findOneBy(array('slug' => $study_programme_slug));
-        if ($study_programme_id === null) {
+        $studyProgramme = $em->getRepository('AnketaBundle:StudyProgram')->findOneBy(array('slug' => $study_programme_slug));
+        if ($studyProgramme === null) {
             throw new NotFoundHttpException();
         }
         
-        $teachers = $em->getRepository('AnketaBundle:Teacher')->getTeachersForStudyProgramme($study_programme_id, $season);
+        $teachers = $em->getRepository('AnketaBundle:Teacher')->getTeachersForStudyProgramme($studyProgramme, $season);
         foreach ($teachers as $teacher) {
             $teacher->subjects = $em->getRepository('AnketaBundle:Subject')->getSubjectsForTeacherWithAnswers($teacher, $season);
             $teacher->evaluation = $em->getRepository('AnketaBundle:Answer')->getAverageEvaluationForTeacher($teacher, $season);
@@ -44,7 +44,7 @@ class ReportsController extends Controller {
 
         usort($teachers, array('AnketaBundle\Controller\ReportsController', 'compareAverageEvaluation'));
 
-        $subjects = $em->getRepository('AnketaBundle:Subject')->getSubjectsForStudyProgramme($study_programme_id, $season);
+        $subjects = $em->getRepository('AnketaBundle:Subject')->getSubjectsForStudyProgramme($studyProgramme, $season);
         foreach ($subjects as $subject) {
             $subject->teacher = $em->getRepository('AnketaBundle:Teacher')->getTeachersForSubjectWithAnswers($subject, $season);
             $subject->evaluation = $em->getRepository('AnketaBundle:Answer')->getAverageEvaluationForSubject($subject, $season);
@@ -52,7 +52,10 @@ class ReportsController extends Controller {
 
         usort($subjects, array('AnketaBundle\Controller\ReportsController', 'compareAverageEvaluation'));
 
-        return $this->render('AnketaBundle:Reports:report.html.twig', array('subjects' => $subjects, 'teachers' => $teachers, 'season' => $season, 'title' => "Študijný program ". $study_programme_id->getName()));
+        return $this->render('AnketaBundle:Reports:report.html.twig', array('subjects' => $subjects,
+            'teachers' => $teachers, 'season' => $season,
+            'title' => "Študijný program ". $studyProgramme->getName(),
+            'studyProgramme' => $studyProgramme));
     }
 
     public function departmentAction($department_slug, $season_slug = null) {
@@ -92,7 +95,9 @@ class ReportsController extends Controller {
 
         usort($subjects, array('AnketaBundle\Controller\ReportsController', 'compareAverageEvaluation'));
 
-        return $this->render('AnketaBundle:Reports:report.html.twig', array('subjects' => $subjects, 'teachers' => $teachers, 'season' => $season, 'title' => $department->getName()));
+        return $this->render('AnketaBundle:Reports:report.html.twig', array('subjects' => $subjects,
+            'teachers' => $teachers, 'season' => $season, 'title' => $department->getName(),
+            'studyProgramme' => null));
     }
 
     public function myReportsAction($season_slug = null) {
