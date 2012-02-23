@@ -500,7 +500,7 @@ class StatisticsController extends Controller {
                         array('season_slug' => $currentSeason->getSlug())));
         }
         $secCon = $this->get('security.context');
-        if (($secCon->isGranted('ROLE_STUDY_PROGRAMME_REPORT')) || ($secCon->isGranted('	ROLE_DEPARTMENT_REPORT')) || ($secCon->isGranted('ROLE_ALL_REPORTS'))) {
+        if (($secCon->isGranted('ROLE_STUDY_PROGRAMME_REPORT')) || ($secCon->isGranted('ROLE_DEPARTMENT_REPORT')) || ($secCon->isGranted('ROLE_ALL_REPORTS'))) {
             $currentMenu['my_reports'] = new MenuItem(
                     'Moje reporty',
                     $this->generateUrl('reports_my_reports',
