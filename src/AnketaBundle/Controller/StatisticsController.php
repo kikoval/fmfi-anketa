@@ -353,6 +353,9 @@ class StatisticsController extends Controller {
             $maxCnt = max($maxCnt, $data['stats']['cnt']);
             $results[] = $data;
         }
+        
+        $subjectSeason = $em->getRepository('AnketaBundle\Entity\SubjectSeason')
+                ->findOneBy(array('subject' => $subject->getId(), 'season' => $season->getId()));
 
         $section = StatisticsSection::makeSubjectSection($this->container, $season, $subject);
         $responses = $em->getRepository('AnketaBundle:Response')
@@ -363,6 +366,7 @@ class StatisticsController extends Controller {
         $templateParams['season'] = $season;
         $templateParams['category'] = $category;
         $templateParams['subject'] = $subject;
+        $templateParams['subjectSeason'] = $subjectSeason;
 
         if ($maxCnt >= self::MIN_VOTERS_FOR_PUBLIC ||
             $this->get('security.context')->isGranted('ROLE_FULL_RESULTS')) {

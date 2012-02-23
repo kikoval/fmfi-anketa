@@ -11,6 +11,22 @@
 {% endblock %}
 {% block content %}
     <h1> {{ subject.code }} {{ subject.name }}</h1>
+    {% if subjectSeason is not null %}
+        <p>Tento predmet 
+            {% if subjectSeason.studentCountFaculty == 0 -%}
+                nemal nikto z FMFI zapísaný
+            {%- elseif subjectSeason.studentCountFaculty == 1 -%}
+                mal zapísaný jeden študent FMFI
+            {%- elseif subjectSeason.studentCountFaculty in [2, 3, 4] -%}
+                mali zapísaní {{ {2: 'dvaja', 3: 'traja', 4:'štyria'}[subjectSeason.studentCountFaculty] }} študenti FMFI
+            {%- else -%}
+                malo zapísaných {{ subjectSeason.studentCountFaculty }} študentov z FMFI
+            {%- endif -%}
+            {#- TODO toto treba overit, ci boli tie cisla spravne naimportovane
+            {%- if (subjectSeason.studentCountAll - subjectSeason.studentCountFaculty) > 0 %}
+                ({{ subjectSeason.studentCountAll  - subjectSeason.studentCountFaculty}} z iných fakúlt)
+            {%- endif -%}-#}.</p>
+    {% endif %}
     {{ responseMacro.displayResponse(responses, responseEditable, newResponseLink) }}
     {% for result in results %}
         {% if not loop.first %}
