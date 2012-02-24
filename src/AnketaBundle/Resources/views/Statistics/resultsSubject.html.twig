@@ -11,7 +11,7 @@
 {% endblock %}
 {% block content %}
     <h1> {{ subject.code }} {{ subject.name }}</h1>
-    {% if subjectSeason is not null %}
+    {% if subjectSeason is not null and subjectSeason.studentCountFaculty is not null %}
         <p>Tento predmet 
             {% if subjectSeason.studentCountFaculty == 0 -%}
                 nemal nikto z FMFI zapísaný
@@ -22,10 +22,12 @@
             {%- else -%}
                 malo zapísaných {{ subjectSeason.studentCountFaculty }} študentov z FMFI
             {%- endif -%}
-            {#- TODO toto treba overit, ci boli tie cisla spravne naimportovane
-            {%- if (subjectSeason.studentCountAll - subjectSeason.studentCountFaculty) > 0 %}
-                ({{ subjectSeason.studentCountAll  - subjectSeason.studentCountFaculty}} z iných fakúlt)
-            {%- endif -%}-#}.</p>
+            {%- if subjectSeason.studentCountAll is not null %}
+                {% set pocetInych = subjectSeason.studentCountAll - subjectSeason.studentCountFaculty %}
+                {% if pocetInych > 0 %}
+                    ({{ pocetInych }} z iných fakúlt)
+                {% endif %}
+            {%- endif -%}.</p>
     {% endif %}
     {{ responseMacro.displayResponse(responses, responseEditable, newResponseLink) }}
     {% for result in results %}
