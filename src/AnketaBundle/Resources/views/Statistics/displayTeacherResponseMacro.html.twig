@@ -2,24 +2,29 @@
     {% if editable or responses is not empty %}
         <div class="results-comments results-comments-official">
         <h2>Vyjadrenia učiteľov k výsledkom:</h2>
-        {% for item in responses %}
-            <div class='comment' id="odpoved{{ item.response.id }}">
-            <div class="comment-top">
-            <b>{{ item.author }}</b>:
-            </div>
-            <p class="comment-comment">{{ item.response.comment|escape|replace({"\n": "<br />"})|raw }}</p>
-            {% if item.editable %}
-            <div>
-                <a href="{{ path('response_edit', {'response_id': item.response.id}) }}">Upraviť komentár</a> |
-                <a href="{{ path('response_delete', {'response_id': item.response.id}) }}">Zmazať komentár</a>
-            </div>
+        {% if is_granted('ROLE_USER') %}
+            {% for item in responses %}
+                <div class='comment' id="odpoved{{ item.response.id }}">
+                <div class="comment-top">
+                <b>{{ item.author }}</b>:
+                </div>
+                <p class="comment-comment">{{ item.response.comment|escape|replace({"\n": "<br />"})|raw }}</p>
+                {% if item.editable %}
+                <div>
+                    <a href="{{ path('response_edit', {'response_id': item.response.id}) }}">Upraviť komentár</a> |
+                    <a href="{{ path('response_delete', {'response_id': item.response.id}) }}">Zmazať komentár</a>
+                </div>
+                {% endif %}
+                </div>
+            {% endfor %}
+            {% if editable %}
+                <div>
+                    <a href="{{ newResponseLink }}">Nový komentár</a>
+                </div>
             {% endif %}
-            </div>
-        {% endfor %}
-        {% if editable %}
-            <div>
-                <a href="{{ newResponseLink }}">Nový komentár</a>
-            </div>
+        {% else %}
+        {# TODO(majak): load cosign location from config  #}
+            Komentáre učiteľov si môžete pozrieť po <a href="https://login.uniba.sk/?cosign-proxy-anketa.fmph.uniba.sk&{{ app.request.uri | url_encode() }}">prihlásení</a>.
         {% endif %}
         </div>
     {% endif %}

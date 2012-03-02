@@ -719,6 +719,9 @@ class StatisticsController extends Controller {
     /** Return true, if the current user can edit a response */
     private function userCanEditResponse(Response $response)
     {
+        // user must be logged in, otherwise he doesn't have name
+        if (!$this->get('security.context')->isGranted('ROLE_USER')) return false;
+        
         $user = $this->get('security.context')->getToken()->getUser();
         return $user->getUserName() === $response->getAuthorLogin();
     }

@@ -8,7 +8,7 @@
         <p class="question-description">{{ data.description }}</p>
     {% endif %}
     </div>
-    {% if not data.hasAnswer and not data.numberOfInappropriateComments %}
+    {% if not data.hasAnswer and data.numberOfInappropriateComments == 0 %}
         Na túto otázku nikto neodpovedal.
     {% else %}
         {% if data.chart is not null %}
@@ -53,32 +53,37 @@
             </div>
         {% endif %}
         {% if data.commentsAllowed %}
-            {% if data.comments is not empty %}
-                Komentáre:
-                <div class="results-comments">
-                {% for comment in data.comments %}
-                    <div class='comment' id="komentar{{ comment.answer_id }}">
-                    <div class="comment-top"><a class="comment-link" href="#komentar{{ comment.answer_id }}">#{{ comment.answer_id }}</a>:
-                        <a href="{{ path('statistics_report', {'season_slug': season.slug, 'answer_id': comment.answer_id}) }}" class="report-link"
-                            >Nahlásiť nevhodný komentár</a>
+            {% if is_granted('ROLE_USER') %}
+                {% if data.comments is not empty %}
+                    Komentáre:
+                    <div class="results-comments">
+                    {% for comment in data.comments %}
+                        <div class='comment' id="komentar{{ comment.answer_id }}">
+                        <div class="comment-top"><a class="comment-link" href="#komentar{{ comment.answer_id }}">#{{ comment.answer_id }}</a>:
+                            <a href="{{ path('statistics_report', {'season_slug': season.slug, 'answer_id': comment.answer_id}) }}" class="report-link"
+                                >Nahlásiť nevhodný komentár</a>
+                        </div>
+                        <p class="comment-comment">{{ comment.comment|escape|replace({"\n":"<br>"})|raw }}</p>
+                        </div>
+                    {% endfor %}
                     </div>
-                    <p class="comment-comment">{{ comment.comment|escape|replace({"\n":"<br>"})|raw }}</p>
-                    </div>
-                {% endfor %}
-                </div>
-            {% else %}
-                K tejto otázke nikto nepridal žiaden komentár.
-            {% endif %}
-            {% if data.numberOfInappropriateComments > 0 %}
-                <p class="inappropriate-comments-info">
-                {% if data.numberOfInappropriateComments == 1 %}
-                    Bol skrytý 1 nevhodný komentár. Jeho obsah bude napriek tomu preskúmaný.
-                {% elseif data.numberOfInappropriateComments in [2, 3, 4] %}
-                    Boli skryté {{ data.numberOfInappropriateComments }} nevhodné komentáre. Ich obsah bude napriek tomu preskúmaný.
-                {% elseif data.numberOfInappropriateComments > 4 %}
-                    Bolo skrytých {{ data.numberOfInappropriateComments }} nevhodných komentárov. Ich obsah bude napriek tomu preskúmaný.
+                {% elseif data.numberOfInappropriateComments == 0 %}
+                    K tejto otázke nikto nepridal žiaden komentár.
                 {% endif %}
-                </p>
+                {% if data.numberOfInappropriateComments > 0 %}
+                    <p class="inappropriate-comments-info">
+                    {% if data.numberOfInappropriateComments == 1 %}
+                        Bol skrytý 1 nevhodný komentár. Jeho obsah bude napriek tomu preskúmaný.
+                    {% elseif data.numberOfInappropriateComments in [2, 3, 4] %}
+                        Boli skryté {{ data.numberOfInappropriateComments }} nevhodné komentáre. Ich obsah bude napriek tomu preskúmaný.
+                    {% elseif data.numberOfInappropriateComments > 4 %}
+                        Bolo skrytých {{ data.numberOfInappropriateComments }} nevhodných komentárov. Ich obsah bude napriek tomu preskúmaný.
+                    {% endif %}
+                    </p>
+                {% endif %}
+            {% else %}
+                {# TODO(majak): load cosign location from config  #}
+                Komentáre si môžete pozrieť po <a href="https://login.uniba.sk/?cosign-proxy-anketa.fmph.uniba.sk&{{ app.request.uri | url_encode() }}">prihlásení</a>.
             {% endif %}
         {% endif %}
     {% endif %}
