@@ -6,7 +6,7 @@ framework:
 
     charset:       UTF-8
     csrf_protection: true
-    secret: %csrf_secret%
+    secret: %secret%
     router:        { resource: "%kernel.root_dir%/config/routing.yml" }
     validation:    { enable_annotations: true }
     templating:    { engines: ['twig'] } #assets_version: SomeVersionScheme

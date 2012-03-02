@@ -21,8 +21,7 @@ fi
 
 if ! [ -f app/config/parameters.ini ]; then
   echo "${bold}vyrabam defaultny app/config/parameters.ini s db_backend=sqlite${normal}"
-  sed 's/db_backend=mysql/db_backend=sqlite/' app/config/parameters.ini.template |
-    sed "s/secret=.*/secret=`head -c1000 /dev/urandom | md5sum | head -c32`/" > app/config/parameters.ini
+  sed "s/secret=.*/secret=`head -c1000 /dev/urandom | md5sum | head -c32`/" app/config/parameters.ini.template > app/config/parameters.ini
   vyrobeny_parameters=t
 fi
 
@@ -42,5 +41,5 @@ if [ "$vyrobeny_config" ] || [ "$vyrobeny_parameters" ] || [ "$nemame_adresare" 
   echo "- spusti ./scripts/reset_all.sh pod uzivatelom webservera, cim vyrobis novu databazu.
   napriklad takto: ${bold}sudo -u www-data ./scripts/reset_all.sh${normal}"
   [ "$vyrobeny_parameters" ] && echo "- ak bude tato databaza produkcna a uz nikdy ju nechces vymazavat,
-  nastav to v app/config/parameters.ini."
+  v app/config/parameters.ini nastav ${bold}db_allow_reset=false${normal}."
 fi
