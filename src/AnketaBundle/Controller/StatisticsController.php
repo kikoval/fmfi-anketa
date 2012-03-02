@@ -17,6 +17,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 class StatisticsController extends Controller {
     const MIN_VOTERS_FOR_PUBLIC = 0;
     const NO_CATEGORY = 'XXX-nekategorizovane';
+    const GRAPH_PALETTE = 'ff1e1e|ff8f1e|f5f51d|b4ff1e|1eff1e';
 
     /**
      * @param string $season_slug if null, returns current active season
@@ -90,23 +91,25 @@ class StatisticsController extends Controller {
         $width = 300;
         $height = 150;
 
+        list($c1, $c2, $c3, $c4, $c5) = explode('|', self::GRAPH_PALETTE);
+
         if (count($histogram) == 2) {
-            $palette = '338000|d40000';   // the first choice is the best
+            $palette = array($c5, $c1);   // the first choice is the best
         }
         else if (count($histogram) == 5 && $histogram[2]['value'] == 0) {
-            $palette = 'd40000|bae11e|338000|bae11e|d40000';   // the middle choice is the best
+            $palette = array($c1, $c4, $c5, $c4, $c1);   // the middle choice is the best
         }
         else if (count($histogram) == 5 && $histogram[0]['value'] > $histogram[4]['value']) {
-            $palette = '338000|bae11e|b3b3b3|f1792a|d40000';   // the first choice is the best
+            $palette = array($c5, $c4, $c3, $c2, $c1);   // the first choice is the best
         }
         else if (count($histogram) == 5) {
-            $palette = 'd40000|f1792a|b3b3b3|bae11e|338000';   // the last choice is the best
+            $palette = array($c1, $c2, $c3, $c4, $c5);   // the last choice is the best
         }
         else if (count($histogram) == 4 && $histogram[0]['value'] > $histogram[3]['value']) {
-            $palette = '338000|bae11e|f1792a|d40000';   // the first choice is the best
+            $palette = array($c5, $c4, $c2, $c1);   // the first choice is the best
         }
         else {
-            $palette = '';
+            $palette = array();
         }
 
         $titles = array_map(function ($data) { return $data['title']; }, $histogram);
@@ -124,8 +127,11 @@ class StatisticsController extends Controller {
             // axis style: leave default color (676767) and font (11.5), align right (1) and
             // show only axis line (l) and not line with tick marks (lt)
             'chxs' => '1,676767,11.5,1,l',
+            // marker style: data values (N), black, sum of each bar (-1), font size 16,
+            // right-anchored placement with offset -3
+            'chm' => 'N,000000,-1,,16,,r:-3',
             'chs' => $width . 'x' . $height,
-            'chco' => $palette,
+            'chco' => implode('|', $palette),
             'chxl' => '1:|' . implode('|', array_reverse($titles)),
             'chd' => 't:' . implode(',', $counts)
         );
