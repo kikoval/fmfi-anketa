@@ -12,8 +12,7 @@ echo "${bold}vyrabam symlinky na assety${normal}"
 
 mkdir -p web/bundles
 cd web/bundles
-ln -sf ../../src/AnketaBundle/Resources/public anketa
-ln -sf ../../vendor/symfony/src/Symfony/Bundle/FrameworkBundle/Resources/public framework
-ln -sf ../../vendor/bundles/Symfony/Bundle/WebConfiguratorBundle/Resources/public symfonywebconfigurator
-ln -sf ../../vendor/symfony/src/Symfony/Bundle/WebProfilerBundle/Resources/public webprofiler
+ln -sfT ../../src/AnketaBundle/Resources/public anketa
+ln -sfT ../../vendor/symfony/src/Symfony/Bundle/FrameworkBundle/Resources/public framework
+ln -sfT ../../vendor/symfony/src/Symfony/Bundle/WebProfilerBundle/Resources/public webprofiler
 
