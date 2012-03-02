@@ -69,6 +69,17 @@
             {% else %}
                 K tejto otázke nikto nepridal žiaden komentár.
             {% endif %}
+            {% if data.numberOfInappropriateComments > 0 %}
+                <p class="inappropriate-comments-info">
+                {% if data.numberOfInappropriateComments == 1 %}
+                    Bol skrytý 1 nevhodný komentár. Jeho obsah bude napriek tomu preskúmaný.
+                {% elseif data.numberOfInappropriateComments in [2, 3, 4] %}
+                    Boli skryté {{ data.numberOfInappropriateComments }} nevhodné komentáre. Ich obsah bude napriek tomu preskúmaný.
+                {% elseif data.numberOfInappropriateComments > 4 %}
+                    Bolo skrytých {{ data.numberOfInappropriateComments }} nevhodných komentárov. Ich obsah bude napriek tomu preskúmaný.
+                {% endif %}
+                </p>
+            {% endif %}
         {% endif %}
     {% endif %}
 

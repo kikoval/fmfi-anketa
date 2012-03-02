@@ -59,7 +59,7 @@ class StatisticsController extends Controller {
      */
     public function getNumberOfInappropriateComments($answers) {
         $amount = 0;
-        foreach ($answers as $answer) if ($answer->hasComment() && !$answer->getInappropriate()) $amount++;
+        foreach ($answers as $answer) if ($answer->hasComment() && $answer->getInappropriate()) $amount++;
         return $amount;
     }
 
@@ -236,6 +236,7 @@ class StatisticsController extends Controller {
                 'histogram' => $histogram,
                 'chart' => $this->getChart($question, $histogram),
                 'stats' => $stats,
+                'numberOfInappropriateComments' => $this->getNumberOfInappropriateComments($answers),
                 );
 
         return $data;
