@@ -18,6 +18,9 @@
     db_mysql_port=3396
     db_mysql_charset=utf8
 
+    ; one of: dev, prod, beta, demo
+    anketa_instance=dev
+
     mailer_transport=smtp
     mailer_host=smtp.gmail.com
     mailer_user=fmfi.svt
