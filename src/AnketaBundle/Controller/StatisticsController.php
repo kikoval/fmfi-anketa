@@ -53,13 +53,14 @@ class StatisticsController extends Controller {
     }
     
     /**
-     * Returs true iff there is inappropriate comment in set of answers.
+     * Returns number of inappropriate comments in set of answers.
      * @param type $answers
-     * @return boolean 
+     * @return int
      */
-    public function hasInappropriateComment($answers) {
-        foreach ($answers as $answer) if ($answer->hasComment() && !$answer->getInappropriate()) return true;
-        return false;
+    public function getNumberOfInappropriateComments($answers) {
+        $amount = 0;
+        foreach ($answers as $answer) if ($answer->hasComment() && !$answer->getInappropriate()) $amount++;
+        return $amount;
     }
 
     /**
