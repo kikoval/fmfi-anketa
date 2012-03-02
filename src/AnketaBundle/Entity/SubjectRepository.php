@@ -31,6 +31,28 @@ class SubjectRepository extends EntityRepository {
             'season' => $season));
         return $subjects;
     }
+
+        
+    public function getSubjectsForTeacherForStudyProgramme($teacher, $studyProgramme, $season) {
+        $dql = 'SELECT DISTINCT s FROM AnketaBundle\Entity\UsersSubjects us, ' .
+                'AnketaBundle\Entity\Subject s, ' .
+                'AnketaBundle\Entity\TeachersSubjects ts, ' .
+                'AnketaBundle\Entity\Teacher t, ' .
+                'AnketaBundle\Entity\Answer a ' .
+                'WHERE us.subject = s ' .
+                'AND ts.subject = s ' .
+                'AND ts.teacher = t ' .
+                'AND a.subject = s ' .
+                'AND a.teacher = t ' .
+                'AND us.season = :season ' .
+                'AND ts.season = :season ' .
+                'AND us.studyProgram = :studyProgramme ' . 
+                'AND t = :teacher ' . 
+                'ORDER BY s.name';
+        $subjects = $this->getEntityManager()
+                        ->createQuery($dql)->execute(array('teacher' => $teacher, 'studyProgramme' => $studyProgramme, 'season' => $season));
+        return $subjects;
+    }
     
     public function getSubjectsForTeacher($teacher, $season) {
         $dql = 'SELECT s FROM AnketaBundle\Entity\Subject s, ' .
@@ -45,6 +67,26 @@ class SubjectRepository extends EntityRepository {
         return $subjects;
     }
 
+    
+    public function getSubjectsForTeacherWithAnswers($teacher, $season) {
+        $dql = 'SELECT s FROM AnketaBundle\Entity\Subject s, ' .
+                'AnketaBundle\Entity\Answer a, ' .
+                'AnketaBundle\Entity\TeachersSubjects ts ' . 
+                'WHERE s = ts.subject ' .
+                'AND a.subject = s ' .
+                'AND a.teacher = :teacher ' .
+                'AND a.season = :season ' .
+                'AND a.option is not null ' .
+                'AND ts.teacher = :teacher ' .
+                'AND ts.season = :season ' .
+                'ORDER BY s.name';
+
+        $subjects = $this->getEntityManager()
+                        ->createQuery($dql)->execute(array('teacher' => $teacher,
+            'season' => $season));
+        return $subjects;
+    }
+    
     public function getSortedSubjectsWithAnswers($season) {
         $dql = 'SELECT DISTINCT s FROM AnketaBundle\Entity\Answer a, ' .
                 'AnketaBundle\Entity\Subject s ' .
@@ -53,6 +95,39 @@ class SubjectRepository extends EntityRepository {
                 'ORDER BY s.name';
         $subjects = $this->getEntityManager()
                         ->createQuery($dql)->execute(array('season' => $season));
+        return $subjects;
+    }
+
+    public function getSubjectsForStudyProgramme($studyProgramme, $season) {
+        $dql = 'SELECT DISTINCT s FROM AnketaBundle\Entity\UsersSubjects us, ' .
+                'AnketaBundle\Entity\Subject s, ' .
+                'AnketaBundle\Entity\Answer a ' .
+                'WHERE us.subject = s ' .
+                'AND a.subject = s ' .
+                'AND us.season = :season ' .
+                'AND us.studyProgram = :studyProgramme ' . 
+                'ORDER BY s.name';
+        $subjects = $this->getEntityManager()
+                        ->createQuery($dql)->execute(array('studyProgramme' => $studyProgramme, 'season' => $season));
+        return $subjects;
+    }
+
+    public function getSubjectsForDepartment($department, $season) {
+        $dql = 'SELECT DISTINCT s FROM AnketaBundle\Entity\Department d, ' .
+                'AnketaBundle\Entity\Subject s, ' .
+                'AnketaBundle\Entity\SubjectSeason ss, ' .
+                'AnketaBundle\Entity\SubjectSeasonDepartment ssd, ' .
+                'AnketaBundle\Entity\Answer a ' .
+                'WHERE d = ssd.department ' .
+                'AND a.subject = s ' .
+                'AND ss = ssd.subjectSeason ' .
+                'AND ss.subject = s ' .
+                'AND ss.season = :season ' .
+                'AND a.season = :season ' .
+                'AND d = :department ' . 
+                'ORDER BY s.name';
+        $subjects = $this->getEntityManager()
+                        ->createQuery($dql)->execute(array('department' => $department, 'season' => $season));
         return $subjects;
     }
 

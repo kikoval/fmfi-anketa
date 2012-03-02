@@ -40,8 +40,23 @@ class StudyProgramRepository extends EntityRepository {
         if (!empty($result[0])) return $result[0];
         else return null;
     }
+    
+    public function findByReportsUser($user, $season) {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery("SELECT sp
+                           FROM AnketaBundle\\Entity\\UserStudyProgram usp,
+                           AnketaBundle\\Entity\\StudyProgram sp
+                           WHERE usp.user = :user
+                           AND usp.studyProgram = sp
+                           AND usp.season = :season
+                           ORDER BY sp.name, sp.code ASC");
+        $query->setParameter('user', $user);
+        $query->setParameter('season', $season);
 
-    public function getAllWithAnswers($season) {
+        return $query->getResult();
+    }
+
+    public function getAllWithAnswers($season, $orderByName = false) {
         $em = $this->getEntityManager();
         $query = $em->createQuery("SELECT DISTINCT sp
                            FROM AnketaBundle\\Entity\\StudyProgram sp,
@@ -50,7 +65,8 @@ class StudyProgramRepository extends EntityRepository {
                            AND a.teacher IS NULL
                            AND a.subject IS NULL
                            AND a.season = :season
-                           ORDER BY sp.code ASC");
+                           AND ((a.option IS NOT NULL) OR (a.comment IS NOT NULL))
+                           ORDER BY " . ($orderByName ? "sp.name, " : "") . "sp.code ASC");
         $query->setParameter('season', $season);
         return $query->getResult();
     }

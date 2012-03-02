@@ -1,0 +1,9 @@
+report_study_programme:
+    pattern: /reporty/{season_slug}/studijny-program/{study_programme_slug}
+    defaults: { _controller: AnketaBundle:Reports:studyProgramme, season_slug: null}
+report_department:
+    pattern: /reporty/{season_slug}/katedra/{department_slug}
+    defaults: { _controller: AnketaBundle:Reports:department, season_slug: null}
+reports_my_reports:
+    pattern: /reporty/{season_slug}/moje-reporty
+    defaults: { _controller: AnketaBundle:Reports:myReports, season_slug: null}

@@ -353,6 +353,9 @@ class StatisticsController extends Controller {
             $maxCnt = max($maxCnt, $data['stats']['cnt']);
             $results[] = $data;
         }
+        
+        $subjectSeason = $em->getRepository('AnketaBundle\Entity\SubjectSeason')
+                ->findOneBy(array('subject' => $subject->getId(), 'season' => $season->getId()));
 
         $section = StatisticsSection::makeSubjectSection($this->container, $season, $subject);
         $responses = $em->getRepository('AnketaBundle:Response')
@@ -363,6 +366,7 @@ class StatisticsController extends Controller {
         $templateParams['season'] = $season;
         $templateParams['category'] = $category;
         $templateParams['subject'] = $subject;
+        $templateParams['subjectSeason'] = $subjectSeason;
 
         if ($maxCnt >= self::MIN_VOTERS_FOR_PUBLIC ||
             $this->get('security.context')->isGranted('ROLE_FULL_RESULTS')) {
@@ -499,7 +503,13 @@ class StatisticsController extends Controller {
                     $this->generateUrl('statistics_mySubjects',
                         array('season_slug' => $currentSeason->getSlug())));
         }
-
+        $secCon = $this->get('security.context');
+        if (($secCon->isGranted('ROLE_STUDY_PROGRAMME_REPORT')) || ($secCon->isGranted('ROLE_DEPARTMENT_REPORT')) || ($secCon->isGranted('ROLE_ALL_REPORTS'))) {
+            $currentMenu['my_reports'] = new MenuItem(
+                    'Moje reporty',
+                    $this->generateUrl('reports_my_reports',
+                        array('season_slug' => $currentSeason->getSlug())));
+        }
         $seasons = $em->getRepository('AnketaBundle\Entity\Season')
                     ->findAll(array());
         $menu = array();
@@ -534,6 +544,15 @@ class StatisticsController extends Controller {
     public function menuMojePredmetyAction($season) {
         $menu = $this->getMenuRoot($season);
         $menu[$season->getId()]->children['my_subjects']->active = true;
+        $templateParams = array('menu' => $menu);
+        return $this->render('AnketaBundle:Hlasovanie:menu.html.twig',
+                             $templateParams);
+
+    }
+//TODO UGLY HACK
+    public function menuMojeReportyAction($season) {
+        $menu = $this->getMenuRoot($season);
+        $menu[$season->getId()]->children['my_reports']->active = true;
         $templateParams = array('menu' => $menu);
         return $this->render('AnketaBundle:Hlasovanie:menu.html.twig',
                              $templateParams);

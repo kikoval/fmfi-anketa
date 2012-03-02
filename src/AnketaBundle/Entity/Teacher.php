@@ -38,6 +38,14 @@ class Teacher {
     private $login;
     
     /**
+     * @ORM\ManyToOne(targetEntity="Department")
+     * @var \AnketaBundle\Entity\Department
+     * @deprecated Docasny hack, chceme priradovat katedru k userom,
+     * ale najprv treba zmigrovat ucitelov do userov (je tam par corner-cases)
+     */
+    private $department;
+
+   /**
      * @param String $name
      */
     public function __construct($givenName, $familyName, $displayName, $login) {
@@ -79,12 +87,28 @@ class Teacher {
         $this->displayName = $displayName;
     }
 
+    public function getFormattedName() {
+        if ($this->getDisplayName() === null) {
+            return $this->getName();
+        }
+        return $this->getDisplayName();
+    }
+
     public function getLogin() {
         return $this->login;
     }
 
     public function setLogin($login) {
         $this->login = $login;
+    }
+    
+    /**
+     * @deprecated Docasny hack, chceme priradovat katedru k userom,
+     * ale najprv treba zmigrovat ucitelov do userov (je tam par corner-cases)
+     * @return \AnketaBundle\Entity\Department
+     */
+    public function getDepartment() {
+        return $this->department;
     }
     
 }
