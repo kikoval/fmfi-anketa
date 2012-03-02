@@ -37,9 +37,9 @@ class StatisticsController extends Controller {
     }
 
     /**
-     * Returns all comments from the set of answers
+     * Returns appropriate comments from the set of answers
      */
-    public function getComments($answers) {
+    public function getAppropriateComments($answers) {
         $comments = array();
 
         foreach ($answers as $answer) {
@@ -194,7 +194,7 @@ class StatisticsController extends Controller {
     public function processQuestion(Question $question, $answers) {
         $histogram = $this->getHistogramData($question, $answers);
         $stats = $this->getStatistics($histogram);
-        $comments = $this->getComments($answers);
+        $comments = $this->getAppropriateComments($answers);
         $hasComments = count($comments) > 0;
         $hasAnsweredOption = $stats['cnt'] > 0;
         if ($hasAnsweredOption) {
