@@ -1,5 +1,7 @@
 [parameters]
-    db_backend=mysql
+    db_backend=sqlite
+
+    db_allow_reset=true
 
     db_sqlite_driver=pdo_sqlite
     db_sqlite_host=localhost
