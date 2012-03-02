@@ -423,5 +423,11 @@ hr {
   padding: 0.5em;
 }
 
+.inappropriate-comments-info {
+    font-style: italic;
+    font-size: 100%;
+    color: gray;
+}
+
 /* TODO: v starom main.css bola kopa symfony-specific veci (cca od #symfony-header po .flash-message). odkial boli, a chceme ich aj tu? */
 

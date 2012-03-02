@@ -52,6 +52,17 @@ class StatisticsController extends Controller {
 
         return $comments;
     }
+    
+    /**
+     * Returns number of inappropriate comments in set of answers.
+     * @param type $answers
+     * @return int
+     */
+    public function getNumberOfInappropriateComments($answers) {
+        $amount = 0;
+        foreach ($answers as $answer) if ($answer->hasComment() && $answer->getInappropriate()) $amount++;
+        return $amount;
+    }
 
     /**
      * @returns array(array('cnt'=>int,'title'=>string,'value'=>double))
@@ -231,6 +242,7 @@ class StatisticsController extends Controller {
                 'histogram' => $histogram,
                 'chart' => $this->getChart($question, $histogram),
                 'stats' => $stats,
+                'numberOfInappropriateComments' => $this->getNumberOfInappropriateComments($answers),
                 );
 
         return $data;
