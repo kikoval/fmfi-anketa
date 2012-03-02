@@ -9,7 +9,7 @@
  # @param subject current subject if it is relevant for the category type
  #}
 
-{% block title %}{{ title }} - Anketa{% endblock %}
+{% block title %}{{ title }}{% endblock %}
 
 {% block navigation %}
     {% render "AnketaBundle:Hlasovanie:menu" with { 'activeItems': activeItems } %}

@@ -98,8 +98,17 @@ input[type="text"], input[type="password"] {
   margin: 0.8em 0;
 }
 
-#header h1 span {
+#header h1 strong {
   font-size: 160%;
+}
+
+#header #instance {
+  text-transform: none;
+  font-size: 0.8em;
+}
+
+#header #instance span {
+  font-style: italic;
 }
 
 #footer {
