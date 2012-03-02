@@ -30,8 +30,7 @@
     mail_dest_new_teaching_association=fmfi-anketa-devel@googlegroups.com
 
     locale=en
-    csrf_secret=417ceb1c3737e1d3bfcd995b67c3bf8c
-    secret=417ceb1c3737e1d3bfcd995b67c3bf8c
+    secret=12341234123412341234123412341234
 
 
     ais_cookie=napisSem
