@@ -17,7 +17,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 class StatisticsController extends Controller {
     const MIN_VOTERS_FOR_PUBLIC = 0;
     const NO_CATEGORY = 'XXX-nekategorizovane';
-    const GRAPH_PALETTE = 'ff1e1e|f18f10|ddcd1a|9cdd1a|1add1a';
+    const GRAPH_PALETTE = 'ff1e1e|ff8f1e|f5f51d|b4ff1e|1eff1e';
 
     /**
      * @param string $season_slug if null, returns current active season
@@ -97,7 +97,7 @@ class StatisticsController extends Controller {
             $palette = array($c5, $c1);   // the first choice is the best
         }
         else if (count($histogram) == 5 && $histogram[2]['value'] == 0) {
-            $palette = array($c1, $c3, $c5, $c3, $c1);   // the middle choice is the best
+            $palette = array($c1, $c4, $c5, $c4, $c1);   // the middle choice is the best
         }
         else if (count($histogram) == 5 && $histogram[0]['value'] > $histogram[4]['value']) {
             $palette = array($c5, $c4, $c3, $c2, $c1);   // the first choice is the best
