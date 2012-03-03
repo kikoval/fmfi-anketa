@@ -44,8 +44,8 @@ jQuery(document).ready(function ($) {
 
   $("#content").prepend('<div id="subject-filter-wrapper">Filtrovať predmety: <input type="text" id="subject-filter"></div>');
   var $input = $('#subject-filter');
-  // onchange, onkeyup atd neodchytia vsetko, napr. ked cez context menu zvolim "Undo",
-  // takze najrobustnejsie asi bude proste pouzit setInterval.
-  setInterval(function () { search($input.val()); }, 100);
+  $input.bind('keydown keyup input', function () {
+    setTimeout(function () { search($input.val()); }, 0);
+  });
 });
 
