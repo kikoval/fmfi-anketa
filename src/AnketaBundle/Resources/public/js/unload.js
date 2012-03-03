@@ -9,6 +9,10 @@
 
 jQuery(document).ready(function ($) {
   "use strict";
+
+  // fungujeme len v question controlleri
+  if ($('#content .submit').length == 0) return;
+
   function getState() {
     var result = [];
     $('input, textarea, option').each(function () {
