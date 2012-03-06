@@ -24,7 +24,7 @@
             {% endif %}
         {% else %}
         {# TODO(majak): load cosign location from config  #}
-            Komentáre učiteľov si môžete pozrieť po <a href="https://login.uniba.sk/?cosign-proxy-anketa.fmph.uniba.sk&{{ app.request.uri | url_encode() }}">prihlásení</a>.
+            Komentáre učiteľov si môžete pozrieť po <a href="https://login.uniba.sk/?cosign-proxy-anketa.fmph.uniba.sk&{{ app.request.uri }}">prihlásení</a>.
         {% endif %}
         </div>
     {% endif %}
