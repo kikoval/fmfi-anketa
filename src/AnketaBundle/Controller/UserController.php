@@ -16,7 +16,7 @@ class UserController extends Controller
             $user = $token->getUser();
         }
         if ($user === null || !($user instanceof User)) {
-            return new Response();
+            return $this->render('AnketaBundle:User:anon_user_bar.html.twig');
         }
         $params = array();
         $params['username'] = $user->getUserName();
