@@ -20,16 +20,9 @@ use Doctrine\ORM\NoResultException;
 class SeasonRepository extends EntityRepository {
 
     public function getActiveSeason() {
-        // TODO(anty): Toto je docasne riesenie, kedze som vyhodil datumy
-        // zo season (datumy sa budu riesit vo fazach)
-        // MIN je z toho dovodu, ze ked niekto nahodou vlozi do season
-        // dalsi zaznam, aktivna zostane rovnaka season,
-        // ked budeme chciet oficialne podporovat viac season
-        // v tabulke, tak bud pridame slpec active alebo nieco take
+
         $dql = 'SELECT s FROM AnketaBundle\Entity\Season s ' .
-               'WHERE s.id = ' .
-                    '(SELECT MIN(s2.id) ' .
-                    ' FROM AnketaBundle\Entity\Season s2)';
+               'WHERE s.active = TRUE';
         $query = $this->getEntityManager()->createQuery($dql);
         $result = $query->execute();
 

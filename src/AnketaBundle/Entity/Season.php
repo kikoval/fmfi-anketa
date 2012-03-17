@@ -40,6 +40,15 @@ class Season {
      */
     private $slug;
 
+    /**
+     * Marks active season.
+     *
+     * @ORM\Column(type="boolean")
+     * @var boolean $active
+     */
+    private $active  = false;
+
+
     public function __construct($description, $slug) {
         $this->setDescription($description);
         $this->setSlug($slug);
@@ -71,6 +80,10 @@ class Season {
 
     public function setSlug($value) {
         $this->slug = $value;
+    }
+
+    public function isActive() {
+        return $this->active;
     }
 
 }
