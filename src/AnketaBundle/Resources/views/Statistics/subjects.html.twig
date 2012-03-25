@@ -6,7 +6,7 @@
 {% block content %}
     {% for category, subjects in categorized_subjects %}
         <h3> {{ category }} </h3>
-        <ul class="category-listing">
+        <ul class="category-listing subject-listing">
         {% for subject in subjects %}
             <li><a href="{{ path('results_subject', { 'season_slug': season.slug, 'subject_code': subject.code }) }}">
                 {{ subject.name }} ({{ subject.code }})
