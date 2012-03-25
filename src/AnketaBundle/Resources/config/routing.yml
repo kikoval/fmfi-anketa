@@ -14,10 +14,6 @@ anketa:
     pattern: /anketa/
     defaults: { _controller: AnketaBundle:Hlasovanie:index }
 
-manage:
-    pattern: /manage/
-    resource: "@AnketaBundle/Resources/config/manage_routing.yml"
-
 answer:
     pattern: /hlasuj/
     resource: "@AnketaBundle/Resources/config/answer_routing.yml"
