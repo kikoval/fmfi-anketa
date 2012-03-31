@@ -51,11 +51,26 @@ class StatisticsSection extends ContainerAware {
     }
 
     public static function makeSubjectSection(ContainerInterface $container, Season $season, Subject $subject) {
+        $em = $container->get('doctrine.orm.entity_manager');
         $result = new StatisticsSection();
         $result->setContainer($container);
         $result->season = $season;
         $result->subject = $subject;
         $result->title = $subject->getCode() . ' ' . $subject->getName();
+        $subjectSeason = $em->getRepository('AnketaBundle:SubjectSeason')->findOneBy(array('subject' => $subject->getId(), 'season' => $season->getId()));
+        if (isset($subjectSeason) && $subjectSeason->getStudentCountFaculty() !== null) {
+            $scf = $subjectSeason->getStudentCountFaculty();
+            $result->preface = 'Tento predmet ';
+            if ($scf == 0) $result->preface .= 'nemal nikto z FMFI zapísaný';
+            if ($scf == 1) $result->preface .= 'mal zapísaný '.$scf.' študent FMFI';
+            if ($scf >= 2 && $scf <= 4) $result->preface .= 'mali zapísaní '.$scf.' študenti FMFI';
+            if ($scf >= 5) $result->preface .= 'malo zapísaných '.$scf.' študentov FMFI';
+            if ($subjectSeason->getStudentCountAll() !== null) {
+                $sco = $subjectSeason->getStudentCountAll() - $scf;
+                if ($sco) $result->preface .= ' ('.$sco.' z iných fakúlt)';
+            }
+            $result->preface .= '.';
+        }
         $result->questionsCategoryType = CategoryType::SUBJECT;
         $result->responsesQuery = array('season' => $season->getId(), 'subject' => $subject->getId(), 'teacher' => null, 'studyProgram' => null);
         $result->statisticsRoute = 'results_subject';
@@ -206,6 +221,12 @@ class StatisticsSection extends ContainerAware {
 
     public function getHeadingVisible() {
         return $this->headingVisible;
+    }
+
+    private $preface = '';
+
+    public function getPreface() {
+        return $this->preface;
     }
 
     // TODO public function getQuestionsAndAnswers() or something like that
