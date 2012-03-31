@@ -1,7 +1,7 @@
 {% extends 'AnketaBundle:Statistics:index.html.twig' %}
 
 {% block navigation %}
-    {% render "AnketaBundle:Statistics:menuPredmety" with { 'season' : season, 'category' : category } %}
+    {% render "AnketaBundle:Statistics:menu" with { 'activeItems': category ? [season.id, 'subjects', category] : [season.id, 'subjects'] } %}
 {% endblock %}
 {% block content %}
     {% for category, subjects in categorized_subjects %}

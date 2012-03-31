@@ -1,22 +1,8 @@
 {% extends 'AnketaBundle:Statistics:index.html.twig' %}
 
 {% block navigation %}
-{% if teacher is defined %}
-    {% render "AnketaBundle:Statistics:menuPredmety" with { 
-        'season' : season,
-        'category' : category,
-        'subject_id': subject.id,
-        'teacher_id' : teacher.id
-        }
-    %}
-{% elseif subject is defined %}
-    {% render "AnketaBundle:Statistics:menuPredmety" with { 
-        'season' : season,
-        'category' : category,
-        'subject_id': subject.id
-        }
-    %}
-{% endif %}
+    {# TODO spravne menu #}
+    {% render "AnketaBundle:Statistics:menu" with { 'activeItems': [season.id, null] } %}
 {% endblock %}
 
 {% block content %}

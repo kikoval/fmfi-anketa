@@ -2,7 +2,7 @@
 
 {% block navigation %}
     {# TODO lepsie menu #}
-    {% render "AnketaBundle:Statistics:menu" with { 'season' : season } %}
+    {% render "AnketaBundle:Statistics:menu" with { 'activeItems': [season.id, null] } %}
 {% endblock %}
 
 {% block content %}

@@ -3,7 +3,7 @@
 {% import 'AnketaBundle:Statistics:displayTeacherResponseMacro.html.twig' as responseMacro %}
 
 {% block navigation %}
-    {% render "AnketaBundle:Statistics:menuVseobecne" with { 'season' : season } %}
+    {% render "AnketaBundle:Statistics:menu" with { 'activeItems': [season.id, 'general'] } %}
 {% endblock %}
 
 {% block content %}

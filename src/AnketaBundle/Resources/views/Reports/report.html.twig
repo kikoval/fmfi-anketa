@@ -1,6 +1,6 @@
 {% extends 'AnketaBundle:Reports:layout.html.twig' %}
 {% block navigation %}
-    {% render "AnketaBundle:Statistics:menuMojeReporty" with { 'season' : season } %}
+    {% render "AnketaBundle:Statistics:menu" with { 'activeItems': [season.id, 'my_reports'] } %}
 {% endblock %}
 {% block content %}
 <h1>{{ title }}

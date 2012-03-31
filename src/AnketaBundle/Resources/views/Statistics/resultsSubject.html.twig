@@ -2,12 +2,7 @@
 {% import 'AnketaBundle:Statistics:displayQuestionMacro.html.twig' as questionMacro %}
 {% import 'AnketaBundle:Statistics:displayTeacherResponseMacro.html.twig' as responseMacro %}
 {% block navigation %}
-    {% render "AnketaBundle:Statistics:menuPredmety" with { 
-        'season' : season,
-        'category' : category,
-        'subject_id': subject.id
-        }
-    %}
+    {% render "AnketaBundle:Statistics:menu" with { 'activeItems': [season.id, 'subjects', category, subject.id] } %}
 {% endblock %}
 {% block content %}
     <h1> {{ subject.code }} {{ subject.name }}</h1>

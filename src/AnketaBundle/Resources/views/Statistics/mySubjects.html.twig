@@ -1,7 +1,7 @@
 {% extends 'AnketaBundle:Statistics:index.html.twig' %}
 
 {% block navigation %}
-    {% render "AnketaBundle:Statistics:menuMojePredmety" with { 'season' : season } %}
+    {% render "AnketaBundle:Statistics:menu" with { 'activeItems': [season.id, 'my_subjects'] } %}
 {% endblock %}
 {% block content %}
     <h2>Moje predmety</h2>

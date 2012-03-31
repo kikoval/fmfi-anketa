@@ -1,7 +1,7 @@
 {% extends 'AnketaBundle:Statistics:index.html.twig' %}
 
 {% block navigation %}
-    {% render "AnketaBundle:Statistics:menuStudijneOdbory" with { 'season' : season } %}
+    {% render "AnketaBundle:Statistics:menu" with { 'activeItems': [season.id, 'study_programs'] } %}
 {% endblock %}
 {% block content %}
     <h3> Študijné programy </h3>
