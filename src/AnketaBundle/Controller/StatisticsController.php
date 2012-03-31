@@ -15,7 +15,6 @@ use AnketaBundle\Lib\StatisticalFunctions;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class StatisticsController extends Controller {
-    const MIN_VOTERS_FOR_PUBLIC = 0;
     const GRAPH_PALETTE = 'ff1e1e|ff8f1e|f5f51d|b4ff1e|1eff1e';
 
     /**
