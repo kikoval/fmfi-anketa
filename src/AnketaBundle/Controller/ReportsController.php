@@ -107,8 +107,10 @@ class ReportsController extends Controller {
         if ($season === null) {
             throw new NotFoundHttpException();
         }
-        
+
         $user = $security->getToken()->getUser();
+
+        $items = array();
         
         // katedry
         $deptRepository = $em->getRepository('AnketaBundle:Department');
@@ -120,6 +122,14 @@ class ReportsController extends Controller {
         }
         else {
             $departments = null;
+        }
+        if ($departments) {
+            $links = array();
+            foreach ($departments as $department) {
+                $links[$department->getName()] =
+                    $this->generateUrl('report_department', array('season_slug' => $season->getSlug(), 'department_slug' => $department->getSlug()));
+            }
+            $items['Katedry'] = $links;
         }
         
         // studijne programy
@@ -133,10 +143,20 @@ class ReportsController extends Controller {
         else {
             $studyPrograms = null;
         }
-        
-        return $this->render('AnketaBundle:Reports:myReports.html.twig',
-                array('season' => $season, 'studyPrograms' => $studyPrograms,
-                    'departments' => $departments));
+        if ($studyPrograms) {
+            $links = array();
+            foreach ($studyPrograms as $studyProgram) {
+                $links[$studyProgram->getName() . ' (' . $studyProgram->getCode() . ')'] =
+                    $this->generateUrl('report_study_programme', array('season_slug' => $season->getSlug(), 'study_programme_slug' => $studyProgram->getSlug()));
+            }
+            $items['Študijné programy'] = $links;
+        }
+
+        $templateParams = array();
+        $templateParams['title'] = 'Moje reporty';
+        $templateParams['activeMenuItems'] = array($season->getId(), 'my_reports');
+        $templateParams['items'] = $items;
+        return $this->render('AnketaBundle:Statistics:listing.html.twig', $templateParams);
     }
 
 }
