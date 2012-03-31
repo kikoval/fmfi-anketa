@@ -12,6 +12,13 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use AnketaBundle\Entity\Teacher;
 
 class ResponseController extends Controller {
+
+    public function menuAction($activeItems = array()) {
+        $menu = array();
+        $menu['my_list'] = new MenuItem('Moje komentáre', $this->generateUrl('response'));
+        if ($activeItems == array('my_list')) $menu['my_list']->active = true;
+        return $this->render('AnketaBundle:Hlasovanie:menu.html.twig', array('menu' => $menu));
+    }
     
     public function newResponseAction($section_slug) {
         $security = $this->get('security.context');
@@ -132,7 +139,7 @@ class ResponseController extends Controller {
         }
         
         return $this->render('AnketaBundle:Response:list.html.twig',
-                array('responses' => $processedResponses, 'responsePage' => 'myList', 'season' => $season));
+                array('responses' => $processedResponses, 'season' => $season));
     }
     
 }

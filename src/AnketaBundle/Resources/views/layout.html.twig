@@ -1,5 +1,7 @@
 {% extends '::base.html.twig' %}
 
+{% block sidebar %}{% block navigation %}{% endblock %}{% endblock %}
+
 {% block user_bar %}
     {% render "AnketaBundle:User:userBar" %}
 {% endblock %}
