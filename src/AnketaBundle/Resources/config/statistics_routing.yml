@@ -1,33 +1,33 @@
 statistics:
     pattern: /vysledky
-    defaults: { _controller: AnketaBundle:Statistics:general, season_slug: null}
+    defaults: { _controller: AnketaBundle:Statistics:listGeneral, season_slug: null}
 
 statistics_season:
     pattern: /vysledky/{season_slug}
-    defaults: { _controller: AnketaBundle:Statistics:general}
+    defaults: { _controller: AnketaBundle:Statistics:listGeneral}
 
-statistics_subjects:
+statistics_list_subjects:
     pattern: /vysledky/{season_slug}/predmety/{category}
-    defaults: { _controller: AnketaBundle:Statistics:subjects, category: null}
+    defaults: { _controller: AnketaBundle:Statistics:listSubjects, category: null}
     requirements:
       season_slug:   "[a-z0-9-]+"
       category:      "[a-zA-Z0-9-]*"
 
-statistics_mySubjects:
+statistics_list_my_subjects:
     pattern: /vysledky/{season_slug}/moje-predmety
-    defaults: { _controller: AnketaBundle:Statistics:mySubjects }
+    defaults: { _controller: AnketaBundle:Statistics:listMySubjects }
     requirements:
       season_slug:   "[a-z0-9-]+"
 
-statistics_study_programs:
+statistics_list_programs:
     pattern: /vysledky/{season_slug}/programy
-    defaults: { _controller: AnketaBundle:Statistics:studyPrograms}
+    defaults: { _controller: AnketaBundle:Statistics:listStudyPrograms}
     requirements:
       season_slug:   "[a-z0-9-]+"
 
-statistics_general:
+statistics_list_general:
     pattern: /vysledky/{season_slug}/vseobecne
-    defaults: { _controller: AnketaBundle:Statistics:general}
+    defaults: { _controller: AnketaBundle:Statistics:listGeneral}
     requirements:
       season_slug:   "[a-z0-9-]+"
 

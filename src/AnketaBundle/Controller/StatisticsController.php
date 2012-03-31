@@ -247,7 +247,7 @@ class StatisticsController extends Controller {
         return $data;
     }
 
-    public function subjectsAction($season_slug, $category) {
+    public function listSubjectsAction($season_slug, $category) {
         $em = $this->get('doctrine.orm.entity_manager');
 
         $season = $this->getSeason($season_slug);
@@ -272,7 +272,7 @@ class StatisticsController extends Controller {
         return $this->render('AnketaBundle:Statistics:listing.html.twig', $templateParams);
     }
     
-    public function mySubjectsAction($season_slug) {
+    public function listMySubjectsAction($season_slug) {
         $security = $this->get('security.context');
         if (!$security->isGranted('ROLE_TEACHER')) {
             throw new AccessDeniedException();
@@ -302,7 +302,7 @@ class StatisticsController extends Controller {
         return $this->render('AnketaBundle:Statistics:listing.html.twig', $templateParams);
     }
 
-    public function studyProgramsAction($season_slug) {
+    public function listStudyProgramsAction($season_slug) {
         $em = $this->get('doctrine.orm.entity_manager');
 
         $season = $this->getSeason($season_slug);
@@ -362,19 +362,19 @@ class StatisticsController extends Controller {
         foreach ($seasons as $season) {
             $menu[$season->getId()] = $seasonItem = new MenuItem(
                 $season->getDescription(),
-                $this->generateUrl('statistics_general',
+                $this->generateUrl('statistics_list_general',
                     array('season_slug' => $season->getSlug())));
             if (isset($activeItems[0]) && $activeItems[0] == $season->getId()) {
                 $seasonItem->expanded = true;
 
                 $seasonItem->children['general'] = new MenuItem(
                     'Všeobecné otázky',
-                    $this->generateUrl('statistics_general',
+                    $this->generateUrl('statistics_list_general',
                         array('season_slug' => $season->getSlug())));
 
                 $seasonItem->children['study_programs'] = $studyProgramsItem = new MenuItem(
                     'Študijné programy',
-                    $this->generateUrl('statistics_study_programs',
+                    $this->generateUrl('statistics_list_programs',
                         array('season_slug' => $season->getSlug())));
                 if (isset($activeItems[1]) && $activeItems[1] == 'study_programs') {
                     $studyProgramsItem->expanded = true;
@@ -388,14 +388,14 @@ class StatisticsController extends Controller {
 
                 $seasonItem->children['subjects'] = $subjectsItem = new MenuItem(
                     'Predmety',
-                    $this->generateUrl('statistics_subjects',
+                    $this->generateUrl('statistics_list_subjects',
                         array('season_slug' => $season->getSlug())));
                 if (isset($activeItems[1]) && $activeItems[1] == 'subjects') {
                     $subjectsByCategory = $em->getRepository('AnketaBundle:Subject')->getCategorizedSubjects($season);
                     foreach (array_keys($subjectsByCategory) as $category) {
                         $subjectsItem->children[$category] = $categoryItem = new MenuItem(
                             $category,
-                            $this->generateUrl('statistics_subjects',
+                            $this->generateUrl('statistics_list_subjects',
                                 array('season_slug' => $season->getSlug(), 'category' => $category)));
                         if (isset($activeItems[2]) && $activeItems[2] == $category) {
                             $subjectsItem->only_expanded = true;
@@ -421,7 +421,7 @@ class StatisticsController extends Controller {
                 if ($security->isGranted('ROLE_TEACHER')) {
                     $seasonItem->children['my_subjects'] = new MenuItem(
                         'Moje predmety',
-                        $this->generateUrl('statistics_mySubjects',
+                        $this->generateUrl('statistics_list_my_subjects',
                             array('season_slug' => $season->getSlug())));
                 }
 
@@ -460,7 +460,7 @@ class StatisticsController extends Controller {
                              $templateParams);
     }
 
-    public function generalAction($season_slug = null) {
+    public function listGeneralAction($season_slug = null) {
         $em = $this->get('doctrine.orm.entity_manager');
         $season = $this->getSeason($season_slug);
         // TODO: by season
