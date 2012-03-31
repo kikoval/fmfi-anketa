@@ -1,5 +1,5 @@
-{% macro displayResponse(responses, editable, newResponseLink) %}
-    {% if editable or responses is not empty %}
+{% macro displayResponses(responses, section) %}
+    {% if is_granted('ROLE_TEACHER') or responses is not empty %}
         <div class="results-comments results-comments-official">
         <h2>Vyjadrenia učiteľov k výsledkom:</h2>
         {% if is_granted('ROLE_USER') %}
@@ -17,13 +17,12 @@
                 {% endif %}
                 </div>
             {% endfor %}
-            {% if editable %}
+            {% if is_granted('ROLE_TEACHER') %}
                 <div>
-                    <a href="{{ newResponseLink }}">Nový komentár</a>
+                    <a href="{{ path('response_new', {'section_slug': section.slug}) }}">Nový komentár</a>
                 </div>
             {% endif %}
         {% else %}
-        {# TODO(majak): load cosign location from config  #}
             Komentáre učiteľov si môžete pozrieť po <a href="{{ path('login', {'to': app.request.uri}) }}">prihlásení</a>.
         {% endif %}
         </div>

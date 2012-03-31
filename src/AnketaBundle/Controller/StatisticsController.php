@@ -317,8 +317,6 @@ class StatisticsController extends Controller {
                         ' neexistoval.');
         }
 
-        $category = $subject->getCategory();
-
         $maxCnt = 0;
         $results = array();
 
@@ -334,20 +332,13 @@ class StatisticsController extends Controller {
         }
         
         $section = StatisticsSection::makeSubjectSection($this->container, $season, $subject);
-        $responses = $em->getRepository('AnketaBundle:Response')
-                        ->findBy(array('subject' => $subject->getId(), 'teacher' => null, 'studyProgram' => null));
-        $templateParams['responses'] = $this->processResponses($responses);
-        $templateParams['responseEditable'] = $this->get('security.context')->isGranted('ROLE_TEACHER');
-        $templateParams['newResponseLink'] = $this->generateUrl('response_new', array('section_slug' => $section->getSlug()));
-        $templateParams['season'] = $season;
-        $templateParams['category'] = $category;
-        $templateParams['subject'] = $subject;
         $templateParams['section'] = $section;
+        $templateParams['responses'] = $this->processResponses($section->getResponses());
 
         if ($maxCnt >= self::MIN_VOTERS_FOR_PUBLIC ||
             $this->get('security.context')->isGranted('ROLE_FULL_RESULTS')) {
             $templateParams['results'] = $results;
-            return $this->render('AnketaBundle:Statistics:resultsSubject.html.twig',
+            return $this->render('AnketaBundle:Statistics:results.html.twig',
                                  $templateParams);
         } else {
             $templateParams['limit'] = self::MIN_VOTERS_FOR_PUBLIC;
@@ -381,18 +372,13 @@ class StatisticsController extends Controller {
         }
 
         $section = StatisticsSection::makeStudyProgramSection($this->container, $season, $studyProgram);
-        $responses = $em->getRepository('AnketaBundle:Response')
-                        ->findBy(array('studyProgram' => $studyProgram->getId(), 'teacher' => null, 'subject' => null));
-        $templateParams['responses'] = $this->processResponses($responses);
-        $templateParams['responseEditable'] = $this->get('security.context')->isGranted('ROLE_TEACHER');
-        $templateParams['newResponseLink'] = $this->generateUrl('response_new', array('section_slug' => $section->getSlug()));
-        $templateParams['season'] = $season;
-        $templateParams['studyProgram'] = $studyProgram;
-        
+        $templateParams['section'] = $section;
+        $templateParams['responses'] = $this->processResponses($section->getResponses());
+
         if ($maxCnt >= self::MIN_VOTERS_FOR_PUBLIC ||
             $this->get('security.context')->isGranted('ROLE_FULL_RESULTS')) {
             $templateParams['results'] = $results;
-            return $this->render('AnketaBundle:Statistics:resultsStudyProgram.html.twig',
+            return $this->render('AnketaBundle:Statistics:results.html.twig',
                                  $templateParams);
         } else {
             $templateParams['limit'] = self::MIN_VOTERS_FOR_PUBLIC;
@@ -412,7 +398,6 @@ class StatisticsController extends Controller {
                         $season->getDescription() .
                         ' neexistoval.');
         }
-        $category = $subject->getCategory();
         $teacher = $em->find('AnketaBundle:Teacher', $teacher_id);
         if ($teacher === null) {
             throw new NotFoundHttpException('Učiteľ ' . $teacher_id . ' neexistuje');
@@ -434,20 +419,13 @@ class StatisticsController extends Controller {
         }
         
         $section = StatisticsSection::makeSubjectTeacherSection($this->container, $season, $subject, $teacher);
-        $responses = $em->getRepository('AnketaBundle:Response')
-                        ->findBy(array('subject' => $subject->getId(), 'teacher' => $teacher_id, 'studyProgram' => null));
-        $templateParams['responses'] = $this->processResponses($responses);
-        $templateParams['responseEditable'] = $this->get('security.context')->isGranted('ROLE_TEACHER');
-        $templateParams['newResponseLink'] = $this->generateUrl('response_new', array('section_slug' => $section->getSlug()));
-        $templateParams['season'] = $season;
-        $templateParams['category'] = $category;
-        $templateParams['subject'] = $subject;
-        $templateParams['teacher'] = $teacher;
+        $templateParams['section'] = $section;
+        $templateParams['responses'] = $this->processResponses($section->getResponses());
         
         if ($maxCnt >= self::MIN_VOTERS_FOR_PUBLIC ||
             $this->get('security.context')->isGranted('ROLE_FULL_RESULTS')) {
             $templateParams['results'] = $results;
-            return $this->render('AnketaBundle:Statistics:resultsSubjectTeacher.html.twig',
+            return $this->render('AnketaBundle:Statistics:results.html.twig',
                                  $templateParams);
         } else {
             $templateParams['limit'] = self::MIN_VOTERS_FOR_PUBLIC;
@@ -600,14 +578,11 @@ class StatisticsController extends Controller {
                       ->findBy(array('question' => $question->getId()));
 
         $section = StatisticsSection::makeGeneralSection($this->container, $season, $question);
-        $responses = $em->getRepository('AnketaBundle:Response')
-                        ->findBy(array('question' => $question_id));
-        $templateParams['responses'] = $this->processResponses($responses);
-        $templateParams['result'] = $this->processQuestion($question, $answers);
-        $templateParams['season'] = $season;
-        $templateParams['responseEditable'] = $this->get('security.context')->isGranted('ROLE_TEACHER');
-        $templateParams['newResponseLink'] = $this->generateUrl('response_new', array('section_slug' => $section->getSlug()));
-        return $this->render('AnketaBundle:Statistics:resultsGeneral.html.twig', $templateParams);
+        $templateParams['section'] = $section;
+        $templateParams['responses'] = $this->processResponses($section->getResponses());
+        $templateParams['results'] = array($this->processQuestion($question, $answers));
+
+        return $this->render('AnketaBundle:Statistics:results.html.twig', $templateParams);
     }
     
     /** Return true, if the current user can edit a response */
