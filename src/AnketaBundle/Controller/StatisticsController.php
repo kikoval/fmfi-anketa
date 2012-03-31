@@ -321,132 +321,33 @@ class StatisticsController extends Controller {
         return $this->render('AnketaBundle:Statistics:listing.html.twig', $templateParams);
     }
 
-    public function resultsSubjectAction($season_slug, $subject_code) {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $season = $this->getSeason($season_slug);
-        // TODO: check ci predmet s tym id patri do tejto sezony
-        $subjectRepository = $em->getRepository('AnketaBundle:Subject');
-        $subject = $subjectRepository->findOneBy(array('code' => $subject_code));
-        if ($subject === null) {
-            throw new NotFoundHttpException('Predmet ' . $subject_code . ' v sezone ' .
-                        $season->getDescription() .
-                        ' neexistoval.');
-        }
+    public function resultsAction($section_slug) {
+        $section = StatisticsSection::getSectionFromSlug($this->container, $section_slug);
 
         $maxCnt = 0;
         $results = array();
 
-        $questions = $em->getRepository('AnketaBundle\Entity\Question')
-                       ->getOrderedQuestionsByCategoryType(CategoryType::SUBJECT);
+        $questions = $section->getQuestions();
         foreach ($questions as $question) {
-            $answers = $em->getRepository('AnketaBundle\Entity\Answer')
-                          ->findBy(array('question' => $question->getId(),
-                                      'subject' => $subject->getId()));
-            $data = $this->processQuestion($question, $answers);
-            $maxCnt = max($maxCnt, $data['stats']['cnt']);
-            $results[] = $data;
-        }
-        
-        $section = StatisticsSection::makeSubjectSection($this->container, $season, $subject);
-        $templateParams['section'] = $section;
-        $templateParams['responses'] = $this->processResponses($section->getResponses());
-
-        if ($maxCnt >= self::MIN_VOTERS_FOR_PUBLIC ||
-            $this->get('security.context')->isGranted('ROLE_FULL_RESULTS')) {
-            $templateParams['results'] = $results;
-            return $this->render('AnketaBundle:Statistics:results.html.twig',
-                                 $templateParams);
-        } else {
-            $templateParams['limit'] = self::MIN_VOTERS_FOR_PUBLIC;
-            return $this->render('AnketaBundle:Statistics:requestResults.html.twig',
-                                 $templateParams);
-        }
-    }
-
-    public function resultsStudyProgramAction($season_slug, $program_slug) {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $season = $this->getSeason($season_slug);
-        // TODO: check ci predmet s tym id patri do tejto sezony
-        $spRepository = $em->getRepository('AnketaBundle:StudyProgram');
-        $studyProgram = $spRepository->findOneBy(array('slug' => $program_slug));
-        if ($studyProgram === null) {
-            throw new NotFoundHttpException('Studijny odbor so skratkou ' . $program_slug . ' neexistuje.');
-        }
-
-        $maxCnt = 0;
-        $results = array();
-
-        $questions = $em->getRepository('AnketaBundle\Entity\Question')
-                       ->getOrderedQuestionsByCategoryType(CategoryType::STUDY_PROGRAMME);
-        foreach ($questions as $question) {
-            $answers = $em->getRepository('AnketaBundle\Entity\Answer')
-                          ->findBy(array('question' => $question->getId(),
-                                      'studyProgram' => $studyProgram->getId()));
+            $answers = $section->getAnswers($question);
             $data = $this->processQuestion($question, $answers);
             $maxCnt = max($maxCnt, $data['stats']['cnt']);
             $results[] = $data;
         }
 
-        $section = StatisticsSection::makeStudyProgramSection($this->container, $season, $studyProgram);
+        $templateParams = array();
         $templateParams['section'] = $section;
         $templateParams['responses'] = $this->processResponses($section->getResponses());
 
-        if ($maxCnt >= self::MIN_VOTERS_FOR_PUBLIC ||
-            $this->get('security.context')->isGranted('ROLE_FULL_RESULTS')) {
+        $limit = $section->getMinVoters();
+        if ($maxCnt >= $limit ||
+                $this->get('security.context')->isGranted('ROLE_FULL_RESULTS')) {
             $templateParams['results'] = $results;
-            return $this->render('AnketaBundle:Statistics:results.html.twig',
-                                 $templateParams);
-        } else {
-            $templateParams['limit'] = self::MIN_VOTERS_FOR_PUBLIC;
-            return $this->render('AnketaBundle:Statistics:requestResults.html.twig',
-                                 $templateParams);
+            return $this->render('AnketaBundle:Statistics:results.html.twig', $templateParams);
         }
-    }
-
-    public function resultsSubjectTeacherAction($season_slug, $subject_code, $teacher_id) {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $season = $this->getSeason($season_slug);
-        // TODO: check ci predmet s tym id patri do tejto sezony
-        $subjectRepository = $em->getRepository('AnketaBundle:Subject');
-        $subject = $subjectRepository->findOneBy(array('code' => $subject_code));
-        if ($subject === null) {
-            throw new NotFoundHttpException('Predmet ' . $subject_code . ' v sezone ' .
-                        $season->getDescription() .
-                        ' neexistoval.');
-        }
-        $teacher = $em->find('AnketaBundle:Teacher', $teacher_id);
-        if ($teacher === null) {
-            throw new NotFoundHttpException('Učiteľ ' . $teacher_id . ' neexistuje');
-        }
-
-        $maxCnt = 0;
-        $results = array();
-
-        $questions = $em->getRepository('AnketaBundle\Entity\Question')
-                       ->getOrderedQuestionsByCategoryType(CategoryType::TEACHER_SUBJECT);
-        foreach ($questions as $question) {
-            $answers = $em->getRepository('AnketaBundle\Entity\Answer')
-                          ->findBy(array('question' => $question->getId(),
-                                      'subject' => $subject->getId(),
-                                      'teacher' => $teacher->getId()));
-            $data = $this->processQuestion($question, $answers);
-            $maxCnt = max($maxCnt, $data['stats']['cnt']);
-            $results[] = $data;
-        }
-        
-        $section = StatisticsSection::makeSubjectTeacherSection($this->container, $season, $subject, $teacher);
-        $templateParams['section'] = $section;
-        $templateParams['responses'] = $this->processResponses($section->getResponses());
-        
-        if ($maxCnt >= self::MIN_VOTERS_FOR_PUBLIC ||
-            $this->get('security.context')->isGranted('ROLE_FULL_RESULTS')) {
-            $templateParams['results'] = $results;
-            return $this->render('AnketaBundle:Statistics:results.html.twig',
-                                 $templateParams);
-        } else {
-            $templateParams['limit'] = self::MIN_VOTERS_FOR_PUBLIC;
-            return $this->render('AnketaBundle:Statistics:requestResults.html.twig',
-                                 $templateParams);
+        else {
+            $templateParams['limit'] = $limit;
+            return $this->render('AnketaBundle:Statistics:requestResults.html.twig', $templateParams);
         }
     }
 
@@ -587,26 +488,6 @@ class StatisticsController extends Controller {
         return $this->render('AnketaBundle:Statistics:listing.html.twig', $templateParams);
     }
 
-    public function resultsGeneralAction($season_slug, $question_id) {
-        $em = $this->get('doctrine.orm.entity_manager');
-        // TODO: check ci otazka s tym id patri do tejto sezony
-        $season = $this->getSeason($season_slug);
-        // TODO: validacia ci ta otazka je vseobecna
-        $question = $em->find('AnketaBundle:Question', $question_id);
-        if ($question == null) {
-            throw new NotFoundHttpException("Otázka s daným id neexistuje");
-        }
-        $answers = $em->getRepository('AnketaBundle\Entity\Answer')
-                      ->findBy(array('question' => $question->getId()));
-
-        $section = StatisticsSection::makeGeneralSection($this->container, $season, $question);
-        $templateParams['section'] = $section;
-        $templateParams['responses'] = $this->processResponses($section->getResponses());
-        $templateParams['results'] = array($this->processQuestion($question, $answers));
-
-        return $this->render('AnketaBundle:Statistics:results.html.twig', $templateParams);
-    }
-    
     /** Return true, if the current user can edit a response */
     private function userCanEditResponse(Response $response)
     {

@@ -40,6 +40,7 @@ class StatisticsSection extends ContainerAware {
         $result->teacher = $teacher;
         $result->title = $subject->getCode() . ' ' . $subject->getName() . ' - ' . $teacher->getName();
         $result->questionsCategoryType = CategoryType::TEACHER_SUBJECT;
+        $result->answersQuery = array('subject' => $subject->getId(), 'teacher' => $teacher->getId());
         $result->responsesQuery = array('season' => $season->getId(), 'subject' => $subject->getId(), 'teacher' => $teacher->getId(), 'studyProgram' => null);
         $result->statisticsRoute = 'results_subject_teacher';
         $result->statisticsRouteParameters =
@@ -72,6 +73,7 @@ class StatisticsSection extends ContainerAware {
             $result->preface .= '.';
         }
         $result->questionsCategoryType = CategoryType::SUBJECT;
+        $result->answersQuery = array('subject' => $subject->getId());
         $result->responsesQuery = array('season' => $season->getId(), 'subject' => $subject->getId(), 'teacher' => null, 'studyProgram' => null);
         $result->statisticsRoute = 'results_subject';
         $result->statisticsRouteParameters =
@@ -83,12 +85,16 @@ class StatisticsSection extends ContainerAware {
     }
 
     public static function makeGeneralSection(ContainerInterface $container, Season $season, Question $generalQuestion) {
+        if ($generalQuestion->getCategory()->getType() != CategoryType::GENERAL) {
+            throw new \Exception('Section not found: Question is not general.');
+        }
         $result = new StatisticsSection();
         $result->setContainer($container);
         $result->season = $season;
         $result->generalQuestion = $generalQuestion;
         $result->title = $generalQuestion->getQuestion();
         $result->headingVisible = false;
+        $result->answersQuery = array();
         $result->responsesQuery = array('season' => $season->getId(), 'question' => $generalQuestion->getId());
         $result->statisticsRoute = 'statistics_results_general';
         $result->statisticsRouteParameters =
@@ -106,6 +112,7 @@ class StatisticsSection extends ContainerAware {
         $result->studyProgram = $studyProgram;
         $result->title = $studyProgram->getCode() . ' ' . $studyProgram->getName();
         $result->questionsCategoryType = CategoryType::STUDY_PROGRAMME;
+        $result->answersQuery = array('studyProgram' => $studyProgram->getId());
         $result->responsesQuery = array('season' => $season->getId(), 'studyProgram' => $studyProgram->getId(), 'teacher' => null, 'subject' => null);
         $result->statisticsRoute = 'statistics_study_program';
         $result->statisticsRouteParameters =
@@ -227,6 +234,28 @@ class StatisticsSection extends ContainerAware {
 
     public function getPreface() {
         return $this->preface;
+    }
+
+    private $minVoters = 0;
+
+    public function getMinVoters() {
+        return $this->minVoters;
+    }
+
+    private $questionsCategoryType = null;
+
+    public function getQuestions() {
+        if ($this->generalQuestion) return array($this->generalQuestion);
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        return $em->getRepository('AnketaBundle:Question')->getOrderedQuestionsByCategoryType($this->questionsCategoryType);
+    }
+
+    private $answersQuery = null;
+
+    public function getAnswers($question) {
+        $query = array_merge($this->answersQuery, array('question' => $question->getId()));
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        return $em->getRepository('AnketaBundle:Answer')->findBy($query);
     }
 
     // TODO public function getQuestionsAndAnswers() or something like that

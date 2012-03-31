@@ -19,6 +19,31 @@ statistics_mySubjects:
     requirements:
       season_slug:   "[a-z0-9-]+"
 
+statistics_study_programs:
+    pattern: /vysledky/{season_slug}/programy
+    defaults: { _controller: AnketaBundle:Statistics:studyPrograms}
+    requirements:
+      season_slug:   "[a-z0-9-]+"
+
+statistics_general:
+    pattern: /vysledky/{season_slug}/vseobecne
+    defaults: { _controller: AnketaBundle:Statistics:general}
+    requirements:
+      season_slug:   "[a-z0-9-]+"
+
+statistics_report:
+    pattern: /vysledky/{season_slug}/report/{answer_id}
+    defaults: { _controller: AnketaBundle:Statistics:reportInappropriate}
+    requirements:
+      season_slug:   "[a-z0-9-]+"
+      answer_id: \d+
+
+statistics_results:
+    pattern: /vysledky/{section_slug}
+    defaults: { _controller: AnketaBundle:Statistics:results }
+    requirements:
+      section_slug: ".+"
+
 results_subject:
     pattern: /vysledky/{season_slug}/predmet/{subject_code}
     defaults: { _controller: AnketaBundle:Statistics:resultsSubject}
@@ -34,24 +59,12 @@ results_subject_teacher:
       subject_code:  "[a-zA-Z0-9-_]+"
       teacher_id:  \d+
 
-statistics_study_programs:
-    pattern: /vysledky/{season_slug}/programy
-    defaults: { _controller: AnketaBundle:Statistics:studyPrograms}
-    requirements:
-      season_slug:   "[a-z0-9-]+"
-
 statistics_study_program:
     pattern: /vysledky/{season_slug}/program/{program_slug}
     defaults: { _controller: AnketaBundle:Statistics:resultsStudyProgram, program_slug: null}
     requirements:
       season_slug:   "[a-z0-9-]+"
       program_slug:  "[a-zA-Z0-9-_]+"
-
-statistics_general:
-    pattern: /vysledky/{season_slug}/vseobecne
-    defaults: { _controller: AnketaBundle:Statistics:general}
-    requirements:
-      season_slug:   "[a-z0-9-]+"
 
 statistics_results_general:
     pattern: /vysledky/{season_slug}/vseobecne/{question_id}
@@ -60,9 +73,3 @@ statistics_results_general:
       season_slug:   "[a-z0-9-]+"
       question_id: \d+
 
-statistics_report:
-    pattern: /vysledky/{season_slug}/report/{answer_id}
-    defaults: { _controller: AnketaBundle:Statistics:reportInappropriate}
-    requirements:
-      season_slug:   "[a-z0-9-]+"
-      answer_id: \d+
