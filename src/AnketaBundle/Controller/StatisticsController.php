@@ -16,7 +16,6 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class StatisticsController extends Controller {
     const MIN_VOTERS_FOR_PUBLIC = 0;
-    const NO_CATEGORY = 'XXX-nekategorizovane';
     const GRAPH_PALETTE = 'ff1e1e|ff8f1e|f5f51d|b4ff1e|1eff1e';
 
     /**
@@ -248,50 +247,12 @@ class StatisticsController extends Controller {
         return $data;
     }
 
-    /**
-     * Vrat nazov kategorie pre predmet
-     * @param Subject $subject
-     * @return string nazov kategorie alebo self::NO_CATEGORY ak je nekategorizovany
-     */
-    private function getCategory(Subject $subject)
-    {
-        $match = preg_match("@^[^-]*-([^-]*)-@", $subject->getCode(), $matches);
-        if ($match == 0) {
-            return self::NO_CATEGORY;
-        } else {
-            return $matches[1];
-        }
-    }
-
-    // TODO:nahrad celu tuto saskaren studijnymi programmi ked budu k dispozicii
-    public function getCategorizedSubjects(Season $season) {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $subjects = $em->getRepository('AnketaBundle\Entity\Subject')->getSortedSubjectsWithAnswers($season);
-        $categorized = array();
-        $uncategorized = array();
-        foreach ($subjects as $subject) {
-            $category = $this->getCategory($subject);
-
-            if ($category === self::NO_CATEGORY) {
-                $uncategorized[] = $subject;
-            } else {
-                $categorized[$category][] = $subject;
-            }
-        }
-        uksort($categorized, 'strcasecmp');
-        // we want to append this after sorting
-        if (!empty($uncategorized)) {
-            $categorized[self::NO_CATEGORY] = $uncategorized;
-        }
-        return $categorized;
-    }
-
     public function subjectsAction($season_slug, $category) {
         $em = $this->get('doctrine.orm.entity_manager');
 
         $season = $this->getSeason($season_slug);
         $templateParams = array();
-        $subjects = $this->getCategorizedSubjects($season);
+        $subjects = $em->getRepository('AnketaBundle:Subject')->getCategorizedSubjects($season);
 
         if ($category == null) {
             $templateParams['categorized_subjects'] = $subjects;
@@ -356,7 +317,7 @@ class StatisticsController extends Controller {
                         ' neexistoval.');
         }
 
-        $category = $this->getCategory($subject);
+        $category = $subject->getCategory();
 
         $maxCnt = 0;
         $results = array();
@@ -454,7 +415,7 @@ class StatisticsController extends Controller {
                         $season->getDescription() .
                         ' neexistoval.');
         }
-        $category = $this->getCategory($subject);
+        $category = $subject->getCategory();
         $teacher = $em->find('AnketaBundle:Teacher', $teacher_id);
         if ($teacher === null) {
             throw new NotFoundHttpException('Učiteľ ' . $teacher_id . ' neexistuje');
@@ -539,7 +500,7 @@ class StatisticsController extends Controller {
                     $this->generateUrl('statistics_subjects',
                         array('season_slug' => $season->getSlug())));
                 if (isset($activeItems[1]) && $activeItems[1] == 'subjects') {
-                    $subjectsByCategory = $this->getCategorizedSubjects($season);
+                    $subjectsByCategory = $em->getRepository('AnketaBundle:Subject')->getCategorizedSubjects($season);
                     foreach (array_keys($subjectsByCategory) as $category) {
                         $subjectsItem->children[$category] = $categoryItem = new MenuItem(
                             $category,
