@@ -44,32 +44,3 @@ statistics_results:
     requirements:
       section_slug: ".+"
 
-results_subject:
-    pattern: /vysledky/{season_slug}/predmet/{subject_code}
-    defaults: { _controller: AnketaBundle:Statistics:resultsSubject}
-    requirements:
-      season_slug:   "[a-z0-9-]+"
-      subject_code:  "[a-zA-Z0-9-_]+"
-      
-results_subject_teacher:
-    pattern: /vysledky/{season_slug}/predmet/{subject_code}/ucitel/{teacher_id}
-    defaults: { _controller: AnketaBundle:Statistics:resultsSubjectTeacher}
-    requirements:
-      season_slug:   "[a-z0-9-]+"
-      subject_code:  "[a-zA-Z0-9-_]+"
-      teacher_id:  \d+
-
-statistics_study_program:
-    pattern: /vysledky/{season_slug}/program/{program_slug}
-    defaults: { _controller: AnketaBundle:Statistics:resultsStudyProgram, program_slug: null}
-    requirements:
-      season_slug:   "[a-z0-9-]+"
-      program_slug:  "[a-zA-Z0-9-_]+"
-
-statistics_results_general:
-    pattern: /vysledky/{season_slug}/vseobecne/{question_id}
-    defaults: { _controller: AnketaBundle:Statistics:resultsGeneral}
-    requirements:
-      season_slug:   "[a-z0-9-]+"
-      question_id: \d+
-

@@ -258,8 +258,8 @@ class StatisticsController extends Controller {
             if ($category != null && $category != $category_id) continue;
             $links = array();
             foreach ($subjects as $subject) {
-                $links[$subject->getName() . ' (' . $subject->getCode() . ')'] =
-                    $this->generateUrl('results_subject', array('season_slug' => $season->getSlug(), 'subject_code' => $subject->getCode()));
+                $section = StatisticsSection::makeSubjectSection($this->container, $season, $subject);
+                $links[$section->getTitle()] = $section->getStatisticsPath();
             }
             $items[$category_id] = $links;
         }
@@ -291,8 +291,8 @@ class StatisticsController extends Controller {
 
         $items = array();
         foreach ($subjects as $subject) {
-            $items[$subject->getName() . ' (' . $subject->getCode() . ')'] =
-                $this->generateUrl('results_subject', array('season_slug' => $season->getSlug(), 'subject_code' => $subject->getCode()));
+            $section = StatisticsSection::makeSubjectSection($this->container, $season, $subject);
+            $items[$section->getTitle()] = $section->getStatisticsPath();
         }
 
         $templateParams = array();
@@ -310,8 +310,8 @@ class StatisticsController extends Controller {
 
         $items = array();
         foreach ($studyPrograms as $studyProgram) {
-            $items[$studyProgram->getName() . ' (' . $studyProgram->getCode() . ')'] =
-                $this->generateUrl('statistics_study_program', array('season_slug' => $season->getSlug(), 'program_slug' => $studyProgram->getSlug()));
+            $section = StatisticsSection::makeStudyProgramSection($this->container, $season, $studyProgram);
+            $items[$section->getTitle()] = $section->getStatisticsPath();
         }
 
         $templateParams = array();
@@ -380,10 +380,9 @@ class StatisticsController extends Controller {
                     $studyProgramsItem->expanded = true;
                     $studyPrograms = $em->getRepository('AnketaBundle:StudyProgram')->getAllWithAnswers($season);
                     foreach ($studyPrograms as $studyProgram) {
+                        $studyProgramSection = StatisticsSection::makeStudyProgramSection($this->container, $season, $studyProgram);
                         $studyProgramsItem->children[$studyProgram->getCode()] = new MenuItem(
-                            $studyProgram->getCode(),
-                            $this->generateUrl('statistics_study_program',
-                                array('season_slug' => $season->getSlug(), 'program_slug' => $studyProgram->getSlug())));
+                            $studyProgram->getCode(), $studyProgramSection->getStatisticsPath());
                     }
                 }
 
@@ -402,18 +401,16 @@ class StatisticsController extends Controller {
                             $subjectsItem->only_expanded = true;
                             $categoryItem->expanded = true;
                             foreach ($subjectsByCategory[$category] as $subject) {
+                                $subjectSection = StatisticsSection::makeSubjectSection($this->container, $season, $subject);
                                 $categoryItem->children[$subject->getId()] = $subjectItem = new MenuItem(
-                                    $subject->getName(),
-                                    $this->generateUrl('results_subject',
-                                        array('season_slug' => $season->getSlug(), 'subject_code' => $subject->getCode())));
+                                    $subject->getName(), $subjectSection->getStatisticsPath());
                                 if (isset($activeItems[3]) && $activeItems[3] == $subject->getId()) {
                                     $categoryItem->only_expanded = true;
                                     $teachers = $em->getRepository('AnketaBundle:Teacher')->getTeachersForSubject($subject, $season);
                                     foreach ($teachers as $teacher) {
+                                        $teacherSection = StatisticsSection::makeSubjectTeacherSection($this->container, $season, $subject, $teacher);
                                         $subjectItem->children[$teacher->getId()] = new MenuItem(
-                                            $teacher->getName(),
-                                            $this->generateUrl('results_subject_teacher',
-                                                array('season_slug' => $season->getSlug(), 'subject_code' => $subject->getCode(), 'teacher_id' => $teacher->getId())));
+                                            $teacher->getName(), $teacherSection->getStatisticsPath());
                                     }
                                 }
                             }
@@ -475,9 +472,8 @@ class StatisticsController extends Controller {
             $items[$category->getDescription()] = array();
             $questions = $em->getRepository('AnketaBundle:Question')->getOrderedQuestions($category);
             foreach ($questions as $question) {
-                $items[$category->getDescription()][$question->getQuestion()] =
-                    $this->generateUrl('statistics_results_general',
-                        array('season_slug' => $season->getSlug(), 'question_id' => $question->getId()));
+                $section = StatisticsSection::makeGeneralSection($this->container, $season, $question);
+                $items[$category->getDescription()][$question->getQuestion()] = $section->getStatisticsPath();
             }
         }
 

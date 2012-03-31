@@ -23,12 +23,21 @@ class ReportsController extends Controller {
         foreach ($teachers as $teacher) {
             $teacher->subjects = $em->getRepository('AnketaBundle:Subject')->getSubjectsForTeacherWithAnswers($teacher, $season);
             $teacher->evaluation = $em->getRepository('AnketaBundle:Answer')->getAverageEvaluationForTeacher($teacher, $season);
+            $teacher->links = array();
+            foreach ($teacher->subjects as $subject) {
+                $teacher->links[$subject->getId()] = StatisticsSection::makeSubjectTeacherSection($this->container, $season, $subject, $teacher)->getStatisticsPath();
+            }
         }
         usort($teachers, array('AnketaBundle\Controller\ReportsController', 'compareAverageEvaluation'));
 
         foreach ($subjects as $subject) {
             $subject->teacher = $em->getRepository('AnketaBundle:Teacher')->getTeachersForSubjectWithAnswers($subject, $season);
             $subject->evaluation = $em->getRepository('AnketaBundle:Answer')->getAverageEvaluationForSubject($subject, $season);
+            $subject->link = StatisticsSection::makeSubjectSection($this->container, $season, $subject)->getStatisticsPath();
+            $subject->links = array();
+            foreach ($subject->teacher as $teacher) {
+                $subject->links[$teacher->getId()] = StatisticsSection::makeSubjectTeacherSection($this->container, $season, $subject, $teacher)->getStatisticsPath();
+            }
         }
         usort($subjects, array('AnketaBundle\Controller\ReportsController', 'compareAverageEvaluation'));
 
@@ -61,6 +70,7 @@ class ReportsController extends Controller {
             $em->getRepository('AnketaBundle:Teacher')->getTeachersForStudyProgramme($studyProgramme, $season),
             $em->getRepository('AnketaBundle:Subject')->getSubjectsForStudyProgramme($studyProgramme, $season),
             array('title' => $studyProgramme->getCode() . ' ' . $studyProgramme->getName(),
+                'studyProgrammeLink' => StatisticsSection::makeStudyProgramSection($this->container, $season, $studyProgramme)->getStatisticsPath(),
                 'studyProgramme' => $studyProgramme));
     }
 

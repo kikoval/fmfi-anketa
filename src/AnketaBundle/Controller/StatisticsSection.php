@@ -42,9 +42,6 @@ class StatisticsSection extends ContainerAware {
         $result->questionsCategoryType = CategoryType::TEACHER_SUBJECT;
         $result->answersQuery = array('subject' => $subject->getId(), 'teacher' => $teacher->getId());
         $result->responsesQuery = array('season' => $season->getId(), 'subject' => $subject->getId(), 'teacher' => $teacher->getId(), 'studyProgram' => null);
-        $result->statisticsRoute = 'results_subject_teacher';
-        $result->statisticsRouteParameters =
-                array('season_slug' => $season->getSlug(), 'subject_code' => $subject->getCode(), 'teacher_id' => $teacher->getId());
         $result->activeMenuItems = array($season->getId(), 'subjects', $subject->getCategory(), $subject->getId(), $teacher->getId());
         $result->slug = $season->getSlug() . '/predmet/' . $subject->getCode() . '/ucitel/' . $teacher->getId();
         $result->associationExamples = 'prednášajúci, cvičiaci, garant predmetu';
@@ -75,9 +72,6 @@ class StatisticsSection extends ContainerAware {
         $result->questionsCategoryType = CategoryType::SUBJECT;
         $result->answersQuery = array('subject' => $subject->getId());
         $result->responsesQuery = array('season' => $season->getId(), 'subject' => $subject->getId(), 'teacher' => null, 'studyProgram' => null);
-        $result->statisticsRoute = 'results_subject';
-        $result->statisticsRouteParameters =
-                array('season_slug' => $season->getSlug(), 'subject_code' => $subject->getCode());
         $result->activeMenuItems = array($season->getId(), 'subjects', $subject->getCategory(), $subject->getId());
         $result->slug = $season->getSlug() . '/predmet/' . $subject->getCode();
         $result->associationExamples = 'prednášajúci, cvičiaci, garant predmetu';
@@ -96,9 +90,6 @@ class StatisticsSection extends ContainerAware {
         $result->headingVisible = false;
         $result->answersQuery = array();
         $result->responsesQuery = array('season' => $season->getId(), 'question' => $generalQuestion->getId());
-        $result->statisticsRoute = 'statistics_results_general';
-        $result->statisticsRouteParameters =
-                array('season_slug' => $season->getSlug(), 'question_id' => $generalQuestion->getId());
         $result->activeMenuItems = array($season->getId(), 'general');
         $result->slug = $season->getSlug() . '/vseobecne/' . $generalQuestion->getId();
         $result->associationExamples = 'vedenie fakulty, vedúci katedry, vyučujúci';
@@ -114,9 +105,6 @@ class StatisticsSection extends ContainerAware {
         $result->questionsCategoryType = CategoryType::STUDY_PROGRAMME;
         $result->answersQuery = array('studyProgram' => $studyProgram->getId());
         $result->responsesQuery = array('season' => $season->getId(), 'studyProgram' => $studyProgram->getId(), 'teacher' => null, 'subject' => null);
-        $result->statisticsRoute = 'statistics_study_program';
-        $result->statisticsRouteParameters =
-                array('season_slug' => $season->getSlug(), 'program_slug' => $studyProgram->getSlug());
         $result->activeMenuItems = array($season->getId(), 'study_programs', $studyProgram->getCode());
         $result->slug = $season->getSlug() . '/program/' . $studyProgram->getSlug();
         $result->associationExamples = 'garant, tútor, vedúci katedry, vyučujúci niektorého predmetu';
@@ -267,14 +255,6 @@ class StatisticsSection extends ContainerAware {
         return $em->getRepository('AnketaBundle:Response')->findBy($this->responsesQuery);
     }
 
-    // TODO ak zrefaktorujeme results, aby vsetky isli cez slug, toto budeme moct vyhodit.
-    private $statisticsRoute = null;
-    private $statisticsRouteParameters = null;
-
-    public function getStatisticsPath($absolute = false) {
-        return $this->container->get('router')->generate($this->statisticsRoute, $this->statisticsRouteParameters, $absolute);
-    }
-
     private $activeMenuItems = null;
 
     public function getActiveMenuItems() {
@@ -285,6 +265,10 @@ class StatisticsSection extends ContainerAware {
 
     public function getSlug() {
         return $this->slug;
+    }
+
+    public function getStatisticsPath($absolute = false) {
+        return $this->container->get('router')->generate('statistics_results', array('section_slug' => $this->getSlug()), $absolute);
     }
 
     private $associationExamples = null;
