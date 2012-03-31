@@ -44,6 +44,7 @@ class StatisticsSection extends ContainerAware {
         $result->statisticsRoute = 'results_subject_teacher';
         $result->statisticsRouteParameters =
                 array('season_slug' => $season->getSlug(), 'subject_code' => $subject->getCode(), 'teacher_id' => $teacher->getId());
+        $result->activeMenuItems = array($season->getId(), 'subjects', $subject->getCategory(), $subject->getId(), $teacher->getId());
         $result->slug = $season->getSlug() . '/predmet/' . $subject->getCode() . '/ucitel/' . $teacher->getId();
         $result->associationExamples = 'prednášajúci, cvičiaci, garant predmetu';
         return $result;
@@ -60,6 +61,7 @@ class StatisticsSection extends ContainerAware {
         $result->statisticsRoute = 'results_subject';
         $result->statisticsRouteParameters =
                 array('season_slug' => $season->getSlug(), 'subject_code' => $subject->getCode());
+        $result->activeMenuItems = array($season->getId(), 'subjects', $subject->getCategory(), $subject->getId());
         $result->slug = $season->getSlug() . '/predmet/' . $subject->getCode();
         $result->associationExamples = 'prednášajúci, cvičiaci, garant predmetu';
         return $result;
@@ -76,6 +78,7 @@ class StatisticsSection extends ContainerAware {
         $result->statisticsRoute = 'statistics_results_general';
         $result->statisticsRouteParameters =
                 array('season_slug' => $season->getSlug(), 'question_id' => $generalQuestion->getId());
+        $result->activeMenuItems = array($season->getId(), 'general');
         $result->slug = $season->getSlug() . '/vseobecne/' . $generalQuestion->getId();
         $result->associationExamples = 'vedenie fakulty, vedúci katedry, vyučujúci';
         return $result;
@@ -92,6 +95,7 @@ class StatisticsSection extends ContainerAware {
         $result->statisticsRoute = 'statistics_study_program';
         $result->statisticsRouteParameters =
                 array('season_slug' => $season->getSlug(), 'program_slug' => $studyProgram->getSlug());
+        $result->activeMenuItems = array($season->getId(), 'study_programs', $studyProgram->getCode());
         $result->slug = $season->getSlug() . '/program/' . $studyProgram->getSlug();
         $result->associationExamples = 'garant, tútor, vedúci katedry, vyučujúci niektorého predmetu';
         return $result;
@@ -101,8 +105,8 @@ class StatisticsSection extends ContainerAware {
         $category = $answer->getQuestion()->getCategory()->getType();
         if ($category == CategoryType::TEACHER_SUBJECT) return self::makeSubjectTeacherSection($container, $answer->getSeason(), $answer->getSubject(), $answer->getTeacher());
         if ($category == CategoryType::SUBJECT) return self::makeSubjectSection($container, $answer->getSeason(), $answer->getSubject());
-        if ($category == CategoryType::GENERAL) return $result->makeGeneralSection($container, $answer->getSeason(), $answer->getQuestion());
-        if ($category == CategoryType::STUDY_PROGRAMME) return $result->makeStudyProgramSection($container, $answer->getSeason(), $answer->getStudyProgram());
+        if ($category == CategoryType::GENERAL) return self::makeGeneralSection($container, $answer->getSeason(), $answer->getQuestion());
+        if ($category == CategoryType::STUDY_PROGRAMME) return self::makeStudyProgramSection($container, $answer->getSeason(), $answer->getStudyProgram());
         throw new \Exception('Unknown category type');
     }
 
@@ -219,6 +223,12 @@ class StatisticsSection extends ContainerAware {
 
     public function getStatisticsPath($absolute = false) {
         return $this->container->get('router')->generate($this->statisticsRoute, $this->statisticsRouteParameters, $absolute);
+    }
+
+    private $activeMenuItems = null;
+
+    public function getActiveMenuItems() {
+        return $this->activeMenuItems;
     }
 
     private $slug = null;
