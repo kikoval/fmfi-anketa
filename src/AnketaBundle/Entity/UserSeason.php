@@ -83,6 +83,15 @@ class UserSeason {
      * @var boolean
      */
     private $finished;
+
+    /**
+     * Ci pouzivatel je v tejto sezone ucitelom.
+     *
+     * @ORM\Column(type="boolean")
+     *
+     * @var boolean
+     */
+    private $teacher;
     
     public function getUser() {
         return $this->user;
@@ -134,6 +143,22 @@ class UserSeason {
 
     public function setFinished($finished) {
         $this->finished = $finished;
+    }
+
+    public function canVote() {
+        return ($this->getEligible() && !$this->getFinished());
+    }
+
+    public function getTeacher() {
+        return $this->teacher;
+    }
+
+    public function setTeacher($teacher) {
+        $this->teacher = $teacher;
+    }
+
+    public function isTeacher() {
+        return $this->getTeacher();
     }
 
     
