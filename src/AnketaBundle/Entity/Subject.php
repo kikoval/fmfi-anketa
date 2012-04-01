@@ -30,17 +30,9 @@ class Subject {
     private $name;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Teacher", mappedBy="subjects")
-     *
-     * @var ArrayCollection $teachers
-     */
-    private $teachers;
-
-    /**
      * @param String $name
      */
     public function __construct($name) {
-        $this->teachers = new ArrayCollection();
         $this->name = $name;
     }
 
@@ -62,20 +54,6 @@ class Subject {
 
     public function getName() {
         return $this->name;
-    }
-
-    /**
-     * @param Teacher $value
-     */
-    public function addTeacher($value) {
-        $this->teachers[] = $value;
-    }
-
-    /**
-     * @return ArrayCollection teachers
-     */
-    public function getTeachers() {
-        return $this->teachers;
     }
 
     /**
