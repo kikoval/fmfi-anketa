@@ -234,7 +234,7 @@ class StatisticsController extends Controller {
                 'title' => $question->getQuestion(),
                 'description' => $question->getDescription(),
                 'commentsAllowed' => $question->getHasComment(),
-                'hasAnswer' => $hasAnsweredOption | $hasComments,
+                'hasAnswer' => $hasAnsweredOption || $hasComments,
                 'hasDifferentOptions' => $hasDifferentOptions,
                 'comments' => $comments,
                 'histogram' => $histogram,
