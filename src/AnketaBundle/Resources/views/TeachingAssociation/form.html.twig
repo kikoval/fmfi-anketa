@@ -10,19 +10,14 @@
 
 <h2>{{ subject.name }} - Chýbajúci učiteľ?</h2>
 
-<p>V prípade, že Vás učil (ešte) niekto iný, ako sme sa pýtali, môžte nám o tom napísať nižšie.</p>
-
 <form method="POST" action="{{ path('assoc_teacher_with_subject_process', {'subject_code': subject.code}) }}">
 
-<p>Zadajte prosím identifikačné údaje učiteľa, ktorý Vám chýba do poľa nižie.
-My ho potom ručne pridáme k predmetu <em>{{ subject.name }}</em>.
-Je možné zadať aj viacerých učiteľov naraz.
-Okrem mena a priezviska môžete voliteľne
-napísať aj ľubovoľnú inú poznámku, ktorá nám pomôže pri pridávaní učiteľa.
-</p>
-<div>
-<label for="note">Informácia pre nás</label>:
-</div>
+<p>Ak v zozname učiteľov predmetu niekto chýba, napíšte sem jeho celé <strong>meno</strong>
+(aj s diakritikou) a <strong>funkciu</strong> (či bol prednášajúci, cvičiaci alebo oboje).</p>
+
+<p>My potom učiteľa ručne pridáme k predmetu <em>{{ subject.name }}</em>. (Môžete pripísať aj
+ľubovoľnú inú informáciu, ktorá nám pri tom pomôže.)</p>
+
 <div>
 <textarea id="note" name="note" cols="40" rows="6"></textarea>
 </div>
