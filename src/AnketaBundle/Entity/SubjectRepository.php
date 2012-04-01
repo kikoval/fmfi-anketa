@@ -87,15 +87,33 @@ class SubjectRepository extends EntityRepository {
         return $subjects;
     }
     
-    public function getSortedSubjectsWithAnswers($season) {
+    public function getCategorizedSubjects(Season $season) {
+        // najdeme subjecty, co maju aspon jednu odpoved
         $dql = 'SELECT DISTINCT s FROM AnketaBundle\Entity\Answer a, ' .
                 'AnketaBundle\Entity\Subject s ' .
                 'WHERE a.subject = s ' .
                 'AND a.season = :season ' .
                 'ORDER BY s.name';
         $subjects = $this->getEntityManager()
-                        ->createQuery($dql)->execute(array('season' => $season));
-        return $subjects;
+                         ->createQuery($dql)->execute(array('season' => $season));
+        // TODO:nahrad celu tuto saskaren studijnymi programmi ked budu k dispozicii
+        $categorized = array();
+        $uncategorized = array();
+        foreach ($subjects as $subject) {
+            $category = $subject->getCategory();
+
+            if ($category === Subject::NO_CATEGORY) {
+                $uncategorized[] = $subject;
+            } else {
+                $categorized[$category][] = $subject;
+            }
+        }
+        uksort($categorized, 'strcasecmp');
+        // we want to append this after sorting
+        if (!empty($uncategorized)) {
+            $categorized[Subject::NO_CATEGORY] = $uncategorized;
+        }
+        return $categorized;
     }
 
     public function getSubjectsForStudyProgramme($studyProgramme, $season) {

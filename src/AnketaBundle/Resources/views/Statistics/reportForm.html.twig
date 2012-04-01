@@ -1,13 +1,12 @@
-{% extends 'AnketaBundle:Statistics:index.html.twig' %}
+{% extends 'AnketaBundle::layout.html.twig' %}
 
 {% block navigation %}
-    {# TODO lepsie menu #}
-    {% render "AnketaBundle:Statistics:menu" with { 'season' : season } %}
+    {% render "AnketaBundle:Statistics:menu" with { 'activeItems': section.activeMenuItems } %}
 {% endblock %}
 
 {% block content %}
 
-    <p><a href="{{ link_back }}">&laquo; Späť na výsledky</a></p>
+    <p><a href="{{ section.statisticsPath }}">&laquo; Späť na výsledky</a></p>
 
     <h2>Nahlásiť nevhodný komentár</h2>
 

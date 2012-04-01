@@ -1,0 +1,21 @@
+{% extends 'AnketaBundle::layout.html.twig' %}
+
+{% block title %}{{ title|default("") }}{% endblock %}
+{% block navigation %}
+    {% render "AnketaBundle:Statistics:menu" with { 'activeItems': activeMenuItems } %}
+{% endblock %}
+{% block content %}
+    {% if title is defined %}
+        <h1>{{ title }}</h1>
+    {% endif %}
+    {% for category_title, list in items %}
+        {% if category_title is not empty %}
+            <h3>{{ category_title }}</h3>
+        {% endif %}
+        <ul class="category-listing {{ class|default('') }}">
+        {% for item_text, item_href in list %}
+            <li><a href="{{ item_href }}">{{ item_text }}</a></li>
+        {% endfor %}
+        </ul>
+    {% endfor %}
+{% endblock %}

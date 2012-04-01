@@ -1,4 +1,8 @@
-{% extends 'AnketaBundle:Response:layout.html.twig' %}
+{% extends 'AnketaBundle::layout.html.twig' %}
+
+{% block navigation %}
+    {% render "AnketaBundle:Response:menu" with { 'activeItems': [] } %}
+{% endblock %}
 
 {% block content %}
 <h1>Zmazať komentár</h1>

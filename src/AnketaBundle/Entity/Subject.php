@@ -9,6 +9,8 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Entity(repositoryClass="AnketaBundle\Entity\SubjectRepository")
  */
 class Subject {
+
+    const NO_CATEGORY = 'XXX-nekategorizovane';
     
     /**
      * @ORM\Id @ORM\GeneratedValue 
@@ -74,6 +76,20 @@ class Subject {
      */
     public function getTeachers() {
         return $this->teachers;
+    }
+
+    /**
+     * Vrat nazov kategorie pre predmet
+     * @return string nazov kategorie alebo Subject::NO_CATEGORY ak je nekategorizovany
+     */
+    public function getCategory()
+    {
+        $match = preg_match("@^[^-]*-([^-]*)-@", $this->getCode(), $matches);
+        if ($match == 0) {
+            return self::NO_CATEGORY;
+        } else {
+            return $matches[1];
+        }
     }
 
 }
