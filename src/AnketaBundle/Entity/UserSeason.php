@@ -91,7 +91,7 @@ class UserSeason {
      *
      * @var boolean
      */
-    private $teacher;
+    private $isTeacher;
     
     public function getUser() {
         return $this->user;
@@ -149,16 +149,12 @@ class UserSeason {
         return ($this->getEligible() && !$this->getFinished());
     }
 
-    public function getTeacher() {
-        return $this->teacher;
+    public function getIsTeacher() {
+        return $this->isTeacher;
     }
 
-    public function setTeacher($teacher) {
-        $this->teacher = $teacher;
-    }
-
-    public function isTeacher() {
-        return $this->getTeacher();
+    public function setIsTeacher($isTeacher) {
+        $this->isTeacher = $isTeacher;
     }
 
     
