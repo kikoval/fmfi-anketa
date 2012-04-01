@@ -359,6 +359,7 @@ class StatisticsController extends Controller {
         $menu = array();
         $seasons = $em->getRepository('AnketaBundle:Season')->findAll();
         foreach ($seasons as $season) {
+            // Add this season.
             $menu[$season->getId()] = $seasonItem = new MenuItem(
                 $season->getDescription(),
                 $this->generateUrl('statistics_list_general',
@@ -366,11 +367,13 @@ class StatisticsController extends Controller {
             if (isset($activeItems[0]) && $activeItems[0] == $season->getId()) {
                 $seasonItem->expanded = true;
 
+                // Add "General questions" under this season.
                 $seasonItem->children['general'] = new MenuItem(
                     'Všeobecné otázky',
                     $this->generateUrl('statistics_list_general',
                         array('season_slug' => $season->getSlug())));
 
+                // Add "Study programmes" under this season.
                 $seasonItem->children['study_programs'] = $studyProgramsItem = new MenuItem(
                     'Študijné programy',
                     $this->generateUrl('statistics_list_programs',
@@ -379,12 +382,14 @@ class StatisticsController extends Controller {
                     $studyProgramsItem->expanded = true;
                     $studyPrograms = $em->getRepository('AnketaBundle:StudyProgram')->getAllWithAnswers($season);
                     foreach ($studyPrograms as $studyProgram) {
+                        // Add this study program under "Study programmes".
                         $studyProgramSection = StatisticsSection::makeStudyProgramSection($this->container, $season, $studyProgram);
                         $studyProgramsItem->children[$studyProgram->getCode()] = new MenuItem(
                             $studyProgram->getCode(), $studyProgramSection->getStatisticsPath());
                     }
                 }
 
+                // Add "Subjects" under this season.
                 $seasonItem->children['subjects'] = $subjectsItem = new MenuItem(
                     'Predmety',
                     $this->generateUrl('statistics_list_subjects',
@@ -392,6 +397,7 @@ class StatisticsController extends Controller {
                 if (isset($activeItems[1]) && $activeItems[1] == 'subjects') {
                     $subjectsByCategory = $em->getRepository('AnketaBundle:Subject')->getCategorizedSubjects($season);
                     foreach (array_keys($subjectsByCategory) as $category) {
+                        // Add this category under "Subjects".
                         $subjectsItem->children[$category] = $categoryItem = new MenuItem(
                             $category,
                             $this->generateUrl('statistics_list_subjects',
@@ -400,6 +406,7 @@ class StatisticsController extends Controller {
                             $subjectsItem->only_expanded = true;
                             $categoryItem->expanded = true;
                             foreach ($subjectsByCategory[$category] as $subject) {
+                                // Add this subject under this category.
                                 $subjectSection = StatisticsSection::makeSubjectSection($this->container, $season, $subject);
                                 $categoryItem->children[$subject->getId()] = $subjectItem = new MenuItem(
                                     $subject->getName(), $subjectSection->getStatisticsPath());
@@ -407,6 +414,7 @@ class StatisticsController extends Controller {
                                     $categoryItem->only_expanded = true;
                                     $teachers = $em->getRepository('AnketaBundle:Teacher')->getTeachersForSubject($subject, $season);
                                     foreach ($teachers as $teacher) {
+                                        // Add this teacher under this subject.
                                         $teacherSection = StatisticsSection::makeSubjectTeacherSection($this->container, $season, $subject, $teacher);
                                         $subjectItem->children[$teacher->getId()] = new MenuItem(
                                             $teacher->getName(), $teacherSection->getStatisticsPath());
@@ -417,6 +425,7 @@ class StatisticsController extends Controller {
                     }
                 }
 
+                // Add "My subjects" under this season.
                 if ($security->isGranted('ROLE_TEACHER')) {
                     $seasonItem->children['my_subjects'] = new MenuItem(
                         'Moje predmety',
@@ -424,6 +433,7 @@ class StatisticsController extends Controller {
                             array('season_slug' => $season->getSlug())));
                 }
 
+                // Add "My reports" under this season.
                 if ($security->isGranted('ROLE_STUDY_PROGRAMME_REPORT') || $security->isGranted('ROLE_DEPARTMENT_REPORT') || $security->isGranted('ROLE_ALL_REPORTS')) {
                     $seasonItem->children['my_reports'] = new MenuItem(
                         'Moje reporty',
@@ -431,7 +441,6 @@ class StatisticsController extends Controller {
                             array('season_slug' => $season->getSlug())));
                 }
             }
-            $menu[$season->getId()] = $seasonItem;
         }
 
         return $menu;
