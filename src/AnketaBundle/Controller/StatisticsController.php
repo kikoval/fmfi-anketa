@@ -433,6 +433,14 @@ class StatisticsController extends Controller {
                             array('season_slug' => $season->getSlug())));
                 }
 
+                // Add "My comments" under this section.
+                if ($security->isGranted('ROLE_TEACHER')) {
+                    $seasonItem->children['my_comments'] = new MenuItem(
+                        'Moje komentáre',
+                        $this->generateUrl('response',
+                            array('season_slug' => $season->getSlug())));
+                }
+
                 // Add "My reports" under this season.
                 if ($security->isGranted('ROLE_STUDY_PROGRAMME_REPORT') || $security->isGranted('ROLE_DEPARTMENT_REPORT') || $security->isGranted('ROLE_ALL_REPORTS')) {
                     $seasonItem->children['my_reports'] = new MenuItem(

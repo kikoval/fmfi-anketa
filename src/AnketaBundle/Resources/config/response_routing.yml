@@ -1,6 +1,8 @@
 response:
-    pattern: /odpovede
-    defaults: { _controller: AnketaBundle:Response:listMine, season_slug: null}
+    pattern: /vysledky/{season_slug}/moje-komentare
+    defaults: { _controller: AnketaBundle:Response:listMine }
+    requirements:
+      season_slug:   "[a-z0-9-]+"
 
 response_new:
     pattern: /odpovede/nova-odpoved/{section_slug}

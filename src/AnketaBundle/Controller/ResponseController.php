@@ -12,13 +12,6 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use AnketaBundle\Entity\Teacher;
 
 class ResponseController extends Controller {
-
-    public function menuAction($activeItems = array()) {
-        $menu = array();
-        $menu['my_list'] = new MenuItem('Moje komentáre', $this->generateUrl('response'));
-        if ($activeItems == array('my_list')) $menu['my_list']->active = true;
-        return $this->render('AnketaBundle:Hlasovanie:menu.html.twig', array('menu' => $menu));
-    }
     
     public function newResponseAction($section_slug) {
         $security = $this->get('security.context');
@@ -103,7 +96,7 @@ class ResponseController extends Controller {
         }
     }
     
-    public function listMineAction($season_slug = null) {
+    public function listMineAction($season_slug) {
         $em = $this->get('doctrine.orm.entity_manager');
         $security = $this->get('security.context');
         if (!$security->isGranted('ROLE_TEACHER')) {
@@ -111,23 +104,14 @@ class ResponseController extends Controller {
         }
         $user = $security->getToken()->getUser();
         
-        $season = null;
         $seasonRepo = $em->getRepository('AnketaBundle\Entity\Season');
-        if ($season_slug !== null) {
-            $season = $seasonRepo->findOneBy(array('slug' => $season_slug));
-            if ($season == null) {
-                throw new NotFoundHttpException('Chybna sezona: ' . $season_slug);
-            }
-        }
-        else {
-            $season = $seasonRepo->getActiveSeason();
+        $season = $seasonRepo->findOneBy(array('slug' => $season_slug));
+        if ($season == null) {
+            throw new NotFoundHttpException('Chybna sezona: ' . $season_slug);
         }
         
         $responseRepo = $em->getRepository('AnketaBundle:Response');
-        $query = array('author_login' => $user->getUserName());
-        if ($season !== null) {
-            $query['season'] = $season->getId();
-        }
+        $query = array('author_login' => $user->getUserName(), 'season' => $season->getId());
         $responses = $responseRepo->findBy($query);
         $processedResponses = array();
         foreach ($responses as $response) {
