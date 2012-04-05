@@ -27,20 +27,6 @@ class User implements UserInterface {
      * @ORM\Column(type="string")
      */
     private $displayName;
-
-    /**
-     * @ORM\Column(type="boolean")
-     * @var boolean
-     * @deprecated nahradene v UserSeason
-     */
-    private $hasVote;
-
-    /**
-     * @ORM\Column(type="boolean")
-     * @var boolean
-     * @deprecated nahradene v UserSeason
-     */
-    private $participated;
     
     /**
      * @ORM\ManyToMany(targetEntity="Role")
@@ -58,6 +44,11 @@ class User implements UserInterface {
     private $nonPersistentRoles = array(); // inicializator musi byt tu! (doctrine nevola konstruktor)
 
     /**
+     * @ORM\OneToMany(targetEntity="UserSeason", mappedBy="user")
+     */
+    private $userSeasons;
+
+    /**
      * @param String $username
      * @param String $realname
      */
@@ -66,8 +57,6 @@ class User implements UserInterface {
         $this->roles = new ArrayCollection();
         $this->userName = $username;
         $this->displayName = $displayname;
-        $this->hasVote = false;
-        $this->participated = false;
     }
 
     public function getId() {
@@ -88,22 +77,6 @@ class User implements UserInterface {
 
     public function getDisplayName() {
         return $this->displayName;
-    }
-
-    public function getHasVote() {
-        return $this->hasVote;
-    }
-
-    public function setHasVote($hasVote) {
-        $this->hasVote = $hasVote;
-    }
-
-    public function getParticipated() {
-        return $this->participated;
-    }
-
-    public function setParticipated($participated) {
-        $this->participated = $participated;
     }
 
     /**
@@ -136,9 +109,6 @@ class User implements UserInterface {
         foreach ($this->roles as $role) {
             $roles[] = $role->getRole();
         }
-        if ($this->getHasVote()) {
-            $roles[] = 'ROLE_HAS_VOTE';
-        }
         $roles = array_merge($roles, $this->nonPersistentRoles);
         return $roles;
     }
@@ -169,8 +139,39 @@ class User implements UserInterface {
         return null;
     }
 
+    public function forSeason($season) {
+        if ($season instanceof Season) $season = $season->getId();
+        foreach ($this->getUserSeasons() as $us) {
+            if ($us->getSeason()->getId() == $season) {
+                return $us;
+            }
+        }
+        return null;
+    }
+
+
     public function __toString() {
         return $this->getUserName();
     }
 
+
+    /**
+     * Add userSeason
+     *
+     * @param AnketaBundle\Entity\UserSeason $userSeasons
+     */
+    public function addUserSeasons(\AnketaBundle\Entity\UserSeason $userSeasons)
+    {
+        $this->userSeasons[] = $userSeasons;
+    }
+
+    /**
+     * Get userSeasons
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getUserSeasons()
+    {
+        return $this->userSeasons;
+    }
 }

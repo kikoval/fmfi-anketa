@@ -30,7 +30,7 @@ class UserSeason {
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="userSeasons")
      *
      * @var User $user
      */
@@ -54,15 +54,14 @@ class UserSeason {
     private $department;
     
     /**
-     * Ci je/bol pouzivatel opravneny hlasovat v tejto sezone.
-     * Null, ak sa este nerozhodlo (napr. sa v tejto sezone neprihlasil).
-     * Pri anonymizacii sa tento flag necha na povodnej hodnote.
+     * Ci je pouzivatel v tejto sezone student.
+     * Od tohto flagu sa odvija napriklad moznost hlasovat v ankete.
      * 
-     * @ORM\Column(type="boolean", nullable="true")
+     * @ORM\Column(type="boolean")
      * 
      * @var boolean
      */
-    private $eligible;
+    private $isStudent;
     
     /**
      * Ci pouzivatel vyplnil odpoved na aspon jednu otazku
@@ -121,12 +120,12 @@ class UserSeason {
         return $this->id;
     }
     
-    public function getEligible() {
-        return $this->eligible;
+    public function getIsStudent() {
+        return $this->isStudent;
     }
 
-    public function setEligible($eligible) {
-        $this->eligible = $eligible;
+    public function setIsStudent($isStudent) {
+        $this->isStudent = $isStudent;
     }
 
     public function getParticipated() {
@@ -146,7 +145,7 @@ class UserSeason {
     }
 
     public function canVote() {
-        return ($this->getEligible() && !$this->getFinished());
+        return ($this->getIsStudent() && !$this->getFinished());
     }
 
     public function getIsTeacher() {
