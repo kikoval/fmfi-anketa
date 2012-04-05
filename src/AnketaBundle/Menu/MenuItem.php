@@ -10,9 +10,8 @@
  * @author     Martin Králik <majak47@gmail.com>
  */
 
-namespace AnketaBundle\Controller;
+namespace AnketaBundle\Menu;
 
-use AnketaBundle\Controller\MenuItemProgressbar;
 use fajr\libfajr\base\Preconditions;
 
 // TODO(ppershing): make things private

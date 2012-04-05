@@ -2,7 +2,7 @@
 
 {% block title %}{{ title|default("") }}{% endblock %}
 {% block navigation %}
-    {% render "AnketaBundle:Statistics:menu" with { 'activeItems': activeMenuItems } %}
+    {{ menu.statistics.render(activeMenuItems)|raw }}
 {% endblock %}
 {% block content %}
     {% if title is defined %}

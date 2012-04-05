@@ -4,5 +4,11 @@ services:
         class: AnketaBundle\Extension\AnketaTwigExtension
         tags: [{ name: twig.extension }]
         arguments: ["@service_container"]    # TODO :-(
+    anketa.menu.hlasovanie:
+        class: AnketaBundle\Menu\HlasovanieMenu
+        arguments: ["@service_container"]    # TODO :-(
+    anketa.menu.statistics:
+        class: AnketaBundle\Menu\StatisticsMenu
+        arguments: ["@service_container"]    # TODO :-(
 
 

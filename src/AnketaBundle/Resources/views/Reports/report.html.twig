@@ -1,6 +1,6 @@
 {% extends 'AnketaBundle::layout.html.twig' %}
 {% block navigation %}
-    {% render "AnketaBundle:Statistics:menu" with { 'activeItems': [season.id, 'my_reports'] } %}
+    {{ menu.statistics.render([season.id, 'my_reports'])|raw }}
 {% endblock %}
 {% block content %}
 <h1>{{ title }}

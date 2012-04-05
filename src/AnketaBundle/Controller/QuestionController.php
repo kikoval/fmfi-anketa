@@ -94,6 +94,16 @@ class QuestionController extends Controller {
         return $result;
     }
 
+    private function redirectAfterProcessing($activeItems = array()) {
+        $request = $this->get('request');
+        if ($request->request->get('next')) {
+            return new RedirectResponse($this->get('anketa.menu.hlasovanie')->getNextSection($activeItems) ?: $request->getRequestUri());
+        }
+        else {
+            return new RedirectResponse($request->getRequestUri());
+        }
+    }
+
     /**
      * Note: code may be "-1" meaning default first subject
      */
@@ -204,13 +214,7 @@ class QuestionController extends Controller {
 
             $em->flush();
 
-            if ($request->request->get('next')) {
-                return $this->forward('AnketaBundle:Hlasovanie:menuNext',
-                    array('activeItems' => array('subject', $subject->getCode(), $teacher->getId())));
-            }
-            else {
-                return new RedirectResponse($request->getRequestUri());
-            }
+            return $this->redirectAfterProcessing(array('subject', $subject->getCode(), $teacher->getId()));
         }
 
         $templateParams = array();
@@ -260,13 +264,7 @@ class QuestionController extends Controller {
 
             $em->flush();
 
-            if ($request->request->get('next')) {
-                return $this->forward('AnketaBundle:Hlasovanie:menuNext',
-                    array('activeItems' => array('subject', $subject->getCode())));
-            }
-            else {
-                return new RedirectResponse($request->getRequestUri());
-            }
+            return $this->redirectAfterProcessing(array('subject', $subject->getCode()));
         }
 
         $templateParams = array();
@@ -312,13 +310,7 @@ class QuestionController extends Controller {
 
             $em->flush();
 
-            if ($request->request->get('next')) {
-                return $this->forward('AnketaBundle:Hlasovanie:menuNext',
-                    array('activeItems' => array('study_program', $studyProgramme->getCode())));
-            }
-            else {
-                return new RedirectResponse($request->getRequestUri());
-            }
+            return $this->redirectAfterProcessing(array('study_program', $studyProgramme->getCode()));
         }
 
         $templateParams = array();
@@ -386,13 +378,7 @@ class QuestionController extends Controller {
 
             $em->flush();
 
-            if ($request->request->get('next')) {
-                return $this->forward('AnketaBundle:Hlasovanie:menuNext',
-                    array('activeItems' => array('general', $category->getId())));
-            }
-            else {
-                return new RedirectResponse($request->getRequestUri());
-            }
+            return $this->redirectAfterProcessing(array('general', $category->getId()));
         }
 
         $templateParams = array();

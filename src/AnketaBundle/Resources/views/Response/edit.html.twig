@@ -1,7 +1,7 @@
 {% extends 'AnketaBundle::layout.html.twig' %}
 
 {% block navigation %}
-    {% render "AnketaBundle:Statistics:menu" with { 'activeItems': [section.season.id, 'my_comments'] } %}
+    {{ menu.statistics.render([section.season.id, 'my_comments'])|raw }}
 {% endblock %}
 
 {% block content %}

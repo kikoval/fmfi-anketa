@@ -13,6 +13,15 @@ class AnketaTwigExtension extends \Twig_Extension {
         $this->container = $container;
     }
 
+    public function getGlobals() {
+        return array(
+            'menu' => array(
+                'hlasovanie' => $this->container->get('anketa.menu.hlasovanie'),
+                'statistics' => $this->container->get('anketa.menu.statistics'),
+            ),
+        );
+    }
+
     public function getFunctions()
     {
         return array(
