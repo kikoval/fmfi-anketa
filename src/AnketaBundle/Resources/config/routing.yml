@@ -38,7 +38,3 @@ anonymizuj:
 dakujeme:
     pattern: /dakujeme/
     defaults: { _controller: AnketaBundle:Anonymizacia:dakujeme }
-
-ping:
-    pattern: /ping/{devName}
-    defaults: { _controller: AnketaBundle:Ping:ping, devName: -1 }
