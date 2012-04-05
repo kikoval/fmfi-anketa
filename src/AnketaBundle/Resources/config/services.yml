@@ -1,0 +1,8 @@
+
+services:
+    anketa.twig.extension:
+        class: AnketaBundle\Extension\AnketaTwigExtension
+        tags: [{ name: twig.extension }]
+        arguments: ["@service_container"]    # TODO :-(
+
+

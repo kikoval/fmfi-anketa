@@ -3,7 +3,7 @@
 {% block sidebar %}{% block navigation %}{% endblock %}{% endblock %}
 
 {% block user_bar %}
-    {% render "AnketaBundle:User:userBar" %}
+    {{ user_bar() }}
 {% endblock %}
 
 {% block section_bar %}
@@ -26,6 +26,6 @@
 {% block body %}
     {{ parent() }}
     {% block google_analytics %}
-        {% render 'AnketaBundle:Tracking:track' %}
+        {{ analytics() }}
     {% endblock %}
 {% endblock %}
