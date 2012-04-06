@@ -15,20 +15,20 @@ class Season {
      * @ORM\Id @ORM\GeneratedValue 
      * @ORM\Column(type="integer")
      */
-    private $id;
+    protected $id;
 
     /**
      * Full name, i.e. 2010/2011
      * @ORM\Column(type="string")
      */
-    private $description;
+    protected $description;
     
     /**
      * Total number of students in this season
      * @ORM\Column(type="integer")
      * @var int $studentCount
      */
-    private $studentCount;
+    protected $studentCount;
 
     /**
      * Slug - unique descriptive ID to be used in URLs.
@@ -38,7 +38,7 @@ class Season {
      * @ORM\Column(type="string", unique="true")
      * @var string $slug
      */
-    private $slug;
+    protected $slug;
 
     public function __construct($description, $slug) {
         $this->setDescription($description);

@@ -27,21 +27,21 @@ class UserSeason {
      * @ORM\GeneratedValue 
      * @ORM\Column(type="integer")
      */
-    private $id;
+    protected $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="User", inversedBy="userSeasons")
      *
      * @var User $user
      */
-    private $user;
+    protected $user;
     
     /**
      * @ORM\ManyToOne(targetEntity="Season")
      *
      * @var Season $season
      */
-    private $season;
+    protected $season;
     
     /**
      * Do ktorej katedry pouzivatel patri (ktora ho zamestnava, etc.).
@@ -51,7 +51,7 @@ class UserSeason {
      *
      * @var Department $department
      */
-    private $department;
+    protected $department;
     
     /**
      * Ci je pouzivatel v tejto sezone student.
@@ -61,7 +61,7 @@ class UserSeason {
      * 
      * @var boolean
      */
-    private $isStudent;
+    protected $isStudent;
     
     /**
      * Ci pouzivatel vyplnil odpoved na aspon jednu otazku
@@ -70,7 +70,7 @@ class UserSeason {
      * 
      * @var boolean
      */
-    private $participated;
+    protected $participated;
     
     /**
      * Ci pouzivatel dohlasoval (anonymizoval) v tejto sezone.
@@ -81,7 +81,7 @@ class UserSeason {
      * 
      * @var boolean
      */
-    private $finished;
+    protected $finished;
 
     /**
      * Ci pouzivatel je v tejto sezone ucitelom.
@@ -90,7 +90,7 @@ class UserSeason {
      *
      * @var boolean
      */
-    private $isTeacher;
+    protected $isTeacher;
     
     public function getUser() {
         return $this->user;

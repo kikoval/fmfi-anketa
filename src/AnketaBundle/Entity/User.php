@@ -16,17 +16,17 @@ class User implements UserInterface {
      * @ORM\GeneratedValue 
      * @ORM\Column(type="integer")
      */
-    private $id;
+    protected $id;
 
     /**
      * @ORM\Column(type="string", unique=true)
      */
-    private $userName;
+    protected $userName;
 
     /**
      * @ORM\Column(type="string")
      */
-    private $displayName;
+    protected $displayName;
     
     /**
      * @ORM\ManyToMany(targetEntity="Role")
@@ -35,18 +35,18 @@ class User implements UserInterface {
      *      inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")}
      *      )
      */
-    private $roles;
+    protected $roles;
     
     /**
      * Roles that are not persisted in the database
      * @var array(string)
      */
-    private $nonPersistentRoles = array(); // inicializator musi byt tu! (doctrine nevola konstruktor)
+    protected $nonPersistentRoles = array(); // inicializator musi byt tu! (doctrine nevola konstruktor)
 
     /**
      * @ORM\OneToMany(targetEntity="UserSeason", mappedBy="user")
      */
-    private $userSeasons;
+    protected $userSeasons;
 
     /**
      * @param String $username

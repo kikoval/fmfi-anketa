@@ -16,25 +16,25 @@ class Subject {
      * @ORM\Id @ORM\GeneratedValue 
      * @ORM\Column(type="integer")
      */
-    private $id;
+    protected $id;
 
     /**
      * Uniquely identifies the subject
      * @ORM\Column(type="string", nullable="false", unique="true")
      */
-    private $code;
+    protected $code;
 
     /**
      * @ORM\Column(type="string")
      */
-    private $name;
+    protected $name;
 
     /**
      * @ORM\ManyToMany(targetEntity="Teacher", mappedBy="subjects")
      *
      * @var ArrayCollection $teachers
      */
-    private $teachers;
+    protected $teachers;
 
     /**
      * @param String $name

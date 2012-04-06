@@ -15,27 +15,27 @@ class Teacher {
      * @ORM\GeneratedValue 
      * @ORM\Column(type="integer")
      */
-    private $id;
+    protected $id;
 
     /**
      * @ORM\Column(type="string")
      */
-    private $givenName;
+    protected $givenName;
 
     /**
      * @ORM\Column(type="string")
      */
-    private $familyName;
+    protected $familyName;
 
     /**
      * @ORM\Column(type="string", nullable="true")
      */
-    private $displayName;
+    protected $displayName;
 
     /**
      * @ORM\Column(type="string", nullable="true")
      */
-    private $login;
+    protected $login;
     
     /**
      * @ORM\ManyToOne(targetEntity="Department")
@@ -43,7 +43,7 @@ class Teacher {
      * @deprecated Docasny hack, chceme priradovat katedru k userom,
      * ale najprv treba zmigrovat ucitelov do userov (je tam par corner-cases)
      */
-    private $department;
+    protected $department;
 
    /**
      * @param String $name

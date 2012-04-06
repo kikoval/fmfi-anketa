@@ -13,40 +13,40 @@ class TeachersSubjects {
     /**
      * @ORM\Id @ORM\GeneratedValue @ORM\Column(type="integer")
      */
-    private $id;
+    protected $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="Teacher")
      *
      * @var Teacher $teacher
      */
-    private $teacher;
+    protected $teacher;
 
     /**
      * @ORM\ManyToOne(targetEntity="Subject")
      *
      * @var Subject $subject
      */
-    private $subject;
+    protected $subject;
 
     /**
      * @ORM\Column(type="boolean")
      * @var boolean ci prednasa(l) k danemu predmetu
      */
-    private $lecturer;
+    protected $lecturer;
 
     /**
      * @ORM\Column(type="boolean")
      * @var boolean ci cvici(l) 
      */
-    private $trainer;
+    protected $trainer;
 
     /**
      * @ORM\ManyToOne(targetEntity="Season")
      *
      * @var Season $season
      */
-    private $season;
+    protected $season;
     
     public function __construct($teacher, $subject, $season, $lecturer = false, $trainer = false) {
         $this->setTeacher($teacher);

@@ -16,12 +16,12 @@ class Role implements RoleInterface {
      * @ORM\GeneratedValue 
      * @ORM\Column(type="integer")
      */
-    private $id;
+    protected $id;
 
     /**
      * @ORM\Column(type="string", unique="true")
      */
-    private $name;
+    protected $name;
 
     /**
      * @param String $name
