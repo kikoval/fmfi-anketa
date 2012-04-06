@@ -36,15 +36,16 @@ class UserRepository extends EntityRepository {
         return array_shift($result);
     }
 
-    public function anonymizeAnswersByUserId($userId) {
+    public function anonymizeAnswersByUser($user, $season) {
         $q = $this->getEntityManager()->createQueryBuilder()
                                       ->update('AnketaBundle\Entity\Answer', 'a')
-                                      ->set('a.author', '?1')
-                                      ->where('a.author = ?2')
+                                      ->set('a.author', ':nobody')
+                                      ->where('a.author = :user AND a.season = :season')
                                       ->getQuery();
         $q->setParameters(array(
-            1 => null,
-            2 => $userId
+            'nobody' => null,
+            'user' => $user,
+            'season' => $season
          ));
 
         //TODO(majak): nikde som nenasiel, co tato funkcia vrati, ked to failne

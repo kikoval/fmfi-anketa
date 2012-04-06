@@ -181,7 +181,7 @@ class QuestionController extends Controller {
         }
 
         $answers = $em->getRepository('AnketaBundle\Entity\Answer')
-                      ->getAnswersByCriteria($questions, $user, $subject, $teacher);
+                      ->getAnswersByCriteria($questions, $user, $season, $subject, $teacher);
 
         if ('POST' == $request->getMethod()) {
             $answerArray = $this->processForm($request, $user, $questions, $answers, $season);
@@ -200,7 +200,7 @@ class QuestionController extends Controller {
                 $em->persist($answer);
             }
 
-            $user->setParticipated(true);
+            $user->forSeason($season)->setParticipated(true);
 
             $em->flush();
 
@@ -233,11 +233,11 @@ class QuestionController extends Controller {
         } catch (\RuntimeException $e) {
             throw new NotFoundHttpException($e->getMessage());
         }
-        $questions = $em->getRepository('AnketaBundle\Entity\Question')
-                        ->getOrderedQuestionsByCategoryType(CategoryType::SUBJECT);
-        $answers = $em->getRepository('AnketaBundle\Entity\Answer')
-                      ->getAnswersByCriteria($questions, $user, $subject);
         $season = $em->getRepository('AnketaBundle:Season')->getActiveSeason();
+        $questions = $em->getRepository('AnketaBundle\Entity\Question')
+                        ->getOrderedQuestionsByCategoryType(CategoryType::SUBJECT, $season);
+        $answers = $em->getRepository('AnketaBundle\Entity\Answer')
+                      ->getAnswersByCriteria($questions, $user, $season, $subject);
         
         if ('POST' == $request->getMethod()) {
             $answerArray = $this->processForm($request, $user, $questions, $answers, $season);
@@ -256,7 +256,7 @@ class QuestionController extends Controller {
                 $em->persist($answer);
             }
 
-            $user->setParticipated(true);
+            $user->forSeason($season)->setParticipated(true);
 
             $em->flush();
 
@@ -289,11 +289,11 @@ class QuestionController extends Controller {
         } catch (\RuntimeException $e) {
             throw new NotFoundHttpException($e->getMessage());
         }
-        $questions = $em->getRepository('AnketaBundle\Entity\Question')
-                        ->getOrderedQuestionsByCategoryType(CategoryType::STUDY_PROGRAMME);
-        $answers = $em->getRepository('AnketaBundle\Entity\Answer')
-                      ->getAnswersByCriteria($questions, $user, null, null, $studyProgramme);
         $season = $em->getRepository('AnketaBundle:Season')->getActiveSeason();
+        $questions = $em->getRepository('AnketaBundle\Entity\Question')
+                        ->getOrderedQuestionsByCategoryType(CategoryType::STUDY_PROGRAMME, $season);
+        $answers = $em->getRepository('AnketaBundle\Entity\Answer')
+                      ->getAnswersByCriteria($questions, $user, $season, null, null, $studyProgramme);
 
         if ('POST' == $request->getMethod()) {
             $answerArray = $this->processForm($request, $user, $questions, $answers, $season);
@@ -308,7 +308,7 @@ class QuestionController extends Controller {
                 $em->persist($answer);
             }
 
-            $user->setParticipated(true);
+            $user->forSeason($season)->setParticipated(true);
 
             $em->flush();
 
@@ -366,11 +366,11 @@ class QuestionController extends Controller {
             }
         }
         
-        $questions = $em->getRepository('AnketaBundle\Entity\Question')
-                        ->getOrderedQuestions($category);
-        $answers = $em->getRepository('AnketaBundle\Entity\Answer')
-                      ->getAnswersByCriteria($questions, $user);
         $season = $em->getRepository('AnketaBundle:Season')->getActiveSeason();
+        $questions = $em->getRepository('AnketaBundle\Entity\Question')
+                        ->getOrderedQuestions($category, $season);
+        $answers = $em->getRepository('AnketaBundle\Entity\Answer')
+                      ->getAnswersByCriteria($questions, $user, $season);
         
         if ('POST' == $request->getMethod()) {
             $answerArray = $this->processForm($request, $user, $questions, $answers, $season);
@@ -382,7 +382,7 @@ class QuestionController extends Controller {
                 $em->persist($answer);
             }
 
-            $user->setParticipated(true);
+            $user->forSeason($season)->setParticipated(true);
 
             $em->flush();
 

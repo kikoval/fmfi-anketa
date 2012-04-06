@@ -104,7 +104,7 @@ class HlasovanieController extends Controller
         // nastavime progress
         $questionRepository = $em->getRepository('AnketaBundle\Entity\Question');
         
-        foreach ($questionRepository->getProgressForSubjectTeachersByUser($user) as $subject => $rest) {
+        foreach ($questionRepository->getProgressForSubjectTeachersByUser($user, $season) as $subject => $rest) {
             foreach ($rest as $teacher => $progress) {
                 
                 $menu['subject']->children[$subject]
@@ -115,7 +115,7 @@ class HlasovanieController extends Controller
             }
         }
 
-        foreach ($questionRepository->getProgressForSubjectsByUser($user) as $subject => $progress) {
+        foreach ($questionRepository->getProgressForSubjectsByUser($user, $season) as $subject => $progress) {
             $menu['subject']->children[$subject]
                             ->getProgressbar()
                             ->setProgress((int)$progress['answered'],
@@ -125,7 +125,7 @@ class HlasovanieController extends Controller
                             ->setIncludeChildren(false);
         }
 
-        foreach ($questionRepository->getProgressForCategoriesByUser($user) as $categoryId => $progress) {
+        foreach ($questionRepository->getProgressForCategoriesByUser($user, $season) as $categoryId => $progress) {
             if (array_key_exists($categoryId, $menu['general']->children)) {
                 $menu['general']->children[$categoryId]
                                 ->getProgressbar()
@@ -134,7 +134,7 @@ class HlasovanieController extends Controller
             }
         }
 
-        foreach ($questionRepository->getProgressForStudyProgramsByUser($user) as $studyProgramId => $progress) {
+        foreach ($questionRepository->getProgressForStudyProgramsByUser($user, $season) as $studyProgramId => $progress) {
             if (array_key_exists($studyProgramId, $menu['study_program']->children)) {
                 $menu['study_program']->children[$studyProgramId]
                                 ->getProgressbar()
@@ -199,13 +199,12 @@ class HlasovanieController extends Controller
     public function globalProgressbarAction($mode) {
         $em = $this->get('doctrine.orm.entity_manager');
 
-        $total = $em->getRepository('AnketaBundle\Entity\Season')
-                    ->getActiveSeason()
-                    ->getStudentCount();
+        $activeSeason = $em->getRepository('AnketaBundle\Entity\Season')->getActiveSeason();
+        $total = $activeSeason->getStudentCount();
         $voters = $em->getRepository('AnketaBundle\Entity\User')
-                     ->getNumberOfVoters();
+                     ->getNumberOfVoters($activeSeason);
         $anon = $em->getRepository('AnketaBundle\Entity\User')
-                   ->getNumberOfAnonymizations();
+                   ->getNumberOfAnonymizations($activeSeason);
 
         $templateParams = array();
         $templateParams['progressAnon'] = new MenuItemProgressbar(null, $total, $anon);

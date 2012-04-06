@@ -39,16 +39,19 @@ class QuestionRepository extends EntityRepository {
     /**
      *
      * @param Category $category category of the questions to look for
+     * @param Season $season active season
      * @return ArrayCollection questions ordered by position
      */
-    public function getOrderedQuestions(Category $category) {
+    public function getOrderedQuestions(Category $category, Season $season) {
         $em = $this->getEntityManager();
         $query = $em->createQuery("SELECT q, o
                                    FROM AnketaBundle\Entity\Question q
                                    LEFT JOIN q.options o
                                    WHERE q.category = :category
+                                   AND q.season = :season
                                    ORDER BY q.position ASC");
-        $query->setParameter('category', $category->getId());
+        $query->setParameter('category', $category);
+        $query->setParameter('season', $season);
         return $query->getResult();
     }
 
@@ -56,7 +59,7 @@ class QuestionRepository extends EntityRepository {
     //                 Nefunguje to pre "general" kategoriu,
     //                 kde to vrati pocet otazok iba prvej kategorie.
     //                 Navrhujem tuto funkciu zrusit a pouzivat iba tu nad nou.
-    public function getOrderedQuestionsByCategoryType($type) {
+    public function getOrderedQuestionsByCategoryType($type, Season $season) {
         Preconditions::check(CategoryType::isValid($type));
         $category = $this->getEntityManager()
                 ->getRepository('AnketaBundle\Entity\Category')
@@ -64,17 +67,20 @@ class QuestionRepository extends EntityRepository {
         if ($category == null) {
             throw new NoResultException();
         }
-        return $this->getOrderedQuestions($category);
+        return $this->getOrderedQuestions($category, $season);
     }
 
-     public function getNumberOfQuestionsForCategoryType($type) {
+     public function getNumberOfQuestionsForCategoryType($type, Season $season) {
         Preconditions::check(CategoryType::isValid($type));
         $em = $this->getEntityManager();
         $query = $em->createQuery("SELECT COUNT(q.id) as questions
                                    FROM AnketaBundle\Entity\Question q
                                    JOIN q.category c
-                                   WHERE c.type = :type");
-        $result = $query->setParameter('type', $type)->getResult();
+                                   WHERE c.type = :type
+                                   AND q.season = :season");
+        $query->setParameter('type', $type);
+        $query->setParameter('season', $season);
+        $result = $query->getResult();
         return $result[0]['questions'];
     }
 
@@ -84,24 +90,27 @@ class QuestionRepository extends EntityRepository {
      * - result[subject_code]['total'] = number of questions for subject
      * Includes progress for teacher with the largest progress!
      * @param User $user
+     * @param Season $season
      * @return array
      */
-    public function getProgressForSubjectsByUser(User $user) {
+    public function getProgressForSubjectsByUser(User $user, Season $season) {
         $em = $this->getEntityManager();
-        $season = $em->getRepository('AnketaBundle:Season')->getActiveSeason();
         $query = $em->createQuery('SELECT s.code AS subject_code, COUNT(a.id) AS num
                                    FROM AnketaBundle\Entity\Answer a
                                    JOIN a.subject s
-                                   WHERE a.author = :authorID
+                                   WHERE a.author = :author
+                                         AND a.season = :season
                                          AND (a.option IS NOT NULL OR a.comment IS NOT NULL)
                                          AND a.teacher IS NULL
                                    GROUP BY s.id');
-        $rows = $query->setParameter('authorID', $user->getId())->getResult();
+        $query->setParameter('author', $user);
+        $query->setParameter('season', $season);
+        $rows = $query->getResult();
 
-        $subjectQuestions = $this->getNumberOfQuestionsForCategoryType(CategoryType::SUBJECT);
-        $subjectTeachersQuestions = $this->getNumberOfQuestionsForCategoryType(CategoryType::TEACHER_SUBJECT);
+        $subjectQuestions = $this->getNumberOfQuestionsForCategoryType(CategoryType::SUBJECT, $season);
+        $subjectTeachersQuestions = $this->getNumberOfQuestionsForCategoryType(CategoryType::TEACHER_SUBJECT, $season);
 
-        $teachers = $this->getProgressForSubjectTeachersByUser($user);
+        $teachers = $this->getProgressForSubjectTeachersByUser($user, $season);
 
         $mostCompleteTeacher = function(array $array)
         {
@@ -133,21 +142,24 @@ class QuestionRepository extends EntityRepository {
      * - result[subject_code][teacher_id]['answered'] = number of answers for subject and teacher
      * - result[subject_code][teacher_id]['total'] = number of questions for subject and teacher
      * @param User $user
+     * @param Season $season
      * @return array
      */
-    public function getProgressForSubjectTeachersByUser(User $user) {
+    public function getProgressForSubjectTeachersByUser(User $user, Season $season) {
         $em = $this->getEntityManager();
-        $season = $em->getRepository('AnketaBundle:Season')->getActiveSeason();
         $query = $em->createQuery('SELECT s.code AS subject_code, t.id AS teacher_id, COUNT(a.id) AS num
                                    FROM AnketaBundle\Entity\Answer a
                                         JOIN a.subject s
                                         JOIN a.teacher t
-                                   WHERE a.author = :authorID
+                                   WHERE a.author = :author
+                                         AND a.season = :season
                                          AND (a.option IS NOT NULL OR a.comment IS NOT NULL)
                                    GROUP BY s.id, a.teacher');
-        $rows = $query->setParameter('authorID', $user->getId())->getResult();
+        $query->setParameter('author', $user);
+        $query->setParameter('season', $season);
+        $rows = $query->getResult();
 
-        $subjectTeachersQuestions = $this->getNumberOfQuestionsForCategoryType(CategoryType::TEACHER_SUBJECT);
+        $subjectTeachersQuestions = $this->getNumberOfQuestionsForCategoryType(CategoryType::TEACHER_SUBJECT, $season);
 
         $subjectRepository = $em->getRepository('AnketaBundle:Subject');
         $teacherRepository = $em->getRepository('AnketaBundle:Teacher');
@@ -176,18 +188,22 @@ class QuestionRepository extends EntityRepository {
      * - result[cat_id]['answered'] = number of answers for category
      * - result[cat_id]['total'] = number of questions for category
      * @param User $user
+     * @param Season $season
      * @return array
      */
-    public function getProgressForCategoriesByUser(User $user) {
+    public function getProgressForCategoriesByUser(User $user, Season $season) {
         $em = $this->getEntityManager();
         $query = $em->createQuery('SELECT c.id AS cat_id, COUNT(a.id) AS num
                                    FROM AnketaBundle\Entity\Answer a
                                         JOIN a.question q
                                         JOIN q.category c
-                                   WHERE a.author = :authorID
+                                   WHERE a.author = :author
+                                         AND a.season = :season
                                          AND (a.option IS NOT NULL OR a.comment IS NOT NULL)
                                    GROUP BY c.id');
-        $rows = $query->setParameter('authorID', $user->getId())->getResult();
+        $query->setParameter('author', $user);
+        $query->setParameter('season', $season);
+        $rows = $query->getResult();
 
         $result = array();
         foreach ($em->getRepository('AnketaBundle\Entity\Category')->findAll() as $category) {
@@ -209,21 +225,24 @@ class QuestionRepository extends EntityRepository {
      * - result[subject_code][teacher_id]['answered'] = number of answers for subject and teacher
      * - result[subject_code][teacher_id]['total'] = number of questions for subject and teacher
      * @param User $user
+     * @param Season $season
      * @return array
      */
-    public function getProgressForStudyProgramsByUser(User $user) {
+    public function getProgressForStudyProgramsByUser(User $user, Season $season) {
         $em = $this->getEntityManager();
-        $season = $em->getRepository('AnketaBundle:Season')->getActiveSeason();
         $query = $em->createQuery('SELECT sp.code AS sp_code, COUNT(a.id) AS num
                                    FROM AnketaBundle\Entity\Answer a
                                         JOIN a.studyProgram sp
                                         JOIN a.question q
                                         JOIN q.category c
-                                   WHERE a.author = :authorID
+                                   WHERE a.author = :author
+                                         AND a.season = :season
                                          AND c.type = \'studijnyProgram\'
                                          AND (a.option IS NOT NULL OR a.comment IS NOT NULL)
                                    GROUP BY sp.id');
-        $rows = $query->setParameter('authorID', $user->getId())->getResult();
+        $query->setParameter('author', $user);
+        $query->setParameter('season', $season);
+        $rows = $query->getResult();
 
 
         $result = array();
@@ -231,7 +250,7 @@ class QuestionRepository extends EntityRepository {
         foreach ($studyRepository->getStudyProgrammesForUser($user, $season) as $studyProgram) {
                 $result[$studyProgram->getCode()] = array(
                     'answered' => 0,
-                    'total' => $this->getNumberOfQuestionsForCategoryType(CategoryType::STUDY_PROGRAMME)
+                    'total' => $this->getNumberOfQuestionsForCategoryType(CategoryType::STUDY_PROGRAMME, $season)
                 );
         }
 
