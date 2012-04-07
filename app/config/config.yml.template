@@ -1,5 +1,6 @@
 imports:
     - { resource: parameters.ini }
+    - { resource: services.yml }
 
 framework:
     trust_proxy_headers: true
