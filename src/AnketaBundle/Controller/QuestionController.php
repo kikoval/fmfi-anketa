@@ -18,6 +18,7 @@ namespace AnketaBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 use AnketaBundle\Entity\Answer;
@@ -26,6 +27,13 @@ use AnketaBundle\Entity\Category;
 use AnketaBundle\Entity\CategoryType;
 
 class QuestionController extends Controller {
+
+    public function preExecute() {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $season = $em->getRepository('AnketaBundle:Season')->getActiveSeason();
+        $user = $this->get('security.context')->getToken()->getUser();
+        if (!$user->forSeason($season)->canVote()) throw new AccessDeniedException();
+    }
 
     /**
      * Processes the form.

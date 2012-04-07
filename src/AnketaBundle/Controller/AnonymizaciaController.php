@@ -6,7 +6,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class AnonymizaciaController extends Controller {
-    
+
+    public function preExecute() {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $season = $em->getRepository('AnketaBundle:Season')->getActiveSeason();
+        $user = $this->get('security.context')->getToken()->getUser();
+        if (!$user->forSeason($season)->canVote()) throw new AccessDeniedException();
+    }
+
     public function anonymizujAction() {
         $request = $this->get('request');
         if ($request->getMethod() == 'POST' && $request->request->get('anonymizuj')) {
