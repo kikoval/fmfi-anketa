@@ -2,7 +2,7 @@
 /**
  * This file contains user source interface 
  *
- * @copyright Copyright (c) 2011 The FMFI Anketa authors (see AUTHORS).
+ * @copyright Copyright (c) 2011,2012 The FMFI Anketa authors (see AUTHORS).
  * Use of this source code is governed by a license that can be
  * found in the LICENSE file in the project root directory.
  *
@@ -12,14 +12,16 @@
  */
 
 namespace AnketaBundle\Security;
+use AnketaBundle\Entity\UserSeason;
 
 interface UserSourceInterface
 {
 
     /**
-     * Load information about user and store it to the builder
-     * @param UserBuilder $builder the builder to populate
+     * Load information about user
+     * @param UserSeason $userSeason user-season to populate
+     * @return boolean true if user found, false otherwise
      */
-    public function load(UserBuilder $builder);
+    public function load(UserSeason $userSeason);
 
 }

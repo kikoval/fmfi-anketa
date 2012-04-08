@@ -2,7 +2,7 @@
 /**
  * This file contains user source interface
  *
- * @copyright Copyright (c) 2011 The FMFI Anketa authors (see AUTHORS).
+ * @copyright Copyright (c) 2011-2012 The FMFI Anketa authors (see AUTHORS).
  * Use of this source code is governed by a license that can be
  * found in the LICENSE file in the project root directory.
  *
@@ -15,6 +15,8 @@ namespace AnketaBundle\Security;
 
 use Doctrine\ORM\EntityManager;
 use AnketaBundle\Entity\User;
+use AnketaBundle\Entity\UserSeason;
+use AnketaBundle\Entity\UsersSubjects;
 use AnketaBundle\Entity\Subject;
 use AnketaBundle\Integration\AISRetriever;
 use AnketaBundle\Entity\Role;
@@ -74,28 +76,29 @@ class AISUserSource implements UserSourceInterface
         $this->logger = $logger;
     }
 
-    public function load(UserBuilder $builder)
+    public function load(UserSeason $userSeason)
     {
-        if (!$builder->hasFullName()) {
-            $builder->setFullName($this->aisRetriever->getFullName());
+        $user = $userSeason->getUser();
+        if (!$user->hasDisplayName()) {
+            $user->setDisplayName($this->aisRetriever->getFullName());
         }
         
         if ($this->aisRetriever->isAdministraciaStudiaAllowed()) {
-            $this->loadSubjects($builder);
+            $this->loadSubjects($userSeason);
 
             if ($this->loadAuth) {            
-                $builder->addRole($this->roleRepository->findOrCreateRole('ROLE_AIS_STUDENT'));
-                $builder->markStudent();
+                $userSeason->setEligible(true); // TODO: setIsStudent
             }
         }
 
         $this->aisRetriever->logoutIfNotAlready();
+        return true;
     }
 
     /**
      * Load subject entities associated with this user
      */
-    private function loadSubjects(UserBuilder $builder)
+    private function loadSubjects(UserSeason $userSeason)
     {
         $aisPredmety = $this->aisRetriever->getPredmety($this->semestre);
         
@@ -141,7 +144,13 @@ class AISUserSource implements UserSourceInterface
             }
             $stmt = null;
 
-            $builder->addSubject($subject, $studyProgram);
+            $userSubject = new UsersSubjects();
+            $userSubject->setUser($userSeason->getUser());
+            $userSubject->setSeason($userSeason->getSeason());
+            $userSubject->setSubject($subject);
+            $userSubject->setStudyProgram($studyProgram);
+            
+            $this->entityManager->persist($userSubject);
         }
     }
 

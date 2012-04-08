@@ -1,6 +1,21 @@
 imports:
     - { resource: parameters.ini }
 
+parameters:
+    # kluc - id sucasti (z LDAPu), vid
+    # https://cit.uniba.sk/wiki/public/jas/ldap/groups
+    org_unit: FMFI
+    other_instances:
+      FMFI:
+        url: https://anketa.fmph.uniba.sk/
+        name: Fakulta matematiky, fyziky a informatiky
+      PriF:
+        url: https://anketa.uniba.sk/fns/
+        name: Prírodovedecká fakulta
+      FaF:
+        url: https://anketa.uniba.sk/fpharm
+        name: Farmaceutická fakulta
+
 framework:
     trust_proxy_headers: true
 
@@ -85,6 +100,8 @@ services:
         arguments:
             - "@doctrine.orm.entity_manager"
             - ["@anketa.ais_user_source"]
+            #- ["@anketa.demo_user_source"]
+            - ["@anketa.ldap_user_source"]
     anketa.ais_retriever:
         class: AnketaBundle\Integration\AISRetriever
         arguments:
@@ -101,10 +118,22 @@ services:
             - "@anketa.ais_retriever"
             - [["2011/2012", "Z"]] # brat iba tieto semestre
             - Yes # pouzit AIS ako zdroj opravneni?
+            - "@logger"
+    anketa.ldap_retriever:
+        class: AnketaBundle\Integration\LDAPRetriever
+        arguments:
+            - "ldaps://jas2.uniba.sk/,ldaps://jas1.uniba.sk/"
+            - "dc=uniba,dc=sk"
+    anketa.ldap_user_source:
+        class: AnketaBundle\Security\LDAPUserSource
+        arguments:
+            - "@anketa.ldap_retriever"
+            - "@logger"
     anketa.demo_user_source:
         class: AnketaBundle\Security\DemoUserSource
         arguments:
             - "@doctrine.orm.entity_manager"
+            - ["FMFI"]
     
 security:
     factories:
