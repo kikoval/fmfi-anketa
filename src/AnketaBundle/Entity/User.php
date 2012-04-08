@@ -158,11 +158,11 @@ class User implements UserInterface {
     /**
      * Add userSeason
      *
-     * @param AnketaBundle\Entity\UserSeason $userSeasons
+     * @param AnketaBundle\Entity\UserSeason $userSeason
      */
-    public function addUserSeasons(\AnketaBundle\Entity\UserSeason $userSeasons)
+    public function addUserSeason(\AnketaBundle\Entity\UserSeason $userSeason)
     {
-        $this->userSeasons[] = $userSeasons;
+        $this->userSeasons[] = $userSeason;
     }
 
     /**
