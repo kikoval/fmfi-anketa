@@ -7,11 +7,17 @@ function stop($message) {
 
 $seasonId = 1;
 
-$user = "root";
-$password = "root";
-$database = "anketa2";
+$DS = DIRECTORY_SEPARATOR;
+$parameters = parse_ini_file(__DIR__.$DS.'..'.$DS.'app'.$DS.'config'.$DS.'parameters.ini');
+if ($parameters['db_backend']!='mysql') stop('This script supports only MySQL.');
+
+$user = $parameters['db_mysql_user'];
+$password = $parameters['db_mysql_password'];
+$database = $parameters['db_mysql_name'];
+
 if (empty($user) || empty($password) || empty($database))
     stop('Nezadane prihlasovacie udaje k DB.');
+
 $mysqli = @new mysqli("localhost", $user, $password, $database);
 if ($mysqli->connect_errno) {
     stop("Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error);
@@ -21,8 +27,6 @@ if (!($stmt = $mysqli->prepare("INSERT INTO `userseason` (`user_id`, `season_id`
 VALUES (?, ?, ?, ?, 1, 0)"))) {
     stop("Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error);
 }
-
-
 
 $res = $mysqli->query("SELECT id, hasVote, participated FROM user");
 while ($row = $res->fetch_assoc()) {
