@@ -31,8 +31,10 @@ class QuestionController extends Controller {
     public function preExecute() {
         $em = $this->get('doctrine.orm.entity_manager');
         $season = $em->getRepository('AnketaBundle:Season')->getActiveSeason();
-        $user = $this->get('security.context')->getToken()->getUser();
-        if (!$user->forSeason($season)->canVote()) throw new AccessDeniedException();
+        $token = $this->get('security.context')->getToken();
+        if (!$token) throw new AccessDeniedException();
+        $user = $token->getUser();
+        if (!$user || !$user->forSeason($season)->canVote()) throw new AccessDeniedException();
     }
 
     /**
