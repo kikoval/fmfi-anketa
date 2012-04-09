@@ -23,12 +23,12 @@ if ($mysqli->connect_errno) {
     stop("Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error);
 }
 
-if (!($stmt = $mysqli->prepare("INSERT INTO `userseason` (`user_id`, `season_id`, `isStudent`, `participated`, `finished`, `isTeacher`)
+if (!($stmt = $mysqli->prepare("INSERT INTO `UserSeason` (`user_id`, `season_id`, `isStudent`, `participated`, `finished`, `isTeacher`)
 VALUES (?, ?, ?, ?, 1, 0)"))) {
     stop("Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error);
 }
 
-$res = $mysqli->query("SELECT id, hasVote, participated FROM user");
+$res = $mysqli->query("SELECT id, hasVote, participated FROM User");
 while ($row = $res->fetch_assoc()) {
     if (!$stmt->bind_param('iiii', $row['id'], $seasonId, $row['participated'], $row['participated'])) {
         stop("Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error);
