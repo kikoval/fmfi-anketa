@@ -38,25 +38,32 @@ class User implements UserInterface {
     protected $roles;
     
     /**
+     * @ORM\OneToMany(targetEntity="UserSeason", mappedBy="user")
+     */
+    protected $userSeasons;
+
+    /**
      * Roles that are not persisted in the database
      * @var array(string)
      */
     protected $nonPersistentRoles = array(); // inicializator musi byt tu! (doctrine nevola konstruktor)
 
     /**
-     * @ORM\OneToMany(targetEntity="UserSeason", mappedBy="user")
+     * List of user's organizational units
+     * This is not persisted in the database, as it is always reloaded 
+     * @var array(string)
      */
-    protected $userSeasons;
+    protected $orgUnits = array(); // inicializator musi byt tu! (doctrine nevola konstruktor)
 
     /**
      * @param String $username
      * @param String $realname
      */
-    public function __construct($username, $displayname) {
+    public function __construct($username) {
         $this->subjects = new ArrayCollection();
         $this->roles = new ArrayCollection();
         $this->userName = $username;
-        $this->displayName = $displayname;
+        $this->displayName = null;
     }
 
     public function getId() {
@@ -76,7 +83,14 @@ class User implements UserInterface {
     }
 
     public function getDisplayName() {
+        if (!$this->hasDisplayName()) {
+            return $this->userName;
+        }
         return $this->displayName;
+    }
+    
+    public function hasDisplayName() {
+        return $this->displayName !== null;
     }
 
     /**
@@ -118,6 +132,14 @@ class User implements UserInterface {
             $role = $role->getRole();
         }
         return array_search($role, $this->getRoles()) !== false;
+    }
+    
+    public function getOrgUnits() {
+        return $this->orgUnits;
+    }
+
+    public function setOrgUnits($orgUnits) {
+        $this->orgUnits = $orgUnits;
     }
 
     public function equals(UserInterface $user) {

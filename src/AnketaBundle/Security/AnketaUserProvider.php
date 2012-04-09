@@ -2,7 +2,7 @@
 /**
  * This file contains user provider for Anketa
  *
- * @copyright Copyright (c) 2011 The FMFI Anketa authors (see AUTHORS).
+ * @copyright Copyright (c) 2011,2012 The FMFI Anketa authors (see AUTHORS).
  * Use of this source code is governed by a license that can be
  * found in the LICENSE file in the project root directory.
  *
@@ -19,6 +19,8 @@ use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Doctrine\ORM\EntityManager;
 use AnketaBundle\Entity\User;
+use AnketaBundle\Entity\Season;
+use AnketaBundle\Entity\UserSeason;
 use AnketaBundle\Entity\UsersSubjects;
 
 class AnketaUserProvider implements UserProviderInterface
@@ -29,7 +31,13 @@ class AnketaUserProvider implements UserProviderInterface
      * @var AnketaBundle\Entity\UserRepository
      */
     private $userRepository;
-
+    
+    /**
+     * Doctrine repository for UserSeason entity
+     * @var AnketaBundle\Entity\UserSeasonRepository
+     */
+    private $userSeasonRepository;
+    
     /**
      * Doctrine repository for Role entity
      * @var AnketaBundle\Entity\RoleRepository
@@ -52,16 +60,21 @@ class AnketaUserProvider implements UserProviderInterface
     private $entityManager;
 
     /** @var UserSourceInterface[] */
-    private $userSources;
+    private $perSeasonUserSources;
+    
+    /** @var UserSourceInterface[] */
+    private $perLoginUserSources;
 
-    public function __construct(EntityManager $em, array $userSources)
+    public function __construct(EntityManager $em, array $perSeasonUserSources, array $perLoginUserSources)
     {
         $this->entityManager = $em;
         $this->userRepository = $em->getRepository('AnketaBundle:User');
+        $this->userSeasonRepository = $em->getRepository('AnketaBundle:UserSeason');
         $this->roleRepository = $em->getRepository('AnketaBundle:Role');
         $this->seasonRepository = $em->getRepository('AnketaBundle:Season');
         $this->teacherRepository = $em->getRepository('AnketaBundle:Teacher');
-        $this->userSources = $userSources;
+        $this->perSeasonUserSources = $perSeasonUserSources;
+        $this->perLoginUserSources = $perLoginUserSources;
     }
 
     /**
@@ -70,12 +83,21 @@ class AnketaUserProvider implements UserProviderInterface
      * @return User the reloaded user
      * @throws UnsupportedUserException if the UserInstance given is not User
      */
-    public function refreshUser(UserInterface $user) {
-        if (!($user instanceof User)) {
+    public function refreshUser(UserInterface $oldUser) {
+        if (!($oldUser instanceof User)) {
             throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', get_class($user)));
         }
         
-        return $this->loadUserByUsername($user->getUsername());
+        $user = $this->userRepository->findOneWithRolesByUserName($oldUser->getUserName());
+
+        if ($user === null) {
+            throw new UsernameNotFoundException(sprintf("User %s not found in database!", $oldUser->getUserName()));
+        }
+        
+        $user->setOrgUnits($oldUser->getOrgUnits());
+        $this->loadUserInfo($user, false);
+        
+        return $user;
     }
 
     /**
@@ -95,45 +117,53 @@ class AnketaUserProvider implements UserProviderInterface
         $user = $this->userRepository->findOneWithRolesByUserName($username);
 
         if ($user === null) {
-            $builder = new UserBuilder();
-            $builder->setUsername($username);
-            $builder->addRole($this->roleRepository->findOrCreateRole('ROLE_USER'));
-
-            foreach ($this->userSources as $userSource) {
-                $userSource->load($builder);
-            }
-
-            $user = $builder->createUser();
-
+            $user = new User($username);
             $this->entityManager->persist($user);
             
-            $season = $this->seasonRepository->getActiveSeason();
+            $user->addRole($this->roleRepository->findOrCreateRole('ROLE_USER'));
+        }
+        
+        assert($user !== null);
+        $this->loadUserInfo($user, true);
+        return $user;
+    }
+    
+    private function loadUserInfo(User $user, $firstTime) {
+        $activeSeason = $this->seasonRepository->getActiveSeason();
+        $userSeason = $this->userSeasonRepository->
+                findOneBy(array('user' => $user->getId(), 'season' => $activeSeason->getId()));
+        $foundUser = false;
+        
+        if ($userSeason === null) {
+            $userSeason = new UserSeason();
+            $userSeason->setUser($user);
+            $userSeason->setSeason($activeSeason);
+            $this->entityManager->persist($userSeason);
             
-            foreach ($builder->getSubjects() as $record) {
-                $usersSubjects = new UsersSubjects();
-                $usersSubjects->setSeason($season);
-                $usersSubjects->setSubject($record['subject']);
-                $usersSubjects->setStudyProgram($record['studyProgram']);
-                $usersSubjects->setUser($user);
-                $this->entityManager->persist($usersSubjects);
+            foreach ($this->perSeasonUserSources as $userSource) {
+                $foundUser |= $userSource->load($userSeason);
             }
-            
-            $this->entityManager->flush();
-
         }
         
-        if ($user === null) {
-            throw new UsernameNotFoundException(sprintf('User "%s" not found.', $username));
+        if ($firstTime) {
+            foreach ($this->perLoginUserSources as $userSource) {
+                $foundUser |= $userSource->load($userSeason);
+            }
         }
         
-        $teacher = $this->teacherRepository->findOneBy(array('login' => $username));
+        if (!$foundUser) {
+            throw new UsernameNotFoundException(sprintf('User "%s" not found.', $user->getUserName()));
+        }
+        
+        $this->entityManager->flush();
+        
+        // TODO: toto vyhodit s presunom teacherov do usera
+        $teacher = $this->teacherRepository->findOneBy(array('login' => $user->getUserName()));
         if ($teacher !== null) {
             if (!$user->hasRole('ROLE_TEACHER')) {
                 $user->addNonPersistentRole('ROLE_TEACHER');
             }
         }
-
-        return $user;
     }
 
     /**

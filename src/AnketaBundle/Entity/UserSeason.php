@@ -92,6 +92,19 @@ class UserSeason {
      */
     protected $isTeacher;
     
+    public function __construct() {
+        $this->department = null;
+        $this->isStudent = false;
+        $this->finished = false;
+        $this->isTeacher = false;
+        $this->participated = false;
+        $this->season = null;
+        $this->user = null;
+    }
+    
+    /**
+     * @return AnketaBundle\Entity\User
+     */
     public function getUser() {
         return $this->user;
     }
