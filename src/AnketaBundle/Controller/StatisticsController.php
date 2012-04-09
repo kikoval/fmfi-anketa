@@ -326,7 +326,7 @@ class StatisticsController extends Controller {
         $maxCnt = 0;
         $results = array();
 
-        $questions = $section->getQuestions();
+        $questions = $section->getQuestions($season);
         foreach ($questions as $question) {
             $answers = $section->getAnswers($question);
             $data = $this->processQuestion($question, $answers);
@@ -478,7 +478,7 @@ class StatisticsController extends Controller {
         foreach ($categories AS $category) {
             // TODO: by season
             $items[$category->getDescription()] = array();
-            $questions = $em->getRepository('AnketaBundle:Question')->getOrderedQuestions($category);
+            $questions = $em->getRepository('AnketaBundle:Question')->getOrderedQuestions($category, $season);
             foreach ($questions as $question) {
                 $section = StatisticsSection::makeGeneralSection($this->container, $season, $question);
                 $items[$category->getDescription()][$question->getQuestion()] = $section->getStatisticsPath();
