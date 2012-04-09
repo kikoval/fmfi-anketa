@@ -326,7 +326,7 @@ class StatisticsController extends Controller {
         $maxCnt = 0;
         $results = array();
 
-        $questions = $section->getQuestions($season);
+        $questions = $section->getQuestions();
         foreach ($questions as $question) {
             $answers = $section->getAnswers($question);
             $data = $this->processQuestion($question, $answers);
