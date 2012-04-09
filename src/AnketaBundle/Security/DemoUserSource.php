@@ -18,6 +18,7 @@ namespace AnketaBundle\Security;
 use Doctrine\ORM\EntityManager;
 use AnketaBundle\Entity\User;
 use AnketaBundle\Entity\UserSeason;
+use AnketaBundle\Entity\UsersSubjects;
 use AnketaBundle\Entity\Subject;
 use AnketaBundle\Integration\AISRetriever;
 use AnketaBundle\Entity\Role;
