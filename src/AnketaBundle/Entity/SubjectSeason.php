@@ -26,21 +26,21 @@ class SubjectSeason {
      * @ORM\GeneratedValue 
      * @ORM\Column(type="integer")
      */
-    private $id;
+    protected $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="Subject")
      *
      * @var Subject $subject
      */
-    private $subject;
+    protected $subject;
     
     /**
      * @ORM\ManyToOne(targetEntity="Season")
      *
      * @var Season $season
      */
-    private $season;
+    protected $season;
     
     public function getSubject() {
         return $this->subject;
@@ -52,7 +52,7 @@ class SubjectSeason {
      * @ORM\Column(type="integer", nullable="true")
      * @param int $studentCountFacutlty
      */
-    private $studentCountFaculty;
+    protected $studentCountFaculty;
     
     /**
      * Pocet studentov, ktori mali tento predmet zapisany celkovo
@@ -61,7 +61,7 @@ class SubjectSeason {
      * @ORM\Column(type="integer", nullable="true")
      * @var int $studentCountAll
      */
-    private $studentCountAll;
+    protected $studentCountAll;
 
     public function setSubject($subject) {
         $this->subject = $subject;

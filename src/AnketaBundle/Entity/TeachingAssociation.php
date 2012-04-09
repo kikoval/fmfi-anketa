@@ -16,41 +16,41 @@ class TeachingAssociation {
      * @ORM\GeneratedValue 
      * @ORM\Column(type="integer")
      */
-    private $id;
+    protected $id;
     
     /**
      * @ORM\ManyToOne(targetEntity="Season")
      *
      * @var Season $season
      */
-    private $season;
+    protected $season;
     
     /**
      * @ORM\ManyToOne(targetEntity="User")
      *
      * @var User $requestedBy
      */
-    private $requestedBy;
+    protected $requestedBy;
     
     /**
      * @ORM\ManyToOne(targetEntity="Subject")
      *
      * @var Subject $subject
      */
-    private $subject;
+    protected $subject;
     
     /**
      * @ORM\ManyToOne(targetEntity="Teacher")
      *
      * @var Teacher $teacher
      */
-    private $teacher;
+    protected $teacher;
     
     /**
      * @ORM\Column(type="text")
      * @var string $note 
      */
-    private $note;
+    protected $note;
 
     /**
      * @param String $name

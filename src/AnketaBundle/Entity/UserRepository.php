@@ -36,15 +36,16 @@ class UserRepository extends EntityRepository {
         return array_shift($result);
     }
 
-    public function anonymizeAnswersByUserId($userId) {
+    public function anonymizeAnswersByUser($user, $season) {
         $q = $this->getEntityManager()->createQueryBuilder()
                                       ->update('AnketaBundle\Entity\Answer', 'a')
-                                      ->set('a.author', '?1')
-                                      ->where('a.author = ?2')
+                                      ->set('a.author', ':nobody')
+                                      ->where('a.author = :user AND a.season = :season')
                                       ->getQuery();
         $q->setParameters(array(
-            1 => null,
-            2 => $userId
+            'nobody' => null,
+            'user' => $user,
+            'season' => $season
          ));
 
         //TODO(majak): nikde som nenasiel, co tato funkcia vrati, ked to failne
@@ -52,11 +53,13 @@ class UserRepository extends EntityRepository {
         return $q->execute();
     }
 
-    public function getNumberOfVoters() {
+    public function getNumberOfVoters($season) {
         $em = $this->getEntityManager();
-        $query = $em->createQuery("SELECT COUNT(u.id) as voters
-                                   FROM AnketaBundle\Entity\User u
-                                   WHERE u.participated = true");
+        $query = $em->createQuery("SELECT COUNT(us.id) as voters
+                                   FROM AnketaBundle\Entity\UserSeason us
+                                   WHERE us.isStudent = true
+                                   AND us.season = :season");
+        $query->setParameter('season', $season);
         $result = $query->getResult();
         return $result[0]['voters'];
     }
@@ -66,13 +69,14 @@ class UserRepository extends EntityRepository {
      * Warning: toto je nasty hack
      * TODO: potrebujeme specialny field k user-season ci anonymizoval
      */
-    public function getNumberOfAnonymizations() {
+    public function getNumberOfAnonymizations($season) {
         $em = $this->getEntityManager();
-        $query = $em->createQuery("SELECT COUNT(u.id) as anon
-                                   FROM AnketaBundle\\Entity\\User u
-                                   JOIN u.roles r
-                                   WHERE u.hasVote = 0 AND 'ROLE_AIS_STUDENT' = r.name AND u.participated = 1
-                                   ");
+        $query = $em->createQuery("SELECT COUNT(us.id) as anon
+                                   FROM AnketaBundle\Entity\UserSeason us
+                                   WHERE us.isStudent = true
+                                   AND us.finished = true
+                                   AND us.season = :season");
+        $query->setParameter('season', $season);
         $result = $query->getResult();
         return $result[0]['anon'];
     }

@@ -16,26 +16,26 @@ class Category {
      * @ORM\GeneratedValue 
      * @ORM\Column(type="integer")
      */
-    private $id;
+    protected $id;
 
     /**
      * Defaults to 100
      * @ORM\Column(type="integer")
      */
-    private $position;
+    protected $position;
 
     /**
      * The type of the category, i.e. "general", "subject"
      * @ORM\Column(type="string")
      */
-    private $type;
+    protected $type;
 
     /**
      * Describes the subcategory, i.e. School properties/Food for students
      * If no subcategories are needed, it's the same as main category
      * @ORM\Column(type="string")
      */
-    private $description;
+    protected $description;
 
     /**
      * @ORM\OneToMany(targetEntity="Question", mappedBy="category")
@@ -43,7 +43,7 @@ class Category {
      *
      * @var ArrayCollection $questions
      */
-    private $questions;
+    protected $questions;
 
     public function __construct($type, $description = null) {
         $this->questions = new ArrayCollection();

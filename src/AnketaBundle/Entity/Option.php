@@ -16,7 +16,7 @@ class Option {
      * @ORM\GeneratedValue 
      * @ORM\Column(type="integer")
      */
-    private $id;
+    protected $id;
 
     /**
      * @ORM\Column(type="integer", name="position")
@@ -24,17 +24,17 @@ class Option {
      * Smallest position means top of the list.
      * Note: the positions need not to be continuous.
      */
-    private $position;
+    protected $position;
 
     /**
      * @ORM\Column(type="string", name="choice")
      */
-    private $option;
+    protected $option;
 
     /**
      * @ORM\Column(type="integer")
      */
-    private $evaluation;
+    protected $evaluation;
 
     /**
      * @ORM\ManyToOne(targetEntity="Question", inversedBy="options")
@@ -42,7 +42,7 @@ class Option {
      *
      * @var Question $question
      */
-    private $question;
+    protected $question;
 
     /**
      * @param String $option

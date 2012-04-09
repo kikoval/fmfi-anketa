@@ -15,40 +15,40 @@ class Question {
      * @ORM\GeneratedValue 
      * @ORM\Column(type="integer")
      */
-    private $id;
+    protected $id;
 
     /**
      * Defaults to 100
      * @ORM\Column(type="integer")
      */
-    private $position;
+    protected $position;
 
     /**
      * @ORM\Column(type="string", nullable="true")
      */
-    private $title;
+    protected $title;
 
     /**
      * @ORM\Column(type="string")
      */
-    private $question;
+    protected $question;
 
     /**
      * @ORM\ManyToOne(targetEntity="Season")
      *
      * @var Season $season
      */
-    private $season;
+    protected $season;
 
     /**
      * @ORM\Column(type="string", length=1024, nullable="true")
      */
-    private $description;
+    protected $description;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private $stars;
+    protected $stars;
 
     /**
      * @ORM\OneToMany(targetEntity="Option", mappedBy="question", cascade={"persist", "remove"})
@@ -56,19 +56,19 @@ class Question {
      *
      * @var ArrayCollection $options
      */
-    private $options;
+    protected $options;
 
     /**
      * @ORM\ManyToOne(targetEntity="Category", inversedBy="questions")
      *
      * @var Category $category
      */
-    private $category;
+    protected $category;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private $hasComment;
+    protected $hasComment;
 
     /**
      * @param String $question

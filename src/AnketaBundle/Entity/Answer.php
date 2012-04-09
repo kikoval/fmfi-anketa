@@ -15,76 +15,76 @@ class Answer {
      * @ORM\GeneratedValue 
      * @ORM\Column(type="integer")
      */
-    private $id;
+    protected $id;
 
     /**
      * @ORM\Column(type="integer", nullable="true")
      */
-    private $evaluation;
+    protected $evaluation;
 
     /**
      * @ORM\Column(type="text", nullable="true")
      */
-    private $comment;
+    protected $comment;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private $attended = false;
+    protected $attended = false;
 
     /**
      * @ORM\ManyToOne(targetEntity="Question")
      *
      * @var Question $question
      */
-    private $question;
+    protected $question;
    
     /**
      * @ORM\ManyToOne(targetEntity="Season")
      *
      * @var Season $season
      */
-    private $season;
+    protected $season;
     
     /**
      * @ORM\ManyToOne(targetEntity="Option")
      *
      * @var Option $option
      */
-    private $option;
+    protected $option;
 
     /**
      * @ORM\ManyToOne(targetEntity="Teacher")
      *
      * @var Teacher $teacher
      */
-    private $teacher;
+    protected $teacher;
 
     /**
      * @ORM\ManyToOne(targetEntity="Subject")
      *
      * @var Subject $subject
      */
-    private $subject;
+    protected $subject;
 
     /**
      * @ORM\ManyToOne(targetEntity="User")
      *
      * @var User $user
      */
-    private $author;
+    protected $author;
     
     /**
      * @ORM\ManyToOne(targetEntity="StudyProgram")
      *
      * @var StudyProgram $studyProgram
      */
-    private $studyProgram;
+    protected $studyProgram;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private $inappropriate = false;
+    protected $inappropriate = false;
 
     public function getId() {
         return $this->id;

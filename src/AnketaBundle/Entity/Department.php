@@ -24,26 +24,26 @@ class Department {
      * @ORM\GeneratedValue 
      * @ORM\Column(type="integer")
      */
-    private $id;
+    protected $id;
 
     /**
      * @ORM\Column(type="string")
      * @var string
      */
-    private $code;
+    protected $code;
     
     /**
      * @ORM\Column(type="string")
      * @var string
      */
-    private $name;
+    protected $name;
     
     /**
      * Homepage URL
      * @ORM\Column(type="string", nullable="true")
      * @var string
      */
-    private $homepage;
+    protected $homepage;
     
     public function getCode() {
         return $this->code;
