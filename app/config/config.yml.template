@@ -22,7 +22,6 @@ twig:
     globals:
         anketa_instance: %anketa_instance%
         skratka_fakulty: %skratka_fakulty%
-        fb_stranka:      %fb_stranka%
         smernica_dekana: %smernica_dekana%
 
 # Assetic Configuration
