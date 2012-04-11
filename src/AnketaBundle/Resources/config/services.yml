@@ -1,5 +1,8 @@
 
 services:
+    anketa.listener.preexecute:
+        class: AnketaBundle\Extension\AnketaPreExecuteControllerExtension
+        tags: [{ name: kernel.event_listener, event: kernel.controller, method: onKernelController }]
     anketa.twig.extension:
         class: AnketaBundle\Extension\AnketaTwigExtension
         tags: [{ name: twig.extension }]

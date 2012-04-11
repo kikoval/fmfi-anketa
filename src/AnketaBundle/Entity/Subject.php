@@ -16,18 +16,18 @@ class Subject {
      * @ORM\Id @ORM\GeneratedValue 
      * @ORM\Column(type="integer")
      */
-    private $id;
+    protected $id;
 
     /**
      * Uniquely identifies the subject
      * @ORM\Column(type="string", nullable="false", unique="true")
      */
-    private $code;
+    protected $code;
 
     /**
      * @ORM\Column(type="string")
      */
-    private $name;
+    protected $name;
 
     /**
      * @param String $name

@@ -27,21 +27,21 @@ class UserSeason {
      * @ORM\GeneratedValue 
      * @ORM\Column(type="integer")
      */
-    private $id;
+    protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="userSeasons")
      *
      * @var User $user
      */
-    private $user;
+    protected $user;
     
     /**
      * @ORM\ManyToOne(targetEntity="Season")
      *
      * @var Season $season
      */
-    private $season;
+    protected $season;
     
     /**
      * Do ktorej katedry pouzivatel patri (ktora ho zamestnava, etc.).
@@ -51,18 +51,17 @@ class UserSeason {
      *
      * @var Department $department
      */
-    private $department;
+    protected $department;
     
     /**
-     * Ci je/bol pouzivatel opravneny hlasovat v tejto sezone.
-     * Null, ak sa este nerozhodlo (napr. sa v tejto sezone neprihlasil).
-     * Pri anonymizacii sa tento flag necha na povodnej hodnote.
+     * Ci je pouzivatel v tejto sezone student.
+     * Od tohto flagu sa odvija napriklad moznost hlasovat v ankete.
      * 
-     * @ORM\Column(type="boolean", nullable="true")
+     * @ORM\Column(type="boolean")
      * 
      * @var boolean
      */
-    private $eligible;
+    protected $isStudent;
     
     /**
      * Ci pouzivatel vyplnil odpoved na aspon jednu otazku
@@ -71,7 +70,7 @@ class UserSeason {
      * 
      * @var boolean
      */
-    private $participated;
+    protected $participated;
     
     /**
      * Ci pouzivatel dohlasoval (anonymizoval) v tejto sezone.
@@ -82,7 +81,7 @@ class UserSeason {
      * 
      * @var boolean
      */
-    private $finished;
+    protected $finished;
 
     /**
      * Ci pouzivatel je v tejto sezone ucitelom.
@@ -91,8 +90,21 @@ class UserSeason {
      *
      * @var boolean
      */
-    private $isTeacher;
+    protected $isTeacher;
     
+    public function __construct() {
+        $this->department = null;
+        $this->isStudent = false;
+        $this->finished = false;
+        $this->isTeacher = false;
+        $this->participated = false;
+        $this->season = null;
+        $this->user = null;
+    }
+    
+    /**
+     * @return AnketaBundle\Entity\User
+     */
     public function getUser() {
         return $this->user;
     }
@@ -121,12 +133,12 @@ class UserSeason {
         return $this->id;
     }
     
-    public function getEligible() {
-        return $this->eligible;
+    public function getIsStudent() {
+        return $this->isStudent;
     }
 
-    public function setEligible($eligible) {
-        $this->eligible = $eligible;
+    public function setIsStudent($isStudent) {
+        $this->isStudent = $isStudent;
     }
 
     public function getParticipated() {
@@ -146,7 +158,7 @@ class UserSeason {
     }
 
     public function canVote() {
-        return ($this->getEligible() && !$this->getFinished());
+        return ($this->getIsStudent() && !$this->getFinished());
     }
 
     public function getIsTeacher() {

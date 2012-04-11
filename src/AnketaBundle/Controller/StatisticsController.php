@@ -360,7 +360,7 @@ class StatisticsController extends Controller {
         foreach ($categories AS $category) {
             // TODO: by season
             $items[$category->getDescription()] = array();
-            $questions = $em->getRepository('AnketaBundle:Question')->getOrderedQuestions($category);
+            $questions = $em->getRepository('AnketaBundle:Question')->getOrderedQuestions($category, $season);
             foreach ($questions as $question) {
                 $section = StatisticsSection::makeGeneralSection($this->container, $season, $question);
                 $items[$category->getDescription()][$question->getQuestion()] = $section->getStatisticsPath();

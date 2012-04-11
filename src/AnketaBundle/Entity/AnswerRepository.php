@@ -27,11 +27,12 @@ class AnswerRepository extends EntityRepository {
      *
      * @param array $questions array of questions
      * @param User $user current user
+     * @param Season $season active season
      * @param Subject $subject
      * @return array array of answers, indexed with question ids
      */
     public function getAnswersByCriteria(
-            array $questions, User $user,
+            array $questions, User $user, Season $season,
             Subject $subject = null, Teacher $teacher = null,
             StudyProgram $studyProgramme = null)
     {
@@ -39,7 +40,10 @@ class AnswerRepository extends EntityRepository {
         // mozno by bolo fajn vytvorit nad tym teda unique index
         $result = array();
         $answerRep = $this->getEntityManager()->getRepository('AnketaBundle\Entity\Answer');
-        $criteria = array('author' => $user->getId());
+        $criteria = array(
+            'author' => $user->getId(),
+            'season' => $season->getId()
+         );
         if ($subject != null) {
             $criteria['subject'] = $subject->getId();
         }
@@ -60,16 +64,19 @@ class AnswerRepository extends EntityRepository {
     /**
      *
      * @param User $user
+     * @param Season $season
      * @return integer number of user answers (not counting answers to subjects
      * not attended)
      */
-    public function getAnswersCount($user) {
+    public function getAnswersCount($user, $season) {
         $em = $this->getEntityManager();
         $query = $em->createQuery('SELECT COUNT(a.id)
                                    FROM AnketaBundle\Entity\Answer a
-                                   WHERE a.author = :userId AND
+                                   WHERE a.author = :user AND
+                                         a.season = :season AND
                                          ((a.subject IS NULL) OR (a.attended = true))');
-        $query->setParameter('userId', $user->getId());
+        $query->setParameter('user', $user);
+        $query->setParameter('season', $season);
         return $query->getSingleScalarResult();
     }
 

@@ -28,28 +28,28 @@ class UserStudyProgram {
      * @ORM\GeneratedValue 
      * @ORM\Column(type="integer")
      */
-    private $id;
+    protected $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="User")
      *
      * @var User $user
      */
-    private $user;
+    protected $user;
     
     /**
      * @ORM\ManyToOne(targetEntity="Season")
      *
      * @var Season $season
      */
-    private $season;
+    protected $season;
     
     /**
      * @ORM\ManyToOne(targetEntity="StudyProgram")
      * 
      * @var StudyProgram $studyProgram
      */
-    private $studyProgram;
+    protected $studyProgram;
 
     public function getSeason() {
         return $this->season;

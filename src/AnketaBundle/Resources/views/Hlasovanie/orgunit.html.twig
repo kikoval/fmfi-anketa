@@ -1,0 +1,20 @@
+{% extends 'AnketaBundle::layout.html.twig' %}
+
+{% block content %}
+<h2>Nemáte oprávnenie hlasovať v ankete</h2>
+<p>
+Hlasovať môžu iba študenti z {{ org_unit }}.
+Prosím skontrolujte, či ste prihlásený/á do ankety pre správnu fakultu.
+</p>
+
+{% if recommended_instances|length > 0 %}
+<p>Odporúčame Vám pozrieť nasledovné ankety:
+</p>
+<ul>
+    {% for inst in recommended_instances %}
+        <li><a href="{{ inst.url }}">{{ inst.name }}</a></li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+{% endblock %}

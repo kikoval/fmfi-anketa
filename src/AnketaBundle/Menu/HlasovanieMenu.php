@@ -97,7 +97,7 @@ class HlasovanieMenu
         // nastavime progress
         $questionRepository = $em->getRepository('AnketaBundle\Entity\Question');
 
-        foreach ($questionRepository->getProgressForSubjectTeachersByUser($user) as $subject => $rest) {
+        foreach ($questionRepository->getProgressForSubjectTeachersByUser($user, $season) as $subject => $rest) {
             foreach ($rest as $teacher => $progress) {
 
                 $menu['subject']->children[$subject]
@@ -108,7 +108,7 @@ class HlasovanieMenu
             }
         }
 
-        foreach ($questionRepository->getProgressForSubjectsByUser($user) as $subject => $progress) {
+        foreach ($questionRepository->getProgressForSubjectsByUser($user, $season) as $subject => $progress) {
             $menu['subject']->children[$subject]
                             ->getProgressbar()
                             ->setProgress((int)$progress['answered'],
@@ -118,7 +118,7 @@ class HlasovanieMenu
                             ->setIncludeChildren(false);
         }
 
-        foreach ($questionRepository->getProgressForCategoriesByUser($user) as $categoryId => $progress) {
+        foreach ($questionRepository->getProgressForCategoriesByUser($user, $season) as $categoryId => $progress) {
             if (array_key_exists($categoryId, $menu['general']->children)) {
                 $menu['general']->children[$categoryId]
                                 ->getProgressbar()
@@ -127,7 +127,7 @@ class HlasovanieMenu
             }
         }
 
-        foreach ($questionRepository->getProgressForStudyProgramsByUser($user) as $studyProgramId => $progress) {
+        foreach ($questionRepository->getProgressForStudyProgramsByUser($user, $season) as $studyProgramId => $progress) {
             if (array_key_exists($studyProgramId, $menu['study_program']->children)) {
                 $menu['study_program']->children[$studyProgramId]
                                 ->getProgressbar()

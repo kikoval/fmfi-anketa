@@ -15,25 +15,25 @@ class StudyProgram {
      * @ORM\GeneratedValue 
      * @ORM\Column(type="integer")
      */
-    private $id;
+    protected $id;
 
     /**
      * @ORM\Column(type="string")
      * @var string $name
      */
-    private $name;
+    protected $name;
 
     /**
      * @ORM\Column(type="string", unique="true")
      * @var string $code
      */
-    private $code;
+    protected $code;
 
     /**
      * @ORM\Column(type="string", unique="true")
      * @var string $slug
      */
-    private $slug;
+    protected $slug;
 
     public function getId() {
         return $this->id;

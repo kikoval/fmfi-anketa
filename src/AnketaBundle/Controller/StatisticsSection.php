@@ -235,7 +235,7 @@ class StatisticsSection extends ContainerAware {
     public function getQuestions() {
         if ($this->generalQuestion) return array($this->generalQuestion);
         $em = $this->container->get('doctrine.orm.entity_manager');
-        return $em->getRepository('AnketaBundle:Question')->getOrderedQuestionsByCategoryType($this->questionsCategoryType);
+        return $em->getRepository('AnketaBundle:Question')->getOrderedQuestionsByCategoryType($this->questionsCategoryType, $this->season);
     }
 
     private $answersQuery = null;

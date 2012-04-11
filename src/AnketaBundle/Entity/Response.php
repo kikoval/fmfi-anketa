@@ -14,62 +14,62 @@ class Response {
     /**
      * @ORM\Id @ORM\GeneratedValue @ORM\Column(type="integer")
      */
-    private $id;
+    protected $id;
 
     /**
      * @ORM\Column(type="text", nullable="true")
      */
-    private $comment;
+    protected $comment;
 
     /**
      * @ORM\ManyToOne(targetEntity="Teacher")
      *
      * @var Teacher $teacher
      */
-    private $teacher;
+    protected $teacher;
 
     /**
      * @ORM\ManyToOne(targetEntity="Subject")
      *
      * @var Subject $subject
      */
-    private $subject;
+    protected $subject;
 
     /**
      * @ORM\ManyToOne(targetEntity="StudyProgram")
      *
      * @var StudyProgram $studyProgram
      */
-    private $studyProgram;
+    protected $studyProgram;
     
     /**
      * @ORM\ManyToOne(targetEntity="Season")
      *
      * @var Season $season
      */
-    private $season;
+    protected $season;
 
     /**
      * @ORM\Column(type="text")
      */
-    private $author_text;
+    protected $author_text;
 
     /**
      * @ORM\Column(type="text")
      */
-    private $author_login;
+    protected $author_login;
 
     /**
      * @ORM\Column(type="text", nullable="true")
      */
-    private $association;
+    protected $association;
 
     /**
      * @ORM\ManyToOne(targetEntity="Question")
      *
      * @var Question $question
      */
-    private $question;
+    protected $question;
 
     public function getId() {
         return $this->id;
