@@ -43,7 +43,7 @@ class StatisticsSection extends ContainerAware {
         $result->answersQuery = array('subject' => $subject->getId(), 'teacher' => $teacher->getId());
         $result->responsesQuery = array('season' => $season->getId(), 'subject' => $subject->getId(), 'teacher' => $teacher->getId(), 'studyProgram' => null);
         $result->activeMenuItems = array($season->getId(), 'subjects', $subject->getCategory(), $subject->getId(), $teacher->getId());
-        $result->slug = $season->getSlug() . '/predmet/' . $subject->getCode() . '/ucitel/' . $teacher->getId();
+        $result->slug = $season->getSlug() . '/predmet/' . $subject->getSlug() . '/ucitel/' . $teacher->getId();
         $result->associationExamples = 'prednášajúci, cvičiaci, garant predmetu';
         return $result;
     }
@@ -73,7 +73,7 @@ class StatisticsSection extends ContainerAware {
         $result->answersQuery = array('subject' => $subject->getId());
         $result->responsesQuery = array('season' => $season->getId(), 'subject' => $subject->getId(), 'teacher' => null, 'studyProgram' => null);
         $result->activeMenuItems = array($season->getId(), 'subjects', $subject->getCategory(), $subject->getId());
-        $result->slug = $season->getSlug() . '/predmet/' . $subject->getCode();
+        $result->slug = $season->getSlug() . '/predmet/' . $subject->getSlug();
         $result->associationExamples = 'prednášajúci, cvičiaci, garant predmetu';
         return $result;
     }
@@ -140,7 +140,7 @@ class StatisticsSection extends ContainerAware {
         }
         $slug = $matches[2];
         if (preg_match('@^predmet/([a-zA-Z0-9-_]+)/ucitel/(\d+)$@', $slug, $matches)) {
-            $subject = $em->getRepository('AnketaBundle:Subject')->findOneBy(array('code' => $matches[1]));
+            $subject = $em->getRepository('AnketaBundle:Subject')->findOneBy(array('slug' => $matches[1]));
             if ($subject === null) {
                 throw new \Exception('Section not found: Subject "'.$matches[1].'" not found.');
             }
@@ -151,7 +151,7 @@ class StatisticsSection extends ContainerAware {
             return self::makeSubjectTeacherSection($container, $season, $subject, $teacher);
         }
         if (preg_match('@^predmet/([a-zA-Z0-9-_]+)$@', $slug, $matches)) {
-            $subject = $em->getRepository('AnketaBundle:Subject')->findOneBy(array('code' => $matches[1]));
+            $subject = $em->getRepository('AnketaBundle:Subject')->findOneBy(array('slug' => $matches[1]));
             if ($subject === null) {
                 throw new \Exception('Section not found: Subject "'.$matches[1].'" not found.');
             }
