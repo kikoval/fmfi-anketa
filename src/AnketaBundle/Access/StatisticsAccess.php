@@ -46,6 +46,11 @@ class StatisticsAccess
         return $this->em->getRepository('AnketaBundle:Season')->getTopLevelResultsVisible();
     }
 
+    public function activeSeasonHasVisibleResults() {
+        $activeSeason = $this->em->getRepository('AnketaBundle:Season')->getActiveSeason();
+        return $activeSeason->getResultsVisible();
+    }
+
     public function canSeeResults($season) {
         if ($this->isAdmin) return true;
         return $season->getResultsVisible() && ($season->getResultsPublic() || (bool)$this->user);
