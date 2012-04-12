@@ -50,12 +50,8 @@ class ReportsController extends Controller {
     public function studyProgrammeAction($study_programme_slug, $season_slug = null) {
 
         $em = $this->get('doctrine.orm.entity_manager');
-        $security = $this->get('security.context');
         //TODO uprsnit na konkretnE studijnE programy
-        if (!$security->isGranted('ROLE_STUDY_PROGRAMME_REPORT') && !$security->isGranted('ROLE_ALL_REPORTS')) {
-            throw new AccessDeniedException();
-        }
-        
+        if (!$this->get('anketa.access.statistics')->hasStudyProgrammeReports()) throw new AccessDeniedException();
         $season = $em->getRepository('AnketaBundle:Season')->findOneBy(array('slug' => $season_slug));
         if ($season === null) {
             throw new NotFoundHttpException();
@@ -77,11 +73,8 @@ class ReportsController extends Controller {
     public function departmentAction($department_slug, $season_slug = null) {
 
         $em = $this->get('doctrine.orm.entity_manager');
-        $security = $this->get('security.context');
         //TODO uprsnit na konkretnU katedrU
-        if (!$security->isGranted('ROLE_DEPARTMENT_REPORT') && !$security->isGranted('ROLE_ALL_REPORTS')) {
-            throw new AccessDeniedException();
-        }
+        if (!$this->get('anketa.access.statistics')->hasDepartmentReports()) throw new AccessDeniedException();
         
         $season = $em->getRepository('AnketaBundle:Season')->findOneBy(array('slug' => $season_slug));
         if ($season === null) {
@@ -103,22 +96,25 @@ class ReportsController extends Controller {
 
     public function myReportsAction($season_slug = null) {
         $em = $this->get('doctrine.orm.entity_manager');
-        $security = $this->get('security.context');
+        $access = $this->get('anketa.access.statistics');
         $season = $em->getRepository('AnketaBundle:Season')->findOneBy(array('slug' => $season_slug));
         if ($season === null) {
             throw new NotFoundHttpException();
         }
 
-        $user = $security->getToken()->getUser();
+        if (!$access->canSeeResults($season)) throw new AccessDeniedException();
+        if (!$access->hasReports()) throw new AccessDeniedException();
+
+        $user = $access->getUser();
 
         $items = array();
         
         // katedry
         $deptRepository = $em->getRepository('AnketaBundle:Department');
-        if ($security->isGranted('ROLE_ALL_REPORTS')) {
+        if ($access->hasAllReports()) {
             $departments = $deptRepository->findBy(array(), array('name' => 'ASC'));
         }
-        else if ($security->isGranted('ROLE_DEPARTMENT_REPORT')) {
+        else if ($access->hasDepartmentReports()) {
             $departments = $deptRepository->findByUser($user, $season);
         }
         else {
@@ -135,10 +131,10 @@ class ReportsController extends Controller {
         
         // studijne programy
         $spRepository = $em->getRepository('AnketaBundle:StudyProgram');
-        if ($security->isGranted('ROLE_ALL_REPORTS')) {
+        if ($access->hasAllReports()) {
             $studyPrograms = $spRepository->getAllWithAnswers($season, true);
         }
-        else if ($security->isGranted('ROLE_STUDY_PROGRAMME_REPORT')) {
+        else if ($access->hasStudyProgrammeReports()) {
             $studyPrograms = $spRepository->findByReportsUser($user, $season);
         }
         else {

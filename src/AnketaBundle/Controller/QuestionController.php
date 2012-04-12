@@ -29,12 +29,7 @@ use AnketaBundle\Entity\CategoryType;
 class QuestionController extends Controller {
 
     public function preExecute() {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $season = $em->getRepository('AnketaBundle:Season')->getActiveSeason();
-        $token = $this->get('security.context')->getToken();
-        if (!$token) throw new AccessDeniedException();
-        $user = $token->getUser();
-        if (!$user || !$user->forSeason($season)->canVote()) throw new AccessDeniedException();
+        if (!$this->get('anketa.access.hlasovanie')->userCanVote()) throw new AccessDeniedException();
     }
 
     /**

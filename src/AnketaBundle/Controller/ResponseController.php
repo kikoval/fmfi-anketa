@@ -14,15 +14,11 @@ use AnketaBundle\Entity\Teacher;
 class ResponseController extends Controller {
     
     public function newResponseAction($section_slug) {
-        $security = $this->get('security.context');
-        if (!$security->isGranted('ROLE_TEACHER')) {
-            throw new AccessDeniedException();
-        }
-        $user = $security->getToken()->getUser();
-
-        $em = $this->get('doctrine.orm.entity_manager');
-
         $section = StatisticsSection::getSectionFromSlug($this->container, $section_slug);
+
+        $access = $this->get('anketa.access.statistics');
+        if (!$access->canCreateResponse($section->getSeason())) throw new AccessDeniedException();
+        $user = $access->getUser();
         
         $response = new Response();
         $response->setAuthorLogin($user->getUserName());
@@ -38,15 +34,11 @@ class ResponseController extends Controller {
     
     public function editResponseAction($response_id, $delete) {
         $em = $this->get('doctrine.orm.entity_manager');
-        if (!$this->get('security.context')->isGranted('ROLE_TEACHER')) {
-            throw new AccessDeniedException();
-        }
-        
         $response = $em->find('AnketaBundle:Response', $response_id);
         if ($response == null) {
             throw new NotFoundHttpException('Neznama odpoved: ' . $response_id);
         }
-        
+
         return $this->updateResponse($response, $delete);
     }
     
@@ -54,9 +46,7 @@ class ResponseController extends Controller {
         $em = $this->get('doctrine.orm.entity_manager');
         $request = $this->get('request');
 
-        if ($response->getAuthorLogin() !== $this->get('security.context')->getToken()->getUser()->getUserName()) {
-            throw new AccessDeniedException();
-        }
+        if (!$this->get('anketa.access.statistics')->canEditResponse($response)) throw new AccessDeniedException();
 
         $section = StatisticsSection::getSectionOfResponse($this->container, $response);
         
@@ -98,11 +88,9 @@ class ResponseController extends Controller {
     
     public function listMineAction($season_slug) {
         $em = $this->get('doctrine.orm.entity_manager');
-        $security = $this->get('security.context');
-        if (!$security->isGranted('ROLE_TEACHER')) {
-            throw new AccessDeniedException();
-        }
-        $user = $security->getToken()->getUser();
+        $access = $this->get('anketa.access.statistics');
+        if (!$access->hasOwnResponses()) throw new AccessDeniedException();
+        $user = $access->getUser();
         
         $seasonRepo = $em->getRepository('AnketaBundle\Entity\Season');
         $season = $seasonRepo->findOneBy(array('slug' => $season_slug));
@@ -116,8 +104,7 @@ class ResponseController extends Controller {
         $processedResponses = array();
         foreach ($responses as $response) {
             $processedResponses[] = array(
-                'id' => $response->getId(),
-                'comment' => $response->getComment(),
+                'response' => $response,
                 'section' => StatisticsSection::getSectionOfResponse($this->container, $response)
             );
         }

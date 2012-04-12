@@ -19,6 +19,10 @@ class AnketaTwigExtension extends \Twig_Extension {
                 'hlasovanie' => $this->container->get('anketa.menu.hlasovanie'),
                 'statistics' => $this->container->get('anketa.menu.statistics'),
             ),
+            'access' => array(
+                'hlasovanie' => $this->container->get('anketa.access.hlasovanie'),
+                'statistics' => $this->container->get('anketa.access.statistics'),
+            ),
         );
     }
 

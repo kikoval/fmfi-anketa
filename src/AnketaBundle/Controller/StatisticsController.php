@@ -250,6 +250,8 @@ class StatisticsController extends Controller {
         $em = $this->get('doctrine.orm.entity_manager');
 
         $season = $this->getSeason($season_slug);
+        if (!$this->get('anketa.access.statistics')->canSeeResults($season)) throw new AccessDeniedException();
+
         $categories = $em->getRepository('AnketaBundle:Subject')->getCategorizedSubjects($season);
 
         $items = array();
@@ -272,11 +274,9 @@ class StatisticsController extends Controller {
     }
     
     public function listMySubjectsAction($season_slug) {
-        $security = $this->get('security.context');
-        if (!$security->isGranted('ROLE_TEACHER')) {
-            throw new AccessDeniedException();
-        }
-        $user = $security->getToken()->getUser();
+        $access = $this->get('anketa.access.statistics');
+        if (!$access->hasOwnSubjects()) throw new AccessDeniedException();
+        $user = $access->getUser();
         
         $em = $this->get('doctrine.orm.entity_manager');
         $teacher = $em->getRepository('AnketaBundle:Teacher')->findOneBy(array('login' => $user->getUserName()));
@@ -286,6 +286,8 @@ class StatisticsController extends Controller {
         }
 
         $season = $this->getSeason($season_slug);
+        if (!$this->get('anketa.access.statistics')->canSeeResults($season)) throw new AccessDeniedException();
+
         $subjects = $em->getRepository('AnketaBundle:Subject')->getSubjectsForTeacher($teacher, $season);
 
         $items = array();
@@ -305,6 +307,8 @@ class StatisticsController extends Controller {
         $em = $this->get('doctrine.orm.entity_manager');
 
         $season = $this->getSeason($season_slug);
+        if (!$this->get('anketa.access.statistics')->canSeeResults($season)) throw new AccessDeniedException();
+
         $studyPrograms = $em->getRepository('AnketaBundle:StudyProgram')->getAllWithAnswers($season);
 
         $items = array();
@@ -322,6 +326,7 @@ class StatisticsController extends Controller {
 
     public function resultsAction($section_slug) {
         $section = StatisticsSection::getSectionFromSlug($this->container, $section_slug);
+        if (!$this->get('anketa.access.statistics')->canSeeResults($section->getSeason())) throw new AccessDeniedException();
 
         $maxCnt = 0;
         $results = array();
@@ -339,8 +344,7 @@ class StatisticsController extends Controller {
         $templateParams['responses'] = $this->processResponses($section->getResponses());
 
         $limit = $section->getMinVoters();
-        if ($maxCnt >= $limit ||
-                $this->get('security.context')->isGranted('ROLE_FULL_RESULTS')) {
+        if ($maxCnt >= $limit || $this->get('anketa.access.statistics')->hasFullResults()) {
             $templateParams['results'] = $results;
             return $this->render('AnketaBundle:Statistics:results.html.twig', $templateParams);
         }
@@ -353,6 +357,8 @@ class StatisticsController extends Controller {
     public function listGeneralAction($season_slug = null) {
         $em = $this->get('doctrine.orm.entity_manager');
         $season = $this->getSeason($season_slug);
+        if (!$this->get('anketa.access.statistics')->canSeeResults($season)) throw new AccessDeniedException();
+
         // TODO: by season
         $items = array();
         $categories = $em->getRepository('AnketaBundle\Entity\Category')
@@ -374,16 +380,6 @@ class StatisticsController extends Controller {
         return $this->render('AnketaBundle:Statistics:listing.html.twig', $templateParams);
     }
 
-    /** Return true, if the current user can edit a response */
-    private function userCanEditResponse(Response $response)
-    {
-        // user must be logged in, otherwise he doesn't have name
-        if (!$this->get('security.context')->isGranted('ROLE_USER')) return false;
-        
-        $user = $this->get('security.context')->getToken()->getUser();
-        return $user->getUserName() === $response->getAuthorLogin();
-    }
-
     private function processResponses($responses)
     {
         $result = array();
@@ -393,8 +389,7 @@ class StatisticsController extends Controller {
         {
             $item = array();
             $item['response'] = $response;
-            $item['editable'] = $this->userCanEditResponse($response);
-            // TODO: zjednotit nejak spravanie
+            // TODO: zjednotit nejak spravanie (author text vs author login)
             $item['author'] = $response->getAuthorText();
             if ($response->getAuthorLogin())
             {
@@ -429,7 +424,8 @@ class StatisticsController extends Controller {
         $section = StatisticsSection::getSectionOfAnswer($this->container, $answer);
 
         if ('POST' == $request->getMethod()) {
-            $user = $this->get('security.context')->getToken()->getUser();
+            $user = $this->get('anketa.access.statistics')->getUser();
+            if (!$user) throw new AccessDeniedException();
             $note = $request->get('note', '');
 
             $emailTpl = array(

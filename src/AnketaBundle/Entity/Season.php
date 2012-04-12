@@ -40,6 +40,31 @@ class Season {
      */
     protected $slug;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $votingOpen;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $resultsVisible;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $resultsPublic;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $respondingOpen;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $responsesVisible;
+
     public function __construct($description, $slug) {
         $this->setDescription($description);
         $this->setSlug($slug);
@@ -71,6 +96,46 @@ class Season {
 
     public function setSlug($value) {
         $this->slug = $value;
+    }
+
+    public function getVotingOpen() {
+        return $this->votingOpen;
+    }
+
+    public function setVotingOpen($value) {
+        $this->votingOpen = $value;
+    }
+
+    public function getResultsVisible() {
+        return $this->resultsVisible;
+    }
+
+    public function setResultsVisible($value) {
+        $this->resultsVisible = $value;
+    }
+
+    public function getResultsPublic() {
+        return $this->resultsPublic;
+    }
+
+    public function setResultsPublic($value) {
+        $this->resultsPublic = $value;
+    }
+
+    public function getRespondingOpen() {
+        return $this->respondingOpen;
+    }
+
+    public function setRespondingOpen($value) {
+        $this->respondingOpen = $value;
+    }
+
+    public function getResponsesVisible() {
+        return $this->responsesVisible;
+    }
+
+    public function setResponsesVisible($value) {
+        $this->responsesVisible = $value;
     }
 
 }

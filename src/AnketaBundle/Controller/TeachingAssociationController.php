@@ -11,6 +11,10 @@ use DateTime;
 
 class TeachingAssociationController extends Controller
 {
+
+    public function preExecute() {
+        if (!$this->get('anketa.access.hlasovanie')->userCanVote()) throw new AccessDeniedException();
+    }
     
     public function formAction($subject_code)
     {

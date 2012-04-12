@@ -21,11 +21,12 @@ class StatisticsMenu
         // TODO: to ze menu zavisi od $activeItems je dost hack
         // (vid HlasovanieController#buildMenu ze ako to ma vyzerat)
         $em = $this->container->get('doctrine.orm.entity_manager');
-        $security = $this->container->get('security.context');
+        $access = $this->container->get('anketa.access.statistics');
 
         $menu = array();
         $seasons = $em->getRepository('AnketaBundle:Season')->findAll();
         foreach ($seasons as $season) {
+            if (!$access->canSeeResults($season)) continue;
             // Add this season.
             $menu[$season->getId()] = $seasonItem = new MenuItem(
                 $season->getDescription(),
@@ -93,7 +94,7 @@ class StatisticsMenu
                 }
 
                 // Add "My subjects" under this season.
-                if ($security->isGranted('ROLE_TEACHER')) {
+                if ($access->hasOwnSubjects()) {
                     $seasonItem->children['my_subjects'] = new MenuItem(
                         'Moje predmety',
                         $this->generateUrl('statistics_list_my_subjects',
@@ -101,7 +102,7 @@ class StatisticsMenu
                 }
 
                 // Add "My comments" under this section.
-                if ($security->isGranted('ROLE_TEACHER')) {
+                if ($access->hasOwnResponses()) {
                     $seasonItem->children['my_comments'] = new MenuItem(
                         'Moje komentáre',
                         $this->generateUrl('response',
@@ -109,9 +110,9 @@ class StatisticsMenu
                 }
 
                 // Add "My reports" under this season.
-                if ($security->isGranted('ROLE_STUDY_PROGRAMME_REPORT') || $security->isGranted('ROLE_DEPARTMENT_REPORT') || $security->isGranted('ROLE_ALL_REPORTS')) {
+                if ($access->hasReports()) {
                     $seasonItem->children['my_reports'] = new MenuItem(
-                        'Moje reporty',
+                        'Reporty',
                         $this->generateUrl('reports_my_reports',
                             array('season_slug' => $season->getSlug())));
                 }

@@ -13,5 +13,11 @@ services:
     anketa.menu.statistics:
         class: AnketaBundle\Menu\StatisticsMenu
         arguments: ["@service_container"]    # TODO :-(
+    anketa.access.hlasovanie:
+        class: AnketaBundle\Access\HlasovanieAccess
+        arguments: ["@security.context", "@doctrine.orm.entity_manager", "%org_unit%"]
+    anketa.access.statistics:
+        class: AnketaBundle\Access\StatisticsAccess
+        arguments: ["@security.context", "@doctrine.orm.entity_manager"]
 
 

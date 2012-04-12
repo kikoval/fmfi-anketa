@@ -8,12 +8,12 @@
 
 {% block section_bar %}
     {{ parent() }}
-{#
-    {% if is_granted('ROLE_HAS_VOTE') %}
-        <a href="{{ path('answer') }}" class="section">Hlasuj</a>
+    {% if access.hlasovanie.isVotingOpen %}
+        <a href="{{ path('anketa') }}" class="section">Hlasuj</a>
     {% endif %}
-#}
-    <a href="{{ path('statistics') }}" class="section">Výsledky</a>
+    {% if access.statistics.canSeeTopLevelResults %}
+        <a href="{{ path('statistics') }}" class="section">Výsledky</a>
+    {% endif %}
 
 
 
