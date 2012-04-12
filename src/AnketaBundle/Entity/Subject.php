@@ -19,10 +19,16 @@ class Subject {
     protected $id;
 
     /**
+     * Does not uniquely identifies the subject!
+     * @ORM\Column(type="string", nullable="false")
+     */
+    protected $code;
+    
+    /**
      * Uniquely identifies the subject
      * @ORM\Column(type="string", nullable="false", unique="true")
      */
-    protected $code;
+    protected $slug;
 
     /**
      * @ORM\Column(type="string")
@@ -46,6 +52,14 @@ class Subject {
 
     public function getCode() {
         return $this->code;
+    }
+    
+    public function setSlug($slug) {
+        $this->slug = $slug;
+    }
+
+    public function getSlug() {
+        return $this->slug;
     }
 
     public function setName($value) {
