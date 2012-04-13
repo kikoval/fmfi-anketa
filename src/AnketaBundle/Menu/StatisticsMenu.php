@@ -1,4 +1,12 @@
 <?php
+/**
+ * @copyright Copyright (c) 2012 The FMFI Anketa authors (see AUTHORS).
+ * Use of this source code is governed by a license that can be
+ * found in the LICENSE file in the project root directory.
+ *
+ * @package    Anketa
+ * @subpackage Anketa__Menu
+ */
 
 namespace AnketaBundle\Menu;
 
@@ -7,6 +15,7 @@ use AnketaBundle\Controller\StatisticsSection;
 
 class StatisticsMenu
 {
+    /** @var ContainerInterface */
     protected $container;
 
     public function __construct(ContainerInterface $container) {
