@@ -50,8 +50,7 @@ class ReportsController extends Controller {
     public function studyProgrammeAction($study_programme_slug, $season_slug = null) {
 
         $em = $this->get('doctrine.orm.entity_manager');
-        //TODO uprsnit na konkretnE studijnE programy
-        if (!$this->get('anketa.access.statistics')->hasStudyProgrammeReports()) throw new AccessDeniedException();
+
         $season = $em->getRepository('AnketaBundle:Season')->findOneBy(array('slug' => $season_slug));
         if ($season === null) {
             throw new NotFoundHttpException();
@@ -60,6 +59,11 @@ class ReportsController extends Controller {
         $studyProgramme = $em->getRepository('AnketaBundle:StudyProgram')->findOneBy(array('slug' => $study_programme_slug));
         if ($studyProgramme === null) {
             throw new NotFoundHttpException();
+        }
+
+        // TODO: don't get the full list, only check if we can access this item
+        if (!in_array($studyProgramme, $this->get('anketa.access.statistics')->getStudyProgrammeReports($season))) {
+            throw new AccessDeniedException();
         }
 
         return $this->makeReport($season,
@@ -73,9 +77,7 @@ class ReportsController extends Controller {
     public function departmentAction($department_slug, $season_slug = null) {
 
         $em = $this->get('doctrine.orm.entity_manager');
-        //TODO uprsnit na konkretnU katedrU
-        if (!$this->get('anketa.access.statistics')->hasDepartmentReports()) throw new AccessDeniedException();
-        
+
         $season = $em->getRepository('AnketaBundle:Season')->findOneBy(array('slug' => $season_slug));
         if ($season === null) {
             throw new NotFoundHttpException();
@@ -86,6 +88,11 @@ class ReportsController extends Controller {
         $department = $em->getRepository('AnketaBundle:Department')->findOneBy(array('code' => $department_code));
         if ($department === null) {
             throw new NotFoundHttpException();
+        }
+
+        // TODO: don't get the full list, only check if we can access this item
+        if (!in_array($department, $this->get('anketa.access.statistics')->getDepartmentReports($season))) {
+            throw new AccessDeniedException();
         }
 
         return $this->makeReport($season,
@@ -105,22 +112,10 @@ class ReportsController extends Controller {
         if (!$access->canSeeResults($season)) throw new AccessDeniedException();
         if (!$access->hasReports()) throw new AccessDeniedException();
 
-        $user = $access->getUser();
-
         $items = array();
         
-        // katedry
-        $deptRepository = $em->getRepository('AnketaBundle:Department');
-        if ($access->hasAllReports()) {
-            $departments = $deptRepository->findBy(array(), array('name' => 'ASC'));
-        }
-        else if ($access->hasDepartmentReports()) {
-            $departments = $deptRepository->findByUser($user, $season);
-        }
-        else {
-            $departments = null;
-        }
-        if ($departments) {
+        $departments = $access->getDepartmentReports($season);
+        if (count($departments)) {
             $links = array();
             foreach ($departments as $department) {
                 $links[$department->getName()] =
@@ -129,18 +124,8 @@ class ReportsController extends Controller {
             $items['Katedry'] = $links;
         }
         
-        // studijne programy
-        $spRepository = $em->getRepository('AnketaBundle:StudyProgram');
-        if ($access->hasAllReports()) {
-            $studyPrograms = $spRepository->getAllWithAnswers($season, true);
-        }
-        else if ($access->hasStudyProgrammeReports()) {
-            $studyPrograms = $spRepository->findByReportsUser($user, $season);
-        }
-        else {
-            $studyPrograms = null;
-        }
-        if ($studyPrograms) {
+        $studyPrograms = $access->getStudyProgrammeReports($season);
+        if (count($studyPrograms)) {
             $links = array();
             foreach ($studyPrograms as $studyProgram) {
                 $links[$studyProgram->getName() . ' (' . $studyProgram->getCode() . ')'] =

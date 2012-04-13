@@ -6,7 +6,12 @@
 
 {% block content %}
     <h1>Moje komentáre</h1>
-    <p>Tu sa nachádza zoznam vašich komentárov. Komentáre môžete pridávať z jednotlivých stránok s výsledkami.</p>
+    <p>
+        Tu sa nachádza zoznam vašich komentárov.
+        {% if access.statistics.canCreateResponses(season) %}
+            Komentáre môžete pridávať z jednotlivých stránok s výsledkami.
+        {% endif %}
+    </p>
 
     <div class="results-comments results-comments-official">
     {% for item in responses %}

@@ -156,42 +156,53 @@ class StatisticsAccess
     }
 
     /**
-     * Returns whether the current user can view some or all study programme
-     * reports.
-     *
-     * @return boolean
-     */
-    public function hasStudyProgrammeReports() {
-        return $this->security->isGranted('ROLE_STUDY_PROGRAMME_REPORT') || $this->hasAllReports();
-    }
-
-    /**
-     * Returns whether the current user can view some or all department
-     * reports.
-     *
-     * @return boolean
-     */
-    public function hasDepartmentReports() {
-        return $this->security->isGranted('ROLE_DEPARTMENT_REPORT') || $this->hasAllReports();
-    }
-
-    /**
-     * Returns whether the current user can view absolutely all reports.
-     *
-     * @return boolean
-     */
-    public function hasAllReports() {
-        return $this->security->isGranted('ROLE_ALL_REPORTS');
-    }
-
-    /**
      * Returns whether the current user can view some reports, and thus should
      * see a "My subjects" item in the menu.
      *
      * @return boolean
      */
     public function hasReports() {
-        return $this->hasStudyProgrammeReports() || $this->hasDepartmentReports();
+        return $this->security->isGranted('ROLE_ALL_REPORTS') ||
+            $this->security->isGranted('ROLE_DEPARTMENT_REPORT') ||
+            $this->security->isGranted('ROLE_STUDY_PROGRAMME_REPORT');
+    }
+
+    /**
+     * Returns the departments that the current user can view reports of.
+     *
+     * @param \AnketaBundle\Entity\Season $season
+     * @return array(\AnketaBundle\Entity\Department)
+     */
+    public function getDepartmentReports($season) {
+        $repository = $this->em->getRepository('AnketaBundle:Department');
+        if ($this->security->isGranted('ROLE_ALL_REPORTS')) {
+            return $repository->findBy(array(), array('name' => 'ASC'));
+        }
+        else if ($this->security->isGranted('ROLE_DEPARTMENT_REPORT')) {
+            return $repository->findByUser($this->user, $season);
+        }
+        else {
+            return array();
+        }
+    }
+
+    /**
+     * Returns the study programmes that the current user can view reports of.
+     *
+     * @param \AnketaBundle\Entity\Season $season
+     * @return array(\AnketaBundle\Entity\StudyProgram)
+     */
+    public function getStudyProgrammeReports($season) {
+        $repository = $this->em->getRepository('AnketaBundle:StudyProgram');
+        if ($this->security->isGranted('ROLE_ALL_REPORTS')) {
+            return $repository->getAllWithAnswers($season, true);
+        }
+        else if ($this->security->isGranted('ROLE_STUDY_PROGRAMME_REPORT')) {
+            return $repository->findByReportsUser($this->user, $season);
+        }
+        else {
+            return array();
+        }
     }
 
 }
