@@ -20,7 +20,10 @@ class WelcomeController extends Controller
 {
     public function indexAction()
     {
-        return $this->render('AnketaBundle:Welcome:index.html.twig');
+        $em = $this->get('doctrine.orm.entity_manager');
+        $activeSeason = $em->getRepository('AnketaBundle:Season')->getActiveSeason();
+        return $this->render('AnketaBundle:Welcome:index.html.twig',
+            array('active_season' => $activeSeason));
     }
 
     public function faqAction()
