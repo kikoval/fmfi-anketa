@@ -179,11 +179,11 @@ class QuestionController extends Controller {
             throw new NotFoundHttpException($e->getMessage());
         }
 
+        $season = $em->getRepository('AnketaBundle:Season')->getActiveSeason();
         $questions = $em->getRepository('AnketaBundle\Entity\Question')
-                        ->getOrderedQuestionsByCategoryType(CategoryType::TEACHER_SUBJECT);
+                        ->getOrderedQuestionsByCategoryType(CategoryType::TEACHER_SUBJECT, $season);
         
         $teacherRepository = $em->getRepository('AnketaBundle:Teacher');
-        $season = $em->getRepository('AnketaBundle:Season')->getActiveSeason();
         // TODO: opravit nasledovne, nech to nacitava a kontroluje ucitelopredmet
         // z databazy naraz v jednom kroku
         $teachers = $teacherRepository->getTeachersForSubject($subject, $season);
