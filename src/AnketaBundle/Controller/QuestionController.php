@@ -194,6 +194,8 @@ class QuestionController extends Controller {
         if ($teacher == null) {
             throw new NotFoundHttpException("Ucitel " . $teacher_code . " neuci dany predmet");
         }
+        $studyProgram = $em->getRepository('AnketaBundle:StudyProgram')
+                           ->getStudyProgrammeForUserSubject($user, $subject, $season);
 
         $answers = $em->getRepository('AnketaBundle\Entity\Answer')
                       ->getAnswersByCriteria($questions, $user, $season, $subject, $teacher);
@@ -202,14 +204,9 @@ class QuestionController extends Controller {
             $answerArray = $this->processForm($request, $user, $questions, $answers, $season);
 
             foreach ($answerArray AS $answer) {
-                // chceme nastavit este teacher + subject
-                // predpokladame ze subject je to co prislo v parametri kodu
                 $answer->setSubject($subject);
-                // ako ucitela zatial zoberieme prveho... co asi urcite nechceme
                 $answer->setTeacher($teacher);
-                // k odpovedi pridame prvy studijny odbor, co user ma
-                $ur = $em->getRepository('AnketaBundle\Entity\StudyProgram');
-                $answer->setStudyProgram($ur->getFirstStudyProgrammeForUser($user, $season));
+                $answer->setStudyProgram($studyProgram);
                 $answer->setAttended(true);
 
                 $em->persist($answer);
@@ -247,19 +244,16 @@ class QuestionController extends Controller {
                         ->getOrderedQuestionsByCategoryType(CategoryType::SUBJECT, $season);
         $answers = $em->getRepository('AnketaBundle\Entity\Answer')
                       ->getAnswersByCriteria($questions, $user, $season, $subject);
+        $studyProgram = $em->getRepository('AnketaBundle:StudyProgram')
+                           ->getStudyProgrammeForUserSubject($user, $subject, $season);
         
         if ('POST' == $request->getMethod()) {
             $answerArray = $this->processForm($request, $user, $questions, $answers, $season);
 
             foreach ($answerArray AS $answer) {
-                // chceme nastavit este teacher + subject
-                // predpokladame ze subject je to co prislo v parametri kodu
                 $answer->setSubject($subject);
                 $answer->setTeacher(null);
-                // k odpovedi pridame prvy studijny odbor, co user ma
-                $ur = $em->getRepository('AnketaBundle\Entity\StudyProgram');
-                $answer->setStudyProgram($ur->getFirstStudyProgrammeForUser($user, $season));
-                // aktualne sa daju vyplnat iba predmety ktore sme navstevovali 
+                $answer->setStudyProgram($studyProgram);
                 $answer->setAttended(true);
 
                 $em->persist($answer);
