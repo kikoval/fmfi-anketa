@@ -54,7 +54,7 @@ class Season {
      * @ORM\Column(type="boolean")
      * @var boolean $active
      */
-    private $active = false;
+    protected $active = false;
 
 
     public function __construct($description, $slug) {
@@ -90,8 +90,15 @@ class Season {
         $this->slug = $value;
     }
 
-    public function isActive() {
+    /**
+     * @return boolean whether the season is active
+     */
+    public function getActive() {
         return $this->active;
+    }
+
+    public function setActive($active) {
+        $this->active = $active;
     }
 
 }
