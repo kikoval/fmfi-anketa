@@ -1,4 +1,12 @@
 <?php
+/**
+ * @copyright Copyright (c) 2011,2012 The FMFI Anketa authors (see AUTHORS).
+ * Use of this source code is governed by a license that can be
+ * found in the LICENSE file in the project root directory.
+ * 
+ * @package    Anketa
+ * @subpackage Anketa__Entity
+ */
 
 namespace AnketaBundle\Entity;
 
@@ -46,7 +54,7 @@ class Season {
      * @ORM\Column(type="boolean")
      * @var boolean $active
      */
-    private $active  = false;
+    private $active = false;
 
 
     public function __construct($description, $slug) {
