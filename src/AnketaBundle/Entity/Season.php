@@ -1,4 +1,12 @@
 <?php
+/**
+ * @copyright Copyright (c) 2011,2012 The FMFI Anketa authors (see AUTHORS).
+ * Use of this source code is governed by a license that can be
+ * found in the LICENSE file in the project root directory.
+ * 
+ * @package    Anketa
+ * @subpackage Anketa__Entity
+ */
 
 namespace AnketaBundle\Entity;
 
@@ -40,6 +48,15 @@ class Season {
      */
     protected $slug;
 
+    /**
+     * Marks active season.
+     *
+     * @ORM\Column(type="boolean")
+     * @var boolean $active
+     */
+    protected $active = false;
+
+
     public function __construct($description, $slug) {
         $this->setDescription($description);
         $this->setSlug($slug);
@@ -71,6 +88,17 @@ class Season {
 
     public function setSlug($value) {
         $this->slug = $value;
+    }
+
+    /**
+     * @return boolean whether the season is active
+     */
+    public function getActive() {
+        return $this->active;
+    }
+
+    public function setActive($active) {
+        $this->active = $active;
     }
 
 }

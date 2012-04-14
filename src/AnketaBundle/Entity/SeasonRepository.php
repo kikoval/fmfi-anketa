@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright Copyright (c) 2011 The FMFI Anketa authors (see AUTHORS).
+ * @copyright Copyright (c) 2011,2012 The FMFI Anketa authors (see AUTHORS).
  * Use of this source code is governed by a license that can be
  * found in the LICENSE file in the project root directory.
  *
@@ -19,17 +19,16 @@ use Doctrine\ORM\NoResultException;
 
 class SeasonRepository extends EntityRepository {
 
+    /**
+     * Returns the currently active season
+     * @return \AnketaBundle\Entity\Season
+     * @throws NonUniqueResultException if there is more than one season marked active
+     * @throws NoResultException if no season is marked as active
+     */
     public function getActiveSeason() {
-        // TODO(anty): Toto je docasne riesenie, kedze som vyhodil datumy
-        // zo season (datumy sa budu riesit vo fazach)
-        // MIN je z toho dovodu, ze ked niekto nahodou vlozi do season
-        // dalsi zaznam, aktivna zostane rovnaka season,
-        // ked budeme chciet oficialne podporovat viac season
-        // v tabulke, tak bud pridame slpec active alebo nieco take
+
         $dql = 'SELECT s FROM AnketaBundle\Entity\Season s ' .
-               'WHERE s.id = ' .
-                    '(SELECT MIN(s2.id) ' .
-                    ' FROM AnketaBundle\Entity\Season s2)';
+               'WHERE s.active = TRUE';
         $query = $this->getEntityManager()->createQuery($dql);
         $result = $query->execute();
 
