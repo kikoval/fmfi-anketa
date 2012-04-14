@@ -41,7 +41,7 @@ class HlasovanieAccess
         $this->em = $em;
         $this->allowedOrgUnit = $allowedOrgUnit;
         $this->user = null;
-        if ($this->security->isGranted('IS_AUTHENTICATED_FULLY')) {
+        if ($this->security->getToken() !== null && $this->security->isGranted('IS_AUTHENTICATED_FULLY')) {
             $token = $this->security->getToken();
             if ($token) $this->user = $token->getUser();
         }
@@ -50,7 +50,7 @@ class HlasovanieAccess
         if ($this->user) {
             $this->userSeason = $this->user->forSeason($this->activeSeason);
         }
-        $this->isAdmin = $this->security->isGranted('ROLE_ADMIN');
+        $this->isAdmin = $this->security->getToken() !== null && $this->security->isGranted('ROLE_ADMIN');
     }
 
     /**

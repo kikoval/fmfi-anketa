@@ -33,11 +33,11 @@ class StatisticsAccess
         $this->security = $security;
         $this->em = $em;
         $this->user = null;
-        if ($this->security->isGranted('IS_AUTHENTICATED_FULLY')) {
+        if ($this->security->getToken() !== null && $this->security->isGranted('IS_AUTHENTICATED_FULLY')) {
             $token = $this->security->getToken();
             if ($token) $this->user = $token->getUser();
         }
-        $this->isAdmin = $this->security->isGranted('ROLE_ADMIN');
+        $this->isAdmin = $this->security->getToken() !== null && $this->security->isGranted('ROLE_ADMIN');
     }
 
     /**
