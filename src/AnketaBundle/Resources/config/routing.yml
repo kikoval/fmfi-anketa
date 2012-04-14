@@ -22,14 +22,13 @@ reports:
     pattern: /reporty/
     resource: "@AnketaBundle/Resources/config/reports_routing.yml"
 
+response:
+    pattern: /odpovede/
+    resource: "@AnketaBundle/Resources/config/response_routing.yml"
 
 statistics:
     pattern: /vysledky/
     resource: "@AnketaBundle/Resources/config/statistics_routing.yml"
-
-response:
-    pattern: /odpovede/
-    resource: "@AnketaBundle/Resources/config/response_routing.yml"
 
 anonymizuj:
     pattern: /anonymizuj/
@@ -38,7 +37,3 @@ anonymizuj:
 dakujeme:
     pattern: /dakujeme/
     defaults: { _controller: AnketaBundle:Anonymizacia:dakujeme }
-
-ping:
-    pattern: /ping/{devName}
-    defaults: { _controller: AnketaBundle:Ping:ping, devName: -1 }

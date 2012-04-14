@@ -1,5 +1,0 @@
-services:
-    anketa.listener.preexecute:
-        class: AnketaBundle\Extension\AnketaPreExecuteControllerExtension
-        tags:
-            - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }

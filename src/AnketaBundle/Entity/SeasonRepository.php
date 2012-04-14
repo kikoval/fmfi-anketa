@@ -41,4 +41,12 @@ class SeasonRepository extends EntityRepository {
         return array_shift($result);
     }
 
+    public function getTopLevelResultsVisible() {
+        $dql = 'SELECT s FROM AnketaBundle\Entity\Season s ' .
+               'WHERE s.resultsVisible = TRUE';
+        $query = $this->getEntityManager()->createQuery($dql);
+        $result = $query->execute();
+        return count($result) > 0;
+    }
+
 }

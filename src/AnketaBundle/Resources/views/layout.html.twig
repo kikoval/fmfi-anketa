@@ -3,20 +3,16 @@
 {% block sidebar %}{% block navigation %}{% endblock %}{% endblock %}
 
 {% block user_bar %}
-    {% render "AnketaBundle:User:userBar" %}
+    {{ user_bar() }}
 {% endblock %}
 
 {% block section_bar %}
     {{ parent() }}
-{#
-    {% if is_granted('ROLE_HAS_VOTE') %}
-        <a href="{{ path('answer') }}" class="section">Hlasuj</a>
+    {% if access.hlasovanie.isVotingOpen %}
+        <a href="{{ path('anketa') }}" class="section">Hlasuj</a>
     {% endif %}
-#}
-    <a href="{{ path('statistics') }}" class="section">Výsledky</a>
-    
-    {% if is_granted('ROLE_TEACHER') %}
-       <a href="{{ path('response') }}" class="section">Moje komentáre</a>
+    {% if access.statistics.canSeeTopLevelResults %}
+        <a href="{{ path('statistics') }}" class="section">Výsledky</a>
     {% endif %}
 
 
@@ -26,6 +22,6 @@
 {% block body %}
     {{ parent() }}
     {% block google_analytics %}
-        {% render 'AnketaBundle:Tracking:track' %}
+        {{ analytics() }}
     {% endblock %}
 {% endblock %}

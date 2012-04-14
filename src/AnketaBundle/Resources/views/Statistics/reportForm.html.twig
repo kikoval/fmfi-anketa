@@ -1,7 +1,7 @@
 {% extends 'AnketaBundle::layout.html.twig' %}
 
 {% block navigation %}
-    {% render "AnketaBundle:Statistics:menu" with { 'activeItems': section.activeMenuItems } %}
+    {{ menu.statistics.render(section.activeMenuItems)|raw }}
 {% endblock %}
 
 {% block content %}

@@ -10,7 +10,7 @@
  * @author     Martin Králik <majak47@gmail.com>
  */
 
-namespace AnketaBundle\Controller;
+namespace AnketaBundle\Menu;
 
 use fajr\libfajr\base\Preconditions;
 
