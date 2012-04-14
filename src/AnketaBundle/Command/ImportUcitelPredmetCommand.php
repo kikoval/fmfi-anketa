@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright Copyright (c) 2011 The FMFI Anketa authors (see AUTHORS).
+ * @copyright Copyright (c) 2012 The FMFI Anketa authors (see AUTHORS).
  * Use of this source code is governed by a license that can be
  * found in the LICENSE file in the project root directory.
  *
@@ -11,28 +11,16 @@
 
 namespace AnketaBundle\Command;
 
-use DateTime;
-use AnketaBundle\Entity\Category;
-use AnketaBundle\Entity\CategoryType;
-use AnketaBundle\Entity\Question;
-use AnketaBundle\Entity\Option;
-use AnketaBundle\Entity\Season;
-use AnketaBundle\Entity\SeasonRepository;
-use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Yaml\Yaml;
-use Doctrine\Common\DataFixtures\FixtureInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class functioning as command/task for importing questions and categories
- * from YAML file.
+ * Class functioning as command/task for importing teachers, subjects,
+ * and relationship between teachers and subjects from text file.
  *
  * @package    Anketa
  * @author     Jakub Marek <jakub.marek@gmail.com>
@@ -46,7 +34,6 @@ class ImportUcitelPredmetCommand extends ContainerAwareCommand {
                 ->setName('anketa:blah')
                 ->setDescription('Importuj ucitelov predmety z textaku')
                 ->addArgument('file', InputArgument::REQUIRED)
-                ->addOption('duplicates', 'c', InputOption::VALUE_NONE, 'Checks for Duplicate Categories', null)
         ;
     }
 
@@ -64,7 +51,11 @@ class ImportUcitelPredmetCommand extends ContainerAwareCommand {
 
         $filename = $input->getArgument('file');
 
-        $file = fopen($filename, "r");
+        if (!file_exists($filename)) {
+            die("File not found. \n");
+        } else {
+            $file = fopen($filename, "r");
+        }
 
         // nacitaj prvy riadok
         $line = fgets($file);
@@ -111,6 +102,17 @@ class ImportUcitelPredmetCommand extends ContainerAwareCommand {
                 if (strlen($nazov) == 0 || strlen($login) == 0 || strlen($meno) == 0) {
                     continue;
                 }
+
+                $prednasajuci = 0;
+                $cviciaci = 0;
+                if ($hodnost == 'P') {
+                    $prednasajuci = 1;
+                } else if ($hodnost == 'C') {
+                    $cviciaci = 1;
+                } else {
+                    continue;
+                }
+                
                 $stmt = $conn->prepare("
                     INSERT INTO Teacher (displayName, login) 
                     VALUES (:displayName, :login) 
@@ -126,14 +128,6 @@ class ImportUcitelPredmetCommand extends ContainerAwareCommand {
                 $stmt->bindValue('code', $kod);
                 $stmt->bindValue('name', $nazov);
                 $stmt->execute();
-
-                $prednasajuci = 0;
-                $cviciaci = 0;
-                if ($hodnost == 'P') {
-                    $prednasajuci = 1;
-                } else {
-                    $cviciaci = 1;
-                }
 
                 $stmt = $conn->prepare("
                     INSERT INTO TeachersSubjects (teacher_id, subject_id, season_id, lecturer, trainer) 
