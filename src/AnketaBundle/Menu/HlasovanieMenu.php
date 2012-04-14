@@ -27,11 +27,12 @@ class HlasovanieMenu
 
     /**
      *
-     * @param EntityManager $em
-     * @param User $user current user
      * @return array menu array of categories and their subcategories
      */
-    private function buildMenu($em, $user) {
+    private function buildMenu() {
+        $user = $this->container->get('security.context')->getToken()->getUser();
+        $em = $this->container->get('doctrine.orm.entity_manager');
+
         $season = $em->getRepository('AnketaBundle:Season')->getActiveSeason();
 
         $menu = array(
@@ -149,9 +150,7 @@ class HlasovanieMenu
     }
 
     public function render($activeItems = array()) {
-        $user = $this->container->get('security.context')->getToken()->getUser();
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        $templateParams = array('menu' => $this->buildMenu($em, $user));
+        $templateParams = array('menu' => $this->buildMenu());
 
         $activeTail = null;
         $current = &$templateParams['menu'];
@@ -169,9 +168,7 @@ class HlasovanieMenu
     }
 
     public function getNextSection($activeItems = array()) {
-        $user = $this->container->get('security.context')->getToken()->getUser();
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        $menu = $this->buildMenu($em, $user);
+        $menu = $this->buildMenu();
 
         // pre kazdu aktivnu polozku spocitame jej praveho surodenca.
         $nextSibling = array();

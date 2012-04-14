@@ -13,6 +13,7 @@ namespace AnketaBundle\Access;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use AnketaBundle\Entity\Response;
+use AnketaBundle\Entity\Season;
 
 class StatisticsAccess
 {
@@ -101,10 +102,10 @@ class StatisticsAccess
     /**
      * Returns whether the current user can view results of the given season.
      *
-     * @param \AnketaBundle\Entity\Season $season
+     * @param Season $season
      * @return boolean
      */
-    public function canSeeResults($season) {
+    public function canSeeResults(Season $season) {
         if ($this->isAdmin) return true;
         return $season->getResultsVisible() && ($season->getResultsPublic() || (bool)$this->user);
     }
@@ -115,10 +116,10 @@ class StatisticsAccess
      * (This only comes into effect if the user can see the results at all.
      * That is not checked by this function.)
      *
-     * @param \AnketaBundle\Entity\Season $season
+     * @param Season $season
      * @return boolean
      */
-    public function commentsBlocked($season) {
+    public function commentsBlocked(Season $season) {
         return !$this->user;
     }
 
@@ -126,10 +127,10 @@ class StatisticsAccess
      * Returns whether the current user can respond to results of the given
      * season.
      *
-     * @param \AnketaBundle\Entity\Season $season
+     * @param Season $season
      * @return boolean
      */
-    public function canCreateResponses($season) {
+    public function canCreateResponses(Season $season) {
         return $this->canSeeResults($season) && $this->hasOwnResponses() && $season->getRespondingOpen();
     }
 
@@ -148,16 +149,16 @@ class StatisticsAccess
      * Returns whether the current user can view responses to results in the
      * given season.
      *
-     * @param \AnketaBundle\Entity\Season $season
+     * @param Season $season
      * @return boolean
      */
-    public function canSeeResponses($season) {
+    public function canSeeResponses(Season $season) {
         return $this->canSeeResults($season) && ($season->getResponsesVisible() || $this->canCreateResponses($season));
     }
 
     /**
      * Returns whether the current user can view some reports, and thus should
-     * see a "My subjects" item in the menu.
+     * see a "My reports" item in the menu.
      *
      * @return boolean
      */
@@ -170,10 +171,10 @@ class StatisticsAccess
     /**
      * Returns the departments that the current user can view reports of.
      *
-     * @param \AnketaBundle\Entity\Season $season
+     * @param Season $season
      * @return array(\AnketaBundle\Entity\Department)
      */
-    public function getDepartmentReports($season) {
+    public function getDepartmentReports(Season $season) {
         $repository = $this->em->getRepository('AnketaBundle:Department');
         if ($this->security->isGranted('ROLE_ALL_REPORTS')) {
             return $repository->findBy(array(), array('name' => 'ASC'));
@@ -189,10 +190,10 @@ class StatisticsAccess
     /**
      * Returns the study programmes that the current user can view reports of.
      *
-     * @param \AnketaBundle\Entity\Season $season
+     * @param Season $season
      * @return array(\AnketaBundle\Entity\StudyProgram)
      */
-    public function getStudyProgrammeReports($season) {
+    public function getStudyProgrammeReports(Season $season) {
         $repository = $this->em->getRepository('AnketaBundle:StudyProgram');
         if ($this->security->isGranted('ROLE_ALL_REPORTS')) {
             return $repository->getAllWithAnswers($season, true);
