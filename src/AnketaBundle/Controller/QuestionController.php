@@ -110,9 +110,9 @@ class QuestionController extends Controller {
     }
 
     /**
-     * Note: code may be "-1" meaning default first subject
+     * Note: slug may be "-1" meaning default first subject
      */
-    public function getAttendedSubjectByCode($user, $code) {
+    public function getAttendedSubjectBySlug($user, $slug) {
         $em = $this->get('doctrine.orm.entity_manager');
         $season = $em->getRepository('AnketaBundle:Season')->getActiveSeason();
         $attendedSubjects = $em->getRepository('AnketaBundle\Entity\Subject')
@@ -123,16 +123,16 @@ class QuestionController extends Controller {
         }
 
         // defaultne vraciame abecedne prvy predmet
-        if ($code == -1) {
+        if ($slug == -1) {
             $subject = $attendedSubjects[0];
         } else {
             $subject = $em->getRepository('AnketaBundle\Entity\Subject')
-                          ->findOneBy(array('code' => $code));
+                          ->findOneBy(array('slug' => $slug));
             if (empty($subject)) {
-                throw new \RuntimeException('Chybny kod: ' . $code);
+                throw new \RuntimeException('Chybny slug predmetu: ' . $slug);
             }
             if (!in_array($subject, $attendedSubjects)) {
-                throw new \RuntimeException('Predmet ' . $code . ' nemas zapisany');
+                throw new \RuntimeException('Predmet ' . $slug . ' nemas zapisany');
             }
         }
 
@@ -169,12 +169,12 @@ class QuestionController extends Controller {
         return $studyProgramme;
     }
 
-    public function answerSubjectTeacherAction($subject_code, $teacher_code) {
+    public function answerSubjectTeacherAction($subject_slug, $teacher_code) {
         $request = $this->get('request');
         $user = $this->get('security.context')->getToken()->getUser();
         $em = $this->get('doctrine.orm.entity_manager');
         try {
-            $subject = $this->getAttendedSubjectByCode($user, $subject_code);
+            $subject = $this->getAttendedSubjectBySlug($user, $subject_slug);
         } catch (\RuntimeException $e) {
             throw new NotFoundHttpException($e->getMessage());
         }
@@ -216,12 +216,12 @@ class QuestionController extends Controller {
 
             $em->flush();
 
-            return $this->redirectAfterProcessing(array('subject', $subject->getCode(), $teacher->getId()));
+            return $this->redirectAfterProcessing(array('subject', $subject->getId(), $teacher->getId()));
         }
 
         $templateParams = array();
         $templateParams['title'] = $subject->getName() . ' - ' . $teacher->getName();
-        $templateParams['activeItems'] = array('subject', $subject->getCode(), $teacher->getId());
+        $templateParams['activeItems'] = array('subject', $subject->getId(), $teacher->getId());
         $templateParams['questions'] = $questions;
         $templateParams['answers'] = $answers;
         $templateParams['categoryType'] = 'teacher_subject';
@@ -230,12 +230,12 @@ class QuestionController extends Controller {
 
     }
 
-    public function answerSubjectAction($code) {
+    public function answerSubjectAction($subject_slug) {
         $request = $this->get('request');
         $user = $this->get('security.context')->getToken()->getUser();
         $em = $this->get('doctrine.orm.entity_manager');
         try {
-            $subject = $this->getAttendedSubjectByCode($user, $code);
+            $subject = $this->getAttendedSubjectBySlug($user, $subject_slug);
         } catch (\RuntimeException $e) {
             throw new NotFoundHttpException($e->getMessage());
         }
@@ -263,12 +263,12 @@ class QuestionController extends Controller {
 
             $em->flush();
 
-            return $this->redirectAfterProcessing(array('subject', $subject->getCode()));
+            return $this->redirectAfterProcessing(array('subject', $subject->getId()));
         }
 
         $templateParams = array();
         $templateParams['title'] = $subject->getName();
-        $templateParams['activeItems'] = array('subject', $subject->getCode());
+        $templateParams['activeItems'] = array('subject', $subject->getId());
         $templateParams['questions'] = $questions;
         $templateParams['answers'] = $answers;
         $templateParams['categoryType'] = 'subject';

@@ -117,6 +117,7 @@ class ImportUcitelPredmetCommand extends ContainerAwareCommand {
                     VALUES (:displayName, :login) 
                     ON DUPLICATE KEY UPDATE login=login");
         
+        // TODO! slug
         $insertSubject = $conn->prepare("
                     INSERT INTO Subject (code, name) 
                     VALUES (:code, :name) 
@@ -126,7 +127,7 @@ class ImportUcitelPredmetCommand extends ContainerAwareCommand {
                     INSERT INTO TeachersSubjects (teacher_id, subject_id, season_id, lecturer, trainer) 
                     SELECT a.id, b.id, :season, :lecturer, :trainer
                     FROM Teacher a, Subject b 
-                    WHERE a.login = :login and b.code = :code");
+                    WHERE a.login = :login and b.code = :code"); // TODO! slug
 
         try {
             while ($buffer = fgets($file)) {

@@ -1,6 +1,6 @@
 answer:
     pattern: /hlasuj/
-    defaults: { _controller: AnketaBundle:Question:answerSubject, code: -1 }
+    defaults: { _controller: AnketaBundle:Question:answerSubject, subject_slug: -1 }
 
 answer_incomplete:
     pattern: /hlasuj/nevyplnene/
@@ -13,11 +13,11 @@ answer_general:
       id:  \d+
 
 answer_subject:
-    pattern: /hlasuj/predmet/{code}
-    defaults: { _controller: AnketaBundle:Question:answerSubject, code: -1 }
+    pattern: /hlasuj/predmet/{subject_slug}
+    defaults: { _controller: AnketaBundle:Question:answerSubject, subject_slug: -1 }
 
 answer_subject_teacher:
-    pattern: /hlasuj/predmet/{subject_code}/ucitel/{teacher_code}
+    pattern: /hlasuj/predmet/{subject_slug}/ucitel/{teacher_code}
     defaults: { _controller: AnketaBundle:Question:answerSubjectTeacher }
 
 answer_study_program:
@@ -25,13 +25,13 @@ answer_study_program:
     defaults: { _controller: AnketaBundle:Question:answerStudyProgram, slug: -1 }
 
 assoc_teacher_with_subject:
-    pattern: /hlasuj/predmet/{subject_code}/pridaj-ucitela
+    pattern: /hlasuj/predmet/{subject_slug}/pridaj-ucitela
     defaults: { _controller: AnketaBundle:TeachingAssociation:form }
     requirements:
       _method: GET
 
 assoc_teacher_with_subject_process:
-    pattern: /hlasuj/predmet/{subject_code}/pridaj-ucitela
+    pattern: /hlasuj/predmet/{subject_slug}/pridaj-ucitela
     defaults: { _controller: AnketaBundle:TeachingAssociation:processForm }
     requirements:
       _method: POST

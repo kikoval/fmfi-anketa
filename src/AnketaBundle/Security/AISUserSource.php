@@ -118,6 +118,7 @@ class AISUserSource implements UserSourceInterface
             // pouzijeme INSERT ON DUPLICATE KEY UPDATE
             // aby sme nedostavali vynimky pri raceoch
             $stmt = $this->dbConn->prepare("INSERT INTO Subject (code, name, slug) VALUES (:code, :name, :slug) ON DUPLICATE KEY UPDATE slug=slug");
+            // TODO dlhy kod do code!!!
             $stmt->bindValue('code', $this->getKratkyKod($dlhyKod));
             $stmt->bindValue('name', $aisPredmet['nazov']);
             $stmt->bindValue('slug', $slug);
@@ -166,6 +167,7 @@ class AISUserSource implements UserSourceInterface
         return $slug;
     }
     
+    // TODO!!!
     private function generateSubjectSlug($name, $longCode)
     {
         $faculty = explode(".", $longCode);

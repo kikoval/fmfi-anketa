@@ -73,7 +73,7 @@ class HlasovanieMenu
             $subjectMenu =
                 new MenuItem(
                 $subject->getName(),
-                $this->generateUrl('answer_subject', array('code' => $subject->getCode()))
+                $this->generateUrl('answer_subject', array('subject_slug' => $subject->getSlug()))
                 );
             // TODO: optimalizovat selecty
             // pridame vnorene menu pre predmetoucitelov
@@ -83,19 +83,18 @@ class HlasovanieMenu
                     new MenuItem(
                             $teacher->getName(),
                             $this->generateUrl('answer_subject_teacher',
-                                array('subject_code' => $subject->getCode(),
+                                array('subject_slug' => $subject->getSlug(),
                                       'teacher_code' => $teacher->getId()))
                             );
 
             }
-            $menu['subject']->children[$subject->getCode()] = $subjectMenu;
+            $menu['subject']->children[$subject->getId()] = $subjectMenu;
         }
 
         // pridame menu pre studijne programy
         $studyProgrammes = $em->getRepository('AnketaBundle\Entity\StudyProgram')
                        ->getStudyProgrammesForUser($user, $season);
         foreach ($studyProgrammes as $studyProgramme) {
-            //print_r($studyProgramme->getCode());
             $menu['study_program']->children[$studyProgramme->getCode()] =
                 new MenuItem(
                     $studyProgramme->getName().' ('.$studyProgramme->getCode().')',

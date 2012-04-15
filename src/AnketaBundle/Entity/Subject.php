@@ -19,13 +19,17 @@ class Subject {
     protected $id;
 
     /**
-     * Does not uniquely identifies the subject!
+     * Does not (need to) uniquely identify the subject!
      * @ORM\Column(type="string", nullable="false")
      */
     protected $code;
     
     /**
-     * Uniquely identifies the subject
+     * Uniquely identifies the subject, is suitable to be used as
+     * part of an URL.
+     * 
+     * (i.e. alphanumeric chars with not repeated dashes)
+     * 
      * @ORM\Column(type="string", nullable="false", unique="true")
      */
     protected $slug;
@@ -76,6 +80,7 @@ class Subject {
      */
     public function getCategory()
     {
+        // TODO: fixnut pre dlhe kody
         $match = preg_match("@^[^-]*-([^-]*)-@", $this->getCode(), $matches);
         if ($match == 0) {
             return self::NO_CATEGORY;
