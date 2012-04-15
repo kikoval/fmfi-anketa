@@ -20,6 +20,8 @@ use AnketaBundle\Entity\UsersSubjects;
 use AnketaBundle\Entity\Subject;
 use AnketaBundle\Integration\AISRetriever;
 use AnketaBundle\Entity\Role;
+use AnketaBundle\Lib\SubjectIdentificationInterface;
+use AnketaBundle\Lib\SubjectIdentification;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
 
@@ -61,6 +63,9 @@ class AISUserSource implements UserSourceInterface
     
     /** @var LoggerInterface */
     private $logger;
+    
+    /** @var SubjectIdentificationInterface */
+    private $subjectIdentification;
 
     public function __construct(Connection $dbConn, EntityManager $em, AISRetriever $aisRetriever,
                                 array $semestre, $loadAuth, LoggerInterface $logger = null)
@@ -74,6 +79,7 @@ class AISUserSource implements UserSourceInterface
         $this->semestre = $semestre;
         $this->loadAuth = $loadAuth;
         $this->logger = $logger;
+        $this->subjectIdentification = new SubjectIdentification();   // TODO service
     }
 
     public function load(UserSeason $userSeason)
@@ -102,27 +108,27 @@ class AISUserSource implements UserSourceInterface
     {
         $aisPredmety = $this->aisRetriever->getPredmety($this->semestre);
         
-        $kody = array();
+        $slugy = array();
 
         foreach ($aisPredmety as $aisPredmet) {
-            $dlhyKod = $aisPredmet['skratka'];
-            $kratkyKod = $this->getKratkyKod($dlhyKod);
+            $props = $this->subjectIdentification->identify($aisPredmet['skratka'], $aisPredmet['nazov']);
             
             // Ignorujme duplicitne predmety
-            if (in_array($kratkyKod, $kody)) {
+            if (in_array($props['slug'], $slugy)) {
                 continue;
             }
-            $kody[] = $kratkyKod;
+            $slugy[] = $props['slug'];
 
             // vytvorime subject v DB ak neexistuje
             // pouzijeme INSERT ON DUPLICATE KEY UPDATE
             // aby sme nedostavali vynimky pri raceoch
-            $stmt = $this->dbConn->prepare("INSERT INTO Subject (code, name) VALUES (:code, :name) ON DUPLICATE KEY UPDATE code=code");
-            $stmt->bindValue('code', $kratkyKod);
-            $stmt->bindValue('name', $aisPredmet['nazov']);
+            $stmt = $this->dbConn->prepare("INSERT INTO Subject (code, name, slug) VALUES (:code, :name, :slug) ON DUPLICATE KEY UPDATE slug=slug");
+            $stmt->bindValue('code', $props['code']);
+            $stmt->bindValue('name', $props['name']);
+            $stmt->bindValue('slug', $props['slug']);
             $stmt->execute();
 
-            $subject = $this->subjectRepository->findOneBy(array('code' => $kratkyKod));
+            $subject = $this->subjectRepository->findOneBy(array('slug' => $props['slug']));
             if ($subject == null) {
                 throw new \Exception("Nepodarilo sa pridať predmet do DB");
             }
@@ -159,27 +165,10 @@ class AISUserSource implements UserSourceInterface
      */
     private function generateSlug($slug)
     {
-        $slug = str_replace(array(' ', '/'),'-', $slug);
+        $slug = preg_replace('@[^a-zA-Z0-9_]@', '-', $slug);
+        $slug = preg_replace('@-+@', '-', $slug);
         $slug = trim($slug, '-');
         return $slug;
-    }
-
-    private function getKratkyKod($dlhyKod)
-    {
-        $matches = array();
-        if (preg_match('@^[^/]*/([^/]+)/@', $dlhyKod, $matches) !== 1) {
-            // Sice nevieme zistit kratky kod,
-            // to ale neznamena, ze k tomu predmetu nemozu hlasovat
-            // kazdopadne si to ale chceme zalogovat
-            if ($this->logger !== null) {
-                $this->logger->warn('Nepodarilo sa zistit kratky kod predmetu',
-                        array('dlhyKod'=>$dlhyKod));
-            }
-            return $dlhyKod;
-        }
-
-        $kratkyKod = $matches[1];
-        return $kratkyKod;
     }
 
 }

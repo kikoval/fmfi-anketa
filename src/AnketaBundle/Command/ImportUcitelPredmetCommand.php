@@ -19,6 +19,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use AnketaBundle\Entity\Season;
 use AnketaBundle\Entity\SeasonRepository;
+use AnketaBundle\Lib\SubjectIdentification;
 
 /**
  * Class functioning as command/task for importing teachers, subjects,
@@ -52,6 +53,8 @@ class ImportUcitelPredmetCommand extends ContainerAwareCommand {
      */
     protected function execute(InputInterface $input, OutputInterface $output) {
         $manager = $this->getContainer()->get('doctrine')->getEntityManager();
+        
+        $subjectIdentification = new SubjectIdentification();   // TODO service
         
         $seasonSlug = $input->getOption('season');
 
@@ -118,29 +121,34 @@ class ImportUcitelPredmetCommand extends ContainerAwareCommand {
                     ON DUPLICATE KEY UPDATE login=login");
         
         $insertSubject = $conn->prepare("
-                    INSERT INTO Subject (code, name) 
-                    VALUES (:code, :name) 
-                    ON DUPLICATE KEY UPDATE code=code");
+                    INSERT INTO Subject (code, name, slug)
+                    VALUES (:code, :name, :slug)
+                    ON DUPLICATE KEY UPDATE slug=slug");
         
         $insertTeacherSubject = $conn->prepare("
                     INSERT INTO TeachersSubjects (teacher_id, subject_id, season_id, lecturer, trainer) 
                     SELECT a.id, b.id, :season, :lecturer, :trainer
                     FROM Teacher a, Subject b 
-                    WHERE a.login = :login and b.code = :code");
+                    WHERE a.login = :login and b.slug = :slug");
 
         try {
             while ($buffer = fgets($file)) {
                 $id = $stlpce[0]->extractData($buffer);
-                $kod = $stlpce[1]->extractData($buffer);
-                $stredisko = $stlpce[2]->extractData($buffer);
-                $nazov = $stlpce[4]->extractData($buffer);
+                $aisKod = $stlpce[1]->extractData($buffer);
+                $aisStredisko = $stlpce[2]->extractData($buffer);
+                $aisNazov = $stlpce[4]->extractData($buffer);
                 $login = $stlpce[5]->extractData($buffer);
                 $meno = $stlpce[6]->extractData($buffer);
                 $hodnost = $stlpce[7]->extractData($buffer);
 
-                if (strlen($nazov) == 0 || strlen($login) == 0 || strlen($meno) == 0) {
+                if (strlen($aisNazov) == 0 || strlen($login) == 0 || strlen($meno) == 0) {
                     continue;
                 }
+
+                $props = $subjectIdentification->identify($aisStredisko.'/'.$aisKod, $aisNazov);
+                $kod = $props['code'];
+                $nazov = $props['name'];
+                $slug = $props['slug'];
 
                 $prednasajuci = 0;
                 $cviciaci = 0;
@@ -159,9 +167,10 @@ class ImportUcitelPredmetCommand extends ContainerAwareCommand {
 
                 $insertSubject->bindValue('code', $kod);
                 $insertSubject->bindValue('name', $nazov);
+                $insertSubject->bindValue('slug', $slug);
                 $insertSubject->execute();
 
-                $insertTeacherSubject->bindValue('code', $kod);
+                $insertTeacherSubject->bindValue('slug', $slug);
                 $insertTeacherSubject->bindValue('login', $login);
                 $insertTeacherSubject->bindValue('season', $season->getId());
                 $insertTeacherSubject->bindValue('lecturer', $prednasajuci);

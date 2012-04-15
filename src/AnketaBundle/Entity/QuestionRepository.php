@@ -86,8 +86,8 @@ class QuestionRepository extends EntityRepository {
 
     /**
      * Returned array contains progress for provided user in following format:
-     * - result[subject_code]['answered'] = number of answers for subject
-     * - result[subject_code]['total'] = number of questions for subject
+     * - result[subject_id]['answered'] = number of answers for subject
+     * - result[subject_id]['total'] = number of questions for subject
      * Includes progress for teacher with the largest progress!
      * @param User $user
      * @param Season $season
@@ -95,7 +95,8 @@ class QuestionRepository extends EntityRepository {
      */
     public function getProgressForSubjectsByUser(User $user, Season $season) {
         $em = $this->getEntityManager();
-        $query = $em->createQuery('SELECT s.code AS subject_code, COUNT(a.id) AS num
+        // TODO: tu sa uz da pouzit IDENTITY(a.subject) namiesto s.id a joinu
+        $query = $em->createQuery('SELECT s.id AS subject_id, COUNT(a.id) AS num
                                    FROM AnketaBundle\Entity\Answer a
                                    JOIN a.subject s
                                    WHERE a.author = :author
@@ -121,16 +122,16 @@ class QuestionRepository extends EntityRepository {
 
         $result = array();
         foreach ($subjectRepository->getAttendedSubjectsForUser($user, $season) as $subject) {
-                $result[$subject->getCode()] = array(
+                $result[$subject->getId()] = array(
                     'answered' => 0,
                     'total' => $subjectQuestions
                 );
         }
         foreach ($rows as $row) {
-            $result[$row['subject_code']]['answered'] = $row['num'];
-            if (array_key_exists($row['subject_code'], $teachers)) {
-                $result[$row['subject_code']]['answered'] += $mostCompleteTeacher($teachers[$row['subject_code']]);
-                $result[$row['subject_code']]['total'] += $subjectTeachersQuestions;
+            $result[$row['subject_id']]['answered'] = $row['num'];
+            if (array_key_exists($row['subject_id'], $teachers)) {
+                $result[$row['subject_id']]['answered'] += $mostCompleteTeacher($teachers[$row['subject_id']]);
+                $result[$row['subject_id']]['total'] += $subjectTeachersQuestions;
             }
         }
         
@@ -139,15 +140,16 @@ class QuestionRepository extends EntityRepository {
 
     /**
      * Returned array contains progress for provided user in following format:
-     * - result[subject_code][teacher_id]['answered'] = number of answers for subject and teacher
-     * - result[subject_code][teacher_id]['total'] = number of questions for subject and teacher
+     * - result[subject_id][teacher_id]['answered'] = number of answers for subject and teacher
+     * - result[subject_id][teacher_id]['total'] = number of questions for subject and teacher
      * @param User $user
      * @param Season $season
      * @return array
      */
     public function getProgressForSubjectTeachersByUser(User $user, Season $season) {
         $em = $this->getEntityManager();
-        $query = $em->createQuery('SELECT s.code AS subject_code, t.id AS teacher_id, COUNT(a.id) AS num
+        // TODO: Tu sa uz da pouzit IDENTITY(a.subject) namiesto s.id a joinu
+        $query = $em->createQuery('SELECT s.id AS subject_id, t.id AS teacher_id, COUNT(a.id) AS num
                                    FROM AnketaBundle\Entity\Answer a
                                         JOIN a.subject s
                                         JOIN a.teacher t
@@ -169,7 +171,7 @@ class QuestionRepository extends EntityRepository {
         foreach ($subjects as $subject) {
             $teachers = $teacherRepository->getTeachersForSubject($subject, $season);
             foreach ($teachers as $teacher) {
-                $result[$subject->getCode()][$teacher->getId()] = array(
+                $result[$subject->getId()][$teacher->getId()] = array(
                     'answered' => 0,
                     'total' => $subjectTeachersQuestions
                 );
@@ -177,7 +179,7 @@ class QuestionRepository extends EntityRepository {
         }
 
         foreach ($rows as $row) {
-            $result[$row['subject_code']][$row['teacher_id']]['answered'] = $row['num'];
+            $result[$row['subject_id']][$row['teacher_id']]['answered'] = $row['num'];
         }
 
         return $result;
@@ -222,8 +224,8 @@ class QuestionRepository extends EntityRepository {
     
 /**
      * Returned array contains progress for provided user in following format:
-     * - result[subject_code][teacher_id]['answered'] = number of answers for subject and teacher
-     * - result[subject_code][teacher_id]['total'] = number of questions for subject and teacher
+     * - result[studyprogram_code]['answered'] = number of answers for subject and teacher
+     * - result[studyprogram_code]['total'] = number of questions for subject and teacher
      * @param User $user
      * @param Season $season
      * @return array

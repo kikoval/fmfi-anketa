@@ -26,7 +26,7 @@
 vedecká činnosť, samostatné štúdium odbornej literatúry a pod.), prípadne ste tento predmet v aktuálnom semestri neobsolvovali lebo Vám bol uznaný, hodnotenie predmetu prosím preskočte.
         </p>
         <p>Chýba v menu nejaký učiteľ k tomuto predmetu?
-        <a href="{{ path('assoc_teacher_with_subject', {'subject_code': subject.code}) }}"
+        <a href="{{ path('assoc_teacher_with_subject', {'subject_slug': subject.slug}) }}"
            >Dajte nám vedieť a my to napravíme</a>.
         </p>
     {% endif %}

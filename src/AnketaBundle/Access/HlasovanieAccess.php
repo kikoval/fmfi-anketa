@@ -30,27 +30,12 @@ class HlasovanieAccess
     /** @var \AnketaBundle\Entity\UserSeason */
     private $userSeason;
 
-    /** @var \AnketaBundle\Entity\Season */
-    private $activeSeason;
-
-    /** @var boolean */
-    private $isAdmin;
-
     public function __construct(SecurityContextInterface $security, EntityManager $em, $allowedOrgUnit) {
         $this->security = $security;
         $this->em = $em;
         $this->allowedOrgUnit = $allowedOrgUnit;
         $this->user = null;
-        if ($this->security->getToken() !== null && $this->security->isGranted('IS_AUTHENTICATED_FULLY')) {
-            $token = $this->security->getToken();
-            if ($token) $this->user = $token->getUser();
-        }
-        $this->activeSeason = $this->em->getRepository('AnketaBundle:Season')->getActiveSeason();
         $this->userSeason = null;
-        if ($this->user) {
-            $this->userSeason = $this->user->forSeason($this->activeSeason);
-        }
-        $this->isAdmin = $this->security->getToken() !== null && $this->security->isGranted('ROLE_ADMIN');
     }
 
     /**
@@ -59,7 +44,26 @@ class HlasovanieAccess
      * @return mixed
      */
     public function getUser() {
+        if ($this->user === null && $this->security->isGranted('IS_AUTHENTICATED_FULLY')) {
+            $token = $this->security->getToken();
+            if ($token) $this->user = $token->getUser();
+        }
         return $this->user;
+    }
+
+    /**
+     * Returns the logged in user's UserSeason for the active season, or null
+     * if nobody is logged in or the user doesn't have a UserSeason for the
+     * active season.
+     *
+     * @return mixed
+     */
+    public function getUserSeason() {
+        if ($this->userSeason === null && $this->getUser() !== null) {
+            $activeSeason = $this->em->getRepository('AnketaBundle:Season')->getActiveSeason();
+            $this->userSeason = $this->getUser()->forSeason($activeSeason);
+        }
+        return $this->userSeason;
     }
 
     /**
@@ -69,7 +73,8 @@ class HlasovanieAccess
      * @return boolean
      */
     public function isVotingOpen() {
-        return $this->activeSeason->getVotingOpen();
+        $activeSeason = $this->em->getRepository('AnketaBundle:Season')->getActiveSeason();
+        return $activeSeason->getVotingOpen();
     }
 
     /**
@@ -78,7 +83,7 @@ class HlasovanieAccess
      * @return boolean
      */
     public function userIsStudent() {
-        return $this->userSeason && $this->userSeason->getIsStudent();
+        return $this->getUserSeason() && $this->getUserSeason()->getIsStudent();
     }
 
     /**
@@ -87,7 +92,7 @@ class HlasovanieAccess
      * @return boolean
      */
     public function userHasAllowedOrgUnit() {
-        return !$this->allowedOrgUnit || ($this->user && in_array($this->allowedOrgUnit, $this->user->getOrgUnits()));
+        return !$this->allowedOrgUnit || ($this->getUser() && in_array($this->allowedOrgUnit, $this->getUser()->getOrgUnits()));
     }
 
     /**
@@ -96,8 +101,8 @@ class HlasovanieAccess
      * @return boolean
      */
     public function userCanVote() {
-        if ($this->isAdmin) return true;
-        return $this->isVotingOpen() && $this->userSeason && $this->userSeason->canVote() && $this->userHasAllowedOrgUnit();
+        if ($this->security->isGranted('ROLE_ADMIN')) return true;
+        return $this->isVotingOpen() && $this->getUserSeason() && $this->getUserSeason()->canVote() && $this->userHasAllowedOrgUnit();
     }
 
 }

@@ -60,8 +60,8 @@ class User implements UserInterface {
      * @param String $realname
      */
     public function __construct($username) {
-        $this->subjects = new ArrayCollection();
         $this->roles = new ArrayCollection();
+        $this->userSeasons = new ArrayCollection();
         $this->userName = $username;
         $this->displayName = null;
     }

@@ -1,16 +1,16 @@
 {% extends 'AnketaBundle::layout.html.twig' %}
 
 {% block navigation %}
-    {{ menu.hlasovanie.render(['subject', subject.code])|raw }}
+    {{ menu.hlasovanie.render(['subject', subject.slug])|raw }}
 {% endblock %}
 
 {% block content %}
 
-<a href="{{ path('answer_subject', {'code': subject.code}) }}">&laquo; Späť na predmet</a>
+<a href="{{ path('answer_subject', {'subject_slug': subject.slug}) }}">&laquo; Späť na predmet</a>
 
 <h2>{{ subject.name }} - Chýbajúci učiteľ?</h2>
 
-<form method="POST" action="{{ path('assoc_teacher_with_subject_process', {'subject_code': subject.code}) }}">
+<form method="POST" action="{{ path('assoc_teacher_with_subject_process', {'subject_slug': subject.slug}) }}">
 
 <p>Ak v zozname učiteľov predmetu niekto chýba, napíšte sem jeho celé <strong>meno</strong>
 (aj s diakritikou) a <strong>funkciu</strong> (či bol prednášajúci, cvičiaci alebo oboje).</p>

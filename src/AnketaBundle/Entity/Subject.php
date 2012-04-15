@@ -19,10 +19,20 @@ class Subject {
     protected $id;
 
     /**
-     * Uniquely identifies the subject
-     * @ORM\Column(type="string", nullable="false", unique="true")
+     * Does not (need to) uniquely identify the subject!
+     * @ORM\Column(type="string", nullable="false")
      */
     protected $code;
+    
+    /**
+     * Uniquely identifies the subject, is suitable to be used as
+     * part of an URL.
+     * 
+     * (i.e. alphanumeric chars with not repeated dashes)
+     * 
+     * @ORM\Column(type="string", nullable="false", unique="true")
+     */
+    protected $slug;
 
     /**
      * @ORM\Column(type="string")
@@ -47,6 +57,14 @@ class Subject {
     public function getCode() {
         return $this->code;
     }
+    
+    public function setSlug($slug) {
+        $this->slug = $slug;
+    }
+
+    public function getSlug() {
+        return $this->slug;
+    }
 
     public function setName($value) {
         $this->name = $value;
@@ -62,6 +80,7 @@ class Subject {
      */
     public function getCategory()
     {
+        // TODO: fixnut pre dlhe kody
         $match = preg_match("@^[^-]*-([^-]*)-@", $this->getCode(), $matches);
         if ($match == 0) {
             return self::NO_CATEGORY;

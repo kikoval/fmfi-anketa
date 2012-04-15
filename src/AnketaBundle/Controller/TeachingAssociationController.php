@@ -16,20 +16,20 @@ class TeachingAssociationController extends Controller
         if (!$this->get('anketa.access.hlasovanie')->userCanVote()) throw new AccessDeniedException();
     }
     
-    public function formAction($subject_code)
+    public function formAction($subject_slug)
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $repo = $em->getRepository('AnketaBundle\Entity\Subject');
-        $subject = $repo->findOneBy(array('code' => $subject_code));
+        $subject = $repo->findOneBy(array('slug' => $subject_slug));
         if ($subject === null) {
-            throw new NotFoundHttpException('Chybny kod: ' . $subject_code);
+            throw new NotFoundHttpException('Chybny slug predmetu: ' . $subject_slug);
         }
         
         return $this->render('AnketaBundle:TeachingAssociation:form.html.twig',
                 array('subject'=>$subject));
     }
     
-    public function processFormAction($subject_code)
+    public function processFormAction($subject_slug)
     {
         $request = $this->get('request');
         $em = $this->get('doctrine.orm.entity_manager');
@@ -37,9 +37,9 @@ class TeachingAssociationController extends Controller
         $seasonRepository = $em->getRepository('AnketaBundle\Entity\Season');
         
         $season = $seasonRepository->getActiveSeason();
-        $subject = $subjectRepository->findOneBy(array('code' => $subject_code));
+        $subject = $subjectRepository->findOneBy(array('slug' => $subject_slug));
         if ($subject === null) {
-            throw new NotFoundHttpException('Chybny kod: ' . $subject_code);
+            throw new NotFoundHttpException('Chybny slug predmetu: ' . $subject_slug);
         }
         $security = $this->get('security.context');
         $user = $security->getToken()->getUser();
@@ -78,7 +78,7 @@ class TeachingAssociationController extends Controller
                 'otvoriť anketu znovu a ohodnotiť ho.');
         
         return new RedirectResponse($this->generateUrl(
-                'answer_subject', array('code'=>$subject->getCode())));
+                'answer_subject', array('subject_slug'=>$subject->getSlug())));
     }
     
 }

@@ -26,18 +26,10 @@ class StatisticsAccess
     /** @var mixed */
     private $user;
 
-    /** @var boolean */
-    private $isAdmin;
-
     public function __construct(SecurityContextInterface $security, EntityManager $em) {
         $this->security = $security;
         $this->em = $em;
         $this->user = null;
-        if ($this->security->getToken() !== null && $this->security->isGranted('IS_AUTHENTICATED_FULLY')) {
-            $token = $this->security->getToken();
-            if ($token) $this->user = $token->getUser();
-        }
-        $this->isAdmin = $this->security->getToken() !== null && $this->security->isGranted('ROLE_ADMIN');
     }
 
     /**
@@ -46,6 +38,10 @@ class StatisticsAccess
      * @return mixed
      */
     public function getUser() {
+        if ($this->user === null && $this->security->isGranted('IS_AUTHENTICATED_FULLY')) {
+            $token = $this->security->getToken();
+            if ($token) $this->user = $token->getUser();
+        }
         return $this->user;
     }
 
@@ -106,8 +102,8 @@ class StatisticsAccess
      * @return boolean
      */
     public function canSeeResults(Season $season) {
-        if ($this->isAdmin) return true;
-        return $season->getResultsVisible() && ($season->getResultsPublic() || (bool)$this->user);
+        if ($this->security->isGranted('ROLE_ADMIN')) return true;
+        return $season->getResultsVisible() && ($season->getResultsPublic() || ($this->getUser() !== null));
     }
 
     /**
@@ -142,7 +138,8 @@ class StatisticsAccess
      */
     public function canEditResponse(Response $response) {
         if (!$this->canSeeResults($response->getSeason())) return false;
-        return $this->user && $this->user->getUserName() === $response->getAuthorLogin() && $response->getSeason()->getRespondingOpen();
+        $user = $this->getUser();
+        return $user && $user->getUserName() === $response->getAuthorLogin() && $response->getSeason()->getRespondingOpen();
     }
 
     /**
@@ -180,7 +177,7 @@ class StatisticsAccess
             return $repository->findBy(array(), array('name' => 'ASC'));
         }
         else if ($this->security->isGranted('ROLE_DEPARTMENT_REPORT')) {
-            return $repository->findByUser($this->user, $season);
+            return $repository->findByUser($this->getUser(), $season);
         }
         else {
             return array();
@@ -199,7 +196,7 @@ class StatisticsAccess
             return $repository->getAllWithAnswers($season, true);
         }
         else if ($this->security->isGranted('ROLE_STUDY_PROGRAMME_REPORT')) {
-            return $repository->findByReportsUser($this->user, $season);
+            return $repository->findByReportsUser($this->getUser(), $season);
         }
         else {
             return array();
