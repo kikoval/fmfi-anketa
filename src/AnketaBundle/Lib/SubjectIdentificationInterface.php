@@ -14,15 +14,13 @@ interface SubjectIdentificationInterface
 {
     
     /**
-     * Map long code and subject name to unique subject slug
-     * @return string unique slug
+     * Map long code and subject name (information received from AIS) to
+     * internally usable information - a code and name (which are only
+     * displayed in the UI, never used as keys) and a slug that can actually
+     * uniquely identify the subject.
+     *
+     * @return array('code' => code, 'name' => name, 'slug' => slug)
      */
-    public function generateSlug($longCode, $subjectName);
-    
-    /**
-     * Generate UI strings for subject
-     * @return array('code' => code, 'name' => name)
-     */
-    public function generateUIStrings($longCode, $subjectName);
+    public function identify($longCode, $subjectName);
     
 }

@@ -14,35 +14,23 @@ class SubjectIdentification implements SubjectIdentificationInterface
 {
     
     /**
-     * Map long code and subject name to unique subject slug
-     * @return string unique slug
+     * {@inheritdoc}
      */
-    public function generateSlug($longCode, $subjectName) {
+    public function identify($longCode, $subjectName) {
         $faculty = $this->getFaculty($longCode);
         if ($faculty == 'FMFI') {
-            return $this->slugify($this->getShortCode($code));
-        }
-        else {
-            return $this->slugify($longCode . '-' . $subjectName);
-        }
-    }
-    
-    /**
-     * Generate UI strings for subject
-     * @return array('code' => code, 'name' => name)
-     */
-    public function generateUIStrings($longCode, $subjectName) {
-        $faculty = $this->getFaculty($longCode);
-        if ($faculty == 'FMFI') {
+            $shortCode = $this->getShortCode($longCode);
             return array(
-                'code' => $this->getShortCode($code),
+                'code' => $shortCode,
                 'name' => $subjectName,
-                );
+                'slug' => $this->slugify($shortCode),
+            );
         }
         else {
             return array(
                 'code' => $longCode,
                 'name' => $subjectName,
+                'slug' => $this->slugify($longCode . '-' . $subjectName),
             );
         }
     }
