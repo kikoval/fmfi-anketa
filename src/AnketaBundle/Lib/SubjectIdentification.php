@@ -17,9 +17,10 @@ class SubjectIdentification implements SubjectIdentificationInterface
      * {@inheritdoc}
      */
     public function identify($longCode, $subjectName) {
-        $faculty = $this->getFaculty($longCode);
+        $mediumCode = $this->getMediumCode($longCode);
+        $faculty = $this->getFaculty($mediumCode);
         if ($faculty == 'FMFI') {
-            $shortCode = $this->getShortCode($longCode);
+            $shortCode = $this->getShortCode($mediumCode);
             return array(
                 'code' => $shortCode,
                 'name' => $subjectName,
@@ -28,9 +29,9 @@ class SubjectIdentification implements SubjectIdentificationInterface
         }
         else {
             return array(
-                'code' => $longCode,
+                'code' => $mediumCode,
                 'name' => $subjectName,
-                'slug' => $this->slugify($longCode . '-' . $subjectName),
+                'slug' => $this->slugify($mediumCode . '-' . $subjectName),
             );
         }
     }
@@ -59,10 +60,22 @@ class SubjectIdentification implements SubjectIdentificationInterface
         return $parts[0];
     }
     
+    private function getMediumCode($longCode)
+    {
+        // Ozajstny "dlhy kod" je (aspon na FMFI) tvaru "FMFI.KI/1-INF-150/1",
+        // ale v importe z AISu su len prve dve casti, "FMFI.KI" a "1-INF-150".
+        // Aby sme mohli zarucit, ze algoritmus sa bude spravat rovnako, ci uz
+        // sa predmet importuje z niekoho zapisneho listu alebo pri uvodnom
+        // importe, musime tu poslednu cast zahodit. To je skoda, lebo by mozno
+        // mohla byt uzitocna pri odlisovani duplikatov, ale holt chcelo by to
+        // lepsi import.
+        return preg_replace('@^([^/]*/[^/]*).*$@', '\1', $longCode);
+    }
+
     private function getShortCode($longCode)
     {
         $matches = array();
-        if (preg_match('@^[^/]*/([^/]+)/@', $longCode, $matches) !== 1) {
+        if (preg_match('@^[^/]*/([^/]+)@', $longCode, $matches) !== 1) {
             // Nevieme zistit kratky kod
             return $longCode;
         }
