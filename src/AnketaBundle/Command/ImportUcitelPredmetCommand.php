@@ -51,10 +51,10 @@ class ImportUcitelPredmetCommand extends ContainerAwareCommand {
 
         $filename = $input->getArgument('file');
 
-        if (!file_exists($filename)) {
-            die("File not found. \n");
-        } else {
-            $file = fopen($filename, "r");
+        $file = fopen($filename, "r");
+        if ($file === false) {
+            $output->writeln('<error>Failed to open file</error>');
+            return;
         }
 
         // nacitaj prvy riadok
