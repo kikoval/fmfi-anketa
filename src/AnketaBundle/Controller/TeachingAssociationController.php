@@ -73,9 +73,9 @@ class TeachingAssociationController extends Controller
         
         $session = $this->get('session');
         $session->setFlash('success',
-                'Ďakujeme za informáciu o chýbajúcom učiteľovi. ' .
-                'V priebehu pár dní by mal pribudnúť, preto si nezabudnite ' .
-                'otvoriť anketu znovu a ohodnotiť ho.');
+                'Ďakujeme za informáciu. ' .
+                'V priebehu pár dní by mala byť spracovaná, preto si nezabudnite ' .
+                'otvoriť anketu znovu a ohodnotiť prípadných pridaných učiteľov.');
         
         return new RedirectResponse($this->generateUrl(
                 'answer_subject', array('subject_slug'=>$subject->getSlug())));

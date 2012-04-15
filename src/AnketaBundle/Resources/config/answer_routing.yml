@@ -25,13 +25,13 @@ answer_study_program:
     defaults: { _controller: AnketaBundle:Question:answerStudyProgram, slug: -1 }
 
 assoc_teacher_with_subject:
-    pattern: /hlasuj/predmet/{subject_slug}/pridaj-ucitela
+    pattern: /hlasuj/predmet/{subject_slug}/zmena-ucitela
     defaults: { _controller: AnketaBundle:TeachingAssociation:form }
     requirements:
       _method: GET
 
 assoc_teacher_with_subject_process:
-    pattern: /hlasuj/predmet/{subject_slug}/pridaj-ucitela
+    pattern: /hlasuj/predmet/{subject_slug}/zmena-ucitela
     defaults: { _controller: AnketaBundle:TeachingAssociation:processForm }
     requirements:
       _method: POST

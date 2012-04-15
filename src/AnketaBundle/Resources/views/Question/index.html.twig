@@ -25,7 +25,9 @@
             Ak tento predmet nepodlieha priamej vyučbe, ale splneniu určitých povinností (ako napr. diplomová práca,
 vedecká činnosť, samostatné štúdium odbornej literatúry a pod.), prípadne ste tento predmet v aktuálnom semestri neobsolvovali lebo Vám bol uznaný, hodnotenie predmetu prosím preskočte.
         </p>
-        <p>Chýba v menu nejaký učiteľ k tomuto predmetu?
+    {% endif %}
+    {% if categoryType == 'teacher_subject' or categoryType == 'subject' %}
+        <p>Je v zozname učiteľov k tomuto predmetu chyba?
         <a href="{{ path('assoc_teacher_with_subject', {'subject_slug': subject.slug}) }}"
            >Dajte nám vedieť a my to napravíme</a>.
         </p>
