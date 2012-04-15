@@ -32,7 +32,7 @@ class LDAPRetriever {
         $this->linkId = @ldap_connect($this->serverUrl);
         if ($this->linkId === false) {
             $this->linkId = null;
-            throw new Exception('Failed to create LDAP resource');
+            throw new \Exception('Failed to create LDAP resource');
         }
         
         // Toto treba pre JAS-ovsky server
@@ -58,7 +58,7 @@ class LDAPRetriever {
     private function throwException() {
         $errno = ldap_errno($this->linkId);
         $error = ldap_error($this->linkId);
-        throw new Exception('LDAP ' . $errno . ': ' . $error);
+        throw new \Exception('LDAP ' . $errno . ': ' . $error);
     }
     
     private function fetchEntry($entry, $attributes)
@@ -126,7 +126,6 @@ class LDAPRetriever {
     {
         $this->loginIfNotAlready();
         $result = $this->runSearch($filter, $attributes);
-        $entry = $this->firstEntry($result);
         $count = $this->getCount($result);
         
         if ($count === 0) {
@@ -134,14 +133,15 @@ class LDAPRetriever {
         }
         
         if ($count !== 1) {
-            throw new Exception('Only one result exected');
+            throw new \Exception('Only one result exected');
         }
         
-        $entry = $this->fetchEntry($entry, $attributes);
+        $entry = $this->firstEntry($result);
+        $data = $this->fetchEntry($entry, $attributes);
         
         $this->freeResult($result);
         
-        return $entry;
+        return $data;
     }
     
     public function searchAll($filter, $attributes, $limit)

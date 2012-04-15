@@ -69,13 +69,15 @@
         </div>
     <h2 class="faq">Kto sa dostane k dátam z ankety?</h2>
         <div class="faq-item">
-            <p>
-                Prístup k výsledkom ankety sa riadi <a href="http://www.fmph.uniba.sk/index.php?id=2940">smernicou dekana FMFI UK</a>.
-            </p>
+            {% if smernica_dekana is not empty %}
+                <p>
+                    Prístup k výsledkom ankety sa riadi <a href="{{ smernica_dekana }}">smernicou dekana {{ skratka_fakulty }} UK</a>.
+                </p>
+            {% endif %}
             <p>
                 Štatistické výsledky a anonymné komentáre verejne sprístupňujeme
                 po ich spracovaní, zvyšné výsledky si môžu pozrieť všetci
-                členovia akademickej obce FMFI UK (študenti aj
+                členovia akademickej obce {{ skratka_fakulty }} UK (študenti aj
                 zamestnanci).
             </p>
             <p>

@@ -12,24 +12,13 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use AnketaBundle\Entity\Teacher;
 
 class ResponseController extends Controller {
-
-    public function menuAction($activeItems = array()) {
-        $menu = array();
-        $menu['my_list'] = new MenuItem('Moje komentáre', $this->generateUrl('response'));
-        if ($activeItems == array('my_list')) $menu['my_list']->active = true;
-        return $this->render('AnketaBundle:Hlasovanie:menu.html.twig', array('menu' => $menu));
-    }
     
     public function newResponseAction($section_slug) {
-        $security = $this->get('security.context');
-        if (!$security->isGranted('ROLE_TEACHER')) {
-            throw new AccessDeniedException();
-        }
-        $user = $security->getToken()->getUser();
-
-        $em = $this->get('doctrine.orm.entity_manager');
-
         $section = StatisticsSection::getSectionFromSlug($this->container, $section_slug);
+
+        $access = $this->get('anketa.access.statistics');
+        if (!$access->canCreateResponse($section->getSeason())) throw new AccessDeniedException();
+        $user = $access->getUser();
         
         $response = new Response();
         $response->setAuthorLogin($user->getUserName());
@@ -45,15 +34,11 @@ class ResponseController extends Controller {
     
     public function editResponseAction($response_id, $delete) {
         $em = $this->get('doctrine.orm.entity_manager');
-        if (!$this->get('security.context')->isGranted('ROLE_TEACHER')) {
-            throw new AccessDeniedException();
-        }
-        
         $response = $em->find('AnketaBundle:Response', $response_id);
         if ($response == null) {
             throw new NotFoundHttpException('Neznama odpoved: ' . $response_id);
         }
-        
+
         return $this->updateResponse($response, $delete);
     }
     
@@ -61,9 +46,7 @@ class ResponseController extends Controller {
         $em = $this->get('doctrine.orm.entity_manager');
         $request = $this->get('request');
 
-        if ($response->getAuthorLogin() !== $this->get('security.context')->getToken()->getUser()->getUserName()) {
-            throw new AccessDeniedException();
-        }
+        if (!$this->get('anketa.access.statistics')->canEditResponse($response)) throw new AccessDeniedException();
 
         $section = StatisticsSection::getSectionOfResponse($this->container, $response);
         
@@ -103,37 +86,25 @@ class ResponseController extends Controller {
         }
     }
     
-    public function listMineAction($season_slug = null) {
+    public function listMineAction($season_slug) {
         $em = $this->get('doctrine.orm.entity_manager');
-        $security = $this->get('security.context');
-        if (!$security->isGranted('ROLE_TEACHER')) {
-            throw new AccessDeniedException();
-        }
-        $user = $security->getToken()->getUser();
+        $access = $this->get('anketa.access.statistics');
+        if (!$access->hasOwnResponses()) throw new AccessDeniedException();
+        $user = $access->getUser();
         
-        $season = null;
         $seasonRepo = $em->getRepository('AnketaBundle\Entity\Season');
-        if ($season_slug !== null) {
-            $season = $seasonRepo->findOneBy(array('slug' => $season_slug));
-            if ($season == null) {
-                throw new NotFoundHttpException('Chybna sezona: ' . $season_slug);
-            }
-        }
-        else {
-            $season = $seasonRepo->getActiveSeason();
+        $season = $seasonRepo->findOneBy(array('slug' => $season_slug));
+        if ($season == null) {
+            throw new NotFoundHttpException('Chybna sezona: ' . $season_slug);
         }
         
         $responseRepo = $em->getRepository('AnketaBundle:Response');
-        $query = array('author_login' => $user->getUserName());
-        if ($season !== null) {
-            $query['season'] = $season->getId();
-        }
+        $query = array('author_login' => $user->getUserName(), 'season' => $season->getId());
         $responses = $responseRepo->findBy($query);
         $processedResponses = array();
         foreach ($responses as $response) {
             $processedResponses[] = array(
-                'id' => $response->getId(),
-                'comment' => $response->getComment(),
+                'response' => $response,
                 'section' => StatisticsSection::getSectionOfResponse($this->container, $response)
             );
         }

@@ -13,6 +13,9 @@ namespace AnketaBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
 use AnketaBundle\Entity\StudyProgram;
+use AnketaBundle\Entity\User;
+use AnketaBundle\Entity\Subject;
+use AnketaBundle\Entity\Season;
 
 /**
  * Repository class for Program Entity
@@ -20,7 +23,7 @@ use AnketaBundle\Entity\StudyProgram;
 
 class StudyProgramRepository extends EntityRepository {
 
-    public function getStudyProgrammesForUser($user, $season) {
+    public function getStudyProgrammesForUser(User $user, Season $season) {
         $em = $this->getEntityManager();
         $query = $em->createQuery("SELECT sp
                            FROM AnketaBundle\\Entity\\UsersSubjects us,
@@ -35,13 +38,24 @@ class StudyProgramRepository extends EntityRepository {
         return $query->getResult();
     }
 
-    public function getFirstStudyProgrammeForUser($user, $season) {
+    public function getFirstStudyProgrammeForUser(User $user, Season $season) {
         $result = $this->getStudyProgrammesForUser($user, $season);
         if (!empty($result[0])) return $result[0];
         else return null;
     }
+
+    /**
+     * @return StudyProgram
+     */
+    public function getStudyProgrammeForUserSubject(User $user, Subject $subject, Season $season) {
+        $dql = 'SELECT sp FROM AnketaBundle\Entity\UsersSubjects us, AnketaBundle\Entity\StudyProgram sp ' .
+                'WHERE us.user = :user AND us.subject = :subject AND us.season = :season AND us.studyProgram = sp';
+        $query = $this->getEntityManager()->createQuery($dql);
+        $query->setParameters(array('user' => $user, 'subject' => $subject, 'season' => $season));
+        return $query->getSingleResult();
+    }
     
-    public function findByReportsUser($user, $season) {
+    public function findByReportsUser(User $user, Season $season) {
         $em = $this->getEntityManager();
         $query = $em->createQuery("SELECT sp
                            FROM AnketaBundle\\Entity\\UserStudyProgram usp,
@@ -56,7 +70,7 @@ class StudyProgramRepository extends EntityRepository {
         return $query->getResult();
     }
 
-    public function getAllWithAnswers($season, $orderByName = false) {
+    public function getAllWithAnswers(Season $season, $orderByName = false) {
         $em = $this->getEntityManager();
         $query = $em->createQuery("SELECT DISTINCT sp
                            FROM AnketaBundle\\Entity\\StudyProgram sp,

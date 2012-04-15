@@ -124,6 +124,10 @@ a:link, a:visited, a:active {
   color: #777;
 }
 
+#footer a {
+  color: #777;
+}
+
 .big-success-flash {
   border-color: green;
   background: #ebfdec;

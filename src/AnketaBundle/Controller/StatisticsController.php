@@ -250,6 +250,8 @@ class StatisticsController extends Controller {
         $em = $this->get('doctrine.orm.entity_manager');
 
         $season = $this->getSeason($season_slug);
+        if (!$this->get('anketa.access.statistics')->canSeeResults($season)) throw new AccessDeniedException();
+
         $categories = $em->getRepository('AnketaBundle:Subject')->getCategorizedSubjects($season);
 
         $items = array();
@@ -272,11 +274,9 @@ class StatisticsController extends Controller {
     }
     
     public function listMySubjectsAction($season_slug) {
-        $security = $this->get('security.context');
-        if (!$security->isGranted('ROLE_TEACHER')) {
-            throw new AccessDeniedException();
-        }
-        $user = $security->getToken()->getUser();
+        $access = $this->get('anketa.access.statistics');
+        if (!$access->hasOwnSubjects()) throw new AccessDeniedException();
+        $user = $access->getUser();
         
         $em = $this->get('doctrine.orm.entity_manager');
         $teacher = $em->getRepository('AnketaBundle:Teacher')->findOneBy(array('login' => $user->getUserName()));
@@ -286,6 +286,8 @@ class StatisticsController extends Controller {
         }
 
         $season = $this->getSeason($season_slug);
+        if (!$this->get('anketa.access.statistics')->canSeeResults($season)) throw new AccessDeniedException();
+
         $subjects = $em->getRepository('AnketaBundle:Subject')->getSubjectsForTeacher($teacher, $season);
 
         $items = array();
@@ -305,6 +307,8 @@ class StatisticsController extends Controller {
         $em = $this->get('doctrine.orm.entity_manager');
 
         $season = $this->getSeason($season_slug);
+        if (!$this->get('anketa.access.statistics')->canSeeResults($season)) throw new AccessDeniedException();
+
         $studyPrograms = $em->getRepository('AnketaBundle:StudyProgram')->getAllWithAnswers($season);
 
         $items = array();
@@ -322,6 +326,7 @@ class StatisticsController extends Controller {
 
     public function resultsAction($section_slug) {
         $section = StatisticsSection::getSectionFromSlug($this->container, $section_slug);
+        if (!$this->get('anketa.access.statistics')->canSeeResults($section->getSeason())) throw new AccessDeniedException();
 
         $maxCnt = 0;
         $results = array();
@@ -339,8 +344,7 @@ class StatisticsController extends Controller {
         $templateParams['responses'] = $this->processResponses($section->getResponses());
 
         $limit = $section->getMinVoters();
-        if ($maxCnt >= $limit ||
-                $this->get('security.context')->isGranted('ROLE_FULL_RESULTS')) {
+        if ($maxCnt >= $limit || $this->get('anketa.access.statistics')->hasFullResults()) {
             $templateParams['results'] = $results;
             return $this->render('AnketaBundle:Statistics:results.html.twig', $templateParams);
         }
@@ -350,127 +354,11 @@ class StatisticsController extends Controller {
         }
     }
 
-    private function buildMenu($activeItems = array()) {
-        // TODO: to ze menu zavisi od $activeItems je dost hack
-        // (vid HlasovanieController#buildMenu ze ako to ma vyzerat)
-        $em = $this->get('doctrine.orm.entity_manager');
-        $security = $this->get('security.context');
-
-        $menu = array();
-        $seasons = $em->getRepository('AnketaBundle:Season')->findAll();
-        foreach ($seasons as $season) {
-            // Add this season.
-            $menu[$season->getId()] = $seasonItem = new MenuItem(
-                $season->getDescription(),
-                $this->generateUrl('statistics_list_general',
-                    array('season_slug' => $season->getSlug())));
-            if (isset($activeItems[0]) && $activeItems[0] == $season->getId()) {
-                $seasonItem->expanded = true;
-
-                // Add "General questions" under this season.
-                $seasonItem->children['general'] = new MenuItem(
-                    'Všeobecné otázky',
-                    $this->generateUrl('statistics_list_general',
-                        array('season_slug' => $season->getSlug())));
-
-                // Add "Study programmes" under this season.
-                $seasonItem->children['study_programs'] = $studyProgramsItem = new MenuItem(
-                    'Študijné programy',
-                    $this->generateUrl('statistics_list_programs',
-                        array('season_slug' => $season->getSlug())));
-                if (isset($activeItems[1]) && $activeItems[1] == 'study_programs') {
-                    $studyProgramsItem->expanded = true;
-                    $studyPrograms = $em->getRepository('AnketaBundle:StudyProgram')->getAllWithAnswers($season);
-                    foreach ($studyPrograms as $studyProgram) {
-                        // Add this study program under "Study programmes".
-                        $studyProgramSection = StatisticsSection::makeStudyProgramSection($this->container, $season, $studyProgram);
-                        $studyProgramsItem->children[$studyProgram->getCode()] = new MenuItem(
-                            $studyProgram->getCode(), $studyProgramSection->getStatisticsPath());
-                    }
-                }
-
-                // Add "Subjects" under this season.
-                $seasonItem->children['subjects'] = $subjectsItem = new MenuItem(
-                    'Predmety',
-                    $this->generateUrl('statistics_list_subjects',
-                        array('season_slug' => $season->getSlug())));
-                if (isset($activeItems[1]) && $activeItems[1] == 'subjects') {
-                    $subjectsByCategory = $em->getRepository('AnketaBundle:Subject')->getCategorizedSubjects($season);
-                    foreach (array_keys($subjectsByCategory) as $category) {
-                        // Add this category under "Subjects".
-                        $subjectsItem->children[$category] = $categoryItem = new MenuItem(
-                            $category,
-                            $this->generateUrl('statistics_list_subjects',
-                                array('season_slug' => $season->getSlug(), 'category' => $category)));
-                        if (isset($activeItems[2]) && $activeItems[2] == $category) {
-                            $subjectsItem->only_expanded = true;
-                            $categoryItem->expanded = true;
-                            foreach ($subjectsByCategory[$category] as $subject) {
-                                // Add this subject under this category.
-                                $subjectSection = StatisticsSection::makeSubjectSection($this->container, $season, $subject);
-                                $categoryItem->children[$subject->getId()] = $subjectItem = new MenuItem(
-                                    $subject->getName(), $subjectSection->getStatisticsPath());
-                                if (isset($activeItems[3]) && $activeItems[3] == $subject->getId()) {
-                                    $categoryItem->only_expanded = true;
-                                    $teachers = $em->getRepository('AnketaBundle:Teacher')->getTeachersForSubject($subject, $season);
-                                    foreach ($teachers as $teacher) {
-                                        // Add this teacher under this subject.
-                                        $teacherSection = StatisticsSection::makeSubjectTeacherSection($this->container, $season, $subject, $teacher);
-                                        $subjectItem->children[$teacher->getId()] = new MenuItem(
-                                            $teacher->getName(), $teacherSection->getStatisticsPath());
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-
-                // Add "My subjects" under this season.
-                if ($security->isGranted('ROLE_TEACHER')) {
-                    $seasonItem->children['my_subjects'] = new MenuItem(
-                        'Moje predmety',
-                        $this->generateUrl('statistics_list_my_subjects',
-                            array('season_slug' => $season->getSlug())));
-                }
-
-                // Add "My reports" under this season.
-                if ($security->isGranted('ROLE_STUDY_PROGRAMME_REPORT') || $security->isGranted('ROLE_DEPARTMENT_REPORT') || $security->isGranted('ROLE_ALL_REPORTS')) {
-                    $seasonItem->children['my_reports'] = new MenuItem(
-                        'Moje reporty',
-                        $this->generateUrl('reports_my_reports',
-                            array('season_slug' => $season->getSlug())));
-                }
-            }
-        }
-
-        return $menu;
-    }
-
-    public function menuAction($activeItems = array()) {
-        $templateParams = array('menu' => $this->buildMenu($activeItems));
-
-        $activeTail = null;
-        $current = &$templateParams['menu'];
-        foreach ($activeItems as $item) {
-            if (!isset($current[$item])) {
-                $activeTail = null;
-                break;
-            }
-            $activeTail = $current[$item];
-            $current[$item]->expanded = true;
-            $current = &$current[$item]->children;
-        }
-        if ($activeTail) {
-            $activeTail->active = true;
-        }
-
-        return $this->render('AnketaBundle:Hlasovanie:menu.html.twig',
-                             $templateParams);
-    }
-
     public function listGeneralAction($season_slug = null) {
         $em = $this->get('doctrine.orm.entity_manager');
         $season = $this->getSeason($season_slug);
+        if (!$this->get('anketa.access.statistics')->canSeeResults($season)) throw new AccessDeniedException();
+
         // TODO: by season
         $items = array();
         $categories = $em->getRepository('AnketaBundle\Entity\Category')
@@ -492,16 +380,6 @@ class StatisticsController extends Controller {
         return $this->render('AnketaBundle:Statistics:listing.html.twig', $templateParams);
     }
 
-    /** Return true, if the current user can edit a response */
-    private function userCanEditResponse(Response $response)
-    {
-        // user must be logged in, otherwise he doesn't have name
-        if (!$this->get('security.context')->isGranted('ROLE_USER')) return false;
-        
-        $user = $this->get('security.context')->getToken()->getUser();
-        return $user->getUserName() === $response->getAuthorLogin();
-    }
-
     private function processResponses($responses)
     {
         $result = array();
@@ -511,8 +389,7 @@ class StatisticsController extends Controller {
         {
             $item = array();
             $item['response'] = $response;
-            $item['editable'] = $this->userCanEditResponse($response);
-            // TODO: zjednotit nejak spravanie
+            // TODO: zjednotit nejak spravanie (author text vs author login)
             $item['author'] = $response->getAuthorText();
             if ($response->getAuthorLogin())
             {
@@ -547,7 +424,8 @@ class StatisticsController extends Controller {
         $section = StatisticsSection::getSectionOfAnswer($this->container, $answer);
 
         if ('POST' == $request->getMethod()) {
-            $user = $this->get('security.context')->getToken()->getUser();
+            $user = $this->get('anketa.access.statistics')->getUser();
+            if (!$user) throw new AccessDeniedException();
             $note = $request->get('note', '');
 
             $emailTpl = array(

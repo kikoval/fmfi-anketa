@@ -3,7 +3,7 @@
 {% block title %}Anonymizácia{% endblock %}
 
 {% block navigation %}
-    {% render "AnketaBundle:Hlasovanie:menu" with { 'activeItems': ['anonymizuj'] } %}
+    {{ menu.hlasovanie.render(['anonymizuj'])|raw }}
 {% endblock %}
 
 {% block content %}

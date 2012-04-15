@@ -12,7 +12,7 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block navigation %}
-    {% render "AnketaBundle:Hlasovanie:menu" with { 'activeItems': activeItems } %}
+    {{ menu.hlasovanie.render(activeItems)|raw }}
 {% endblock %}
 
 {% block content %}
@@ -42,7 +42,7 @@ vedecká činnosť, samostatné štúdium odbornej literatúry a pod.), prípadn
             {% if question.hasDescription %}
                 <div class="description">{{ question.description }}</div>
             {% endif %}
-            
+
             {% if question.options | length %}
               <div class="option none">
                 <label for="question_{{ question.id }}_empty">

@@ -52,6 +52,7 @@ function setContainer(ContainerInterface $container = null) {
                 ->setDescription('Importuj otazky z yaml')
                 ->addArgument('file', InputArgument::REQUIRED)
                 ->addOption('duplicates', 'c', InputOption::VALUE_NONE, 'Checks for Duplicate Categories', null)
+                ->addOption('season', null, InputOption::VALUE_OPTIONAL, 'Season to use', null)
         ;
     }
 
@@ -70,17 +71,27 @@ function setContainer(ContainerInterface $container = null) {
         $filename = $input->getArgument('file');
         $checkDuplicatesOption = $input->getOption('duplicates');
 
-
-        $input_array = Yaml::parse($filename);
+        $seasonSlug = $input->getOption('season');
 
         /** @var SeasonRepository seasonRepository */
         $seasonRepository = $manager->getRepository('AnketaBundle:Season');
-        $season = $seasonRepository->getActiveSeason();
-        if ($season == null) {
-            $output->writeln("<error>V databaze sa nenasla aktivna Season</error>");
-            return;
+        if ($seasonSlug === null) {
+            $season = $seasonRepository->getActiveSeason();
+            if ($season == null) {
+                $output->writeln("<error>V databaze sa nenasla aktivna Season</error>");
+                return;
+            }
+        }
+        else {
+            $season = $seasonRepository->findOneBy(array('slug' => $seasonSlug));
+            if ($season == null) {
+                $output->writeln("<error>V databaze sa nenasla Season so slug " . $seasonSlug. "</error>");
+                return;
+            }
         }
 
+        $input_array = Yaml::parse($filename);
+        
         // checkDuplicates
         if ($checkDuplicatesOption != null) {
             $this->checkDuplicates($input_array, $manager);

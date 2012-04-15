@@ -50,12 +50,7 @@ class ReportsController extends Controller {
     public function studyProgrammeAction($study_programme_slug, $season_slug = null) {
 
         $em = $this->get('doctrine.orm.entity_manager');
-        $security = $this->get('security.context');
-        //TODO uprsnit na konkretnE studijnE programy
-        if (!$security->isGranted('ROLE_STUDY_PROGRAMME_REPORT') && !$security->isGranted('ROLE_ALL_REPORTS')) {
-            throw new AccessDeniedException();
-        }
-        
+
         $season = $em->getRepository('AnketaBundle:Season')->findOneBy(array('slug' => $season_slug));
         if ($season === null) {
             throw new NotFoundHttpException();
@@ -64,6 +59,11 @@ class ReportsController extends Controller {
         $studyProgramme = $em->getRepository('AnketaBundle:StudyProgram')->findOneBy(array('slug' => $study_programme_slug));
         if ($studyProgramme === null) {
             throw new NotFoundHttpException();
+        }
+
+        // TODO: don't get the full list, only check if we can access this item
+        if (!in_array($studyProgramme, $this->get('anketa.access.statistics')->getStudyProgrammeReports($season))) {
+            throw new AccessDeniedException();
         }
 
         return $this->makeReport($season,
@@ -77,12 +77,7 @@ class ReportsController extends Controller {
     public function departmentAction($department_slug, $season_slug = null) {
 
         $em = $this->get('doctrine.orm.entity_manager');
-        $security = $this->get('security.context');
-        //TODO uprsnit na konkretnU katedrU
-        if (!$security->isGranted('ROLE_DEPARTMENT_REPORT') && !$security->isGranted('ROLE_ALL_REPORTS')) {
-            throw new AccessDeniedException();
-        }
-        
+
         $season = $em->getRepository('AnketaBundle:Season')->findOneBy(array('slug' => $season_slug));
         if ($season === null) {
             throw new NotFoundHttpException();
@@ -95,6 +90,11 @@ class ReportsController extends Controller {
             throw new NotFoundHttpException();
         }
 
+        // TODO: don't get the full list, only check if we can access this item
+        if (!in_array($department, $this->get('anketa.access.statistics')->getDepartmentReports($season))) {
+            throw new AccessDeniedException();
+        }
+
         return $this->makeReport($season,
             $em->getRepository('AnketaBundle:Teacher')->getTeachersForDepartment($department, $season),
             $em->getRepository('AnketaBundle:Subject')->getSubjectsForDepartment($department, $season),
@@ -103,28 +103,19 @@ class ReportsController extends Controller {
 
     public function myReportsAction($season_slug = null) {
         $em = $this->get('doctrine.orm.entity_manager');
-        $security = $this->get('security.context');
+        $access = $this->get('anketa.access.statistics');
         $season = $em->getRepository('AnketaBundle:Season')->findOneBy(array('slug' => $season_slug));
         if ($season === null) {
             throw new NotFoundHttpException();
         }
 
-        $user = $security->getToken()->getUser();
+        if (!$access->canSeeResults($season)) throw new AccessDeniedException();
+        if (!$access->hasReports()) throw new AccessDeniedException();
 
         $items = array();
         
-        // katedry
-        $deptRepository = $em->getRepository('AnketaBundle:Department');
-        if ($security->isGranted('ROLE_ALL_REPORTS')) {
-            $departments = $deptRepository->findBy(array(), array('name' => 'ASC'));
-        }
-        else if ($security->isGranted('ROLE_DEPARTMENT_REPORT')) {
-            $departments = $deptRepository->findByUser($user, $season);
-        }
-        else {
-            $departments = null;
-        }
-        if ($departments) {
+        $departments = $access->getDepartmentReports($season);
+        if (count($departments)) {
             $links = array();
             foreach ($departments as $department) {
                 $links[$department->getName()] =
@@ -133,18 +124,8 @@ class ReportsController extends Controller {
             $items['Katedry'] = $links;
         }
         
-        // studijne programy
-        $spRepository = $em->getRepository('AnketaBundle:StudyProgram');
-        if ($security->isGranted('ROLE_ALL_REPORTS')) {
-            $studyPrograms = $spRepository->getAllWithAnswers($season, true);
-        }
-        else if ($security->isGranted('ROLE_STUDY_PROGRAMME_REPORT')) {
-            $studyPrograms = $spRepository->findByReportsUser($user, $season);
-        }
-        else {
-            $studyPrograms = null;
-        }
-        if ($studyPrograms) {
+        $studyPrograms = $access->getStudyProgrammeReports($season);
+        if (count($studyPrograms)) {
             $links = array();
             foreach ($studyPrograms as $studyProgram) {
                 $links[$studyProgram->getName() . ' (' . $studyProgram->getCode() . ')'] =

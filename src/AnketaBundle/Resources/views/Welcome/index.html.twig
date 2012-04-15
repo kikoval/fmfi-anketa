@@ -1,27 +1,38 @@
 {% extends 'AnketaBundle::layout.html.twig' %}
 {% block content %}
 
-<h2>Študentská anketa FMFI</h2>
-
-<p>Vitajte v Študentskej ankete pre zimný semester 2011/2012! {#Zapojte sa aj Vy a prezentujte svoj názor!#}</p>
-
-<p>Prečítajte si <a href="{{ asset('bundles/anketa/files/anketa-stanovisko-2010.pdf') }}">stanovisko vedenia fakulty k výsledkom ankety za akademický rok 2010/2011</a>.</p>
-{#
-<p><a class="bigbtn" id="uvod_prihlas" href="{{ path('anketa') }}">
-<span class="bigbtn_middle"><span class="bigbtn_left"><span class="bigbtn_right bigbtn_in">Hlasuj!</span></span></span></a></p>
-<p style="text-align: center"> Otvorené do <strong>15.1.2012 23:59:59</strong></p>
-#}
+<h2>Študentská anketa {{ skratka_fakulty }} &mdash; {{ active_season.description }}</h2>
 
 <p>
-Hlasovanie v ankete je ukončené. Ďakujeme všetkým zúčastneným za vyplnenie :)<br/>
-{# <strong>Výsledky budú k dispozícii po ukončení skúškového obdobia.</strong> #}
+    Vitajte v Študentskej ankete {{ skratka_fakulty }}!
+    Zapojte sa aj Vy a prezentujte svoj názor!
 </p>
 
-<p><a class="bigbtn" id="uvod_prihlas" href="{{ path('statistics') }}">
-<span class="bigbtn_middle"><span class="bigbtn_left"><span class="bigbtn_right bigbtn_in">Výsledky</span></span></span></a></p>
+{% if skratka_fakulty == 'FMFI' %}
+<p>Prečítajte si <a href="{{ asset('bundles/anketa/files/anketa-stanovisko-2010.pdf') }}">stanovisko vedenia fakulty k výsledkom ankety za akademický rok 2010/2011</a>.</p>
+{% endif %}
 
+{% if access.hlasovanie.isVotingOpen %}
+    <p><a class="bigbtn" href="{{ path('anketa') }}">
+    <span class="bigbtn_middle"><span class="bigbtn_left"><span class="bigbtn_right bigbtn_in">Hlasuj!</span></span></span></a></p>
+    {% if skratka_fakulty == 'FMFI' %}
+        {# <p style="text-align: center"> Otvorené do <strong>15.1.2012 23:59:59</strong></p> #}
+    {% else %}
+        {# TODO: dokedy su otvoreni ostatni? #}
+    {% endif %}
+{% else %}
+    <p>Hlasovanie v ankete je ukončené. Ďakujeme všetkým zúčastneným za vyplnenie :)</p>
+    {% if access.statistics.activeSeasonHasVisibleResults %}
+        <p><a class="bigbtn" href="{{ path('statistics') }}">
+        <span class="bigbtn_middle"><span class="bigbtn_left"><span class="bigbtn_right bigbtn_in">Výsledky</span></span></span></a></p>
+    {% elseif skratka_fakulty == 'FMFI' %}
+        <p><strong>Výsledky budú k dispozícii po ukončení skúškového obdobia.</strong></p>
+    {% else %}
+        {# TODO: kedy sa zverejnuju vysledky na inych fakultach? #}
+    {% endif %}
+{% endif %}
 
-{% render "AnketaBundle:Hlasovanie:globalProgressbar" with { 'mode': 'finished' } %}
+{% render "AnketaBundle:Hlasovanie:globalProgressbar" %}
 
 <p>Aká je nová anketa?</p>
 <ul>

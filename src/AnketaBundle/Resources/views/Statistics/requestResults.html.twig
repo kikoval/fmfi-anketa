@@ -3,7 +3,7 @@
 {% block title %}{{ section.title }}{% endblock %}
 
 {% block navigation %}
-    {% render "AnketaBundle:Statistics:menu" with { 'activeItems': section.activeMenuItems } %}
+    {{ menu.statistics.render(section.activeMenuItems)|raw }}
 {% endblock %}
 
 {% block content %}

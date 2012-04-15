@@ -14,7 +14,10 @@ dostatočne vysoký počet študentov. Prosíme Vás preto, aby ste dali vedieť
 aj svojim spolužiakom, napríklad prostredníctvom rozhovoru, emailu či Facebooku.
 </p>
 {% include 'AnketaBundle:Welcome:likebox.html.twig' %}
-<p>Výsledky ankety sa objavia na stránke ankety niekedy v priebehu prázdnin.
-</p>
+{% if skratka_fakulty == 'FMFI' %}
+    <p>Výsledky ankety budú k dispozícii po ukončení skúškového obdobia.</p>
+{% else %}
+    {# TODO: kedy sa zverejnuju vysledky na inych fakultach? #}
+{% endif %}
 
 {% endblock %}

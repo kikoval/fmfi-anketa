@@ -29,7 +29,7 @@
             .clearfix { zoom: 1; }
         </style>
         <![endif]-->
-        <title>{{ block('title') == '' ? '' : block('title') ~ ' - ' }}Anketa FMFI{{ anketa_instance != 'prod' ? ' (' ~ anketa_instance ~ ')' : '' }}</title>
+        <title>{{ block('title') == '' ? '' : block('title') ~ ' - ' }}Anketa {{ skratka_fakulty }} {{ anketa_instance != 'prod' ? ' (' ~ anketa_instance ~ ')' : '' }}</title>
         <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" />
         {% endblock %}
     </head>
@@ -47,7 +47,7 @@
 
             <div id="header">
                 {% block header %}
-                    <h1><a href="{{ path('homepage') }}">Anketa <strong>FMFI</strong>{% if anketa_instance != 'prod'
+                    <h1><a href="{{ path('homepage') }}">Anketa <strong>{{ skratka_fakulty }}</strong>{% if anketa_instance != 'prod'
                       %} <span id="instance">(<span>{{ anketa_instance }}</span>)</span>{% endif
                     %}</a></h1>
                 {% endblock %}
@@ -69,7 +69,7 @@
             </div>
 
             <div id="footer">
-                &copy; Študentský Vývojový Tím 2011
+                &copy; <a href="http://svt.fmph.uniba.sk/">Študentský Vývojový Tím</a> 2011,2012
             </div>
         </div>
         {% endblock %}

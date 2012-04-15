@@ -29,12 +29,7 @@ use AnketaBundle\Entity\CategoryType;
 class QuestionController extends Controller {
 
     public function preExecute() {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $season = $em->getRepository('AnketaBundle:Season')->getActiveSeason();
-        $token = $this->get('security.context')->getToken();
-        if (!$token) throw new AccessDeniedException();
-        $user = $token->getUser();
-        if (!$user || !$user->forSeason($season)->canVote()) throw new AccessDeniedException();
+        if (!$this->get('anketa.access.hlasovanie')->userCanVote()) throw new AccessDeniedException();
     }
 
     /**
@@ -102,6 +97,16 @@ class QuestionController extends Controller {
             $result[] = $answer;
         }
         return $result;
+    }
+
+    private function redirectAfterProcessing($activeItems = array()) {
+        $request = $this->get('request');
+        if ($request->request->get('next')) {
+            return new RedirectResponse($this->get('anketa.menu.hlasovanie')->getNextSection($activeItems) ?: $request->getRequestUri());
+        }
+        else {
+            return new RedirectResponse($request->getRequestUri());
+        }
     }
 
     /**
@@ -174,11 +179,11 @@ class QuestionController extends Controller {
             throw new NotFoundHttpException($e->getMessage());
         }
 
+        $season = $em->getRepository('AnketaBundle:Season')->getActiveSeason();
         $questions = $em->getRepository('AnketaBundle\Entity\Question')
-                        ->getOrderedQuestionsByCategoryType(CategoryType::TEACHER_SUBJECT);
+                        ->getOrderedQuestionsByCategoryType(CategoryType::TEACHER_SUBJECT, $season);
         
         $teacherRepository = $em->getRepository('AnketaBundle:Teacher');
-        $season = $em->getRepository('AnketaBundle:Season')->getActiveSeason();
         // TODO: opravit nasledovne, nech to nacitava a kontroluje ucitelopredmet
         // z databazy naraz v jednom kroku
         $teachers = $teacherRepository->getTeachersForSubject($subject, $season);
@@ -189,6 +194,8 @@ class QuestionController extends Controller {
         if ($teacher == null) {
             throw new NotFoundHttpException("Ucitel " . $teacher_code . " neuci dany predmet");
         }
+        $studyProgram = $em->getRepository('AnketaBundle:StudyProgram')
+                           ->getStudyProgrammeForUserSubject($user, $subject, $season);
 
         $answers = $em->getRepository('AnketaBundle\Entity\Answer')
                       ->getAnswersByCriteria($questions, $user, $season, $subject, $teacher);
@@ -197,14 +204,9 @@ class QuestionController extends Controller {
             $answerArray = $this->processForm($request, $user, $questions, $answers, $season);
 
             foreach ($answerArray AS $answer) {
-                // chceme nastavit este teacher + subject
-                // predpokladame ze subject je to co prislo v parametri kodu
                 $answer->setSubject($subject);
-                // ako ucitela zatial zoberieme prveho... co asi urcite nechceme
                 $answer->setTeacher($teacher);
-                // k odpovedi pridame prvy studijny odbor, co user ma
-                $ur = $em->getRepository('AnketaBundle\Entity\StudyProgram');
-                $answer->setStudyProgram($ur->getFirstStudyProgrammeForUser($user, $season));
+                $answer->setStudyProgram($studyProgram);
                 $answer->setAttended(true);
 
                 $em->persist($answer);
@@ -214,13 +216,7 @@ class QuestionController extends Controller {
 
             $em->flush();
 
-            if ($request->request->get('next')) {
-                return $this->forward('AnketaBundle:Hlasovanie:menuNext',
-                    array('activeItems' => array('subject', $subject->getCode(), $teacher->getId())));
-            }
-            else {
-                return new RedirectResponse($request->getRequestUri());
-            }
+            return $this->redirectAfterProcessing(array('subject', $subject->getCode(), $teacher->getId()));
         }
 
         $templateParams = array();
@@ -248,19 +244,16 @@ class QuestionController extends Controller {
                         ->getOrderedQuestionsByCategoryType(CategoryType::SUBJECT, $season);
         $answers = $em->getRepository('AnketaBundle\Entity\Answer')
                       ->getAnswersByCriteria($questions, $user, $season, $subject);
+        $studyProgram = $em->getRepository('AnketaBundle:StudyProgram')
+                           ->getStudyProgrammeForUserSubject($user, $subject, $season);
         
         if ('POST' == $request->getMethod()) {
             $answerArray = $this->processForm($request, $user, $questions, $answers, $season);
 
             foreach ($answerArray AS $answer) {
-                // chceme nastavit este teacher + subject
-                // predpokladame ze subject je to co prislo v parametri kodu
                 $answer->setSubject($subject);
                 $answer->setTeacher(null);
-                // k odpovedi pridame prvy studijny odbor, co user ma
-                $ur = $em->getRepository('AnketaBundle\Entity\StudyProgram');
-                $answer->setStudyProgram($ur->getFirstStudyProgrammeForUser($user, $season));
-                // aktualne sa daju vyplnat iba predmety ktore sme navstevovali 
+                $answer->setStudyProgram($studyProgram);
                 $answer->setAttended(true);
 
                 $em->persist($answer);
@@ -270,13 +263,7 @@ class QuestionController extends Controller {
 
             $em->flush();
 
-            if ($request->request->get('next')) {
-                return $this->forward('AnketaBundle:Hlasovanie:menuNext',
-                    array('activeItems' => array('subject', $subject->getCode())));
-            }
-            else {
-                return new RedirectResponse($request->getRequestUri());
-            }
+            return $this->redirectAfterProcessing(array('subject', $subject->getCode()));
         }
 
         $templateParams = array();
@@ -322,13 +309,7 @@ class QuestionController extends Controller {
 
             $em->flush();
 
-            if ($request->request->get('next')) {
-                return $this->forward('AnketaBundle:Hlasovanie:menuNext',
-                    array('activeItems' => array('study_program', $studyProgramme->getCode())));
-            }
-            else {
-                return new RedirectResponse($request->getRequestUri());
-            }
+            return $this->redirectAfterProcessing(array('study_program', $studyProgramme->getCode()));
         }
 
         $templateParams = array();
@@ -396,13 +377,7 @@ class QuestionController extends Controller {
 
             $em->flush();
 
-            if ($request->request->get('next')) {
-                return $this->forward('AnketaBundle:Hlasovanie:menuNext',
-                    array('activeItems' => array('general', $category->getId())));
-            }
-            else {
-                return new RedirectResponse($request->getRequestUri());
-            }
+            return $this->redirectAfterProcessing(array('general', $category->getId()));
         }
 
         $templateParams = array();

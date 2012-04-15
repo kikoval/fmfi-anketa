@@ -100,6 +100,7 @@ input[type="text"], input[type="password"] {
 
 #header h1 strong {
   font-size: 160%;
+  text-transform: none;
 }
 
 #header #instance {
