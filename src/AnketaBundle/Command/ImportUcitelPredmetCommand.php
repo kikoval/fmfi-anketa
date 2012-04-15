@@ -88,6 +88,22 @@ class ImportUcitelPredmetCommand extends ContainerAwareCommand {
         $conn = $this->getContainer()->get('database_connection');
 
         $conn->beginTransaction();
+        
+        $insertTeacher = $conn->prepare("
+                    INSERT INTO Teacher (displayName, login) 
+                    VALUES (:displayName, :login) 
+                    ON DUPLICATE KEY UPDATE login=login");
+        
+        $insertSubject = $conn->prepare("
+                    INSERT INTO Subject (code, name) 
+                    VALUES (:code, :name) 
+                    ON DUPLICATE KEY UPDATE code=code");
+        
+        $insertTeacherSubject = $conn->prepare("
+                    INSERT INTO TeachersSubjects (teacher_id, subject_id, season_id, lecturer, trainer) 
+                    SELECT a.id, b.id, :season, :lecturer, :trainer
+                    FROM Teacher a, Subject b 
+                    WHERE a.login = :login and b.code = :code");
 
         try {
             while ($buffer = fgets($file)) {
@@ -114,33 +130,20 @@ class ImportUcitelPredmetCommand extends ContainerAwareCommand {
                     continue;
                 }
                 
-                $stmt = $conn->prepare("
-                    INSERT INTO Teacher (displayName, login) 
-                    VALUES (:displayName, :login) 
-                    ON DUPLICATE KEY UPDATE login=login");
-                $stmt->bindValue('displayName', $meno);
-                $stmt->bindValue('login', $login);
-                $stmt->execute();
+                $insertTeacher->bindValue('displayName', $meno);
+                $insertTeacher->bindValue('login', $login);
+                $insertTeacher->execute();
 
-                $stmt = $conn->prepare("
-                    INSERT INTO Subject (code, name) 
-                    VALUES (:code, :name) 
-                    ON DUPLICATE KEY UPDATE code=code");
-                $stmt->bindValue('code', $kod);
-                $stmt->bindValue('name', $nazov);
-                $stmt->execute();
+                $insertSubject->bindValue('code', $kod);
+                $insertSubject->bindValue('name', $nazov);
+                $insertSubject->execute();
 
-                $stmt = $conn->prepare("
-                    INSERT INTO TeachersSubjects (teacher_id, subject_id, season_id, lecturer, trainer) 
-                    SELECT a.id, b.id, :season, :lecturer, :trainer
-                    FROM Teacher a, Subject b 
-                    WHERE a.login = :login and b.code = :code");
-                $stmt->bindValue('code', $kod);
-                $stmt->bindValue('login', $login);
-                $stmt->bindValue('season', 1);
-                $stmt->bindValue('lecturer', $prednasajuci);
-                $stmt->bindValue('trainer', $cviciaci);
-                $stmt->execute();
+                $insertTeacherSubject->bindValue('code', $kod);
+                $insertTeacherSubject->bindValue('login', $login);
+                $insertTeacherSubject->bindValue('season', 1);
+                $insertTeacherSubject->bindValue('lecturer', $prednasajuci);
+                $insertTeacherSubject->bindValue('trainer', $cviciaci);
+                $insertTeacherSubject->execute();
             }
         } catch (Exception $e) {
             $conn->rollback();
