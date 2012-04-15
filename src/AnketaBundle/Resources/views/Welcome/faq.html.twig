@@ -39,28 +39,47 @@
                 táto informácia zostane neverejná.
             </p>
             <p>
-                Po novom si v databáze pri konkrétnej odpovedi pamätáme aj študijný odbor hlasujúceho, aby sme vedeli lepšie
-                vyhodnotiť situácie, kde študenti viacerých odborov navštevujú rovnaký predmet.
+                V databáze  si pri konkrétnej odpovedi pamätáme aj študijný odbor hlasujúceho, aby sme vedeli lepšie
+                vyhodnotiť situácie, keď študenti viacerých odborov navštevujú rovnaký predmet.
             </p>
         </div>
     {# !!! nove otazky pridavat az sem, alebo este nizsie. !!! #}
     <h2 class="faq">Dá sa vyplnením ankety vôbec niečo dosiahnuť?</h2>
+    {% if skratka_fakulty == 'FMFI' %}
         <div class="faq-item">
             Vplyv ankety na chod fakulty je priamo úmerný účasti študentov.
             Vedenie fakulty berie početné názory študentov vážne &mdash;
             prečítajte si <a href="{{ asset('bundles/anketa/files/anketa-stanovisko-2010.pdf') }}">stanovisko vedenia
             k výsledkom poslednej ankety</a>, ktoré bolo motivované vyše 40% účasťou študentov.
         </div>
+    {% else %}
+        <div class="faq-item">
+            To, či sa vyplnením ankety niečo zmení, závisí v prvom rade od Vás - Vaša účasť na ankete je prvým, ale potrebným krokom.
+            Ako motivácia môže poslúžiť výsledok ankety na Fakulte matematiky, fyziky a informatiky, kde anketa prebehla minulý rok.
+            Po vyše 40% účasti študentov došlo k viacerým zmenám (napr. zmeny učiteľov, upravenie obsahov predmetov a pod.). Viac si môžte 
+            prečítať v <a href="{{ asset('bundles/anketa/files/anketa-stanovisko-2010.pdf') }}">stanovisku vedenia
+            k výsledkom ankety z FMFI</a>. Teda niečo sa dosiahnuť určite dá :)
+        </div>
+    {% endif %}
+
+    {% if skratka_fakulty == 'FMFI' %}
     <h2 class="faq">Dokedy môžem hlasovať?</h2>
         <div class="faq-item">
             Hlasovať je možné len do 15.1.2012 23:59:59.
         </div>
+    {% else %}
+        {# TODO zistit dokedy je otvorene hlasovanie! #}
+    {% endif %}
+
     <h2 class="faq">Kto je za anketou?</h2>
         <div class="faq-item">
             <p>
-            Študentský vývojový tím, viď <a href="http://svt.fmph.uniba.sk/">http://svt.fmph.uniba.sk/</a>. Ak sa
-            chcete stať členom a prispieť tak k vývoju ankety a ďalších
-            zaujímavých projektov, napíšte nám.
+            Anketu vytvoril <a href="http://svt.fmph.uniba.sk/">Študentský Vývojový Tím</a>{% if skratka_fakulty != 'FMFI' %} z FMFI{% endif %}.
+            {% if skratka_fakulty == 'FMFI' %}
+
+                Ak sa chcete stať členom a prispieť tak k vývoju ankety a ďalších
+                zaujímavých projektov, napíšte nám.
+            {% endif %}
             </p>
             <p>
         Anketa je open source projekt licencovaný pod GPLv3+,
@@ -80,19 +99,27 @@
                 členovia akademickej obce {{ skratka_fakulty }} UK (študenti aj
                 zamestnanci).
             </p>
-            <p>
-                Pozrite si <a href="/vysledky/2010-2011">výsledky ankety 2010/2011</a>.
-            </p>
+            {% if skratka_fakulty == 'FMFI' %}
+                <p>
+                    Pozrite si <a href="/vysledky/2010-2011">výsledky ankety 2010/2011</a>.
+                </p>
+            {% endif %}
+
      </div>
-    <h2 class="faq">Naďabil som sa na bug/napadlo mi vylepšenie. Čo mám robiť?
+    <h2 class="faq">Našiel som bug/napadlo mi vylepšenie. Čo mám robiť?
 </h2>
         <div class="faq-item">
         <p>
         Určite nám napíšte mail na adresu <a href="mailto:fmfi-anketa-users@googlegroups.com">fmfi-anketa-users@googlegroups.com</a>.
         </p>
+    {% if skratka_fakulty == 'FMFI' %}
         <p>
-    Pre akékoľvek ďaľšie poznámky, pripomienky, kritiku, či slová vďaky neváhajte použiť <a href="http://www.facebook.com/FMFIanketa">našu oficiálnu Facebook stránku</a>.
+    Pre akékoľvek ďaľšie poznámky, pripomienky, kritiku, či slová vďaky neváhajte použiť 
+        <a href="http://www.facebook.com/FMFIanketa">našu oficiálnu Facebook stránku</a>.
         </p>
+    {% else %}
+        {# TODO vyrobit facebookove stranky #}
+    {% endif %}
         </div>
 </div>
 {% endblock %}
