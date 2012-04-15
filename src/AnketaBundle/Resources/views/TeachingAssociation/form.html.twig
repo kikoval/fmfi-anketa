@@ -1,7 +1,7 @@
 {% extends 'AnketaBundle::layout.html.twig' %}
 
 {% block navigation %}
-    {{ menu.hlasovanie.render(['subject', subject.slug])|raw }}
+    {{ menu.hlasovanie.render(['subject', subject.id])|raw }}
 {% endblock %}
 
 {% block content %}
