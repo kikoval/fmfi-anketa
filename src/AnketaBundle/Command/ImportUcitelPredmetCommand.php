@@ -105,6 +105,7 @@ class ImportUcitelPredmetCommand extends ContainerAwareCommand {
 
                 $prednasajuci = 0;
                 $cviciaci = 0;
+                
                 if ($hodnost == 'P') {
                     $prednasajuci = 1;
                 } else if ($hodnost == 'C') {
