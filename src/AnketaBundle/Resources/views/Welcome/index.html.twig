@@ -34,6 +34,7 @@
 
 {% render "AnketaBundle:Hlasovanie:globalProgressbar" %}
 
+{% if skratka_fakulty == 'FMFI' %}
 <p>Aká je nová anketa?</p>
 <ul>
 <li><b>Ešte rýchlejšia</b> &mdash; starostlivo sme znova prešli všetky pôvodné otázky a povyberali len tie najdôležitejšie</li>
@@ -44,6 +45,19 @@
 <li><b>Mobilná</b> &mdash; hlasujte kdekoľvek a s čímkoľvek, vrátane mobilov a smartfónov</li>
 <li><b>Má prekrásne hviezdičky</b> &mdash; náš tím tvrdo pracoval, aby Vám poskytol <em>state-of-the-art</em> hviezdičkové hlasovanie</li>
 </ul>
+{% else %}
+<p>Aká je nová anketa?</p>
+<ul>
+<li><b>Rýchla</b> &mdash; vybrali sme len niekoľko najdôležitejších otázok, anketa Vám nezaberie veľa času</li>
+<li><b>Jednoduchá</b> &mdash; pri otázkach sú na výber jasne formulované možnosti pre odpoveď</li>
+<li><b>K veci</b> &mdash; automaticky načíta Váš zoznam predmetov s učiteľmi</li>
+<li><b>Flexibilná</b> &mdash; môžete sa k nej vrátiť neskôr, nemusíte všetko vyplniť naraz</li>
+<li><b>Anonymná</b> &mdash; po ukončení hlasovania sa nedá zistiť, komu patria ktoré odpovede</li>
+<li><b>Mobilná</b> &mdash; hlasujte kdekoľvek a s čímkoľvek, vrátane mobilov a smartfónov</li>
+<li><b>Má prekrásne hviezdičky</b> &mdash; náš tím tvrdo pracoval, aby Vám poskytol <em>state-of-the-art</em> hviezdičkové hlasovanie</li>
+</ul>
+
+{% endif %}
 
 <p><strong>AJ VÁŠ HLAS MÔŽE ZMENIŤ NAŠU ALMA-MÁTER K LEPŠIEMU ;-)</strong><p>
 
