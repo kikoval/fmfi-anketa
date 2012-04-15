@@ -17,6 +17,8 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use AnketaBundle\Entity\Season;
+use AnketaBundle\Entity\SeasonRepository;
 
 /**
  * Class functioning as command/task for importing teachers, subjects,
@@ -34,6 +36,7 @@ class ImportUcitelPredmetCommand extends ContainerAwareCommand {
                 ->setName('anketa:import-ucitel-predmet')
                 ->setDescription('Importuj ucitelov predmety z textaku')
                 ->addArgument('file', InputArgument::REQUIRED)
+                ->addOption('season', null, InputOption::VALUE_OPTIONAL, 'Season to use', null)
         ;
     }
 
@@ -48,6 +51,26 @@ class ImportUcitelPredmetCommand extends ContainerAwareCommand {
      * @throws \LogicException When this abstract class is not implemented
      */
     protected function execute(InputInterface $input, OutputInterface $output) {
+        $manager = $this->getContainer()->get('doctrine')->getEntityManager();
+        
+        $seasonSlug = $input->getOption('season');
+
+        /** @var SeasonRepository seasonRepository */
+        $seasonRepository = $manager->getRepository('AnketaBundle:Season');
+        if ($seasonSlug === null) {
+            $season = $seasonRepository->getActiveSeason();
+            if ($season == null) {
+                $output->writeln("<error>V databaze sa nenasla aktivna Season</error>");
+                return;
+            }
+        }
+        else {
+            $season = $seasonRepository->findOneBy(array('slug' => $seasonSlug));
+            if ($season == null) {
+                $output->writeln("<error>V databaze sa nenasla Season so slug " . $seasonSlug. "</error>");
+                return;
+            }
+        }
 
         $filename = $input->getArgument('file');
 
@@ -140,7 +163,7 @@ class ImportUcitelPredmetCommand extends ContainerAwareCommand {
 
                 $insertTeacherSubject->bindValue('code', $kod);
                 $insertTeacherSubject->bindValue('login', $login);
-                $insertTeacherSubject->bindValue('season', 1);
+                $insertTeacherSubject->bindValue('season', $season->getId());
                 $insertTeacherSubject->bindValue('lecturer', $prednasajuci);
                 $insertTeacherSubject->bindValue('trainer', $cviciaci);
                 $insertTeacherSubject->execute();
