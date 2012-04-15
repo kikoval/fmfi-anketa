@@ -126,7 +126,6 @@ class LDAPRetriever {
     {
         $this->loginIfNotAlready();
         $result = $this->runSearch($filter, $attributes);
-        $entry = $this->firstEntry($result);
         $count = $this->getCount($result);
         
         if ($count === 0) {
@@ -137,11 +136,12 @@ class LDAPRetriever {
             throw new \Exception('Only one result exected');
         }
         
-        $entry = $this->fetchEntry($entry, $attributes);
+        $entry = $this->firstEntry($result);
+        $data = $this->fetchEntry($entry, $attributes);
         
         $this->freeResult($result);
         
-        return $entry;
+        return $data;
     }
     
     public function searchAll($filter, $attributes, $limit)
