@@ -119,8 +119,6 @@ class AnketaUserProvider implements UserProviderInterface
         if ($user === null) {
             $user = new User($username);
             $this->entityManager->persist($user);
-            
-            $user->addRole($this->roleRepository->findOrCreateRole('ROLE_USER'));
         }
         
         assert($user !== null);

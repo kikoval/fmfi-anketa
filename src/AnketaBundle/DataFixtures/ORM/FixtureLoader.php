@@ -166,7 +166,6 @@ class FixtureLoader implements FixtureInterface {
         $userAdmin = new User('admin', 'admin');
 
         $roleAdmin = new Role('ROLE_ADMIN');
-        $roleUser = new Role('ROLE_USER');
         $roleSuperAdmin = new Role('ROLE_SUPER_ADMIN');
         
         $studyProgramINF = new StudyProgram();
@@ -216,14 +215,11 @@ class FixtureLoader implements FixtureInterface {
             $manager->persist($usersSubjects);
         }
             
-        $userFoo->addRole($roleUser);
-
         $userAdmin->addRole($roleAdmin);
 
         $manager->persist($userFoo);
         $manager->persist($userAdmin);
         $manager->persist($roleAdmin);
-        $manager->persist($roleUser);
         $manager->persist($roleSuperAdmin);
 
         $manager->flush();
