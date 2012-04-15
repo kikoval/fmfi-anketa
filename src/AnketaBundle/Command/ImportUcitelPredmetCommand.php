@@ -85,26 +85,26 @@ class ImportUcitelPredmetCommand extends ContainerAwareCommand {
 
         // splitni riadok 
         $splitnuty_riadok = preg_split("/[\s]+/", $line);
-        $first_line_rows = array();
+        $stlpce = array();
 
         // vytvor si pole objektov, ktore obsahuju udaje o nazve, zaciatku stlpca
         for ($i = 0; $i < count($splitnuty_riadok) - 1; $i++) {
             $position = strpos($line, $splitnuty_riadok[$i]);
 
-            $row = new Stlpec();
-            $row->setNazov($splitnuty_riadok[$i]);
-            $row->setStart($position);
+            $stlpec = new Stlpec();
+            $stlpec->setNazov($splitnuty_riadok[$i]);
+            $stlpec->setStart($position);
 
-            $first_line_rows[] = $row;
+            $stlpce[] = $stlpec;
         }
 
         // zisti dlzku stlpcov
-        for ($i = 0; $i < count($first_line_rows) - 1; $i++) {
-            $first_line_rows[$i]->setDlzka(
-                    $first_line_rows[$i + 1]->getStart() - $first_line_rows[$i]->getStart()
+        for ($i = 0; $i < count($stlpce) - 1; $i++) {
+            $stlpce[$i]->setDlzka(
+                    $stlpce[$i + 1]->getStart() - $stlpce[$i]->getStart()
             );
         }
-        $first_line_rows[count($first_line_rows) - 1]->setDlzka(strlen($line) - $first_line_rows[count($first_line_rows) - 1]->getStart());
+        $stlpce[count($stlpce) - 1]->setDlzka(strlen($line) - $stlpce[count($stlpce) - 1]->getStart());
 
         $line = fgets($file); // nacitaj riadok s pomlckami (nepodstatny)
 
@@ -130,13 +130,13 @@ class ImportUcitelPredmetCommand extends ContainerAwareCommand {
 
         try {
             while ($buffer = fgets($file)) {
-                $id = trim(substr($buffer, $first_line_rows[0]->getStart(), $first_line_rows[0]->getDlzka()));
-                $kod = trim(substr($buffer, $first_line_rows[1]->getStart(), $first_line_rows[1]->getDlzka()));
-                $stredisko = trim(substr($buffer, $first_line_rows[2]->getStart(), $first_line_rows[2]->getDlzka()));
-                $nazov = trim(substr($buffer, $first_line_rows[4]->getStart(), $first_line_rows[4]->getDlzka()));
-                $login = trim(substr($buffer, $first_line_rows[5]->getStart(), $first_line_rows[5]->getDlzka()));
-                $meno = trim(substr($buffer, $first_line_rows[6]->getStart(), $first_line_rows[6]->getDlzka()));
-                $hodnost = trim(substr($buffer, $first_line_rows[7]->getStart(), $first_line_rows[7]->getDlzka()));
+                $id = $stlpce[0]->extractData($buffer);
+                $kod = $stlpce[1]->extractData($buffer);
+                $stredisko = $stlpce[2]->extractData($buffer);
+                $nazov = $stlpce[4]->extractData($buffer);
+                $login = $stlpce[5]->extractData($buffer);
+                $meno = $stlpce[6]->extractData($buffer);
+                $hodnost = $stlpce[7]->extractData($buffer);
 
                 if (strlen($nazov) == 0 || strlen($login) == 0 || strlen($meno) == 0) {
                     continue;
@@ -207,6 +207,15 @@ class Stlpec {
 
     public function setDlzka($dlzka) {
         $this->dlzka = $dlzka;
+    }
+    
+    /**
+     * Vyber data stlpca z riadku
+     * @param string $line
+     * @return string hodnota stlpca
+     */
+    public function extractData($line) {
+        return trim(substr($line, $this->getStart(), $this->getDlzka()));
     }
 
     function __construct() {
