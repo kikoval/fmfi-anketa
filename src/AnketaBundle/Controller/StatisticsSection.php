@@ -38,7 +38,7 @@ class StatisticsSection extends ContainerAware {
         $result->season = $season;
         $result->subject = $subject;
         $result->teacher = $teacher;
-        $result->title = $subject->getName() . ' - ' . $teacher->getName();
+        $result->title = $subject->getCode() . ' ' . $subject->getName() . ' - ' . $teacher->getName();
         $result->questionsCategoryType = CategoryType::TEACHER_SUBJECT;
         $result->answersQuery = array('subject' => $subject->getId(), 'teacher' => $teacher->getId());
         $result->responsesQuery = array('season' => $season->getId(), 'subject' => $subject->getId(), 'teacher' => $teacher->getId(), 'studyProgram' => null);
@@ -54,7 +54,7 @@ class StatisticsSection extends ContainerAware {
         $result->setContainer($container);
         $result->season = $season;
         $result->subject = $subject;
-        $result->title = $subject->getName();
+        $result->title = $subject->getCode() . ' ' . $subject->getName();
         $subjectSeason = $em->getRepository('AnketaBundle:SubjectSeason')->findOneBy(array('subject' => $subject->getId(), 'season' => $season->getId()));
         if (isset($subjectSeason) && $subjectSeason->getStudentCountFaculty() !== null) {
             $scf = $subjectSeason->getStudentCountFaculty();
