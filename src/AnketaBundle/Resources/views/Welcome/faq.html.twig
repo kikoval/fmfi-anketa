@@ -55,28 +55,26 @@
     {% else %}
         <div class="faq-item">
             To, či sa vyplnením ankety niečo zmení, závisí v prvom rade od Vás - Vaša účasť na ankete je prvým, ale potrebným krokom.
-            Ako motivácia môže poslúžiť výsledok ankety na fakulte matematiky, fyziky a informatiky, kde anketa prebehla prvý raz minulý rok.
+            Ako motivácia môže poslúžiť výsledok ankety na Fakulte matematiky, fyziky a informatiky, kde anketa prebehla minulý rok.
             Po vyše 40% účasti študentov došlo k viacerým zmenám (napr. zmeny učiteľov, upravenie obsahov predmetov a pod.). Viac si môžte 
             prečítať v <a href="{{ asset('bundles/anketa/files/anketa-stanovisko-2010.pdf') }}">stanovisku vedenia
             k výsledkom ankety z FMFI</a>. Teda niečo sa dosiahnuť určite dá :)
         </div>
     {% endif %}
 
-    <h2 class="faq">Dokedy môžem hlasovať?</h2>
     {% if skratka_fakulty == 'FMFI' %}
+    <h2 class="faq">Dokedy môžem hlasovať?</h2>
         <div class="faq-item">
             Hlasovať je možné len do 15.1.2012 23:59:59.
         </div>
     {% else %}
-        <div class="faq-item">
-            Hlasovať je možné DOKEDY.
-        </div>
+        {# TODO zistit dokedy je otvorene hlasovanie! #}
     {% endif %}
 
     <h2 class="faq">Kto je za anketou?</h2>
         <div class="faq-item">
             <p>
-            Za anketou stojí študentský vývojový tím, viď <a href="http://svt.fmph.uniba.sk/">http://svt.fmph.uniba.sk/</a>. 
+            Anketu vytvoril <a href="http://svt.fmph.uniba.sk/">Študentský Vývojový Tím</a>{% if skratka_fakulty != 'FMFI' %} z FMFI{% endif %}.
             {% if skratka_fakulty == 'FMFI' %}
 
                 Ak sa chcete stať členom a prispieť tak k vývoju ankety a ďalších
@@ -114,14 +112,14 @@
         <p>
         Určite nám napíšte mail na adresu <a href="mailto:fmfi-anketa-users@googlegroups.com">fmfi-anketa-users@googlegroups.com</a>.
         </p>
+    {% if skratka_fakulty == 'FMFI' %}
         <p>
     Pre akékoľvek ďaľšie poznámky, pripomienky, kritiku, či slová vďaky neváhajte použiť 
-    {% if skratka_fakulty == 'FMFI' %}
-        <a href="http://www.facebook.com/FMFIanketa">našu oficiálnu Facebook stránku</a>
-    {% else %}
-        <a href="http://www.facebook.com/PRIFanketa">našu oficiálnu Facebook stránku</a>
-    {% endif %}.
+        <a href="http://www.facebook.com/FMFIanketa">našu oficiálnu Facebook stránku</a>.
         </p>
+    {% else %}
+        {# TODO vyrobit facebookove stranky #}
+    {% endif %}
         </div>
 </div>
 {% endblock %}
