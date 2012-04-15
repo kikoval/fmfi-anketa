@@ -8,7 +8,7 @@
 
 <a href="{{ path('answer_subject', {'subject_slug': subject.slug}) }}">&laquo; Späť na predmet</a>
 
-<h2>{{ subject.name }} - Chýbajúci učiteľ?</h2>
+<h2>{{ subject.name }} - Chyba v zozname učiteľov?</h2>
 
 <form method="POST" action="{{ path('assoc_teacher_with_subject_process', {'subject_slug': subject.slug}) }}">
 
@@ -17,6 +17,9 @@
 
 <p>My potom učiteľa ručne pridáme k predmetu <em>{{ subject.name }}</em>. (Môžete pripísať aj
 ľubovoľnú inú informáciu, ktorá nám pri tom pomôže.)</p>
+
+<p>Ak niektorý z učiteľov nikoho neučil, dajte nám vedieť a môžeme ho zo zoznamu odstrániť.
+</p>
 
 <div>
 <textarea id="note" name="note" cols="40" rows="6"></textarea>
