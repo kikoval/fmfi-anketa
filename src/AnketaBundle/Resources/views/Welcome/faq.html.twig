@@ -117,11 +117,13 @@
         Pre akékoľvek ďaľšie poznámky, pripomienky, kritiku, či slová vďaky neváhajte použiť 
         <a href="http://www.facebook.com/FMFIanketa">našu oficiálnu Facebook stránku</a>.
         </p>
-    {% else %}
+    {% elseif skratka_fakulty == 'PriF' %}
         <p>
         Pre akékoľvek ďaľšie poznámky, pripomienky, kritiku, či slová vďaky neváhajte použiť 
         <a href="http://www.facebook.com/PRIFanketa">našu oficiálnu Facebook stránku</a>.
         </p>
+    {% else %} 
+        {# ina fb page #}
     {% endif %}
         </div>
 </div>
