@@ -39,9 +39,19 @@ class SubjectIdentification implements SubjectIdentificationInterface
     private function transliterate($string)
     {
         $oldLocale = setlocale(LC_CTYPE, "0");
-        setlocale(LC_CTYPE, 'sk_SK.utf-8');
+        $newLocale = 'en_US.UTF-8';
+
+        $status = setlocale(LC_CTYPE, $newLocale);
         $result = iconv('UTF-8', 'ASCII//TRANSLIT', $string);
+        $test = iconv('UTF-8', 'ASCII//TRANSLIT', 'Žltučký kôň Üʿö');
         setlocale(LC_CTYPE, $oldLocale);
+
+        if ($status === FALSE) {
+            throw new \Exception("Nepodarilo sa setlocale($newLocale).");
+        }
+        if ($test !== 'Zltucky kon U?o') {
+            throw new \Exception('Transliteracia nefunguje.');
+        }
         return $result;
     }
     
