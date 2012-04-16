@@ -17,7 +17,8 @@ class AnonymizaciaController extends Controller {
             $em = $this->get('doctrine.orm.entity_manager');
             $user = $this->get('security.context')->getToken()->getUser();
             $season = $em->getRepository('AnketaBundle:Season')->getActiveSeason();
-            $user->forSeason($season)->setFinished(true);
+            $userSeason = $em->getRepository('AnketaBundle:UserSeason')->findOneBy(array('user' => $user->getId(), 'season' => $season->getId()));
+            $userSeason->setFinished(true);
             $em->persist($user);
             $em->getRepository('AnketaBundle\Entity\User')
                ->anonymizeAnswersByUser($user->getId(), $season);

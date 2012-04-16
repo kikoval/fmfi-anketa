@@ -212,7 +212,8 @@ class QuestionController extends Controller {
                 $em->persist($answer);
             }
 
-            $user->forSeason($season)->setParticipated(true);
+            $userSeason = $em->getRepository('AnketaBundle:UserSeason')->findOneBy(array('user' => $user->getId(), 'season' => $season->getId()));
+            $userSeason->setParticipated(true);
 
             $em->flush();
 
@@ -259,7 +260,8 @@ class QuestionController extends Controller {
                 $em->persist($answer);
             }
 
-            $user->forSeason($season)->setParticipated(true);
+            $userSeason = $em->getRepository('AnketaBundle:UserSeason')->findOneBy(array('user' => $user->getId(), 'season' => $season->getId()));
+            $userSeason->setParticipated(true);
 
             $em->flush();
 
@@ -305,7 +307,8 @@ class QuestionController extends Controller {
                 $em->persist($answer);
             }
 
-            $user->forSeason($season)->setParticipated(true);
+            $userSeason = $em->getRepository('AnketaBundle:UserSeason')->findOneBy(array('user' => $user->getId(), 'season' => $season->getId()));
+            $userSeason->setParticipated(true);
 
             $em->flush();
 
@@ -373,7 +376,8 @@ class QuestionController extends Controller {
                 $em->persist($answer);
             }
 
-            $user->forSeason($season)->setParticipated(true);
+            $userSeason = $em->getRepository('AnketaBundle:UserSeason')->findOneBy(array('user' => $user->getId(), 'season' => $season->getId()));
+            $userSeason->setParticipated(true);
 
             $em->flush();
 

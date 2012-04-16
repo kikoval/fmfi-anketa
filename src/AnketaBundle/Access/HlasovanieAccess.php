@@ -61,7 +61,7 @@ class HlasovanieAccess
     public function getUserSeason() {
         if ($this->userSeason === null && $this->getUser() !== null) {
             $activeSeason = $this->em->getRepository('AnketaBundle:Season')->getActiveSeason();
-            $this->userSeason = $this->getUser()->forSeason($activeSeason);
+            $this->userSeason = $this->em->getRepository('AnketaBundle:UserSeason')->findOneBy(array('user' => $this->getUser()->getId(), 'season' => $activeSeason->getId()));
         }
         return $this->userSeason;
     }
