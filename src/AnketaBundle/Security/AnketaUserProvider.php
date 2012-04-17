@@ -17,6 +17,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
+use Symfony\Component\HttpKernel\Log\LoggerInterface;
 use Doctrine\ORM\EntityManager;
 use AnketaBundle\Entity\User;
 use AnketaBundle\Entity\Season;
@@ -65,7 +66,10 @@ class AnketaUserProvider implements UserProviderInterface
     /** @var UserSourceInterface[] */
     private $perLoginUserSources;
 
-    public function __construct(EntityManager $em, array $perSeasonUserSources, array $perLoginUserSources)
+    /** @var LoggerInterface */
+    private $logger;
+
+    public function __construct(EntityManager $em, array $perSeasonUserSources, array $perLoginUserSources, LoggerInterface $logger = null)
     {
         $this->entityManager = $em;
         $this->userRepository = $em->getRepository('AnketaBundle:User');
@@ -75,6 +79,7 @@ class AnketaUserProvider implements UserProviderInterface
         $this->teacherRepository = $em->getRepository('AnketaBundle:Teacher');
         $this->perSeasonUserSources = $perSeasonUserSources;
         $this->perLoginUserSources = $perLoginUserSources;
+        $this->logger = $logger;
     }
 
     /**
@@ -84,19 +89,32 @@ class AnketaUserProvider implements UserProviderInterface
      * @throws UnsupportedUserException if the UserInstance given is not User
      */
     public function refreshUser(UserInterface $oldUser) {
+        if ($this->logger) {
+            $this->logger->debug(sprintf('refreshing user %s object %s', $oldUser->getUsername(), get_class($oldUser)));
+        }
         if (!($oldUser instanceof User)) {
             throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', get_class($oldUser)));
         }
         
+        if ($this->logger) {
+            $this->logger->debug('Searching in database');
+        }
         $user = $this->userRepository->findOneWithRolesByUserName($oldUser->getUserName());
 
         if ($user === null) {
+            if ($this->logger) {
+                $this->logger->debug('not found in database');
+            }
             throw new UsernameNotFoundException(sprintf("User %s not found in database!", $oldUser->getUserName()));
         }
         
         $user->setOrgUnits($oldUser->getOrgUnits());
         $this->loadUserInfo($user, false);
         
+        if ($this->logger) {
+              $this->logger->debug('Returning the user');
+        }
+
         return $user;
     }
 
@@ -141,17 +159,34 @@ class AnketaUserProvider implements UserProviderInterface
             $this->entityManager->persist($userSeason);
             
             foreach ($this->perSeasonUserSources as $userSource) {
-                $foundUser |= $userSource->load($userSeason);
+                $found = $userSource->load($userSeason);
+
+                if ($this->logger) {
+                    $this->logger->debug(sprintf('Per season user source %s returned %s',
+                        get_class($userSource), $found));
+                }
+
+                $foundUser |= $found;
             }
         }
         
         if ($firstTime) {
             foreach ($this->perLoginUserSources as $userSource) {
-                $foundUser |= $userSource->load($userSeason);
+                $found = $userSource->load($userSeason);
+
+                if ($this->logger) {
+                    $this->logger->debug(sprintf('Per login user source %s returned %s',
+                        get_class($userSource), $found));
+                }
+
+                $foundUser |= $found;
             }
         }
         
         if (!$foundUser) {
+            if ($this->logger) {
+                $this->logger->debug('User info not found in loadUserInfo');
+            }
             throw new UsernameNotFoundException(sprintf('User "%s" not found.', $user->getUserName()));
         }
         
@@ -175,5 +210,4 @@ class AnketaUserProvider implements UserProviderInterface
         return $class === 'AnketaBundle\Entity\User';
     }
 
-    
 }

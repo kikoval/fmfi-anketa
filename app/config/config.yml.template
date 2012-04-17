@@ -105,6 +105,7 @@ services:
             - ["@anketa.ais_user_source"]
             #- ["@anketa.demo_user_source"]
             - ["@anketa.ldap_user_source"]
+            - "@logger"
     anketa.ais_retriever:
         class: AnketaBundle\Integration\AISRetriever
         arguments:
