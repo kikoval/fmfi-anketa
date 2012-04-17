@@ -85,7 +85,7 @@ class AnketaUserProvider implements UserProviderInterface
      */
     public function refreshUser(UserInterface $oldUser) {
         if (!($oldUser instanceof User)) {
-            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', get_class($user)));
+            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', get_class($oldUser)));
         }
         
         $user = $this->userRepository->findOneWithRolesByUserName($oldUser->getUserName());
