@@ -150,8 +150,8 @@ class AnketaUserProvider implements UserProviderInterface
         $activeSeason = $this->seasonRepository->getActiveSeason();
         $userSeason = $this->userSeasonRepository->
                 findOneBy(array('user' => $user->getId(), 'season' => $activeSeason->getId()));
-        $foundUser = false;
-        
+        $foundUser = !$firstTime;
+
         if ($userSeason === null) {
             $userSeason = new UserSeason();
             $userSeason->setUser($user);
