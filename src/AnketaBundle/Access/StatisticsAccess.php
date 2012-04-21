@@ -116,7 +116,7 @@ class StatisticsAccess
      * @return boolean
      */
     public function commentsBlocked(Season $season) {
-        return !$this->user;
+        return !$this->getUser();
     }
 
     /**
