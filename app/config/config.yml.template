@@ -148,7 +148,7 @@ security:
     firewalls:
         main:
             pattern:    ^/.*
-            cosign:     true
+            cosign: { login_route: login }
             anonymous:  true
             switch_user: { role: ROLE_SUPER_ADMIN, parameter: _zmen_usera }
             logout:
