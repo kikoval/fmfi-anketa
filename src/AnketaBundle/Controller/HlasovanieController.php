@@ -15,6 +15,8 @@ class HlasovanieController extends Controller
         $access = $this->get('anketa.access.hlasovanie');
         if (!$access->isVotingOpen()) throw new AccessDeniedException();
 
+        if ($access->getUser() === null) throw new AccessDeniedException();
+
         if (!$access->userIsStudent()) {
             return $this->render('AnketaBundle:Hlasovanie:novote.html.twig');
         }
