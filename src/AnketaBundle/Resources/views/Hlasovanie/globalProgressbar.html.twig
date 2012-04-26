@@ -9,7 +9,12 @@
 {% if access.hlasovanie.isVotingOpen %}
 <p>Doteraz sa zúčastnilo <strong>{{ voters }} študentov</strong>,
 {{ anon }} z nich už hlasovanie ukončilo.
-Naším cieľom je dosiahnuť aspoň 50% účasť. Preto neváhajte a zapojte sa tiež!</p>
+{% if skratka_fakulty == 'FMFI' %}
+Naším cieľom je dosiahnuť aspoň 50% účasť. Preto neváhajte a zapojte sa tiež!
+{% else %}
+Neváhajte a zapojte sa tiež!
+{% endif %}
+</p>
 {% else %}
 <p>V ankete hlasovalo <strong>{{ voters }}</strong> študentov.</p>
 {% endif %}
