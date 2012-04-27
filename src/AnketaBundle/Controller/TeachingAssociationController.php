@@ -60,12 +60,13 @@ class TeachingAssociationController extends Controller
         $sender = $this->container->getParameter('mail_sender');
         $to = $this->container->getParameter('mail_dest_new_teaching_association');
         $body = $this->renderView('AnketaBundle:TeachingAssociation:email.txt.twig', $emailTpl);
+        $skratkaFakulty = $this->container->getParameter('skratka_fakulty');
 
        $this->get('mailer'); // DO NOT DELETE THIS LINE
        // it autoloads required things before Swift_Message can be used
 
         $message = \Swift_Message::newInstance()
-                        ->setSubject('FMFI ANKETA -- requested teacher')
+                        ->setSubject($skratkaFakulty . ' ANKETA -- requested teacher')
                         ->setFrom($sender)
                         ->setTo($to)
                         ->setBody($body);
