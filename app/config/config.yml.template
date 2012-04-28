@@ -29,6 +29,7 @@ framework:
     session:
         default_locale: %locale%
         lifetime:       3600
+        name: anketasessid_%skratka_fakulty%_%anketa_instance%
         auto_start:     true
 
 # Twig Configuration
