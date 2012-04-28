@@ -61,19 +61,33 @@ class LDAPRetriever {
         throw new \Exception('LDAP ' . $errno . ': ' . $error);
     }
     
+    private function fetchAttributes($entry) {
+        $attrs = array();
+        $attr = @ldap_first_attribute($this->linkId, $entry);
+        if ($attr === false) {
+            return $attrs;
+        }
+        while (($attr = @ldap_next_attribute($this->linkId, $entry)) !== false) {
+            $attrs[] = $attr;
+        }
+        return $attrs;
+    }
+    
     private function fetchEntry($entry, $attributes)
     {
         $data = array();
         foreach ($attributes as $attribute) {
+            $data[$attribute] = array();
+        }
+        
+        foreach ($this->fetchAttributes($entry) as $attribute) {
             $ldapValues = @ldap_get_values($this->linkId, $entry, $attribute);
-            $dataValues = array();
             if ($ldapValues === false) {
                 $this->throwException();
             }
             for ($i=0; $i < $ldapValues['count']; $i++) {
-                $dataValues[] = $ldapValues[$i];
+                $data[$attribute][] = $ldapValues[$i];
             }
-            $data[$attribute] = $dataValues;
         }
         return $data;
     }
