@@ -18,7 +18,7 @@ parameters:
         name: Farmaceutická fakulta
 
 framework:
-    trust_proxy_headers: true
+    trust_proxy_headers: false
 
     charset:       UTF-8
     csrf_protection: true
@@ -29,6 +29,7 @@ framework:
     session:
         default_locale: %locale%
         lifetime:       3600
+        name: anketasessid_%skratka_fakulty%_%anketa_instance%
         auto_start:     true
 
 # Twig Configuration
