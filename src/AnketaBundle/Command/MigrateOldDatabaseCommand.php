@@ -69,9 +69,9 @@ class MigrateOldDatabaseCommand extends ContainerAwareCommand {
             $this->migrateUsersRoles();
             $this->migrateSubjects();
             $this->migrateQuestionsCategoriesChoices();
-            $this->migrateAnswersUserSubjects();
             $this->migrateTeachersResponses();
-        } catch (Exception $e) {
+            $this->migrateAnswersUserSubjects();
+        } catch (\Exception $e) {
             $this->newDB->rollback();
             $this->output->writeln($e->getTraceAsString());
             throw $e;
@@ -124,7 +124,67 @@ class MigrateOldDatabaseCommand extends ContainerAwareCommand {
 
     // teacher, teachers_subjects, teachingassociation, response
     private function migrateTeachersResponses() {
-        //TODO
+        $teacherSubjectsInserted = 0;
+        $teacherSubjectsFound = 0;
+
+        $result = $this->oldDB->executeQuery("SELECT ts.*, s.code
+                                              FROM teachers_subjects ts
+                                              JOIN subject s ON (ts.subject_id = s.id)"
+        );
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            if (!$this->rowId('teacher', array('id' => $row['teacher_id']))) throw new \Exception('Teacher '.$row['id'].' '.$row['name']." not found!");
+            $subjectId = $this->rowId('subject', array('code' => $row['code']));
+            if ($subjectId === false) throw new \Exception("Subject ".$row['code']." was not imported!");
+            
+            if (!$this->rowId('teacherssubjects', array('subject_id' => $subjectId, 'teacher_id' => $row['teacher_id'], 'season_id' => $this->newSeasonId))) {
+                $this->newDB->insert('teacherssubjects', array(
+                    'subject_id' => $subjectId,
+                    'teacher_id' => $row['teacher_id'],
+                    'season_id' => $this->newSeasonId,
+                    'lecturer' => 0,
+                    'trainer' => 0,
+                ));
+                $teacherSubjectsInserted++;
+            } else {
+                $teacherSubjectsFound++;
+            }
+        }
+        $this->output->writeln('teacherSubjects: '.$teacherSubjectsInserted.' inserted | '.$teacherSubjectsFound.' found');
+
+
+        $responsesInserted = 0;
+        $responsesFound = 0;
+
+        $result = $this->oldDB->executeQuery("SELECT r.*, s.code
+                                              FROM response r
+                                              JOIN subject s ON (r.subject_id = s.id)"
+        );
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            if ($row['teacher_id'] !== null) if (!$this->rowId('teacher', array('id' => $row['teacher_id']))) throw new \Exception('Teacher '.$row['teacher_id'].' not found!');
+            $subjectId = $this->rowId('subject', array('code' => $row['code']));
+            if ($subjectId === false) throw new \Exception("Subject ".$row['code']." was not imported!");
+            if ($row['author_text'] === null) {
+                $row['author_text'] = $this->oldDB->fetchColumn("SELECT displayName FROM `user` WHERE userName = ? LIMIT 1", array($row['author_login']),0);
+            }
+
+            if (!$this->rowId('response', array('comment' => $row['comment'], 'season_id' => $this->newSeasonId))) {
+                $this->newDB->insert('response', array(
+                    'subject_id' => $subjectId,
+                    'teacher_id' => $row['teacher_id'],
+                    'season_id' => $this->newSeasonId,
+                    'studyProgram_id' => null,
+                    'question_id' => $row['question_id'],
+                    'comment' => $row['comment'],
+                    'author_text' => $row['author_text'],
+                    'author_login' => $row['author_login'],
+                    'association' => null,
+                ));
+                $responsesInserted++;
+            } else {
+                $responsesFound++;
+            }
+        }
+        $this->output->writeln('responses: '.$responsesInserted.' inserted | '.$responsesFound.' found');
     }
 
     // subject
@@ -168,7 +228,89 @@ class MigrateOldDatabaseCommand extends ContainerAwareCommand {
 
     // users_subjects, answer
     private function migrateAnswersUserSubjects() {
-        //TODO
+        $userSubjectsInserted = 0;
+        $userSubjectsFound = 0;
+
+        $result = $this->oldDB->executeQuery("SELECT u.username, s.code
+                                              FROM `users_subjects` us
+                                              JOIN `user` u ON (u.id=us.user_id)
+                                              JOIN `subject` s ON (s.id=us.subject_id)"
+        );
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $userId = $this->getNewUserId($row['username']);
+            $subjectId = $this->rowId('subject', array('code' => $row['code']));
+            if ($userId === false) throw new \Exception("User ".$row['username']." was not imported!");
+            if ($subjectId === false) throw new \Exception("Subject ".$row['code']." was not imported!");
+            
+            if (!$this->rowId('userssubjects', array('subject_id' => $subjectId, 'user_id' => $userId, 'season_id' => $this->newSeasonId))) {
+                $this->newDB->insert('userssubjects', array(
+                    'user_id' => $userId,
+                    'subject_id' => $subjectId,
+                    'season_id' => $this->newSeasonId,
+                    'studyProgram_id' => null,
+                ));
+                $userSubjectsInserted++;
+            } else {
+                $userSubjectsFound++;
+            }
+        }
+
+        $this->output->writeln('userssubjects: '.$userSubjectsInserted.' inserted | '.$userSubjectsFound.' found');
+
+
+        if ($this->rowId('answer', array('season_id' => $this->newSeasonId))) {
+            $this->output->writeln('answers already imported!');
+            return;
+        }
+
+        $answersInserted = 0;
+        $this->oldDB->getWrappedConnection()->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, false);
+        $result = $this->oldDB->executeQuery("SELECT a.*, s.code, q.question, q.description, ch.choice
+                                              FROM `answer` a
+                                              LEFT JOIN `subject` s ON (s.id=a.subject_id)
+                                              JOIN `question` q ON (a.question_id=q.id)
+                                              LEFT JOIN `choice` ch ON (a.option_id=ch.id)"
+        );
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            if ($row['subject_id'] !== null) {
+                $subjectId = $this->rowId('subject', array('code' => $row['code']));
+                if ($subjectId === false) throw new \Exception("Subject ".$row['code']." was not imported!");
+            } else $subjectId = null;
+            if ($row['teacher_id'] !== null) if (!$this->rowId('teacher', array('id' => $row['teacher_id']))) throw new \Exception('Teacher '.$row['teacher_id'].' not found!');
+            
+            $questionId = $this->rowId('question', array(
+                'season_id' => $this->newSeasonId,
+                'question' => $row['question'],
+                'description' => $row['description']
+            ));
+            if ($questionId === false) throw new \Exception("Question \"".$row['question']."\" was not imported!");
+            
+            if ($row['option_id']) {
+                $optionId = $this->rowId('choice', array(
+                    'question_id' => $questionId,
+                    'choice' => $row['choice'],
+                ));
+                if ($questionId === false) throw new \Exception("Option \"".$row['option_id']."\" was not imported!");
+            } else $optionId = null;
+
+            $this->newDB->insert('answer', array(
+                'question_id' => $questionId,
+                'subject_id' => $subjectId,
+                'season_id' => $this->newSeasonId,
+                'studyProgram_id' => null,
+                'option_id' => $questionId,
+                'teacher_id' => $row['teacher_id'],
+                'author_id' => null,
+                'evaluation' => $row['evaluation'],
+                'comment' => $row['comment'],
+                'attended' => $row['attended'],
+                'inappropriate' => $row['inappropriate'],
+            ));
+            $answersInserted++;
+        }
+
+        $this->output->writeln('answers: '.$answersInserted.' inserted');
+
     }
 
     // question, choice, category
