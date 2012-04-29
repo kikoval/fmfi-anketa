@@ -173,7 +173,52 @@ class MigrateOldDatabaseCommand extends ContainerAwareCommand {
 
     // question, choice, category
     private function migrateQuestionsCategoriesChoices() {
-        
+        $questionsInserted = 0;
+        $questionsFound = 0;
+
+        $categoryMapping = array(
+            1 => 1,
+            2 => 2,
+            3 => 3,
+            4 => 4,
+            5 => 5,
+            6 => 5
+        );
+
+        $result = $this->oldDB->executeQuery("SELECT * FROM `question` WHERE season_id = ?", array($this->oldSeasonId));
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $questionId = $this->rowId('question', array(
+                'season_id' => $this->newSeasonId,
+                'question' => $row['question'],
+                'description' => $row['description']
+            ));
+            if ($questionId === false) {
+                $this->newDB->insert('question', array(
+                    'season_id' => $this->newSeasonId,
+                    'category_id' => $categoryMapping[$row['category_id']],
+                    'position' => $row['position'],
+                    'title' => $row['title'],
+                    'question' => $row['question'],
+                    'description' => $row['description'],
+                    'stars' => $row['stars'],
+                    'hasComment' => $row['hasComment'],
+                ));
+                $questionsInserted++;
+                $questionId = $this->newDB->lastInsertId();
+
+                $result2 = $this->oldDB->executeQuery("SELECT * FROM `choice` WHERE question_id = ?", array($row['id']));
+                while ($choice = $result2->fetch(PDO::FETCH_ASSOC)) {
+                    unset($choice['id']);
+                    $choice['question_id'] = $questionId;
+                    $this->newDB->insert('choice', $choice);
+                }
+            } else {
+                $questionsFound++;
+            }
+
+        }
+
+        $this->output->writeln('questions: '.$questionsInserted.' inserted | '.$questionsFound.' found');
     }
 
     private function getNewUserId($login) {
@@ -186,8 +231,11 @@ class MigrateOldDatabaseCommand extends ContainerAwareCommand {
 
         foreach ($data as $column => $value)
         {
-            $conditions[] = $column . " = ?";
-            $values[] = $value;
+            if ($value === null) $conditions[] = $column . " IS NULL";
+            else {
+                $conditions[] = $column . " = ?";
+                $values[] = $value;
+            }
         }
 
         $query = "SELECT id FROM `".$table."` WHERE ".  implode(" AND ", $conditions);
