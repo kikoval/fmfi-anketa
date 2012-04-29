@@ -73,6 +73,7 @@ class MigrateOldDatabaseCommand extends ContainerAwareCommand {
             $this->migrateTeachersResponses();
         } catch (Exception $e) {
             $this->newDB->rollback();
+            $this->output->writeln($e->getTraceAsString());
             throw $e;
         }
         $this->newDB->commit();
@@ -102,7 +103,8 @@ class MigrateOldDatabaseCommand extends ContainerAwareCommand {
             } else {
                 $usersFound++;
             }
-            if (!$this->rowExists('userseason', array('user_id' => $userId, 'season_id' => $this->newSeasonId))) {
+
+            if (!$this->rowId('userseason', array('user_id' => $userId, 'season_id' => $this->newSeasonId))) {
                 $this->newDB->insert('userseason', array(
                     'user_id' => $userId,
                     'season_id' => $this->newSeasonId,
@@ -127,7 +129,41 @@ class MigrateOldDatabaseCommand extends ContainerAwareCommand {
 
     // subject
     private function migrateSubjects() {
-        //TODO
+        $subjectsInserted = 0;
+        $subjectsFound = 0;
+        $subjectSeasonsInserted = 0;
+        $subjectSeasonsFound = 0;
+
+        $result = $this->oldDB->executeQuery("SELECT * FROM `subject`");
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $subjectId = $this->rowId('subject', array('code' => $row['code']));
+            if ($subjectId === false) {
+                $this->newDB->insert('subject', array(
+                    'code' => $row['code'],
+                    'name' => $row['name'],
+                    'slug' => $row['code']
+                ));
+                $subjectsInserted++;
+                $subjectId = $this->newDB->lastInsertId();
+            } else {
+                $subjectsFound++;
+            }
+              
+            if (!$this->rowId('subjectseason', array('subject_id' => $subjectId, 'season_id' => $this->newSeasonId))) {
+                $this->newDB->insert('subjectseason', array(
+                    'subject_id' => $subjectId,
+                    'season_id' => $this->newSeasonId,
+                    'studentCountFaculty' => null,
+                    'studentCountAll' => null,
+                ));
+                $subjectSeasonsInserted++;
+            } else {
+                $subjectSeasonsFound++;
+            }
+        }
+
+        $this->output->writeln('subjects: '.$subjectsInserted.' inserted | '.$subjectsFound.' found');
+        $this->output->writeln('subjectseasons: '.$subjectSeasonsInserted.' inserted | '.$subjectSeasonsFound.' found');
     }
 
     // users_subjects, answer
@@ -137,14 +173,14 @@ class MigrateOldDatabaseCommand extends ContainerAwareCommand {
 
     // question, choice, category
     private function migrateQuestionsCategoriesChoices() {
-        //TODO
+        
     }
 
     private function getNewUserId($login) {
         return $this->newDB->fetchColumn("SELECT id FROM `user` WHERE userName = ? LIMIT 1", array($login),0);
     }
 
-    private function rowExists($table, $data) {
+    private function rowId($table, $data) {
         $conditions = array();
         $values = array();
 
@@ -154,10 +190,10 @@ class MigrateOldDatabaseCommand extends ContainerAwareCommand {
             $values[] = $value;
         }
 
-        $query = "SELECT * FROM `".$table."` WHERE ".  implode(" AND ", $conditions);
-        $result = $this->newDB->fetchArray($query, $values);
-        if ($result !== false) $result = true;
-        return $result;
+        $query = "SELECT id FROM `".$table."` WHERE ".  implode(" AND ", $conditions);
+        $result = $this->newDB->fetchAssoc($query, $values);
+        if ($result === false) return $result;
+        return $result['id'];
     }
 
 }
