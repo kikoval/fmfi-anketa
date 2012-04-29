@@ -31,6 +31,12 @@ class Category {
     protected $type;
 
     /**
+     * Subcategory of category, 
+     * @ORM\Column(type="string", unique="true")
+     */
+    protected $specification;
+    
+    /**
      * Describes the subcategory, i.e. School properties/Food for students
      * If no subcategories are needed, it's the same as main category
      * @ORM\Column(type="string")
@@ -45,10 +51,11 @@ class Category {
      */
     protected $questions;
 
-    public function __construct($type, $description = null) {
+    public function __construct($type, $specification, $description = null) {
         $this->questions = new ArrayCollection();
         $this->setType($type);
         $this->setDescription($description);
+        $this->setSpecification($specification);
         // viac ako 100 otazok dufam nikdy nebudeme zobrazovat na 1 stranke
         $this->position = 100;
     }
@@ -110,5 +117,14 @@ class Category {
     public function getQuestionsCount() {
         return $this->questions->count();
     }
+    
+    public function getSpecification() {
+        return $this->specification;
+    }
+
+    public function setSpecification($specification) {
+        $this->specification = $specification;
+    }
+
 
 }

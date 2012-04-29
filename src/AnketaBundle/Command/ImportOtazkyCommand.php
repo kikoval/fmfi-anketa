@@ -39,10 +39,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class ImportOtazkyCommand extends ContainerAwareCommand implements ContainerAwareInterface {
 
-private $container;
-function setContainer(ContainerInterface $container = null) {
-    $this->container = $container;
-}
+    private $container;
+
+    function setContainer(ContainerInterface $container = null) {
+        $this->container = $container;
+    }
 
     protected function configure() {
         //parent::configure();
@@ -52,7 +53,7 @@ function setContainer(ContainerInterface $container = null) {
                 ->setDescription('Importuj otazky z yaml')
                 ->addArgument('file', InputArgument::REQUIRED)
                 ->addOption('duplicates', 'c', InputOption::VALUE_NONE, 'Checks for Duplicate Categories', null)
-                ->addOption('season', null, InputOption::VALUE_OPTIONAL, 'Season to use', null)
+                ->addOption('season', 'd', InputOption::VALUE_OPTIONAL, 'Season to use', null)
         ;
     }
 
@@ -81,17 +82,16 @@ function setContainer(ContainerInterface $container = null) {
                 $output->writeln("<error>V databaze sa nenasla aktivna Season</error>");
                 return;
             }
-        }
-        else {
+        } else {
             $season = $seasonRepository->findOneBy(array('slug' => $seasonSlug));
             if ($season == null) {
-                $output->writeln("<error>V databaze sa nenasla Season so slug " . $seasonSlug. "</error>");
+                $output->writeln("<error>V databaze sa nenasla Season so slug " . $seasonSlug . "</error>");
                 return;
             }
         }
 
         $input_array = Yaml::parse($filename);
-        
+
         // checkDuplicates
         if ($checkDuplicatesOption != null) {
             $this->checkDuplicates($input_array, $manager);
@@ -103,14 +103,14 @@ function setContainer(ContainerInterface $container = null) {
         // ass_array je pomocne asociativne pole pre referenciu Category objektov
         $ass_array = array();
         foreach ($categories as $category) {
-            $ass_array = array_merge($ass_array, $this->processCategory($category, $manager));
+            $this->processCategory($category, $manager);
         }
 
         // spracuj otazky
         $questions = $input_array["otazky"];
         $questionPos = 0;
         foreach ($questions as $question) {
-            $this->processQuestion($question, $manager, $ass_array, $season, $questionPos);
+            $this->processQuestion($question, $manager, $season, $questionPos);
             $questionPos++;
         }
 
@@ -126,14 +126,21 @@ function setContainer(ContainerInterface $container = null) {
             'studijnyprogram' => CategoryType::STUDY_PROGRAMME,
         );
 
-        $category = new Category($sectionIdMap[$import['kategoria']], $import["popis"]);
+        $category = new Category($sectionIdMap[$import['kategoria']], $import['id'], $import["popis"]);
 
-        $manager->persist($category);
-        return array($import["id"] => $category);
+        $categoryRepository = $manager->getRepository('AnketaBundle\Entity\Category');
+        $objekt = $categoryRepository->findOneBy(
+                array('specification' => $import['id']));
+        
+        if ($objekt == null) {
+            $manager->persist($category);
+        } else {
+            $spec = $import['id'];
+            echo "Kategoria s unique indexom $spec  sa uz v databaze nachadza.\n";
+        }
     }
 
-    private function processQuestion(array $import, EntityManager $manager,
-            array $categories, Season $season, $questionPos) {
+    private function processQuestion(array $import, EntityManager $manager, Season $season, $questionPos) {
 
         // hlupy test, otazky su este zle navrhnute
         if ($import["text"] != '') {
@@ -147,10 +154,12 @@ function setContainer(ContainerInterface $container = null) {
         if (array_key_exists("popis", $import)) {
             $question->setDescription($import["popis"]);
         }
+        
+        $categoryRepository = $manager->getRepository('AnketaBundle\Entity\Category');
+        $category = $categoryRepository->findOneBy(
+                array('specification' => $import['kategoria']));
 
-        $kat = $import["kategoria"];
-
-        $question->setCategory($categories[$kat]);
+        $question->setCategory($category);
 
         if ($import["komentar"] == 'No') {
             $question->setHasComment(false);
@@ -198,8 +207,8 @@ function setContainer(ContainerInterface $container = null) {
             $kat = $sectionIdMap[$category['kategoria']];
             $typ = $category["popis"];
             $objekt = $categoryRepository->findOneBy(
-                            array('type' => $kat,
-                                'description' => $typ));
+                    array('type' => $kat,
+                        'description' => $typ));
             if ($objekt == null) {
                 echo 'null';
             } else {
@@ -207,4 +216,5 @@ function setContainer(ContainerInterface $container = null) {
             }
         }
     }
+
 }
