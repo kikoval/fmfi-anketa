@@ -55,7 +55,7 @@ class DepartmentRepository extends EntityRepository {
         // TODO vyhodit
         $em = $this->getEntityManager();
         $query = $em->createQuery("SELECT d
-                           FROM AnketaBundle\\Entity\\Teacher t,
+                           FROM AnketaBundle\\Entity\\User t,
                            AnketaBundle\\Entity\\Department d
                            WHERE t.login = :login
                            AND t.department = d

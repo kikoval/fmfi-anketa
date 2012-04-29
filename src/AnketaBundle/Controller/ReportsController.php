@@ -9,7 +9,6 @@ use AnketaBundle\Entity\Season;
 use AnketaBundle\Entity\Subject;
 use AnketaBundle\Entity\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use AnketaBundle\Entity\Teacher;
 
 class ReportsController extends Controller {
 

@@ -40,7 +40,7 @@ class TeachingAssociation {
     protected $subject;
     
     /**
-     * @ORM\ManyToOne(targetEntity="Teacher")
+     * @ORM\ManyToOne(targetEntity="User")
      *
      * @var Teacher $teacher
      */

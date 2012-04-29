@@ -17,7 +17,6 @@ use AnketaBundle\Entity\Question;
 use AnketaBundle\Entity\Option;
 use AnketaBundle\Entity\Category;
 use AnketaBundle\Entity\Answer;
-use AnketaBundle\Entity\Teacher;
 use AnketaBundle\Entity\Subject;
 use AnketaBundle\Entity\User;
 use AnketaBundle\Entity\Role;
@@ -112,9 +111,6 @@ class FixtureLoader implements FixtureInterface {
         $manager->persist($season);
         
         // create teacher + subject
-        $teacher1 = new Teacher('Janko', 'Hraško', 'RNDr. Janko Hraško, PhD.', 'hrasko1');
-        $teacher2 = new Teacher('Jožko', 'Mrkvička', 'Mgr. Jožko Mrkvička', 'mrkvicka47');
-        $teacher3 = new Teacher('James', 'Burton', 'Mgr. Art. James Burton', 'burton42');
 
 
         $sub1 = new Subject('Metalyza');

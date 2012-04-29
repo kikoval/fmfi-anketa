@@ -13,7 +13,6 @@ namespace AnketaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\EntityRepository;
-use AnketaBundle\Entity\Teacher;
 use AnketaBundle\Entity\Subject;
 use AnketaBundle\Entity\User;
 

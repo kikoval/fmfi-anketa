@@ -19,6 +19,28 @@ class User implements UserInterface {
     protected $id;
 
     /**
+     * @ORM\Column(type="string")
+     */
+    protected $givenName;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    protected $familyName;
+   /**
+     * @ORM\Column(type="string", nullable="true", unique="true")
+     */
+    protected $login;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="Department")
+     * @var \AnketaBundle\Entity\Department
+     * @deprecated Docasny hack, chceme priradovat katedru k userom,
+     * ale najprv treba zmigrovat ucitelov do userov (je tam par corner-cases)
+     */
+    protected $department;
+    
+    /**
      * @ORM\Column(type="string", unique=true)
      */
     protected $userName;
@@ -196,4 +218,45 @@ class User implements UserInterface {
     {
         return $this->userSeasons;
     }
+
+        public function getGivenName() {
+        return $this->givenName;
+    }
+
+    public function setGivenName($givenName) {
+        $this->givenName = $givenName;
+    }
+
+    public function getFamilyName() {
+        return $this->familyName;
+    }
+
+    public function setFamilyName($familyName) {
+        $this->familyName = $familyName;
+    }
+
+    public function getFormattedName() {
+        if ($this->getDisplayName() === null) {
+            return $this->getName();
+        }
+        return $this->getDisplayName();
+    }
+
+    public function getLogin() {
+        return $this->login;
+    }
+
+    public function setLogin($login) {
+        $this->login = $login;
+    }
+    
+    /**
+     * @deprecated Docasny hack, chceme priradovat katedru k userom,
+     * ale najprv treba zmigrovat ucitelov do userov (je tam par corner-cases)
+     * @return \AnketaBundle\Entity\Department
+     */
+    public function getDepartment() {
+        return $this->department;
+    }
+    
 }

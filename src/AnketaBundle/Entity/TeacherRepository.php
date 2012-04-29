@@ -20,7 +20,7 @@ use Doctrine\ORM\EntityRepository;
 class TeacherRepository extends EntityRepository {
     
     public function getTeachersForSubject($subject, $season) {
-        $dql = 'SELECT t FROM AnketaBundle\Entity\Teacher t, ' .
+        $dql = 'SELECT t FROM AnketaBundle\Entity\User t, ' .
                   'AnketaBundle\Entity\TeachersSubjects ts WHERE t = ts.teacher ' .
                   ' AND ts.subject = :subject ' .
                   ' AND ts.season = :season ' .
@@ -33,7 +33,7 @@ class TeacherRepository extends EntityRepository {
     }
     
     public function getTeachersForSubjectWithAnswers($subject, $season) {
-        $dql = 'SELECT t FROM AnketaBundle\Entity\Teacher t, ' .
+        $dql = 'SELECT t FROM AnketaBundle\Entity\User t, ' .
                   'AnketaBundle\Entity\TeachersSubjects ts, ' .
                   'AnketaBundle\Entity\Answer a ' .
                   'WHERE t = ts.teacher ' .
@@ -56,7 +56,7 @@ class TeacherRepository extends EntityRepository {
         $dql = 'SELECT DISTINCT t FROM AnketaBundle\Entity\UsersSubjects us, ' .
                 'AnketaBundle\Entity\Subject s, ' .
                 'AnketaBundle\Entity\TeachersSubjects ts, ' .
-                'AnketaBundle\Entity\Teacher t, ' .
+                'AnketaBundle\Entity\User t, ' .
                 'AnketaBundle\Entity\Answer a ' .
                 'WHERE us.subject = s ' .
                 'AND ts.subject = s ' .
@@ -74,7 +74,7 @@ class TeacherRepository extends EntityRepository {
 
     public function getTeachersForDepartment($department, $season) {
         $dql = 'SELECT DISTINCT t FROM AnketaBundle\Entity\Department d, ' .
-                'AnketaBundle\Entity\Teacher t, ' .
+                'AnketaBundle\Entity\User t, ' .
                 'AnketaBundle\Entity\Answer a ' .
                 'WHERE d = t.department ' .
                 'AND a.teacher = t ' .

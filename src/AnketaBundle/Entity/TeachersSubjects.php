@@ -16,7 +16,7 @@ class TeachersSubjects {
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Teacher")
+     * @ORM\ManyToOne(targetEntity="User")
      *
      * @var Teacher $teacher
      */
