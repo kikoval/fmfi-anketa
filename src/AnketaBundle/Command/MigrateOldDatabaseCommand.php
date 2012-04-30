@@ -296,6 +296,7 @@ class MigrateOldDatabaseCommand extends ContainerAwareCommand {
             } else $optionId = null;
 
             $this->newDB->insert('Answer', array(
+                'id' => $row['id'],
                 'question_id' => $questionId,
                 'subject_id' => $subjectId,
                 'season_id' => $this->newSeasonId,
