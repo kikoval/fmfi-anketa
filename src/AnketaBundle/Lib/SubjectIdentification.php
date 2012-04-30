@@ -57,8 +57,9 @@ class SubjectIdentification implements SubjectIdentificationInterface
     private function slugify($string)
     {
         $slug = $this->transliterate($string);
-        $slug = preg_replace('@[^a-zA-Z0-9_]@', '-', $slug);
+        $slug = preg_replace('@[^a-zA-Z0-9_/]@', '-', $slug);
         $slug = preg_replace('@-+@', '-', $slug);
+        $slug = preg_replace('@/@', '--', $slug);
         $slug = trim($slug, '-');
         return $slug;
     }
