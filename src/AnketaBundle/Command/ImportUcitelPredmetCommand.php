@@ -119,7 +119,12 @@ class ImportUcitelPredmetCommand extends ContainerAwareCommand {
                     INSERT INTO Teacher (displayName, login) 
                     VALUES (:displayName, :login) 
                     ON DUPLICATE KEY UPDATE login=login");
-        
+
+        $insertUser = $conn->prepare("
+                    INSERT INTO User (id, displayName, userName) 
+                    VALUES (:id, :displayName, :login) 
+		    ON DUPLICATE KEY UPDATE userName=userName");
+
         $insertSubject = $conn->prepare("
                     INSERT INTO Subject (code, name, slug)
                     VALUES (:code, :name, :slug)
@@ -164,6 +169,13 @@ class ImportUcitelPredmetCommand extends ContainerAwareCommand {
                 $insertTeacher->bindValue('displayName', $meno);
                 $insertTeacher->bindValue('login', $login);
                 $insertTeacher->execute();
+
+		$faggot = $conn->lastInsertId();
+
+		$insertUser->bindValue('id', $faggot);
+                $insertUser->bindValue('login', $login);
+		$insertUser->bindValue('displayName',$meno);
+                $insertUser->execute();
 
                 $insertSubject->bindValue('code', $kod);
                 $insertSubject->bindValue('name', $nazov);
