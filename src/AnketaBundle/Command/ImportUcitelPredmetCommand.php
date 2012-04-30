@@ -141,6 +141,7 @@ class ImportUcitelPredmetCommand extends ContainerAwareCommand {
                 $id = $stlpce[0]->extractData($buffer);
                 $aisKod = $stlpce[1]->extractData($buffer);
                 $aisStredisko = $stlpce[2]->extractData($buffer);
+                $aisPopisRokVzniku = $stlpce[3]->extractData($buffer);
                 $aisNazov = $stlpce[4]->extractData($buffer);
                 $login = $stlpce[5]->extractData($buffer);
                 $meno = $stlpce[6]->extractData($buffer);
@@ -150,7 +151,9 @@ class ImportUcitelPredmetCommand extends ContainerAwareCommand {
                     continue;
                 }
 
-                $props = $subjectIdentification->identify($aisStredisko.'/'.$aisKod, $aisNazov);
+                $aisRokVzniku = substr($aisPopisRokVzniku, 2, 2);
+                $aisDlhyKod = $aisStredisko . '/' . $aisKod . '/' . $aisRokVzniku;
+                $props = $subjectIdentification->identify($aisDlhyKod, $aisNazov);
                 $kod = $props['code'];
                 $nazov = $props['name'];
                 $slug = $props['slug'];
