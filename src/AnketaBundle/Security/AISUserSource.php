@@ -68,7 +68,8 @@ class AISUserSource implements UserSourceInterface
     private $subjectIdentification;
 
     public function __construct(Connection $dbConn, EntityManager $em, AISRetriever $aisRetriever,
-                                array $semestre, $loadAuth, LoggerInterface $logger = null)
+            array $semestre, $loadAuth, SubjectIdentificationInterface $subjectIdentification,
+            LoggerInterface $logger = null)
     {
         $this->dbConn = $dbConn;
         $this->entityManager = $em;
@@ -79,7 +80,7 @@ class AISUserSource implements UserSourceInterface
         $this->semestre = $semestre;
         $this->loadAuth = $loadAuth;
         $this->logger = $logger;
-        $this->subjectIdentification = new SubjectIdentification();   // TODO service
+        $this->subjectIdentification = $subjectIdentification;
     }
 
     public function load(UserSeason $userSeason)

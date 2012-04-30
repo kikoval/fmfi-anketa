@@ -19,7 +19,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use AnketaBundle\Entity\Season;
 use AnketaBundle\Entity\SeasonRepository;
-use AnketaBundle\Lib\SubjectIdentification;
+use AnketaBundle\Lib\SubjectIdentificationInterface;
 
 /**
  * Class functioning as command/task for importing teachers, subjects,
@@ -54,7 +54,7 @@ class ImportUcitelPredmetCommand extends ContainerAwareCommand {
     protected function execute(InputInterface $input, OutputInterface $output) {
         $manager = $this->getContainer()->get('doctrine')->getEntityManager();
         
-        $subjectIdentification = new SubjectIdentification();   // TODO service
+        $subjectIdentification = $this->getContainer()->get('anketa.subject_identification');
         
         $seasonSlug = $input->getOption('season');
 

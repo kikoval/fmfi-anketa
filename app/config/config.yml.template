@@ -123,6 +123,7 @@ services:
             - "@anketa.ais_retriever"
             - [["2011/2012", "Z"]] # brat iba tieto semestre
             - Yes # pouzit AIS ako zdroj opravneni?
+            - "@anketa.subject_identification"
             - "@logger"
     anketa.ldap_retriever:
         class: AnketaBundle\Integration\LDAPRetriever
@@ -139,6 +140,9 @@ services:
         arguments:
             - "@doctrine.orm.entity_manager"
             - ["FMFI"]
+    anketa.subject_identification:
+        class: AnketaBundle\Lib\SubjectIdentification
+        # class: AnketaBundle\Lib\OldPriFSubjectIdentification # Pre PriF instanciu
     
 security:
     factories:

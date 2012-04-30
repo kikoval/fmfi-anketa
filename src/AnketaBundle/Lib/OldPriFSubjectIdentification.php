@@ -10,16 +10,17 @@
 
 namespace AnketaBundle\Lib;
 
-class SubjectIdentification implements SubjectIdentificationInterface
+class OldPriFSubjectIdentification implements SubjectIdentificationInterface
 {
     
     /**
      * {@inheritdoc}
      */
     public function identify($longCode, $subjectName) {
-        $faculty = $this->getFaculty($longCode);
+        $mediumCode = $this->getMediumCode($longCode);
+        $faculty = $this->getFaculty($mediumCode);
         if ($faculty == 'FMFI') {
-            $shortCode = $this->getShortCode($longCode);
+            $shortCode = $this->getShortCode($mediumCode);
             return array(
                 'code' => $shortCode,
                 'name' => $subjectName,
@@ -28,9 +29,9 @@ class SubjectIdentification implements SubjectIdentificationInterface
         }
         else {
             return array(
-                'code' => $longCode,
+                'code' => $mediumCode,
                 'name' => $subjectName,
-                'slug' => $this->slugify($longCode),
+                'slug' => $this->slugify($mediumCode . '-' . $subjectName),
             );
         }
     }
@@ -69,6 +70,15 @@ class SubjectIdentification implements SubjectIdentificationInterface
         return $parts[0];
     }
     
+    private function getMediumCode($longCode)
+    {
+        // Ozajstny "dlhy kod" je (aspon na FMFI) tvaru "FMFI.KI/1-INF-150/01",
+        // ale na PriF ankete sme este nevedeli ako generovat uplne dlhe kody
+        // z importu z AISu, preto tam docasne pouzivame kody bez poslednej casti
+        // (roku vzniku predmetu)
+        return preg_replace('@^([^/]*/[^/]*).*$@', '\1', $longCode);
+    }
+
     private function getShortCode($longCode)
     {
         $matches = array();
