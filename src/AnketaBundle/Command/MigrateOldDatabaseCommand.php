@@ -83,7 +83,7 @@ class MigrateOldDatabaseCommand extends ContainerAwareCommand {
     private function migrateUsersRoles() {
         // v starej DB su dve role, z toho AIS_STUDENT ma id = 2
         $result = $this->oldDB->executeQuery("SELECT u.*, MAX(ur.role_id)-1 as isStudent
-                                              FROM `user` u
+                                              FROM `User` u
                                               JOIN `users_roles` ur ON (u.id = ur.user_id)
                                               GROUP BY u.id");
         $usersInserted = 0;
@@ -94,7 +94,7 @@ class MigrateOldDatabaseCommand extends ContainerAwareCommand {
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             $userId = $this->getNewUserId($row['userName']);
             if ($userId === false) {
-                $this->newDB->insert('user', array(
+                $this->newDB->insert('User', array(
                     'userName' => $row['userName'],
                     'displayName' => $row['displayName']
                 ));
@@ -104,8 +104,8 @@ class MigrateOldDatabaseCommand extends ContainerAwareCommand {
                 $usersFound++;
             }
 
-            if (!$this->rowId('userseason', array('user_id' => $userId, 'season_id' => $this->newSeasonId))) {
-                $this->newDB->insert('userseason', array(
+            if (!$this->rowId('UserSeason', array('user_id' => $userId, 'season_id' => $this->newSeasonId))) {
+                $this->newDB->insert('UserSeason', array(
                     'user_id' => $userId,
                     'season_id' => $this->newSeasonId,
                     'participated' => $row['participated'],
@@ -132,12 +132,12 @@ class MigrateOldDatabaseCommand extends ContainerAwareCommand {
                                               JOIN subject s ON (ts.subject_id = s.id)"
         );
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-            if (!$this->rowId('teacher', array('id' => $row['teacher_id']))) throw new \Exception('Teacher '.$row['id'].' '.$row['name']." not found!");
-            $subjectId = $this->rowId('subject', array('code' => $row['code']));
+            if (!$this->rowId('Teacher', array('id' => $row['teacher_id']))) throw new \Exception('Teacher '.$row['id'].' '.$row['name']." not found!");
+            $subjectId = $this->rowId('Subject', array('code' => $row['code']));
             if ($subjectId === false) throw new \Exception("Subject ".$row['code']." was not imported!");
             
-            if (!$this->rowId('teacherssubjects', array('subject_id' => $subjectId, 'teacher_id' => $row['teacher_id'], 'season_id' => $this->newSeasonId))) {
-                $this->newDB->insert('teacherssubjects', array(
+            if (!$this->rowId('TeachersSubjects', array('subject_id' => $subjectId, 'teacher_id' => $row['teacher_id'], 'season_id' => $this->newSeasonId))) {
+                $this->newDB->insert('TeachersSubjects', array(
                     'subject_id' => $subjectId,
                     'teacher_id' => $row['teacher_id'],
                     'season_id' => $this->newSeasonId,
@@ -156,19 +156,19 @@ class MigrateOldDatabaseCommand extends ContainerAwareCommand {
         $responsesFound = 0;
 
         $result = $this->oldDB->executeQuery("SELECT r.*, s.code
-                                              FROM response r
+                                              FROM Response r
                                               JOIN subject s ON (r.subject_id = s.id)"
         );
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-            if ($row['teacher_id'] !== null) if (!$this->rowId('teacher', array('id' => $row['teacher_id']))) throw new \Exception('Teacher '.$row['teacher_id'].' not found!');
-            $subjectId = $this->rowId('subject', array('code' => $row['code']));
+            if ($row['teacher_id'] !== null) if (!$this->rowId('Teacher', array('id' => $row['teacher_id']))) throw new \Exception('Teacher '.$row['teacher_id'].' not found!');
+            $subjectId = $this->rowId('Subject', array('code' => $row['code']));
             if ($subjectId === false) throw new \Exception("Subject ".$row['code']." was not imported!");
             if ($row['author_text'] === null) {
-                $row['author_text'] = $this->oldDB->fetchColumn("SELECT displayName FROM `user` WHERE userName = ? LIMIT 1", array($row['author_login']),0);
+                $row['author_text'] = $this->oldDB->fetchColumn("SELECT displayName FROM `User` WHERE userName = ? LIMIT 1", array($row['author_login']),0);
             }
 
-            if (!$this->rowId('response', array('comment' => $row['comment'], 'season_id' => $this->newSeasonId))) {
-                $this->newDB->insert('response', array(
+            if (!$this->rowId('Response', array('comment' => $row['comment'], 'season_id' => $this->newSeasonId))) {
+                $this->newDB->insert('Response', array(
                     'subject_id' => $subjectId,
                     'teacher_id' => $row['teacher_id'],
                     'season_id' => $this->newSeasonId,
@@ -196,9 +196,9 @@ class MigrateOldDatabaseCommand extends ContainerAwareCommand {
 
         $result = $this->oldDB->executeQuery("SELECT * FROM `subject`");
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-            $subjectId = $this->rowId('subject', array('code' => $row['code']));
+            $subjectId = $this->rowId('Subject', array('code' => $row['code']));
             if ($subjectId === false) {
-                $this->newDB->insert('subject', array(
+                $this->newDB->insert('Subject', array(
                     'code' => $row['code'],
                     'name' => $row['name'],
                     'slug' => $row['code']
@@ -209,8 +209,8 @@ class MigrateOldDatabaseCommand extends ContainerAwareCommand {
                 $subjectsFound++;
             }
               
-            if (!$this->rowId('subjectseason', array('subject_id' => $subjectId, 'season_id' => $this->newSeasonId))) {
-                $this->newDB->insert('subjectseason', array(
+            if (!$this->rowId('SubjectSeason', array('subject_id' => $subjectId, 'season_id' => $this->newSeasonId))) {
+                $this->newDB->insert('SubjectSeason', array(
                     'subject_id' => $subjectId,
                     'season_id' => $this->newSeasonId,
                     'studentCountFaculty' => null,
@@ -233,17 +233,17 @@ class MigrateOldDatabaseCommand extends ContainerAwareCommand {
 
         $result = $this->oldDB->executeQuery("SELECT u.username, s.code
                                               FROM `users_subjects` us
-                                              JOIN `user` u ON (u.id=us.user_id)
+                                              JOIN `User` u ON (u.id=us.user_id)
                                               JOIN `subject` s ON (s.id=us.subject_id)"
         );
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             $userId = $this->getNewUserId($row['username']);
-            $subjectId = $this->rowId('subject', array('code' => $row['code']));
+            $subjectId = $this->rowId('Subject', array('code' => $row['code']));
             if ($userId === false) throw new \Exception("User ".$row['username']." was not imported!");
             if ($subjectId === false) throw new \Exception("Subject ".$row['code']." was not imported!");
             
-            if (!$this->rowId('userssubjects', array('subject_id' => $subjectId, 'user_id' => $userId, 'season_id' => $this->newSeasonId))) {
-                $this->newDB->insert('userssubjects', array(
+            if (!$this->rowId('UsersSubjects', array('subject_id' => $subjectId, 'user_id' => $userId, 'season_id' => $this->newSeasonId))) {
+                $this->newDB->insert('UsersSubjects', array(
                     'user_id' => $userId,
                     'subject_id' => $subjectId,
                     'season_id' => $this->newSeasonId,
@@ -258,27 +258,30 @@ class MigrateOldDatabaseCommand extends ContainerAwareCommand {
         $this->output->writeln('userssubjects: '.$userSubjectsInserted.' inserted | '.$userSubjectsFound.' found');
 
 
-        if ($this->rowId('answer', array('season_id' => $this->newSeasonId))) {
+        if ($this->rowId('Answer', array('season_id' => $this->newSeasonId))) {
             $this->output->writeln('answers already imported!');
             return;
         }
 
         $answersInserted = 0;
+        echo 'preexec';
         $this->oldDB->getWrappedConnection()->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, false);
         $result = $this->oldDB->executeQuery("SELECT a.*, s.code, q.question, q.description, ch.choice
-                                              FROM `answer` a
+                                              FROM `Answer` a
                                               LEFT JOIN `subject` s ON (s.id=a.subject_id)
-                                              JOIN `question` q ON (a.question_id=q.id)
-                                              LEFT JOIN `choice` ch ON (a.option_id=ch.id)"
+                                              JOIN `Question` q ON (a.question_id=q.id)
+                                              LEFT JOIN `Choice` ch ON (a.option_id=ch.id)"
         );
+        echo 'postexec';
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            //echo '.';
             if ($row['subject_id'] !== null) {
-                $subjectId = $this->rowId('subject', array('code' => $row['code']));
+                $subjectId = $this->rowId('Subject', array('code' => $row['code']));
                 if ($subjectId === false) throw new \Exception("Subject ".$row['code']." was not imported!");
             } else $subjectId = null;
-            if ($row['teacher_id'] !== null) if (!$this->rowId('teacher', array('id' => $row['teacher_id']))) throw new \Exception('Teacher '.$row['teacher_id'].' not found!');
+            if ($row['teacher_id'] !== null) if (!$this->rowId('Teacher', array('id' => $row['teacher_id']))) throw new \Exception('Teacher '.$row['teacher_id'].' not found!');
             
-            $questionId = $this->rowId('question', array(
+            $questionId = $this->rowId('Question', array(
                 'season_id' => $this->newSeasonId,
                 'question' => $row['question'],
                 'description' => $row['description']
@@ -286,19 +289,19 @@ class MigrateOldDatabaseCommand extends ContainerAwareCommand {
             if ($questionId === false) throw new \Exception("Question \"".$row['question']."\" was not imported!");
             
             if ($row['option_id']) {
-                $optionId = $this->rowId('choice', array(
+                $optionId = $this->rowId('Choice', array(
                     'question_id' => $questionId,
                     'choice' => $row['choice'],
                 ));
                 if ($questionId === false) throw new \Exception("Option \"".$row['option_id']."\" was not imported!");
             } else $optionId = null;
 
-            $this->newDB->insert('answer', array(
+            $this->newDB->insert('Answer', array(
                 'question_id' => $questionId,
                 'subject_id' => $subjectId,
                 'season_id' => $this->newSeasonId,
                 'studyProgram_id' => null,
-                'option_id' => $questionId,
+                'option_id' => $optionId,
                 'teacher_id' => $row['teacher_id'],
                 'author_id' => null,
                 'evaluation' => $row['evaluation'],
@@ -327,15 +330,15 @@ class MigrateOldDatabaseCommand extends ContainerAwareCommand {
             6 => 5
         );
 
-        $result = $this->oldDB->executeQuery("SELECT * FROM `question` WHERE season_id = ?", array($this->oldSeasonId));
+        $result = $this->oldDB->executeQuery("SELECT * FROM `Question` WHERE season_id = ?", array($this->oldSeasonId));
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-            $questionId = $this->rowId('question', array(
+            $questionId = $this->rowId('Question', array(
                 'season_id' => $this->newSeasonId,
                 'question' => $row['question'],
                 'description' => $row['description']
             ));
             if ($questionId === false) {
-                $this->newDB->insert('question', array(
+                $this->newDB->insert('Question', array(
                     'season_id' => $this->newSeasonId,
                     'category_id' => $categoryMapping[$row['category_id']],
                     'position' => $row['position'],
@@ -348,11 +351,11 @@ class MigrateOldDatabaseCommand extends ContainerAwareCommand {
                 $questionsInserted++;
                 $questionId = $this->newDB->lastInsertId();
 
-                $result2 = $this->oldDB->executeQuery("SELECT * FROM `choice` WHERE question_id = ?", array($row['id']));
+                $result2 = $this->oldDB->executeQuery("SELECT * FROM `Choice` WHERE question_id = ?", array($row['id']));
                 while ($choice = $result2->fetch(PDO::FETCH_ASSOC)) {
                     unset($choice['id']);
                     $choice['question_id'] = $questionId;
-                    $this->newDB->insert('choice', $choice);
+                    $this->newDB->insert('Choice', $choice);
                 }
             } else {
                 $questionsFound++;
@@ -364,7 +367,7 @@ class MigrateOldDatabaseCommand extends ContainerAwareCommand {
     }
 
     private function getNewUserId($login) {
-        return $this->newDB->fetchColumn("SELECT id FROM `user` WHERE userName = ? LIMIT 1", array($login),0);
+        return $this->newDB->fetchColumn("SELECT id FROM `User` WHERE userName = ? LIMIT 1", array($login),0);
     }
 
     private function rowId($table, $data) {
