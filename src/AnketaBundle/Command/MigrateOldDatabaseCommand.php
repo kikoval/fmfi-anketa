@@ -55,6 +55,7 @@ class MigrateOldDatabaseCommand extends ContainerAwareCommand {
     protected function execute(InputInterface $input, OutputInterface $output) {
         $this->output = $output;
         $this->newDB = $this->getContainer()->get('doctrine')->getEntityManager('default')->getConnection();
+        $this->newDB->getConfiguration()->setSQLLogger(null);
 
         $connectionFactory = $this->getContainer()->get('doctrine.dbal.connection_factory');
         $params = $this->newDB->getParams();
@@ -264,7 +265,6 @@ class MigrateOldDatabaseCommand extends ContainerAwareCommand {
         }
 
         $answersInserted = 0;
-        echo 'preexec';
         $this->oldDB->getWrappedConnection()->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, false);
         $result = $this->oldDB->executeQuery("SELECT a.*, s.code, q.question, q.description, ch.choice
                                               FROM `Answer` a
@@ -272,9 +272,8 @@ class MigrateOldDatabaseCommand extends ContainerAwareCommand {
                                               JOIN `Question` q ON (a.question_id=q.id)
                                               LEFT JOIN `Choice` ch ON (a.option_id=ch.id)"
         );
-        echo 'postexec';
+        
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-            //echo '.';
             if ($row['subject_id'] !== null) {
                 $subjectId = $this->rowId('Subject', array('code' => $row['code']));
                 if ($subjectId === false) throw new \Exception("Subject ".$row['code']." was not imported!");
