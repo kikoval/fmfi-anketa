@@ -33,7 +33,7 @@ class StatisticsMenu
         $access = $this->container->get('anketa.access.statistics');
 
         $menu = array();
-        $seasons = $em->getRepository('AnketaBundle:Season')->findAll();
+        $seasons = $em->getRepository('AnketaBundle:Season')->findBy(array(), array('ordering' => 'DESC'));
         foreach ($seasons as $season) {
             if (!$access->canSeeResults($season)) continue;
             // Add this season.

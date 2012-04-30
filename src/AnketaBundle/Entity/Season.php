@@ -80,6 +80,15 @@ class Season {
      * @ORM\Column(type="boolean")
      */
     protected $responsesVisible;
+    
+    /**
+     * Order seasons by this column in descending order in results.
+     * The larger the number, the later in history the season will appear.
+     * 
+     * @ORM\Column(type="integer")
+     * @var int $ordering
+     */
+    protected $ordering;
 
     public function __construct($description, $slug) {
         $this->setDescription($description);
@@ -163,6 +172,14 @@ class Season {
 
     public function setResponsesVisible($value) {
         $this->responsesVisible = $value;
+    }
+    
+    public function getOrdering() {
+        return $this->ordering;
+    }
+
+    public function setOrdering($ordering) {
+        $this->ordering = $ordering;
     }
 
 }

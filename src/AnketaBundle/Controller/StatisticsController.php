@@ -25,7 +25,18 @@ class StatisticsController extends Controller {
         $em = $this->get('doctrine.orm.entity_manager');
         $repository = $em->getRepository('AnketaBundle\Entity\Season');
         if ($season_slug === null) {
-            $season = $repository->getActiveSeason();
+            $seasonsFound = $repository->findBy(array(), array('ordering' => 'DESC'));
+            $access = $this->get('anketa.access.statistics');
+            $season = null;
+            foreach ($seasonsFound as $candidateSeason) {
+                if ($access->canSeeResults($candidateSeason)) {
+                    $season = $candidateSeason;
+                    break;
+                }
+            }
+            if ($season == null) {
+                throw new NotFoundHttpException('Ziadna sezona s vysledkami');
+            }
         } else {
             $season = $repository->findOneBy(array('slug' => $season_slug));
         }
