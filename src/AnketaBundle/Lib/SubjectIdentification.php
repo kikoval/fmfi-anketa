@@ -27,11 +27,17 @@ class SubjectIdentification implements SubjectIdentificationInterface
                 'slug' => $this->slugify($shortCode),
             );
         }
-        else {
+        else if ($faculty == 'PriF') {
             return array(
                 'code' => $mediumCode,
                 'name' => $subjectName,
                 'slug' => $this->slugify($mediumCode . '-' . $subjectName),
+            );
+        } else {
+            return array(
+                'code' => $longCode,
+                'name' => $subjectName,
+                'slug' => $this->slugify($longCode),
             );
         }
     }
