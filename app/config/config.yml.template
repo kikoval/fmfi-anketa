@@ -31,6 +31,7 @@ framework:
         lifetime:       3600
         name: anketasessid_%skratka_fakulty%_%anketa_instance%
         auto_start:     true
+    translator: { fallback: sk }
 
 # Twig Configuration
 twig:

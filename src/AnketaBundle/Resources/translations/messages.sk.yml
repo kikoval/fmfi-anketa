@@ -1,0 +1,35 @@
+base:
+  svt: Študentský Vývojový Tím
+userbar:
+  prihlaseny: Prihlásený
+  odhlasit: Odhlásiť
+layout:
+   hlasuj: Hlasuj
+   vysledky: Výsledky
+   
+welcome:
+  index:
+    studentska.anketa: Študentská anketa
+    vitaj: Vitajte v Študentskej ankete
+    zapoj.sa: Zapojte sa aj Vy a prezentujte svoj názor!
+    hlasuj: Hlasuj!
+    otvorene.do: Otvorené do
+    hlasovanie.ukoncene: Hlasovanie v ankete je ukončené. Ďakujeme všetkým zúčastneným za vyplnenie :)
+    vysledky: Výsledky
+    zverejnenie.vysledkov: Výsledky budú k dispozícii po ukončení skúškového obdobia.
+    aka.je.anketa: Aká je nová anketa?
+    rychla: Rýchla
+    rychla.preco: vybrali sme len niekoľko najdôležitejších otázok, anketa Vám nezaberie veľa času
+    jednoducha: Jednoduchá
+    jednoducha.preco: pri otázkach sú na výber jasne formulované možnosti pre odpoveď
+    k.veci: K veci
+    k.veci.preco: automaticky načíta Váš zoznam predmetov s učiteľmi
+    flexibilna: Flexibilná
+    flexibilna.preco: môžete sa k nej vrátiť neskôr, nemusíte všetko vyplniť naraz
+    anonymna: Anonymná
+    anonymna.preco: po ukončení hlasovania sa nedá zistiť, komu patria ktoré odpovede
+    mobilna: Mobilná
+    mobilna.preco: hlasujte kdekoľvek a s čímkoľvek, vrátane mobilov a smartfónov
+    pekne.hviezdicky: Má prekrásne hviezdičky
+    pekne.hviezdicky.preco: náš tím tvrdo pracoval, aby Vám poskytol <em>state-of-the-art</em> hviezdičkové hlasovanie
+    aj.ty.hlasuj: AJ VÁŠ HLAS MÔŽE ZMENIŤ NAŠU ALMA-MÁTER K LEPŠIEMU ;-)

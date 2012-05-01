@@ -1,0 +1,35 @@
+base:
+  svt: Students Development Team
+userbar:
+  prihlaseny: Logged in
+  odhlasit: logout
+layout:
+   hlasuj: Vote
+   vysledky: Results
+   
+welcome:
+  index:
+    studentska.anketa: Student poll
+    vitaj: Welcome to the Student poll
+    zapoj.sa: Get involved and cast your vote!
+    hlasuj: Vote!
+    otvorene.do: Voting period ends on
+    hlasovanie.ukoncene: Voting period is over. Thanks to all participants :)
+    vysledky: Results
+    zverejnenie.vysledkov: Results will be available after the examination period.
+    aka.je.anketa: This poll is
+    rychla: Fast
+    rychla.preco: we picked only the most important questions
+    jednoducha: Simple
+    jednoducha.preco: possible answers are clearly formulated
+    k.veci: On topic
+    k.veci.preco: your courses and teachers are automatically loaded
+    flexibilna: Flexible
+    flexibilna.preco: you don't have to fill everything in at once
+    anonymna: Anonymous
+    anonymna.preco: noone can find out your answers after the voting period
+    mobilna: Mobile
+    mobilna.preco: vote on whatever device you want, including smartphones
+    pekne.hviezdicky: Has beautiful stars
+    pekne.hviezdicky.preco: out team worked hard to bring you <em>state-of-the-art</em> stars
+    aj.ty.hlasuj: EVEN YOUR VOTE CAN IMPROVE OUR ALMA MATER ;-)
