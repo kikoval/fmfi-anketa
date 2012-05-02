@@ -60,7 +60,9 @@ class Teacher {
     }
 
     public function getName() {
-        return trim($this->getGivenName() . ' ' . $this->getFamilyName());
+        $name = trim($this->getGivenName() . ' ' . $this->getFamilyName());
+        if ($name !== '') return $name;
+        return $this->getDisplayName();
     }
 
     public function getGivenName() {
