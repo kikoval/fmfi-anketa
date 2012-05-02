@@ -100,12 +100,11 @@ class ImportOtazkyCommand extends ContainerAwareCommand implements ContainerAwar
 
         // spracuj kategorie
         $categories = $input_array["kategorie"];
-        // ass_array je pomocne asociativne pole pre referenciu Category objektov
-        $ass_array = array();
         foreach ($categories as $category) {
             $this->processCategory($category, $manager);
         }
-
+        $manager->flush();
+	
         // spracuj otazky
         $questions = $input_array["otazky"];
         $questionPos = 0;
@@ -132,7 +131,9 @@ class ImportOtazkyCommand extends ContainerAwareCommand implements ContainerAwar
         $objekt = $categoryRepository->findOneBy(
                 array('specification' => $import['id']));
         
+	print_r($category);
         if ($objekt == null) {
+	 echo "Kategoria s unique indexom sa v db nenachadza.\n";
             $manager->persist($category);
         } else {
             $spec = $import['id'];
