@@ -131,9 +131,7 @@ class ImportOtazkyCommand extends ContainerAwareCommand implements ContainerAwar
         $objekt = $categoryRepository->findOneBy(
                 array('specification' => $import['id']));
         
-	print_r($category);
         if ($objekt == null) {
-	 echo "Kategoria s unique indexom sa v db nenachadza.\n";
             $manager->persist($category);
         } else {
             $spec = $import['id'];
