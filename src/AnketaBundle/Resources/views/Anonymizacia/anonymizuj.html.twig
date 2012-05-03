@@ -12,7 +12,7 @@
 <p>{% trans %}anonymizacia.anonymizuj.co.sa.stane{% endtrans %}</p>
 <p>{% trans %}anonymizacia.anonymizuj.skontrolujte{% endtrans %} <strong class="warning">{% trans %}anonymizacia.anonymizuj.nevratny.proces{% endtrans %}</strong></p>
 <form action="#" method="post">
-<input type="submit" name="{% trans %}anonymizacia.anonymizuj.anonymizuj{% endtrans %}" value="{% trans %}anonymizacia.anonymizuj.ukoncit{% endtrans %}" />
+<input type="submit" name="anonymizuj" value="{% trans %}anonymizacia.anonymizuj.ukoncit{% endtrans %}" />
 &nbsp;&nbsp; <a href="{{ path('answer') }}">{% trans %}anonymizacia.anonymizuj.este.hlasovat{% endtrans %}</a>
 </form>
 {% endblock %}

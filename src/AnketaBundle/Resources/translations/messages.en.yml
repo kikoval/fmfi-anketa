@@ -44,6 +44,7 @@ anonymizacia:
     co.sa.stane: Your votes will be anonymized after you click on "Finish voting" button. You won't be able to review and/or modify your votes anymore.
     skontrolujte: Make sure you filled in everything as you wanted.
     nevratny.proces: This action is irreversible. You won't be able to change anything afterwards.
-    anonymizuj: anonymize
     ukoncit: Finish voting
     este.hlasovat: I'm not finished yet
+  controller:
+    uspesny.koniec: Your voting was successfully completed.

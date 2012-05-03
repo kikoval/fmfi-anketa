@@ -44,6 +44,7 @@ anonymizacia:
     co.sa.stane: Po kliknutí na tlačidlo "Ukončiť hlasovanie" anonymizujeme vaše odpovede &mdash; vymažeme z nich informáciu, že ste ich autorom. Preto si ich už nebudete môcť prezrieť alebo zmeniť.
     skontrolujte: Skontrolujte, či ste vyplnili všetko tak, ako ste chceli.
     nevratny.proces: Tento proces je nevratný. Nebudete môcť už nič zmeniť.
-    anonymizuj: anonymizuj
     ukoncit: Ukončiť hlasovanie
     este.hlasovat: Nie, ešte chcem hlasovať
+  controller:
+    uspesny.koniec: Vaše hlasovanie v ankete bolo úspešne ukončené.
