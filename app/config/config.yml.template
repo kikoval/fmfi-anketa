@@ -106,6 +106,7 @@ services:
             - ["@anketa.ais_user_source"]
             #- ["@anketa.demo_user_source"]
             - ["@anketa.ldap_user_source"]
+            #- ["@anketa.orgunit_demo_user_source"]
             - "@logger"
     anketa.ais_retriever:
         class: AnketaBundle\Integration\AISRetriever
@@ -139,6 +140,9 @@ services:
         class: AnketaBundle\Security\DemoUserSource
         arguments:
             - "@doctrine.orm.entity_manager"
+    anketa.orgunit_demo_user_source:
+        class: AnketaBundle\Security\OrgUnitDemoUserSource
+        arguments:
             - ["FMFI"]
     anketa.subject_identification:
         class: AnketaBundle\Lib\SubjectIdentification
