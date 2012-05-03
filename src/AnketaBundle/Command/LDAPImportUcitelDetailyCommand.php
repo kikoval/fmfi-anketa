@@ -88,35 +88,49 @@ class LDAPImportUcitelDetailyCommand extends ContainerAwareCommand {
                     continue;
                 }
                 
-                $ldapGivenName = $ldapInfo['givenNameU8'][0];
-                $ldapFamilyName = $ldapInfo['snU8'][0];
-                $ldapDisplayName = $ldapInfo['displayName'][0];
-                
-                if (empty($givenName)) {
-                    $givenName = $ldapGivenName;
+                if (isset($ldapInfo['givenNameU8'][0])) {
+                    $ldapGivenName = $ldapInfo['givenNameU8'][0];
+                    if (empty($givenName)) {
+                        $givenName = $ldapGivenName;
+                    }
+                    else if ($givenName != $ldapGivenName) {
+                        $output->writeln('<info>Pouzivatel ' . $login . ' ma ine meno v ldape (' .
+                                $ldapGivenName . ') ako v databaze (' .
+                                $givenName . ')</info>');
+                    }
                 }
-                else if ($givenName != $ldapGivenName) {
-                    $output->writeln('<info>Pouzivatel ' . $login . ' ma ine meno v ldape (' .
-                            $ldapGivenName . ') ako v databaze (' .
-                            $givenName . ')</info>');
-                }
-                
-                if (empty($familyName)) {
-                    $familyName = $ldapFamilyName;
-                }
-                else if ($familyName != $ldapFamilyName) {
-                    $output->writeln('<info>Pouzivatel ' . $login . ' ma ine priezvisko v ldape (' .
-                            $ldapFamilyName . ') ako v databaze (' .
-                            $familyName . ')</info>');
+                else {
+                    $output->writeln('<info>Pouzivatel ' . $login . ' nema meno v ldape</info>');
                 }
                 
-                if (empty($displayName)) {
-                    $displayName = $ldapDisplayName;
+                if (isset($ldapInfo['snU8'][0])) {
+                    $ldapFamilyName = $ldapInfo['snU8'][0];
+                    if (empty($familyName)) {
+                        $familyName = $ldapFamilyName;
+                    }
+                    else if ($familyName != $ldapFamilyName) {
+                        $output->writeln('<info>Pouzivatel ' . $login . ' ma ine priezvisko v ldape (' .
+                                $ldapFamilyName . ') ako v databaze (' .
+                                $familyName . ')</info>');
+                    }
                 }
-                else if ($displayName != $ldapDisplayName) {
-                    $output->writeln('<info>Pouzivatel ' . $login . ' ma ine display name v ldape (' .
-                            $ldapDisplayName . ') ako v databaze (' .
-                            $displayName . ')</info>');
+                else {
+                    $output->writeln('<info>Pouzivatel ' . $login . ' nema priezvisko v ldape</info>');
+                }
+                
+                if (isset($ldapInfo['displayName'][0])) {
+                    $ldapDisplayName = $ldapInfo['displayName'][0];
+                    if (empty($displayName)) {
+                        $displayName = $ldapDisplayName;
+                    }
+                    else if ($displayName != $ldapDisplayName) {
+                        $output->writeln('<info>Pouzivatel ' . $login . ' ma ine display name v ldape (' .
+                                $ldapDisplayName . ') ako v databaze (' .
+                                $displayName . ')</info>');
+                    }
+                }
+                else {
+                    $output->writeln('<info>Pouzivatel ' . $login . ' nema display name v ldape</info>');
                 }
                 
                 $updateTeacher->bindValue('givenName', $givenName);
