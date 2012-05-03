@@ -2,5 +2,5 @@
 <span class="for-screen-readers">{% trans %}userbar.prihlaseny{% endtrans %}: </span><span class="user-fullname" title="{{ user.userName }}">{{ user.displayName }}</span>
 &mdash; <a href="{{ path('logout') }}" class="logout">{% trans %}userbar.odhlasit{% endtrans %}</a>
 {% else %}
-<a href="{{ path('login', {'to': app.request.uri }) }}" class="login">Prihlásiť</a>
+<a href="{{ path('login', {'to': app.request.uri }) }}" class="login">{% trans %}userbar.prihlasit{% endtrans %}</a>
 {% endif %}

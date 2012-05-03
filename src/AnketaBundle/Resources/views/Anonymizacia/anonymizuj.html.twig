@@ -1,18 +1,18 @@
 {% extends 'AnketaBundle::layout.html.twig' %}
 
-{% block title %}Anonymizácia{% endblock %}
+{% block title %}{% trans %}anonymizacia.anonymizuj.anonymizacia{% endtrans %}{% endblock %}
 
 {% block navigation %}
     {{ menu.hlasovanie.render(['anonymizuj'])|raw }}
 {% endblock %}
 
 {% block content %}
-<h2>Ukončenie hlasovania</h2>
-<p>To je všetko. Ďakujeme!</p>
-<p>Po kliknutí na tlačidlo "Ukončiť hlasovanie" anonymizujeme vaše odpovede &mdash; vymažeme z nich informáciu, že ste ich autorom. Preto si ich už nebudete môcť prezrieť alebo zmeniť.</p>
-<p>Skontrolujte, či ste vyplnili všetko tak, ako ste chceli. <strong class="warning">Tento proces je nevratný. Nebudete môcť už nič zmeniť.</strong></p>
+<h2>{% trans %}anonymizacia.anonymizuj.ukoncenie{% endtrans %}</h2>
+<p>{% trans %}anonymizacia.anonymizuj.vdaka{% endtrans %}</p>
+<p>{% trans %}anonymizacia.anonymizuj.co.sa.stane{% endtrans %}</p>
+<p>{% trans %}anonymizacia.anonymizuj.skontrolujte{% endtrans %} <strong class="warning">{% trans %}anonymizacia.anonymizuj.nevratny.proces{% endtrans %}</strong></p>
 <form action="#" method="post">
-<input type="submit" name="anonymizuj" value="Ukončiť hlasovanie" />
-&nbsp;&nbsp; <a href="{{ path('answer') }}">Nie, ešte chcem hlasovať</a>
+<input type="submit" name="{% trans %}anonymizacia.anonymizuj.anonymizuj{% endtrans %}" value="{% trans %}anonymizacia.anonymizuj.ukoncit{% endtrans %}" />
+&nbsp;&nbsp; <a href="{{ path('answer') }}">{% trans %}anonymizacia.anonymizuj.este.hlasovat{% endtrans %}</a>
 </form>
 {% endblock %}

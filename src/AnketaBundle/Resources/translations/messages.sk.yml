@@ -3,6 +3,7 @@ base:
 userbar:
   prihlaseny: Prihlásený
   odhlasit: Odhlásiť
+  prihlasit: Prihlásiť
 layout:
    hlasuj: Hlasuj
    vysledky: Výsledky
@@ -33,3 +34,16 @@ welcome:
     pekne.hviezdicky: Má prekrásne hviezdičky
     pekne.hviezdicky.preco: náš tím tvrdo pracoval, aby Vám poskytol <em>state-of-the-art</em> hviezdičkové hlasovanie
     aj.ty.hlasuj: AJ VÁŠ HLAS MÔŽE ZMENIŤ NAŠU ALMA-MÁTER K LEPŠIEMU ;-)
+#  faq: TODO
+
+anonymizacia:
+  anonymizuj:
+    anonymizacia: Anonymizácia
+    ukoncenie: Ukončenie hlasovania
+    vdaka: To je všetko. Ďakujeme!
+    co.sa.stane: Po kliknutí na tlačidlo "Ukončiť hlasovanie" anonymizujeme vaše odpovede &mdash; vymažeme z nich informáciu, že ste ich autorom. Preto si ich už nebudete môcť prezrieť alebo zmeniť.
+    skontrolujte: Skontrolujte, či ste vyplnili všetko tak, ako ste chceli.
+    nevratny.proces: Tento proces je nevratný. Nebudete môcť už nič zmeniť.
+    anonymizuj: anonymizuj
+    ukoncit: Ukončiť hlasovanie
+    este.hlasovat: Nie, ešte chcem hlasovať

@@ -3,6 +3,7 @@ base:
 userbar:
   prihlaseny: Logged in
   odhlasit: logout
+  prihlasit: Prihlásiť
 layout:
    hlasuj: Vote
    vysledky: Results
@@ -33,3 +34,16 @@ welcome:
     pekne.hviezdicky: Has beautiful stars
     pekne.hviezdicky.preco: out team worked hard to bring you <em>state-of-the-art</em> stars
     aj.ty.hlasuj: EVEN YOUR VOTE CAN IMPROVE OUR ALMA MATER ;-)
+#  faq: TODO
+
+anonymizacia:
+  anonymizuj:
+    anonymizacia: Anonymization
+    ukoncenie: Finish voting
+    vdaka: That's all. Thanks!
+    co.sa.stane: Your votes will be anonymized after you click on "Finish voting" button. You won't be able to review and/or modify your votes anymore.
+    skontrolujte: Make sure you filled in everything as you wanted.
+    nevratny.proces: This action is irreversible. You won't be able to change anything afterwards.
+    anonymizuj: anonymize
+    ukoncit: Finish voting
+    este.hlasovat: I'm not finished yet
