@@ -48,3 +48,15 @@ anonymizacia:
     este.hlasovat: I'm not finished yet
   controller:
     uspesny.koniec: Your voting was successfully completed.
+
+hlasovanie:
+  dakujeme:
+    dakujeme: Thank you
+    dakujeme.za.cas: Thank you for taking the time to complete the student survey.
+    potrebujeme.ucast: In order to have a meaningful results, a high number of students have to express their opinions.
+    povedzte.ostatnym: Please, let others know by any possible means, such as chat, email or Facebook.
+  globalProgressbar:
+    kto.hlasoval: So far, <strong>%voters%</strong> students have participated and %anon% of them have anonymized their votes.
+    ciel: Our goal is to reach at least 50% participation. So don't hesitate and take part!
+    zapojte.sa: Don't hesitate and take part!
+    kto.hlasoval.nakoniec: So far, <strong>%voters%</strong> students have participated.

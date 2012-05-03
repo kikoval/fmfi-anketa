@@ -4,19 +4,17 @@
  # @param voters total number of voters
  # @param anon total number of people that anonymized
  #}
-
 {% if anon > 5 and voters > 5 %}
 {% if access.hlasovanie.isVotingOpen %}
-<p>Doteraz sa zúčastnilo <strong>{{ voters }} študentov</strong>,
-{{ anon }} z nich už hlasovanie ukončilo.
+<p>{% trans with {'%voters%': voters, '%anon%': anon} %}hlasovanie.globalProgressbar.kto.hlasoval{% endtrans %}
 {% if skratka_fakulty == 'FMFI' %}
-Naším cieľom je dosiahnuť aspoň 50% účasť. Preto neváhajte a zapojte sa tiež!
+{% trans %}hlasovanie.globalProgressbar.ciel{% endtrans %}
 {% else %}
-Neváhajte a zapojte sa tiež!
+{% trans %}hlasovanie.globalProgressbar.zapojte.sa{% endtrans %}
 {% endif %}
 </p>
 {% else %}
-<p>V ankete hlasovalo <strong>{{ voters }}</strong> študentov.</p>
+<p>{% trans with {'%voters%': voters} %}hlasovanie.globalProgressbar.kto.hlasoval.nakoniec{% endtrans %}</p>
 {% endif %}
 <div class="progressbar-welcome-wrapper"
      data-anon="{{ "%.0f%%" | format(progressAnon.percentDone) }}"

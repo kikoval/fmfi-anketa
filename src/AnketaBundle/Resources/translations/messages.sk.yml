@@ -48,3 +48,16 @@ anonymizacia:
     este.hlasovat: Nie, ešte chcem hlasovať
   controller:
     uspesny.koniec: Vaše hlasovanie v ankete bolo úspešne ukončené.
+
+hlasovanie:
+  dakujeme:
+    dakujeme: Ďakujeme
+    dakujeme.za.cas: Ďakujeme Vám, že ste si našli čas vyplniť študentskú anketu.
+    potrebujeme.ucast: Aby mala anketa nejakú výpovednú hodnotu, treba, aby sa zúčastnil dostatočne vysoký počet študentov.
+    povedzte.ostatnym: Prosíme Vás preto, aby ste dali vedieť aj svojim spolužiakom, napríklad prostredníctvom rozhovoru, emailu či Facebooku.
+    vysledky.budu: Výsledky ankety budú k dispozícii po ukončení skúškového obdobia.
+  globalProgressbar:
+    kto.hlasoval: Doteraz sa zúčastnilo <strong>%voters% študentov</strong>, %anon% z nich už hlasovanie ukončilo.
+    ciel: Naším cieľom je dosiahnuť aspoň 50% účasť. Preto neváhajte a zapojte sa tiež!
+    zapojte.sa: Neváhajte a zapojte sa tiež!
+    kto.hlasoval.nakoniec: V ankete hlasovalo <strong>%voters%</strong> študentov.
