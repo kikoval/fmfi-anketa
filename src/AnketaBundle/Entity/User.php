@@ -57,7 +57,6 @@ class User implements UserInterface {
 
     /**
      * @param String $username
-     * @param String $realname
      */
     public function __construct($username) {
         $this->roles = new ArrayCollection();

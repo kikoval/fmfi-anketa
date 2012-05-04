@@ -25,6 +25,8 @@ use AnketaBundle\Entity\Season;
 use AnketaBundle\Entity\StudyProgram;
 use AnketaBundle\Entity\UsersSubjects;
 use AnketaBundle\Entity\TeachersSubjects;
+use AnketaBundle\Entity\UserSeason;
+use AnketaBundle\Entity\SubjectSeason;
 use DateTime;
 
 /**
@@ -107,8 +109,15 @@ class FixtureLoader implements FixtureInterface {
         $manager->persist($question5);
 */
         // Vytvorime defaultnu Season
-        $season = new Season('Zima 2011/2012', '2011-2012-zima');
+        $season = new Season('Leto 2011/2012', '2011-2012-leto');
+        $season->setActive(true);
         $season->setStudentCount(1800);
+        $season->setVotingOpen(true);
+        $season->setResultsVisible(false);
+        $season->setResultsPublic(false);
+        $season->setRespondingOpen(false);
+        $season->setResponsesVisible(false);
+        $season->setOrdering(0);
         $manager->persist($season);
         
         // create teacher + subject
@@ -119,12 +128,15 @@ class FixtureLoader implements FixtureInterface {
 
         $sub1 = new Subject('Metalyza');
         $sub1->setCode('met001');
-        $sub2 = new Subject('Agilne techniky v praxi');
+        $sub1->setSlug('met001');
+        $sub2 = new Subject('Agilné techniky v praxi');
         $sub2->setCode('agil056');
-        $sub3 = new Subject('Telesna vychova');
+        $sub2->setSlug('agil056');
+        $sub3 = new Subject('Telesná výchova');
         $sub3->setCode('tv06');
+        $sub3->setSlug('tv06');
         // predmet ktory nikto nenavstevuje
-        $sub4 = new Subject('FMFI volno');
+        $sub4 = new Subject('FMFI voľno');
         $sub4->setCode('fmfi');
         
         // priradenie ucitelov k predmetom
@@ -144,6 +156,23 @@ class FixtureLoader implements FixtureInterface {
         $manager->persist($sub2);
         $manager->persist($sub3);
         $manager->persist($sub4);
+        
+        $subSeason1 = new SubjectSeason();
+        $subSeason1->setSeason($season);
+        $subSeason1->setSubject($sub1);
+        $subSeason2 = new SubjectSeason();
+        $subSeason2->setSeason($season);
+        $subSeason1->setSubject($sub2);
+        $subSeason3 = new SubjectSeason();
+        $subSeason3->setSeason($season);
+        $subSeason1->setSubject($sub3);
+        $subSeason4 = new SubjectSeason();
+        $subSeason4->setSeason($season);
+        $subSeason1->setSubject($sub4);
+        $manager->persist($subSeason1);
+        $manager->persist($subSeason2);
+        $manager->persist($subSeason3);
+        $manager->persist($subSeason4);
 
         // create answers
 //        $a = new Answer();
@@ -162,8 +191,10 @@ class FixtureLoader implements FixtureInterface {
 //        $manager->persist($a2);
 
         // create users, roles
-        $userFoo = new User('foo', 'Bc. Foo');
+        $userFoo = new User('foo');
+        $userFoo->setDisplayName('Bc. Foo');
         $userAdmin = new User('admin', 'admin');
+        $userAdmin->setDisplayName('admin');
 
         $roleAdmin = new Role('ROLE_ADMIN');
         $roleUser = new Role('ROLE_USER');
@@ -185,12 +216,13 @@ class FixtureLoader implements FixtureInterface {
                             'trancik1'  =>  'Bc. Ivan Trančík',
                             'marek11'   =>  'Bc. Jakub Marek',
                             'belan14'   =>  'Tomáš Belan',
-                            'kralik3'   =>  'Bc. Martin Králik');
+                            'kralik3'   =>  'Mgr. Martin Králik');
         
         $subs = array($sub1, $sub2, $sub3);
         
         foreach ($developers as $userName => $displayName) {
-            $user = new User($userName, $displayName);
+            $user = new User($userName);
+            $user->setDisplayName($displayName);
             $user->addRole($roleSuperAdmin);
             
             foreach ($subs as $idx=>$sub) {
@@ -202,8 +234,12 @@ class FixtureLoader implements FixtureInterface {
                 $manager->persist($usersSubjects);
             }
             
-            $user->setHasVote(true);
             $manager->persist($user);
+            
+            $userSeason = new UserSeason();
+            $userSeason->setUser($user);
+            $userSeason->setSeason($season);
+            $manager->persist($userSeason);
         }
         
 //

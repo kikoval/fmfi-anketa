@@ -46,17 +46,13 @@ class DemoUserSource implements UserSourceInterface
 
     /** @var EntityManager */
     private $entityManager;
-    
-    /** @var array */
-    private $orgUnits;
 
-    public function __construct(EntityManager $em, array $orgUnits = null)
+    public function __construct(EntityManager $em)
     {
         $this->entityManager = $em;
         $this->subjectRepository = $em->getRepository('AnketaBundle:Subject');
         $this->studyProgramRepository = $em->getRepository('AnketaBundle:StudyProgram');
         $this->roleRepository = $em->getRepository('AnketaBundle:Role');
-        $this->orgUnits = $orgUnits;
     }
 
     public function load(UserSeason $userSeason)
@@ -79,10 +75,9 @@ class DemoUserSource implements UserSourceInterface
             
             $this->entityManager->persist($userSubject);
         }
-        if ($this->orgUnits !== null) {
-            $user->setOrgUnits($this->orgUnits);
-        }
+
         $userSeason->setIsStudent(true);
+        $userSeason->setFinished(false);
         
         return true;
     }
