@@ -67,6 +67,7 @@ class LDAPRetriever {
         if ($attr === false) {
             return $attrs;
         }
+        $attrs[] = $attr;
         while (($attr = @ldap_next_attribute($this->linkId, $entry)) !== false) {
             $attrs[] = $attr;
         }
