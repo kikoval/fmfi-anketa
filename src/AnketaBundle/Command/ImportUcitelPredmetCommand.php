@@ -37,7 +37,8 @@ class ImportUcitelPredmetCommand extends ContainerAwareCommand {
                 ->setName('anketa:import-ucitel-predmet')
                 ->setDescription('Importuj ucitelov predmety z textaku')
                 ->addArgument('file', InputArgument::REQUIRED)
-                ->addOption('season', null, InputOption::VALUE_OPTIONAL, 'Season to use', null)
+                ->addOption('season', 'd', InputOption::VALUE_OPTIONAL, 'Season to use', null)
+                ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Format of importted data', null)
         ;
     }
 
@@ -53,10 +54,12 @@ class ImportUcitelPredmetCommand extends ContainerAwareCommand {
      */
     protected function execute(InputInterface $input, OutputInterface $output) {
         $manager = $this->getContainer()->get('doctrine')->getEntityManager();
-        
+
         $subjectIdentification = $this->getContainer()->get('anketa.subject_identification');
-        
+
         $seasonSlug = $input->getOption('season');
+        
+        $fileFormat = $input->getOption('format');
 
         /** @var SeasonRepository seasonRepository */
         $seasonRepository = $manager->getRepository('AnketaBundle:Season');
@@ -66,15 +69,19 @@ class ImportUcitelPredmetCommand extends ContainerAwareCommand {
                 $output->writeln("<error>V databaze sa nenasla aktivna Season</error>");
                 return;
             }
-        }
-        else {
+        } else {
             $season = $seasonRepository->findOneBy(array('slug' => $seasonSlug));
             if ($season == null) {
-                $output->writeln("<error>V databaze sa nenasla Season so slug " . $seasonSlug. "</error>");
+                $output->writeln("<error>V databaze sa nenasla Season so slug " . $seasonSlug . "</error>");
                 return;
             }
         }
-
+        
+        if ($fileFormat == 'csv') {
+            $this->importFromCSV($input,$output,$season);
+            return;
+        }
+        
         $filename = $input->getArgument('file');
 
         $file = fopen($filename, "r");
@@ -114,7 +121,7 @@ class ImportUcitelPredmetCommand extends ContainerAwareCommand {
         $conn = $this->getContainer()->get('database_connection');
 
         $conn->beginTransaction();
-        
+
         $insertTeacher = $conn->prepare("
                     INSERT INTO Teacher (displayName, login) 
                     VALUES (:displayName, :login) 
@@ -129,7 +136,7 @@ class ImportUcitelPredmetCommand extends ContainerAwareCommand {
                     INSERT INTO Subject (code, name, slug)
                     VALUES (:code, :name, :slug)
                     ON DUPLICATE KEY UPDATE slug=slug");
-        
+
         $insertTeacherSubject = $conn->prepare("
                     INSERT INTO TeachersSubjects (teacher_id, subject_id, season_id, lecturer, trainer) 
                     SELECT a.id, b.id, :season, :lecturer, :trainer
@@ -160,7 +167,7 @@ class ImportUcitelPredmetCommand extends ContainerAwareCommand {
 
                 $prednasajuci = 0;
                 $cviciaci = 0;
-                
+
                 if ($hodnost == 'P') {
                     $prednasajuci = 1;
                 } else if ($hodnost == 'C') {
@@ -168,14 +175,14 @@ class ImportUcitelPredmetCommand extends ContainerAwareCommand {
                 } else {
                     continue;
                 }
-                
+
                 $insertTeacher->bindValue('displayName', $meno);
                 $insertTeacher->bindValue('login', $login);
                 $insertTeacher->execute();
 
-		$faggot = $conn->lastInsertId();
+                $lastInsertedId = $conn->lastInsertId();
 
-		$insertUser->bindValue('id', $faggot);
+                $insertUser->bindValue('id', $$lastInsertedId);
                 $insertUser->bindValue('login', $login);
 		$insertUser->bindValue('displayName',$meno);
                 $insertUser->execute();
@@ -199,6 +206,123 @@ class ImportUcitelPredmetCommand extends ContainerAwareCommand {
 
         $conn->commit();
         fclose($file);
+    }
+
+    function importFromCSV(InputInterface $input, OutputInterface $output, $season) {
+        $subjectIdentification = $this->getContainer()->get('anketa.subject_identification');
+        $filename = $input->getArgument('file');
+
+        $file = fopen($filename, "r");
+        if ($file === false) {
+            $output->writeln('<error>Failed to open file</error>');
+            return;
+        }
+
+        // nacitaj prve riadky, ktore nas nezaujimaju
+        for ($i = 0;$i <10; $i++) {
+            $line = fgets($file);
+        }
+        
+        $conn = $this->getContainer()->get('database_connection');
+
+        $conn->beginTransaction();
+
+        $insertTeacher = $conn->prepare("
+                    INSERT INTO Teacher (givenName, familyName, displayName, login) 
+                    VALUES (:givenName, :familyName, :displayName, :login) 
+                    ON DUPLICATE KEY UPDATE login=login");
+
+        $insertUser = $conn->prepare("
+                    INSERT INTO User (id, displayName, userName) 
+                    VALUES (:id, :displayName, :login) 
+		    ON DUPLICATE KEY UPDATE userName=userName");
+
+        $insertSubject = $conn->prepare("
+                    INSERT INTO Subject (code, name, slug)
+                    VALUES (:code, :name, :slug)
+                    ON DUPLICATE KEY UPDATE slug=slug");
+
+        $insertTeacherSubject = $conn->prepare("
+                    INSERT INTO TeachersSubjects (teacher_id, subject_id, season_id, lecturer, trainer) 
+                    SELECT a.id, b.id, :season, :lecturer, :trainer
+                    FROM Teacher a, Subject b 
+                    WHERE a.login = :login and b.slug = :slug");
+
+        try {
+            while ($buffer = fgets($file)) {
+                
+                $split_line = preg_split("/[;]+/", $buffer);
+
+                $id = trim($split_line[0], "'\"");
+                $aisDlhyKod = trim($split_line[1], "'\"");
+                $aisStredisko = trim($split_line[2], "'\"");
+                $aisKratkyKod = trim($split_line[3], "'\"");
+                $aisRokVzniku = trim($split_line[4], "'\"");
+                $aisNazov = trim($split_line[5], "'\"");
+                $semester = trim($split_line[6], "'\"");
+                $hodnost =trim($split_line[7], "'\"");
+                $plneMeno = trim($split_line[8], "'\"");
+                $priezvisko = trim($split_line[9], "'\"");
+                $meno = trim($split_line[10], "'\"");
+                $split_line[11] = str_replace("\n", '', $split_line[11]);
+                $login = trim($split_line[11], "'\"");
+                
+                if (strlen($aisNazov) == 0 || strlen($login) == 0 || strlen($meno) == 0) {
+                    continue;
+                }
+
+                $aisRokVzniku = substr($aisRokVzniku, 2, 2);
+                $aisDlhyKod = $aisStredisko . '/' . $aisKratkyKod . '/' . $aisRokVzniku;
+                $props = $subjectIdentification->identify($aisDlhyKod, $aisNazov);
+                
+                $kod = $props['code'];
+                $nazov = $props['name'];
+                $slug = $props['slug'];
+
+                $prednasajuci = 0;
+                $cviciaci = 0;
+
+                if ($hodnost == 'P') {
+                    $prednasajuci = 1;
+                } else if ($hodnost == 'C') {
+                    $cviciaci = 1;
+                } else {
+                    continue;
+                }
+               
+                $insertTeacher->bindValue('displayName', $plneMeno);
+                $insertTeacher->bindValue('givenName', $meno);
+                $insertTeacher->bindValue('familyName', $priezvisko);
+                $insertTeacher->bindValue('login', $login);
+                $insertTeacher->execute();
+
+                $lastInsertedId = $conn->lastInsertId();
+
+                $insertUser->bindValue('id', $lastInsertedId);
+                $insertUser->bindValue('login', $login);
+		$insertUser->bindValue('displayName',$plneMeno);
+                $insertUser->execute();
+
+                $insertSubject->bindValue('code', $kod);
+                $insertSubject->bindValue('name', $nazov);
+                $insertSubject->bindValue('slug', $slug);
+                $insertSubject->execute();
+
+                $insertTeacherSubject->bindValue('slug', $slug);
+                $insertTeacherSubject->bindValue('login', $login);
+                $insertTeacherSubject->bindValue('season', $season->getId());
+                $insertTeacherSubject->bindValue('lecturer', $prednasajuci);
+                $insertTeacherSubject->bindValue('trainer', $cviciaci);
+                $insertTeacherSubject->execute();
+            }
+        } catch (Exception $e) {
+            $conn->rollback();
+            throw $e;
+        }
+
+        $conn->commit();
+        fclose($file);
+        return;
     }
 
 }
@@ -232,7 +356,7 @@ class Stlpec {
     public function setDlzka($dlzka) {
         $this->dlzka = $dlzka;
     }
-    
+
     /**
      * Vyber data stlpca z riadku
      * @param string $line
