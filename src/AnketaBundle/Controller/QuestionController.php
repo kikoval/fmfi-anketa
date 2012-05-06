@@ -119,7 +119,7 @@ class QuestionController extends Controller {
                                ->getAttendedSubjectsForUser($user, $season);
 
         if (count($attendedSubjects) == 0) {
-            throw new \RuntimeException ('Nemas ziadne predmety.');
+            return false;
         }
 
         // defaultne vraciame abecedne prvy predmet
@@ -240,6 +240,8 @@ class QuestionController extends Controller {
         } catch (\RuntimeException $e) {
             throw new NotFoundHttpException($e->getMessage());
         }
+        if ($subject === false) return new RedirectResponse($this->generateUrl('answer_general'));
+
         $season = $em->getRepository('AnketaBundle:Season')->getActiveSeason();
         $questions = $em->getRepository('AnketaBundle\Entity\Question')
                         ->getOrderedQuestionsByCategoryType(CategoryType::SUBJECT, $season);
