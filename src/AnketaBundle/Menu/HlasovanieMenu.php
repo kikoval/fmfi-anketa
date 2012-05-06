@@ -64,6 +64,7 @@ class HlasovanieMenu
                     $this->generateUrl('answer_general', array('id' => $subcategory->getId()))
                     );
         }
+        if (empty($subcategories)) unset($menu['general']);
 
         // pridame menu pre predmety
         $subjects = $em->getRepository('AnketaBundle\Entity\Subject')
@@ -90,6 +91,7 @@ class HlasovanieMenu
             }
             $menu['subject']->children[$subject->getId()] = $subjectMenu;
         }
+        if (empty($subjects)) unset($menu['subject']);
 
         // pridame menu pre studijne programy
         $studyProgrammes = $em->getRepository('AnketaBundle\Entity\StudyProgram')
@@ -101,6 +103,7 @@ class HlasovanieMenu
                     $this->generateUrl('answer_study_program', array('slug' => $studyProgramme->getSlug()))
                     );
         }
+        if (empty($studyProgrammes)) unset($menu['study_program']);
 
 
         // nastavime progress
