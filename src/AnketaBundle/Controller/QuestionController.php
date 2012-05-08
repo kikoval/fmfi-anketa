@@ -129,10 +129,12 @@ class QuestionController extends Controller {
             $subject = $em->getRepository('AnketaBundle\Entity\Subject')
                           ->findOneBy(array('slug' => $slug));
             if (empty($subject)) {
-                throw new \RuntimeException('Chybny slug predmetu: ' . $slug);
+                $msg = $this->get('translator')->trans('question.controller.chybny.slug.predmetu', array('%slug%' => $slug));
+                throw new \RuntimeException($msg);
             }
             if (!in_array($subject, $attendedSubjects)) {
-                throw new \RuntimeException('Predmet ' . $slug . ' nemas zapisany');
+                $msg = $this->get('translator')->trans('question.controller.nezapisany.predmet', array('%slug%' => $slug));
+                throw new \RuntimeException($msg);
             }
         }
 
@@ -149,7 +151,8 @@ class QuestionController extends Controller {
                                       ->getStudyProgrammesForUser($user, $season);
 
         if (count($attendedStudyProgrammes) == 0) {
-            throw new \RuntimeException ('Nemas ziadne studijne programy.');
+            $msg = $this->get('translator')->trans('question.controller.ziadne.programy');
+            throw new \RuntimeException($msg);
         }
 
         // defaultne vraciame abecedne prvy predmet
@@ -162,7 +165,8 @@ class QuestionController extends Controller {
                 break;
             }
             if (empty($studyProgramme)) {
-                throw new \RuntimeException('Studijny program ' . $slug . ' nestudujes.');
+                $msg = $this->get('translator')->trans('question.controller.program.neexistuje', array('%slug%' => $slug));
+                throw new \RuntimeException($msg);
             }
         }
 
@@ -192,7 +196,8 @@ class QuestionController extends Controller {
             if ($tmp->getId() == $teacher_code) $teacher = $tmp;
         }
         if ($teacher == null) {
-            throw new NotFoundHttpException("Ucitel " . $teacher_code . " neuci dany predmet");
+            $msg = $this->get('translator')->trans('question.controller.ucitel.neuci', array('%teacher_code%' => $teacher_code));
+            throw new NotFoundHttpException($msg);
         }
         $studyProgram = $em->getRepository('AnketaBundle:StudyProgram')
                            ->getStudyProgrammeForUserSubject($user, $subject, $season);
@@ -346,8 +351,10 @@ class QuestionController extends Controller {
         // TODO toto je code duplication s buildMenu, tuto informaciu aj tak dostaneme v templateParams
         $subcategories = $em->getRepository('AnketaBundle\Entity\Category')
                        ->getOrderedGeneral();
-        if (empty($subcategories))
-            throw new NotFoundHttpException ('Ziadne vseobecne kategorie.');
+        if (empty($subcategories)) {
+            $msg = $this->get('translator')->trans('question.controller.ziadne.podkategorie');
+            throw new NotFoundHttpException($msg);
+        }
 
         // default prva kategoria (najnizsie position)
         if ($id == -1) {
@@ -358,7 +365,8 @@ class QuestionController extends Controller {
 
             if (empty($category) ||
                 ($category->getType() !== CategoryType::GENERAL)) {
-                throw new NotFoundHttpException ('Chybna kategoria: ' . $id);
+                $msg = $this->get('translator')->trans('question.controller.chybna.kategoria', array('%id%' => $id));
+                throw new NotFoundHttpException($msg);
             }
         }
         

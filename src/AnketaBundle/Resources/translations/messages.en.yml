@@ -60,3 +60,22 @@ hlasovanie:
     ciel: Our goal is to reach at least 50% participation. So don't hesitate and take part!
     zapojte.sa: Don't hesitate and take part!
     kto.hlasoval.nakoniec: So far, <strong>%voters%</strong> students have participated.
+
+question:
+  index:
+    ak.neucil: If you had no classes with this teacher you can skip these questions and choose
+    uloz.a.chod: Save and continue
+    preskocte.predmet: Please skip voting on this course if it is not subject to direct teaching, but the fulfillment of certain obligations (such as masters thesis, research activity, individual study of scientific literature, etc.) or you did not take it in this semester.
+    chyba.v.uciteloch: Is list of associated teachers wrong?
+    dajte.nam.vediet: Let us know and we will fix it
+    uloz: Save
+    ziadna.odpoved: no answer
+    komentar: Comment
+  controller:
+    chybny.slug.predmetu: Wrong subject slug: %slug%
+    nezapisany.predmet: You are not enrolled in course %slug%
+    ziadne.programy: You have no study programs.
+    program.neexistuje: You are not enrolled in study program %slug%.
+    ucitel.neuci: Teacher %teacher_code% is not associated with this course.
+    ziadne.podkategorie: General question categories are missing.
+    chybna.kategoria: Wrong category: %id%

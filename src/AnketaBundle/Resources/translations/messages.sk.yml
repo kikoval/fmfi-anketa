@@ -61,3 +61,22 @@ hlasovanie:
     ciel: Naším cieľom je dosiahnuť aspoň 50% účasť. Preto neváhajte a zapojte sa tiež!
     zapojte.sa: Neváhajte a zapojte sa tiež!
     kto.hlasoval.nakoniec: V ankete hlasovalo <strong>%voters%</strong> študentov.
+
+question:
+  index:
+    ak.neucil: Ak vás tento učiteľ neučil, môžete otázky preskočiť a zvoliť
+    uloz.a.chod: Ulož a choď ďalej
+    preskocte.predmet: Ak tento predmet nepodlieha priamej vyučbe, ale splneniu určitých povinností (ako napr. diplomová práca, vedecká činnosť, samostatné štúdium odbornej literatúry a pod.), prípadne ste tento predmet v aktuálnom semestri neobsolvovali lebo Vám bol uznaný, hodnotenie predmetu prosím preskočte.
+    chyba.v.uciteloch: Je v zozname učiteľov k tomuto predmetu chyba?
+    dajte.nam.vediet: Dajte nám vedieť a my to napravíme
+    uloz: Ulož
+    ziadna.odpoved: žiadna odpoveď
+    komentar: Komentár
+  controller:
+    chybny.slug.predmetu: Chybný slug predmetu: %slug%
+    nezapisany.predmet: Predmet %slug% nemáš zapísaný
+    ziadne.programy: Nemáš žiadne študijné programy.
+    program.neexistuje: Študijný program %slug% neštuduješ.
+    ucitel.neuci: Učiteľ %teacher_code% daný predmet neučí.
+    ziadne.podkategorie: Neexistujú žiadne všeobecné kategórie otázok.
+    chybna.kategoria: Chybná kategória: %id%
