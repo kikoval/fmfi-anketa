@@ -100,12 +100,11 @@ class ImportOtazkyCommand extends ContainerAwareCommand implements ContainerAwar
 
         // spracuj kategorie
         $categories = $input_array["kategorie"];
-        // ass_array je pomocne asociativne pole pre referenciu Category objektov
-        $ass_array = array();
         foreach ($categories as $category) {
             $this->processCategory($category, $manager);
         }
-
+        $manager->flush();
+	
         // spracuj otazky
         $questions = $input_array["otazky"];
         $questionPos = 0;
