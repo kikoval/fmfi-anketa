@@ -85,6 +85,8 @@ otazky:
             hodnota: -1
           - text: Triviálna.
             hodnota: -2
+          - text: Táto otázka pre tento predmet nemá zmysel.
+            hodnota: -3  
       position:   2
 
     - nazov:  Zaujímavosť predmetu
@@ -165,6 +167,8 @@ otazky:
             hodnota: -1
           - text: Určite nie.
             hodnota: -2      
+          - text: Táto otázka pre tento predmet nemá zmysel.
+            hodnota: -3     
       position:   7
 
     - nazov:  Odporúčanie predmetu
@@ -191,6 +195,8 @@ otazky:
       komentar:   No
       hviezdicky: No
       moznosti:
+          - text: predmet som mal povinný
+            hodnota: 0        
           - text: odporúčania ostatných študentov
             hodnota: 2
           - text: informačného listu (AIS)
