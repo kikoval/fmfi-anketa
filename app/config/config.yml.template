@@ -16,6 +16,7 @@ parameters:
       FaF:
         url: https://anketa.uniba.sk/fpharm
         name: Farmaceutická fakulta
+      twig.exception_listener.class: AnketaBundle\EventListener\ExceptionListener
 
 framework:
     trust_proxy_headers: false
