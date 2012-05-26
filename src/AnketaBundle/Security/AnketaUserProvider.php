@@ -131,6 +131,15 @@ class AnketaUserProvider implements UserProviderInterface
      *                                   nor constructed
      */
     public function loadUserByUsername($username) {
+        // It seems that the username argument may also be a UserInterface instance
+        // ... may be a bug in Symfony security component
+        // (the user(name) is extracted from PreAuthenticatedToken at
+        // PreAuthenticatedAuthenticationProvider:67)
+        if ($username instanceof UserInterface) {
+            $username = $username->getUsername();
+        }
+        $username = (string) $username;
+
         // Try to load the user from database first
         $user = $this->userRepository->findOneWithRolesByUserName($username);
 
