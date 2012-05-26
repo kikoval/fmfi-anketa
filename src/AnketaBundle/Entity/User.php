@@ -61,8 +61,8 @@ class User implements UserInterface {
     public function __construct($username) {
         $this->roles = new ArrayCollection();
         $this->userSeasons = new ArrayCollection();
-        $this->userName = $username;
-        $this->displayName = null;
+        $this->setUserName($username);
+        $this->setDisplayName(null);
     }
 
     public function getId() {
