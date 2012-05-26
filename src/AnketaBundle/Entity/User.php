@@ -70,6 +70,9 @@ class User implements UserInterface {
     }
 
     public function setUserName($value) {
+        if (!is_string($value)) {
+            throw new \InvalidArgumentException('User name must be string');
+        }
         $this->userName = $value;
     }
 

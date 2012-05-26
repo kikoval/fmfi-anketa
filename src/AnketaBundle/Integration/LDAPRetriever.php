@@ -194,6 +194,9 @@ class LDAPRetriever {
      */
     public function escape($str)
     {
+        if (!is_string($str)) {
+            throw new \InvalidArgumentException('Only strings can be escaped');
+        }
         $esc = '';
         // NOTE: strlen does not always work for binary strings
         // as it can be overriden by mbstring.func_overload 2
