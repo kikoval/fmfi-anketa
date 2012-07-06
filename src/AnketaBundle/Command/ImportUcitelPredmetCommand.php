@@ -103,13 +103,13 @@ class ImportUcitelPredmetCommand extends ContainerAwareCommand {
         $conn->beginTransaction();
 
         $insertTeacher = $conn->prepare("
-                    INSERT INTO Teacher (givenName, familyName, displayName, login) 
-                    VALUES (:givenName, :familyName, :displayName, :login) 
+                    INSERT INTO Teacher (id, givenName, familyName, displayName, login) 
+                    VALUES (:id, :givenName, :familyName, :displayName, :login) 
                     ON DUPLICATE KEY UPDATE login=login");
 
         $insertUser = $conn->prepare("
-                    INSERT INTO User (id, displayName, userName) 
-                    VALUES (:id, :displayName, :login) 
+                    INSERT INTO User (displayName, userName) 
+                    VALUES (:displayName, :login) 
 		    ON DUPLICATE KEY UPDATE userName=userName");
 
         $insertSubject = $conn->prepare("
@@ -176,18 +176,17 @@ class ImportUcitelPredmetCommand extends ContainerAwareCommand {
                     continue;
                 }
 
+                $insertUser->bindValue('login', $login);
+		$insertUser->bindValue('displayName', $plneMeno);
+                $insertUser->execute();
+                $userId = $conn->lastInsertId();
+                
+                $insertTeacher->bindValue('id', $userId);
                 $insertTeacher->bindValue('displayName', $plneMeno);
                 $insertTeacher->bindValue('givenName', $meno);
                 $insertTeacher->bindValue('familyName', $priezvisko);
                 $insertTeacher->bindValue('login', $login);
                 $insertTeacher->execute();
-
-                $lastInsertedId = $conn->lastInsertId();
-
-                $insertUser->bindValue('id', $lastInsertedId);
-                $insertUser->bindValue('login', $login);
-		$insertUser->bindValue('displayName', $plneMeno);
-                $insertUser->execute();
 
                 $insertSubject->bindValue('code', $kod);
                 $insertSubject->bindValue('name', $nazov);
