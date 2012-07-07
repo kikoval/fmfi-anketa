@@ -105,6 +105,10 @@ class ImportPocetStudentovCommand extends AbstractImportCommand {
                 $insertSubjectSeason->bindValue('count', count($students));
                 $insertSubjectSeason->bindValue('season', $season->getId());
                 $insertSubjectSeason->execute();
+                
+                if ($insertSubjectSeason->rowCount() == 0) {
+                    $output->writeln(sprintf('Predmet %s nie je v databaze, nevytvaram SubjectSeason.', $slug));
+                }
             }
         } catch (Exception $e) {
             $conn->rollback();
