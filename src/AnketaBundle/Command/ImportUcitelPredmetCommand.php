@@ -11,14 +11,11 @@
 
 namespace AnketaBundle\Command;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use AnketaBundle\Entity\Season;
-use AnketaBundle\Entity\SeasonRepository;
 use AnketaBundle\Lib\SubjectIdentificationInterface;
 use AnketaBundle\Lib\NativeCSVTableReader;
 use AnketaBundle\Lib\FixedWidthTableReader;
@@ -30,16 +27,14 @@ use AnketaBundle\Lib\FixedWidthTableReader;
  * @package    Anketa
  * @author     Jakub Marek <jakub.marek@gmail.com>
  */
-class ImportUcitelPredmetCommand extends ContainerAwareCommand {
+class ImportUcitelPredmetCommand extends AbstractImportCommand {
 
     protected function configure() {
-        //parent::configure();
+        parent::configure();
 
         $this
                 ->setName('anketa:import:ucitel-predmet')
                 ->setDescription('Importuj ucitelov predmety z textaku')
-                ->addArgument('file', InputArgument::REQUIRED)
-                ->addOption('season', 'd', InputOption::VALUE_OPTIONAL, 'Season to use', null)
                 ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Format of importted data', null)
         ;
     }
@@ -55,37 +50,12 @@ class ImportUcitelPredmetCommand extends ContainerAwareCommand {
      * @throws \LogicException When this abstract class is not implemented
      */
     protected function execute(InputInterface $input, OutputInterface $output) {
-        $manager = $this->getContainer()->get('doctrine')->getEntityManager();
-
         $subjectIdentification = $this->getContainer()->get('anketa.subject_identification');
 
-        $seasonSlug = $input->getOption('season');
-        
         $fileFormat = $input->getOption('format');
 
-        /** @var SeasonRepository seasonRepository */
-        $seasonRepository = $manager->getRepository('AnketaBundle:Season');
-        if ($seasonSlug === null) {
-            $season = $seasonRepository->getActiveSeason();
-            if ($season == null) {
-                $output->writeln("<error>V databaze sa nenasla aktivna Season</error>");
-                return;
-            }
-        } else {
-            $season = $seasonRepository->findOneBy(array('slug' => $seasonSlug));
-            if ($season == null) {
-                $output->writeln("<error>V databaze sa nenasla Season so slug " . $seasonSlug . "</error>");
-                return;
-            }
-        }
-        
-        $filename = $input->getArgument('file');
-
-        $file = fopen($filename, "r");
-        if ($file === false) {
-            $output->writeln('<error>Failed to open file</error>');
-            return;
-        }
+        $season = $this->getSeason($input);
+        $file = $this->openFile($input);
 
         if ($fileFormat == 'csv') {
             // nacitaj prve riadky, ktore nas nezaujimaju
