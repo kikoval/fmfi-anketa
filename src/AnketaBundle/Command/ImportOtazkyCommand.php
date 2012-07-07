@@ -27,7 +27,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Yaml\Yaml;
 use Doctrine\Common\DataFixtures\FixtureInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -37,13 +36,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @package    Anketa
  * @author     Jakub Marek <jakub.marek@gmail.com>
  */
-class ImportOtazkyCommand extends ContainerAwareCommand implements ContainerAwareInterface {
-
-    private $container;
-
-    function setContainer(ContainerInterface $container = null) {
-        $this->container = $container;
-    }
+class ImportOtazkyCommand extends ContainerAwareCommand {
 
     protected function configure() {
         //parent::configure();
