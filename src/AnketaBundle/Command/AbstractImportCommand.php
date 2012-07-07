@@ -43,6 +43,12 @@ abstract class AbstractImportCommand extends ContainerAwareCommand {
         return $this;
     }
     
+    /**
+     * Get Season that was selected as option (or active season if none was specified)
+     * @param InputInterface $input
+     * @return Season
+     * @throws Exception 
+     */
     protected function getSeason(InputInterface $input)
     {
         $manager = $this->getContainer()->get('doctrine')->getEntityManager();
