@@ -18,6 +18,8 @@ use AnketaBundle\Entity\Season;
 
 /**
  * @ORM\Entity()
+ * @ORM\Table(name="SubjectSeason",
+ *      uniqueConstraints={@ORM\UniqueConstraint(name="subject_season_unique",columns={"subject_id","season_id"})})
  */
 class SubjectSeason {
     
