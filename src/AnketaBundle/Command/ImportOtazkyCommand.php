@@ -49,7 +49,7 @@ class ImportOtazkyCommand extends ContainerAwareCommand implements ContainerAwar
         //parent::configure();
 
         $this
-                ->setName('anketa:import-otazky')
+                ->setName('anketa:import:otazky')
                 ->setDescription('Importuj otazky z yaml')
                 ->addArgument('file', InputArgument::REQUIRED)
                 ->addOption('duplicates', 'c', InputOption::VALUE_NONE, 'Checks for Duplicate Categories', null)

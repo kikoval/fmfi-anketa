@@ -36,7 +36,7 @@ class ImportUcitelPredmetCommand extends ContainerAwareCommand {
         //parent::configure();
 
         $this
-                ->setName('anketa:import-ucitel-predmet')
+                ->setName('anketa:import:ucitel-predmet')
                 ->setDescription('Importuj ucitelov predmety z textaku')
                 ->addArgument('file', InputArgument::REQUIRED)
                 ->addOption('season', 'd', InputOption::VALUE_OPTIONAL, 'Season to use', null)

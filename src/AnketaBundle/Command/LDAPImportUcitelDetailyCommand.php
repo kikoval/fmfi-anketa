@@ -29,7 +29,7 @@ class LDAPImportUcitelDetailyCommand extends ContainerAwareCommand {
         //parent::configure();
 
         $this
-                ->setName('anketa:ldap-ucitel-detaily')
+                ->setName('anketa:ldap:ucitel-detaily')
                 ->setDescription('Importuj detaily ucitelov z LDAPu')
         ;
     }
