@@ -34,8 +34,13 @@ abstract class AbstractImportCommand extends ContainerAwareCommand {
 
         $this
                 ->addArgument('file', InputArgument::REQUIRED)
-                ->addOption('season', 'd', InputOption::VALUE_OPTIONAL, 'Season to use', null)
         ;
+    }
+    
+    protected function addSeasonOption()
+    {
+        $this->addOption('season', 'd', InputOption::VALUE_OPTIONAL, 'Season to use', null);
+        return $this;
     }
     
     protected function getSeason(InputInterface $input)

@@ -42,6 +42,7 @@ class ImportOtazkyCommand extends AbstractImportCommand {
         $this
                 ->setName('anketa:import:otazky')
                 ->setDescription('Importuj otazky z yaml')
+                ->addSeasonOption()
                 ->addOption('duplicates', 'c', InputOption::VALUE_NONE, 'Checks for Duplicate Categories', null)
         ;
     }

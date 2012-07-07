@@ -35,6 +35,7 @@ class ImportUcitelPredmetCommand extends AbstractImportCommand {
         $this
                 ->setName('anketa:import:ucitel-predmet')
                 ->setDescription('Importuj ucitelov predmety z textaku')
+                ->addSeasonOption()
                 ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Format of importted data', null)
         ;
     }
