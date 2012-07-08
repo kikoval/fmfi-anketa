@@ -37,6 +37,9 @@ abstract class AbstractImportCommand extends ContainerAwareCommand {
         ;
     }
     
+    /**
+     * @return \AnketaBundle\Command\AbstractImportCommand 
+     */
     protected function addSeasonOption()
     {
         $this->addOption('season', 'd', InputOption::VALUE_OPTIONAL, 'Season to use', null);
