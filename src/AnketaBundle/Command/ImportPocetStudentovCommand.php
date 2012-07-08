@@ -33,6 +33,7 @@ class ImportPocetStudentovCommand extends AbstractImportCommand {
                 ->setName('anketa:import:pocet-studentov')
                 ->setDescription('Importuj pocet studentov z textaku')
                 ->addArgument('column', InputArgument::REQUIRED, 'faculty|all')
+                ->addOption('dump-sql', null, InputOption::VALUE_NONE, 'Whether to dump SQL instead of executing')
                 ->addSeasonOption()
         ;
     }
@@ -60,20 +61,34 @@ class ImportPocetStudentovCommand extends AbstractImportCommand {
             $output->writeln('<error>Invalid value for column. Use either faculty or all</error>');
             return;
         }
-        $season = $this->getSeason($input);
-
+        if (preg_match('/^\d+$/', $input->getOption('season'))) {
+            $season_id = intval($input->getOption('season'));
+        }
+        else {
+            $season_id = $this->getSeason($input)->getId();
+        }
+        
         $subjectIdentification = $this->getContainer()->get('anketa.subject_identification');
         $tableReader = new AISDelimitedTableReader($file);
         
         $conn = $this->getContainer()->get('database_connection');
 
         $conn->beginTransaction();
-
-        $insertSubjectSeason = $conn->prepare("
+        
+        $dumpSQL = $input->getOption('dump-sql');
+        
+        if (!$dumpSQL) {
+            $insertSubjectSeason = $conn->prepare("
                     INSERT INTO SubjectSeason (subject_id, season_id, $column)
                     SELECT s.id, :season, :count FROM Subject s WHERE s.slug = :subject_slug
                     ON DUPLICATE KEY UPDATE $column = VALUES($column)
                     ");
+        }
+        else {
+            $insertTemplate = "INSERT INTO SubjectSeason (subject_id, season_id, $column) " .
+                    "SELECT s.id, %d, %d FROM Subject s WHERE s.slug = %s " .
+                    "ON DUPLICATE KEY UPDATE $column = VALUES($column);";
+        }
 
         try {
             $pocty = array();
@@ -100,14 +115,21 @@ class ImportPocetStudentovCommand extends AbstractImportCommand {
                 
             }
             
-            foreach ($pocty as $slug => $students) {
-                $insertSubjectSeason->bindValue('subject_slug', $slug);
-                $insertSubjectSeason->bindValue('count', count($students));
-                $insertSubjectSeason->bindValue('season', $season->getId());
-                $insertSubjectSeason->execute();
-                
-                if ($insertSubjectSeason->rowCount() == 0) {
-                    $output->writeln(sprintf('Predmet %s nie je v databaze, nevytvaram SubjectSeason.', $slug));
+            if ($dumpSQL) {
+                foreach ($pocty as $slug => $students) {
+                    $output->writeln(sprintf($insertTemplate, $season_id, count($students), $conn->quote($slug)));
+                }
+            }
+            else {
+                foreach ($pocty as $slug => $students) {
+                    $insertSubjectSeason->bindValue('subject_slug', $slug);
+                    $insertSubjectSeason->bindValue('count', count($students));
+                    $insertSubjectSeason->bindValue('season', $season_id);
+                    $insertSubjectSeason->execute();
+
+                    if ($insertSubjectSeason->rowCount() == 0) {
+                        $output->writeln(sprintf('Predmet %s nie je v databaze, nevytvaram SubjectSeason.', $slug));
+                    }
                 }
             }
         } catch (Exception $e) {
