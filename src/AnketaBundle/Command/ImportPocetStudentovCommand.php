@@ -17,6 +17,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use AnketaBundle\Lib\AISDelimitedTableReader;
+use AnketaBundle\Lib\ConcatTableReader;
 
 /**
  * Class functioning as command/task for importing departments.
@@ -34,6 +35,7 @@ class ImportPocetStudentovCommand extends AbstractImportCommand {
                 ->setDescription('Importuj pocet studentov z textaku')
                 ->addArgument('column', InputArgument::REQUIRED, 'faculty|all')
                 ->addOption('dump-sql', null, InputOption::VALUE_NONE, 'Whether to dump SQL instead of executing')
+                ->addOption('second', null, InputOption::VALUE_REQUIRED, 'Use additional data file (for whole year season)')
                 ->addSeasonOption()
         ;
     }
@@ -51,6 +53,15 @@ class ImportPocetStudentovCommand extends AbstractImportCommand {
     protected function execute(InputInterface $input, OutputInterface $output) {
         
         $file = $this->openFile($input);
+        
+        $secondFile = null;
+        if ($input->getOption('second') !== null) {
+            $secondFile = fopen($input->getOption('second'), "r");
+            if ($secondFile === false) {
+                throw new Exception('Failed to open file');
+            }
+        }
+        
         if ($input->getArgument('column') === 'faculty') {
             $column = 'studentCountFaculty';
         }
@@ -70,6 +81,9 @@ class ImportPocetStudentovCommand extends AbstractImportCommand {
         
         $subjectIdentification = $this->getContainer()->get('anketa.subject_identification');
         $tableReader = new AISDelimitedTableReader($file);
+        if ($secondFile !== null) {
+            $tableReader = new ConcatTableReader(array($tableReader, new AISDelimitedTableReader($secondFile)));
+        }
         
         $conn = $this->getContainer()->get('database_connection');
 
