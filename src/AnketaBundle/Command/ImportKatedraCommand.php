@@ -32,6 +32,7 @@ class ImportKatedraCommand extends AbstractImportCommand {
         $this
                 ->setName('anketa:import:katedra')
                 ->setDescription('Importuj katedry z textaku')
+                ->addOption('parent', null, InputOption::VALUE_REQUIRED, 'Importovať iba katedry pod touto OJ')
         ;
     }
 
@@ -48,6 +49,7 @@ class ImportKatedraCommand extends AbstractImportCommand {
     protected function execute(InputInterface $input, OutputInterface $output) {
 
         $file = $this->openFile($input);
+        $parentFilter = $input->getOption('parent');
 
         // nacitaj prve riadky, ktore nas nezaujimaju
         for ($i = 0;$i < 5; $i++) {
@@ -66,11 +68,16 @@ class ImportKatedraCommand extends AbstractImportCommand {
         try {
             while (($row = $tableReader->readRow()) !== false) {
                 $code = $row[0];
+                $parentOrgUnit = $row[1];
                 $type = $row[2];
                 $name = $row[3];
                 $homepage = $row[7];
                 
                 if ($type !== 'Kated') continue;
+                if ($parentFilter !== null && $parentOrgUnit !== $parentFilter) {
+                    continue;
+                }
+                
                 
                 $insertDepartment->bindValue('code', $code);
                 $insertDepartment->bindValue('name', $name);
