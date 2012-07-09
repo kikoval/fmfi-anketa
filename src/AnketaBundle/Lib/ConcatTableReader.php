@@ -30,6 +30,19 @@ class ConcatTableReader implements TableReaderInterface
     {
         $this->readers = $readers;
         $this->currentReader = 0;
+        
+        //Check that the tables have the same columns
+        $firstHeader = null;
+        foreach ($readers as $reader) {
+            if ($firstHeader === null) {
+                $firstHeader = $reader->getHeader();
+            }
+            else {
+                if ($firstHeader != $reader->getHeader()) {
+                    throw new Exception("Table headers do not match");
+                }
+            }
+        }
     }
     
     public function readRow()
