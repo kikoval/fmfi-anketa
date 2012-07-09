@@ -94,13 +94,13 @@ class ImportPocetStudentovCommand extends AbstractImportCommand {
         if (!$dumpSQL) {
             $insertSubjectSeason = $conn->prepare("
                     INSERT INTO SubjectSeason (subject_id, season_id, $column)
-                    SELECT s.id, :season, :count FROM Subject s WHERE s.slug = :subject_slug
+                    SELECT s.id, :season, :count FROM Subject s WHERE s.code = :subject_code
                     ON DUPLICATE KEY UPDATE $column = VALUES($column)
                     ");
         }
         else {
             $insertTemplate = "INSERT INTO SubjectSeason (subject_id, season_id, $column) " .
-                    "SELECT s.id, %d, %d FROM Subject s WHERE s.slug = %s " .
+                    "SELECT s.id, %d, %d FROM Subject s WHERE s.code = %s " .
                     "ON DUPLICATE KEY UPDATE $column = VALUES($column);";
         }
 
@@ -119,30 +119,30 @@ class ImportPocetStudentovCommand extends AbstractImportCommand {
                 $kod = $props['code'];
                 $slug = $props['slug'];
                 
-                if (!isset($pocty[$slug])) {
-                    $pocty[$slug] = array();
+                if (!isset($pocty[$kod])) {
+                    $pocty[$kod] = array();
                 }
                 
-                if (!isset($pocty[$slug][$uoc])) {
-                    $pocty[$slug][$uoc] = true;
+                if (!isset($pocty[$kod][$uoc])) {
+                    $pocty[$kod][$uoc] = true;
                 }
                 
             }
             
             if ($dumpSQL) {
-                foreach ($pocty as $slug => $students) {
-                    $output->writeln(sprintf($insertTemplate, $season_id, count($students), $conn->quote($slug)));
+                foreach ($pocty as $kod => $students) {
+                    $output->writeln(sprintf($insertTemplate, $season_id, count($students), $conn->quote($kod)));
                 }
             }
             else {
-                foreach ($pocty as $slug => $students) {
-                    $insertSubjectSeason->bindValue('subject_slug', $slug);
+                foreach ($pocty as $kod => $students) {
+                    $insertSubjectSeason->bindValue('subject_code', $kod);
                     $insertSubjectSeason->bindValue('count', count($students));
                     $insertSubjectSeason->bindValue('season', $season_id);
                     $insertSubjectSeason->execute();
 
                     if ($insertSubjectSeason->rowCount() == 0) {
-                        $output->writeln(sprintf('Predmet %s nie je v databaze, nevytvaram SubjectSeason.', $slug));
+                        $output->writeln(sprintf('Predmet %s nie je v databaze, nevytvaram SubjectSeason.', $kod));
                     }
                 }
             }
