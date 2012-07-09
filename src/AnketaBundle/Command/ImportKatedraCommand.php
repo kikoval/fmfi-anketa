@@ -78,6 +78,9 @@ class ImportKatedraCommand extends AbstractImportCommand {
                     continue;
                 }
                 
+                if ($homepage === 'http://' || $homepage === '') {
+                    $homepage = null;
+                }
                 
                 $insertDepartment->bindValue('code', $code);
                 $insertDepartment->bindValue('name', $name);
