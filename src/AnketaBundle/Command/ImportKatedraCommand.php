@@ -17,6 +17,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use AnketaBundle\Lib\NativeCSVTableReader;
+use AnketaBundle\Lib\TableColumnResolver;
 
 /**
  * Class functioning as command/task for importing departments.
@@ -56,6 +57,12 @@ class ImportKatedraCommand extends AbstractImportCommand {
             fgets($file);
         }
         $tableReader = new NativeCSVTableReader($file);
+        $tableResolver = new TableColumnResolver($tableReader);
+        $tableResolver->mapColumnByTitle('OJ ', 'code');
+        $tableResolver->mapColumnByTitle('Nadriadená org. j. ', 'parent');
+        $tableResolver->mapColumnByTitle('Typ OJ ', 'type');
+        $tableResolver->mapColumnByTitle('Org. jednotka ', 'name');
+        $tableResolver->mapColumnByTitle('Homepage ', 'homepage');
         
         $conn = $this->getContainer()->get('database_connection');
 
@@ -66,12 +73,12 @@ class ImportKatedraCommand extends AbstractImportCommand {
                     VALUES (:code, :name, :homepage)");
 
         try {
-            while (($row = $tableReader->readRow()) !== false) {
-                $code = $row[0];
-                $parentOrgUnit = $row[1];
-                $type = $row[2];
-                $name = $row[3];
-                $homepage = $row[7];
+            while (($row = $tableResolver->readRow()) !== false) {
+                $code = $row['code'];
+                $parentOrgUnit = $row['parent'];
+                $type = $row['type'];
+                $name = $row['name'];
+                $homepage = $row['homepage'];
                 
                 if ($type !== 'Kated') continue;
                 if ($parentFilter !== null && $parentOrgUnit !== $parentFilter) {
