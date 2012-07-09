@@ -20,7 +20,7 @@ class Subject {
 
     /**
      * Does not (need to) uniquely identify the subject!
-     * @ORM\Column(type="string", nullable="false")
+     * @ORM\Column(type="string", nullable=false, unique=true)
      */
     protected $code;
     
@@ -30,7 +30,7 @@ class Subject {
      * 
      * (i.e. alphanumeric chars with not repeated dashes)
      * 
-     * @ORM\Column(type="string", nullable="false", unique="true")
+     * @ORM\Column(type="string", nullable=false, unique=true)
      */
     protected $slug;
 
