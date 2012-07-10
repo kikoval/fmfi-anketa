@@ -42,7 +42,7 @@ class StatisticsSection extends ContainerAware {
         $result->questionsCategoryType = CategoryType::TEACHER_SUBJECT;
         $result->answersQuery = array('subject' => $subject->getId(), 'teacher' => $teacher->getId());
         $result->responsesQuery = array('season' => $season->getId(), 'subject' => $subject->getId(), 'teacher' => $teacher->getId(), 'studyProgram' => null);
-        $result->activeMenuItems = array($season->getId(), 'subjects', $subject->getCategory(), $subject->getId(), $teacher->getId());
+        $result->activeMenuItems = array($season->getId(), 'subjects', $subject->getId(), $teacher->getId());
         $result->slug = $season->getSlug() . '/predmet/' . $subject->getSlug() . '/ucitel/' . $teacher->getId();
         $result->associationExamples = 'prednášajúci, cvičiaci, garant predmetu';
         return $result;
@@ -72,7 +72,7 @@ class StatisticsSection extends ContainerAware {
         $result->questionsCategoryType = CategoryType::SUBJECT;
         $result->answersQuery = array('subject' => $subject->getId());
         $result->responsesQuery = array('season' => $season->getId(), 'subject' => $subject->getId(), 'teacher' => null, 'studyProgram' => null);
-        $result->activeMenuItems = array($season->getId(), 'subjects', $subject->getCategory(), $subject->getId());
+        $result->activeMenuItems = array($season->getId(), 'subjects', $subject->getId());
         $result->slug = $season->getSlug() . '/predmet/' . $subject->getSlug();
         $result->associationExamples = 'prednášajúci, cvičiaci, garant predmetu';
         return $result;

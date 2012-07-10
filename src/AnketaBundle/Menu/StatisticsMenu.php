@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright Copyright (c) 2012 The FMFI Anketa authors (see AUTHORS).
  * Use of this source code is governed by a license that can be
@@ -13,8 +14,8 @@ namespace AnketaBundle\Menu;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use AnketaBundle\Controller\StatisticsSection;
 
-class StatisticsMenu
-{
+class StatisticsMenu {
+
     /** @var ContainerInterface */
     protected $container;
 
@@ -35,26 +36,24 @@ class StatisticsMenu
         $menu = array();
         $seasons = $em->getRepository('AnketaBundle:Season')->findBy(array(), array('ordering' => 'DESC'));
         foreach ($seasons as $season) {
-            if (!$access->canSeeResults($season)) continue;
+            if (!$access->canSeeResults($season))
+                continue;
             // Add this season.
             $menu[$season->getId()] = $seasonItem = new MenuItem(
-                $season->getDescription(),
-                $this->generateUrl('statistics_list_general',
-                    array('season_slug' => $season->getSlug())));
+                            $season->getDescription(),
+                            $this->generateUrl('statistics_list_general', array('season_slug' => $season->getSlug())));
             if (isset($activeItems[0]) && $activeItems[0] == $season->getId()) {
                 $seasonItem->expanded = true;
 
                 // Add "General questions" under this season.
                 $seasonItem->children['general'] = new MenuItem(
-                    'Všeobecné otázky',
-                    $this->generateUrl('statistics_list_general',
-                        array('season_slug' => $season->getSlug())));
+                                'Všeobecné otázky',
+                                $this->generateUrl('statistics_list_general', array('season_slug' => $season->getSlug())));
 
                 // Add "Study programmes" under this season.
                 $seasonItem->children['study_programs'] = $studyProgramsItem = new MenuItem(
-                    'Študijné programy',
-                    $this->generateUrl('statistics_list_programs',
-                        array('season_slug' => $season->getSlug())));
+                                'Študijné programy',
+                                $this->generateUrl('statistics_list_programs', array('season_slug' => $season->getSlug())));
                 if (isset($activeItems[1]) && $activeItems[1] == 'study_programs') {
                     $studyProgramsItem->expanded = true;
                     $studyPrograms = $em->getRepository('AnketaBundle:StudyProgram')->getAllWithAnswers($season);
@@ -62,71 +61,58 @@ class StatisticsMenu
                         // Add this study program under "Study programmes".
                         $studyProgramSection = StatisticsSection::makeStudyProgramSection($this->container, $season, $studyProgram);
                         $studyProgramsItem->children[$studyProgram->getCode()] = new MenuItem(
-                            $studyProgram->getCode(), $studyProgramSection->getStatisticsPath());
+                                        $studyProgram->getCode(), $studyProgramSection->getStatisticsPath());
                     }
                 }
 
                 // Add "Subjects" under this season.
                 $seasonItem->children['subjects'] = $subjectsItem = new MenuItem(
-                    'Predmety',
-                    $this->generateUrl('statistics_list_subjects',
-                        array('season_slug' => $season->getSlug())));
+                                'Predmety',
+                                $this->generateUrl('statistics_list_subjects', array('season_slug' => $season->getSlug())));
                 if (isset($activeItems[1]) && $activeItems[1] == 'subjects') {
-                    $subjectsByCategory = $em->getRepository('AnketaBundle:Subject')->getCategorizedSubjects($season);
-                    foreach (array_keys($subjectsByCategory) as $category) {
-                        // Add this category under "Subjects".
-                        $subjectsItem->children[$category] = $categoryItem = new MenuItem(
-                            $category,
-                            $this->generateUrl('statistics_list_subjects',
-                                array('season_slug' => $season->getSlug(), 'category' => $category)));
-                        if (isset($activeItems[2]) && $activeItems[2] == $category) {
-                            $subjectsItem->only_expanded = true;
-                            $categoryItem->expanded = true;
-                            foreach ($subjectsByCategory[$category] as $subject) {
-                                // Add this subject under this category.
-                                $subjectSection = StatisticsSection::makeSubjectSection($this->container, $season, $subject);
-                                $categoryItem->children[$subject->getId()] = $subjectItem = new MenuItem(
-                                    $subject->getName(), $subjectSection->getStatisticsPath());
-                                if (isset($activeItems[3]) && $activeItems[3] == $subject->getId()) {
-                                    $categoryItem->only_expanded = true;
-                                    $teachers = $em->getRepository('AnketaBundle:Teacher')->getTeachersForSubject($subject, $season);
-                                    foreach ($teachers as $teacher) {
-                                        // Add this teacher under this subject.
-                                        $teacherSection = StatisticsSection::makeSubjectTeacherSection($this->container, $season, $subject, $teacher);
-                                        $subjectItem->children[$teacher->getId()] = new MenuItem(
+                    if (isset($activeItems[2])) {
+                        $subject = $em->getRepository('AnketaBundle:Subject')->getSubjectById($activeItems[2]);
+
+                        $subjectSection = StatisticsSection::makeSubjectSection($this->container, $season, $subject[0]);
+                        $subjectsItem->children[$activeItems[2]] = $subjectItem = new MenuItem(
+                                        $subject[0]->getName(), $subjectSection->getStatisticsPath());
+                        $subjectItem->expanded = true;
+                        
+                        $teachers = $em->getRepository('AnketaBundle:Teacher')->getTeachersForSubject($subject[0], $season);
+                        foreach ($teachers as $teacher) {
+                            // Add this teacher under this subject.
+                            $teacherSection = StatisticsSection::makeSubjectTeacherSection($this->container, $season, $subject[0], $teacher);
+                            $subjectItem->children[$teacher->getId()] = new MenuItem(
                                             $teacher->getName(), $teacherSection->getStatisticsPath());
-                                    }
-                                }
-                            }
                         }
                     }
                 }
 
-                // Add "My subjects" under this season.
-                if ($access->hasOwnSubjects()) {
-                    $seasonItem->children['my_subjects'] = new MenuItem(
-                        'Moje predmety',
-                        $this->generateUrl('statistics_list_my_subjects',
-                            array('season_slug' => $season->getSlug())));
-                }
+            }
 
-                // Add "My comments" under this section.
-                if ($access->hasOwnResponses()) {
-                    $seasonItem->children['my_comments'] = new MenuItem(
-                        'Moje komentáre',
-                        $this->generateUrl('response',
-                            array('season_slug' => $season->getSlug())));
-                }
+            // Add "My subjects" under this season.
+            if ($access->hasOwnSubjects()) {
+                $seasonItem->children['my_subjects'] = new MenuItem(
+                                'Moje predmety',
+                                $this->generateUrl('statistics_list_my_subjects', array('season_slug' => $season->getSlug())));
+            }
 
-                // Add "My reports" under this season.
-                if ($access->hasReports()) {
-                    $seasonItem->children['my_reports'] = new MenuItem(
-                        'Reporty',
-                        $this->generateUrl('reports_my_reports',
-                            array('season_slug' => $season->getSlug())));
-                }
+            // Add "My comments" under this section.
+            if ($access->hasOwnResponses()) {
+                $seasonItem->children['my_comments'] = new MenuItem(
+                                'Moje komentáre',
+                                $this->generateUrl('response', array('season_slug' => $season->getSlug())));
+            }
+
+            // Add "My reports" under this season.
+            if ($access->hasReports()) {
+                $seasonItem->children['my_reports'] = new MenuItem(
+                                'Reporty',
+                                $this->generateUrl('reports_my_reports', array('season_slug' => $season->getSlug())));
             }
         }
+
+
 
         return $menu;
     }
@@ -149,8 +135,7 @@ class StatisticsMenu
             $activeTail->active = true;
         }
 
-        return $this->container->get('templating')->render('AnketaBundle::menu.html.twig',
-                                                           $templateParams);
+        return $this->container->get('templating')->render('AnketaBundle::menu.html.twig', $templateParams);
     }
 
 }

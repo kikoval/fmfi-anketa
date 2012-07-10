@@ -279,7 +279,7 @@ class StatisticsController extends Controller {
         $templateParams = array();
         $templateParams['class'] = 'subject-listing';
         $templateParams['activeMenuItems'] = array($season->getId(), 'subjects');
-        if ($category) $templateParams['activeMenuItems'][] = $category;
+//        if ($category) $templateParams['activeMenuItems'][] = $category;
         $templateParams['items'] = $items;
         return $this->render('AnketaBundle:Statistics:listing.html.twig', $templateParams);
     }
