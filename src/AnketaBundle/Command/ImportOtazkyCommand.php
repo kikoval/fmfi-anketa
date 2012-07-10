@@ -19,7 +19,6 @@ use AnketaBundle\Entity\Option;
 use AnketaBundle\Entity\Season;
 use AnketaBundle\Entity\SeasonRepository;
 use Doctrine\ORM\EntityManager;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
@@ -27,8 +26,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Yaml\Yaml;
 use Doctrine\Common\DataFixtures\FixtureInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Class functioning as command/task for importing questions and categories
@@ -37,23 +34,16 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @package    Anketa
  * @author     Jakub Marek <jakub.marek@gmail.com>
  */
-class ImportOtazkyCommand extends ContainerAwareCommand implements ContainerAwareInterface {
-
-    private $container;
-
-    function setContainer(ContainerInterface $container = null) {
-        $this->container = $container;
-    }
+class ImportOtazkyCommand extends AbstractImportCommand {
 
     protected function configure() {
-        //parent::configure();
+        parent::configure();
 
         $this
-                ->setName('anketa:import-otazky')
+                ->setName('anketa:import:otazky')
                 ->setDescription('Importuj otazky z yaml')
-                ->addArgument('file', InputArgument::REQUIRED)
+                ->addSeasonOption()
                 ->addOption('duplicates', 'c', InputOption::VALUE_NONE, 'Checks for Duplicate Categories', null)
-                ->addOption('season', 'd', InputOption::VALUE_OPTIONAL, 'Season to use', null)
         ;
     }
 
@@ -72,23 +62,7 @@ class ImportOtazkyCommand extends ContainerAwareCommand implements ContainerAwar
         $filename = $input->getArgument('file');
         $checkDuplicatesOption = $input->getOption('duplicates');
 
-        $seasonSlug = $input->getOption('season');
-
-        /** @var SeasonRepository seasonRepository */
-        $seasonRepository = $manager->getRepository('AnketaBundle:Season');
-        if ($seasonSlug === null) {
-            $season = $seasonRepository->getActiveSeason();
-            if ($season == null) {
-                $output->writeln("<error>V databaze sa nenasla aktivna Season</error>");
-                return;
-            }
-        } else {
-            $season = $seasonRepository->findOneBy(array('slug' => $seasonSlug));
-            if ($season == null) {
-                $output->writeln("<error>V databaze sa nenasla Season so slug " . $seasonSlug . "</error>");
-                return;
-            }
-        }
+        $season = $this->getSeason($input);
 
         $input_array = Yaml::parse($filename);
 
