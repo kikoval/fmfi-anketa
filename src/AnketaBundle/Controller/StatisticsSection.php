@@ -59,10 +59,10 @@ class StatisticsSection extends ContainerAware {
         if (isset($subjectSeason) && $subjectSeason->getStudentCountFaculty() !== null) {
             $scf = $subjectSeason->getStudentCountFaculty();
             $result->preface = 'Tento predmet ';
-            if ($scf == 0) $result->preface .= 'nemal nikto z FMFI zapísaný';
-            if ($scf == 1) $result->preface .= 'mal zapísaný '.$scf.' študent FMFI';
-            if ($scf >= 2 && $scf <= 4) $result->preface .= 'mali zapísaní '.$scf.' študenti FMFI';
-            if ($scf >= 5) $result->preface .= 'malo zapísaných '.$scf.' študentov FMFI';
+            if ($scf == 0) $result->preface .= 'nemal nikto z '. $container->getParameter('skratka_fakulty') .' zapísaný';
+            if ($scf == 1) $result->preface .= 'mal zapísaný '.$scf.' študent '. $container->getParameter('skratka_fakulty');
+            if ($scf >= 2 && $scf <= 4) $result->preface .= 'mali zapísaní '.$scf.' študenti '. $container->getParameter('skratka_fakulty');
+            if ($scf >= 5) $result->preface .= 'malo zapísaných '.$scf.' študentov '. $container->getParameter('skratka_fakulty');
             if ($subjectSeason->getStudentCountAll() !== null) {
                 $sco = $subjectSeason->getStudentCountAll() - $scf;
                 if ($sco) $result->preface .= ' ('.$sco.' z iných fakúlt)';

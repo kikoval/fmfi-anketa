@@ -182,7 +182,7 @@ class ImportUcitelPredmetCommand extends ContainerAwareCommand {
 
                 $lastInsertedId = $conn->lastInsertId();
 
-                $insertUser->bindValue('id', $$lastInsertedId);
+                $insertUser->bindValue('id', $lastInsertedId);
                 $insertUser->bindValue('login', $login);
 		$insertUser->bindValue('displayName',$meno);
                 $insertUser->execute();
