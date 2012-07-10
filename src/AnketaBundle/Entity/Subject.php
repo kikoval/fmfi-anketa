@@ -80,8 +80,16 @@ class Subject {
      */
     public function getCategory()
     {
-        // TODO: fixnut pre dlhe kody
-        $match = preg_match("@^[^-]*-([^-]*)-@", $this->getCode(), $matches);
+        $matches = array();
+        $stred = preg_match('@^[^/]*/(.*)$@', $this->getCode(), $matches);
+        if ($stred == 0) {
+            $zvysok = $this->getCode();
+        }
+        else {
+            $zvysok = $matches[1];
+        }
+        $matches = array();
+        $match = preg_match("@^[^-]*-([^-]*)-@", $zvysok, $matches);
         if ($match == 0) {
             return self::NO_CATEGORY;
         } else {
