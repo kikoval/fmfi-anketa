@@ -7,11 +7,10 @@ statistics_season:
     defaults: { _controller: AnketaBundle:Statistics:listGeneral}
 
 statistics_list_subjects:
-    pattern: /vysledky/{season_slug}/predmety/{category}
-    defaults: { _controller: AnketaBundle:Statistics:listSubjects, category: null}
+    pattern: /vysledky/{season_slug}/predmety/
+    defaults: { _controller: AnketaBundle:Statistics:listSubjects}
     requirements:
       season_slug:   "[a-z0-9-]+"
-      category:      "[a-zA-Z0-9-]*"
 
 statistics_list_my_subjects:
     pattern: /vysledky/{season_slug}/moje-predmety

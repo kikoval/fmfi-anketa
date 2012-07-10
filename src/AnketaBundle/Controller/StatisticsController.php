@@ -257,7 +257,7 @@ class StatisticsController extends Controller {
         return $data;
     }
 
-    public function listSubjectsAction($season_slug, $category) {
+    public function listSubjectsAction($season_slug) {
         $em = $this->get('doctrine.orm.entity_manager');
 
         $season = $this->getSeason($season_slug);
@@ -267,7 +267,6 @@ class StatisticsController extends Controller {
 
         $items = array();
         foreach ($categories as $category_id => $subjects) {
-            if ($category != null && $category != $category_id) continue;
             $links = array();
             foreach ($subjects as $subject) {
                 $section = StatisticsSection::makeSubjectSection($this->container, $season, $subject);
