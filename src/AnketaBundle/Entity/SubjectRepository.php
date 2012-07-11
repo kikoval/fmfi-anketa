@@ -67,14 +67,49 @@ class SubjectRepository extends EntityRepository {
         return $subjects;
     }
 
-    
-    public function getSubjectsForTeacherWithAnswers($teacher, $season) {
+    /**
+     * Vrati zoznam predmetov daneho ucitela, pre ktore je aspon jedna
+     * odpoved o danom ucitelovi v danej season.
+     * (t.j. nevrati predmety, kde su vyplnene otazky o predmete, ale nie o
+     *  ucitelovi, napriek tomu ze ten predmet ucil)
+     * @param Teacher $teacher
+     * @param Season $season
+     * @return array(Subject)
+     */
+    public function getSubjectsForTeacherWithAnswersAboutTeacher($teacher, $season) {
         $dql = 'SELECT s FROM AnketaBundle\Entity\Subject s, ' .
                 'AnketaBundle\Entity\Answer a, ' .
                 'AnketaBundle\Entity\TeachersSubjects ts ' . 
                 'WHERE s = ts.subject ' .
                 'AND a.subject = s ' .
                 'AND a.teacher = :teacher ' .
+                'AND a.season = :season ' .
+                'AND a.option is not null ' .
+                'AND ts.teacher = :teacher ' .
+                'AND ts.season = :season ' .
+                'ORDER BY s.name';
+
+        $subjects = $this->getEntityManager()
+                        ->createQuery($dql)->execute(array('teacher' => $teacher,
+            'season' => $season));
+        return $subjects;
+    }
+    
+    /**
+     * Vrati zoznam predmetov daneho ucitela, pre ktore je aspon jedna
+     * odpoved o danom ucitelovi alebo predmete v danej season.
+     * (t.j. vrati aj predmety, kde su vyplnene otazky o predmete, ale nie o
+     *  ucitelovi, napriek tomu ze ten predmet ucil)
+     * @param Teacher $teacher
+     * @param Season $season
+     * @return array(Subject)
+     */
+    public function getSubjectsForTeacherWithAnyAnswers($teacher, $season) {
+        $dql = 'SELECT s FROM AnketaBundle\Entity\Subject s, ' .
+                'AnketaBundle\Entity\Answer a, ' .
+                'AnketaBundle\Entity\TeachersSubjects ts ' . 
+                'WHERE s = ts.subject ' .
+                'AND a.subject = s ' .
                 'AND a.season = :season ' .
                 'AND a.option is not null ' .
                 'AND ts.teacher = :teacher ' .

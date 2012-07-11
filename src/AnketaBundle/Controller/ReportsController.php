@@ -21,7 +21,7 @@ class ReportsController extends Controller {
         $em = $this->get('doctrine.orm.entity_manager');
 
         foreach ($teachers as $teacher) {
-            $teacher->subjects = $em->getRepository('AnketaBundle:Subject')->getSubjectsForTeacherWithAnswers($teacher, $season);
+            $teacher->subjects = $em->getRepository('AnketaBundle:Subject')->getSubjectsForTeacherWithAnswersAboutTeacher($teacher, $season);
             $teacher->evaluation = $em->getRepository('AnketaBundle:Answer')->getAverageEvaluationForTeacher($teacher, $season);
             $teacher->links = array();
             foreach ($teacher->subjects as $subject) {

@@ -311,7 +311,7 @@ class StatisticsController extends Controller {
         $season = $this->getSeason($season_slug);
         if (!$this->get('anketa.access.statistics')->canSeeResults($season)) throw new AccessDeniedException();
 
-        $subjects = $em->getRepository('AnketaBundle:Subject')->getSubjectsForTeacherWithAnswers($teacher, $season);
+        $subjects = $em->getRepository('AnketaBundle:Subject')->getSubjectsForTeacherWithAnyAnswers($teacher, $season);
 
         $items = array();
         foreach ($subjects as $subject) {
