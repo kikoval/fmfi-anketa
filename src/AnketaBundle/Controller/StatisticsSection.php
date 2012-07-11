@@ -20,6 +20,7 @@ use AnketaBundle\Entity\StudyProgram;
 use AnketaBundle\Entity\Answer;
 use AnketaBundle\Entity\Response;
 use AnketaBundle\Entity\CategoryType;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class StatisticsSection extends ContainerAware {
 
@@ -31,7 +32,7 @@ class StatisticsSection extends ContainerAware {
     public static function makeSubjectTeacherSection(ContainerInterface $container, Season $season, Subject $subject, Teacher $teacher) {
         $em = $container->get('doctrine.orm.entity_manager');
         if ($em->getRepository('AnketaBundle:TeachersSubjects')->findOneBy(array('teacher' => $teacher->getId(), 'subject' => $subject->getId(), 'season' => $season->getId())) === null) {
-            throw new \Exception('Section not found: Teacher "'.$teacher->getId().'" doesn\'t teach subject "'.$subject->getId().'".');
+            throw new NotFoundHttpException('Section not found: Teacher "'.$teacher->getId().'" doesn\'t teach subject "'.$subject->getId().'".');
         }
         $result = new StatisticsSection();
         $result->setContainer($container);
@@ -92,7 +93,7 @@ class StatisticsSection extends ContainerAware {
 
     public static function makeGeneralSection(ContainerInterface $container, Season $season, Question $generalQuestion) {
         if ($generalQuestion->getCategory()->getType() != CategoryType::GENERAL) {
-            throw new \Exception('Section not found: Question is not general.');
+            throw new NotFoundHttpException('Section not found: Question is not general.');
         }
         $result = new StatisticsSection();
         $result->setContainer($container);
@@ -144,46 +145,46 @@ class StatisticsSection extends ContainerAware {
     public static function getSectionFromSlug(ContainerInterface $container, $slug) {
         $em = $container->get('doctrine.orm.entity_manager');
         if (!preg_match('@^([a-z0-9-]+)/(.*[^/])/*$@', $slug, $matches)) {
-            throw new \Exception('Section not found: Section slug doesn\'t start with season slug.');
+            throw new NotFoundHttpException('Section not found: Section slug doesn\'t start with season slug.');
         }
         $season = $em->getRepository('AnketaBundle:Season')->findOneBy(array('slug' => $matches[1]));
         if ($season === null) {
-            throw new \Exception('Section not found: Season "'.$matches[1].'" not found.');
+            throw new NotFoundHttpException('Section not found: Season "'.$matches[1].'" not found.');
         }
         $slug = $matches[2];
         if (preg_match('@^predmet/([a-zA-Z0-9-_]+)/ucitel/(\d+)$@', $slug, $matches)) {
             $subject = $em->getRepository('AnketaBundle:Subject')->findOneBy(array('slug' => $matches[1]));
             if ($subject === null) {
-                throw new \Exception('Section not found: Subject "'.$matches[1].'" not found.');
+                throw new NotFoundHttpException('Section not found: Subject "'.$matches[1].'" not found.');
             }
             $teacher = $em->find('AnketaBundle:Teacher', $matches[2]);
             if ($teacher === null) {
-                throw new \Exception('Section not found: Teacher "'.$matches[2].'" not found.');
+                throw new NotFoundHttpException('Section not found: Teacher "'.$matches[2].'" not found.');
             }
             return self::makeSubjectTeacherSection($container, $season, $subject, $teacher);
         }
         if (preg_match('@^predmet/([a-zA-Z0-9-_]+)$@', $slug, $matches)) {
             $subject = $em->getRepository('AnketaBundle:Subject')->findOneBy(array('slug' => $matches[1]));
             if ($subject === null) {
-                throw new \Exception('Section not found: Subject "'.$matches[1].'" not found.');
+                throw new NotFoundHttpException('Section not found: Subject "'.$matches[1].'" not found.');
             }
             return self::makeSubjectSection($container, $season, $subject);
         }
         if (preg_match('@^vseobecne/(\d+)$@', $slug, $matches)) {
             $question = $em->find('AnketaBundle:Question', $matches[1]);
             if ($question === null) {
-                throw new \Exception('Section not found: Question "'.$matches[1].'" not found.');
+                throw new NotFoundHttpException('Section not found: Question "'.$matches[1].'" not found.');
             }
             return self::makeGeneralSection($container, $season, $question);
         }
         if (preg_match('@^program/([a-zA-Z0-9-_]+)$@', $slug, $matches)) {
             $program = $em->getRepository('AnketaBundle:StudyProgram')->findOneBy(array('slug' => $matches[1]));
             if ($program === null) {
-                throw new \Exception('Section not found: Program "'.$matches[1].'" not found.');
+                throw new NotFoundHttpException('Section not found: Program "'.$matches[1].'" not found.');
             }
             return self::makeStudyProgramSection($container, $season, $program);
         }
-        throw new \Exception('Section not found: Bad section slug format.');
+        throw new NotFoundHttpException('Section not found: Bad section slug format.');
     }
 
     ///// II. the boring part: instance variables and their accessors
