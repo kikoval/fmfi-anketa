@@ -92,7 +92,7 @@ class Subject {
         $match = preg_match("@^[^-]*-([^-]*)-@", $zvysok, $matches);
         if ($match == 0) {
             $matches = array();
-            if (preg_match("@-(Bc|Mgr)$@", $zvysok, $matches) == 0) {
+            if (preg_match("@-(Bc|Mgr)@", $zvysok, $matches) == 0) {
                 return self::NO_CATEGORY;
             }
             else {
