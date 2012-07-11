@@ -91,7 +91,13 @@ class Subject {
         $matches = array();
         $match = preg_match("@^[^-]*-([^-]*)-@", $zvysok, $matches);
         if ($match == 0) {
-            return self::NO_CATEGORY;
+            $matches = array();
+            if (preg_match("@-(Bc|Mgr)$@", $zvysok, $matches) == 0) {
+                return self::NO_CATEGORY;
+            }
+            else {
+                return $matches[1];
+            }
         } else {
             return $matches[1];
         }
