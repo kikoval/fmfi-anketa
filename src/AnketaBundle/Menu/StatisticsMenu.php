@@ -35,12 +35,13 @@ class StatisticsMenu
         $menu = array();
         $seasons = $em->getRepository('AnketaBundle:Season')->findBy(array(), array('ordering' => 'DESC'));
         foreach ($seasons as $season) {
-            if (!$access->canSeeResults($season)) continue;
+            if (!$access->canSeeResults($season) && !$season->getResultsVisible()) continue;
             // Add this season.
             $menu[$season->getId()] = $seasonItem = new MenuItem(
                 $season->getDescription(),
                 $this->generateUrl('statistics_list_general',
                     array('season_slug' => $season->getSlug())));
+            if (!$access->canSeeResults($season)) continue;
             if (isset($activeItems[0]) && $activeItems[0] == $season->getId()) {
                 $seasonItem->expanded = true;
 

@@ -29,7 +29,7 @@ class StatisticsController extends Controller {
             $access = $this->get('anketa.access.statistics');
             $season = null;
             foreach ($seasonsFound as $candidateSeason) {
-                if ($access->canSeeResults($candidateSeason)) {
+                if ($access->canSeeResults($candidateSeason) || $candidateSeason->getResultsVisible()) {
                     $season = $candidateSeason;
                     break;
                 }
@@ -257,11 +257,23 @@ class StatisticsController extends Controller {
         return $data;
     }
 
+    private function accessDeniedForSeason(Season $season) {
+        if ($season->getResultsVisible()) {
+            $templateParams = array();
+            $templateParams['activeMenuItems'] = array($season->getId());
+            $templateParams['season'] = $season;
+            return $this->render('AnketaBundle:Statistics:resultsRequireLogin.html.twig', $templateParams);
+        }
+        throw new AccessDeniedException();
+    }
+    
     public function listSubjectsAction($season_slug, $category) {
         $em = $this->get('doctrine.orm.entity_manager');
 
         $season = $this->getSeason($season_slug);
-        if (!$this->get('anketa.access.statistics')->canSeeResults($season)) throw new AccessDeniedException();
+        if (!$this->get('anketa.access.statistics')->canSeeResults($season)) {
+            return $this->accessDeniedForSeason($season);
+        }
 
         $categories = $em->getRepository('AnketaBundle:Subject')->getCategorizedSubjects($season);
 
@@ -318,7 +330,9 @@ class StatisticsController extends Controller {
         $em = $this->get('doctrine.orm.entity_manager');
 
         $season = $this->getSeason($season_slug);
-        if (!$this->get('anketa.access.statistics')->canSeeResults($season)) throw new AccessDeniedException();
+        if (!$this->get('anketa.access.statistics')->canSeeResults($season)) {
+            return $this->accessDeniedForSeason($season);
+        }
 
         $studyPrograms = $em->getRepository('AnketaBundle:StudyProgram')->getAllWithAnswers($season);
 
@@ -337,7 +351,9 @@ class StatisticsController extends Controller {
 
     public function resultsAction($section_slug) {
         $section = StatisticsSection::getSectionFromSlug($this->container, $section_slug);
-        if (!$this->get('anketa.access.statistics')->canSeeResults($section->getSeason())) throw new AccessDeniedException();
+        if (!$this->get('anketa.access.statistics')->canSeeResults($section->getSeason())) {
+            return $this->accessDeniedForSeason($section->getSeason());
+        }
 
         $maxCnt = 0;
         $results = array();
@@ -368,7 +384,9 @@ class StatisticsController extends Controller {
     public function listGeneralAction($season_slug = null) {
         $em = $this->get('doctrine.orm.entity_manager');
         $season = $this->getSeason($season_slug);
-        if (!$this->get('anketa.access.statistics')->canSeeResults($season)) throw new AccessDeniedException();
+        if (!$this->get('anketa.access.statistics')->canSeeResults($season)) {
+            return $this->accessDeniedForSeason($season);
+        }
 
         // TODO: by season
         $items = array();
