@@ -77,7 +77,7 @@ class StatisticsSection extends ContainerAware {
                 if ($sca == 1) $result->preface .= 'mal zapísaný '.$sca.' študent';
                 if ($sca >= 2 && $sca <= 4) $result->preface .= 'mali zapísaní '.$sca.' študenti';
                 if ($sca >= 5) $result->preface .= 'malo zapísaných '.$sca.' študentov';
-                $result->preface .= ' (vrátane študentov z iných fakúlt).';
+                $result->preface .= '.';
             }
             
         }
