@@ -69,6 +69,18 @@ class Question {
      * @ORM\Column(type="boolean")
      */
     protected $hasComment;
+    
+    /**
+     * Ci otazka je hodnotenim vyucujuceho (pouziva sa v reportoch napriklad)
+     * @ORM\Column(type="boolean")
+     */
+    protected $isTeacherEvaluation;
+
+    /**
+     * Ci otazka je hodnotenim predmetu (pouziva sa v reportoch napriklad)
+     * @ORM\Column(type="boolean")
+     */
+    protected $isSubjectEvaluation;
 
     /**
      * @param String $question
@@ -211,6 +223,22 @@ class Question {
 
     public function getHasComment() {
         return $this->hasComment;
+    }
+    
+    public function getIsTeacherEvaluation() {
+        return $this->isTeacherEvaluation;
+    }
+
+    public function setIsTeacherEvaluation($isTeacherEvaluation) {
+        $this->isTeacherEvaluation = $isTeacherEvaluation;
+    }
+
+    public function getIsSubjectEvaluation() {
+        return $this->isSubjectEvaluation;
+    }
+
+    public function setIsSubjectEvaluation($isSubjectEvaluation) {
+        $this->isSubjectEvaluation = $isSubjectEvaluation;
     }
 
     /**

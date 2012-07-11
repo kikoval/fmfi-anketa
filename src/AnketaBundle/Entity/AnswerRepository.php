@@ -83,10 +83,10 @@ class AnswerRepository extends EntityRepository {
     
     public function getAverageEvaluationForTeacher($teacher, $season) {
         $dql = 'SELECT AVG(a.evaluation), COUNT(a.evaluation)  FROM ' .
-                'AnketaBundle\Entity\Answer a ' .
+                'AnketaBundle\Entity\Answer a, AnketaBundle\Entity\Question q ' .
                 'WHERE ' .
                 'a.teacher = :teacher ' .
-                'AND a.question = 13 ' .
+                'AND a.question = q.id AND q.isTeacherEvaluation = 1 ' .
                 'AND a.option is not null ' .
                 'AND a.season = :season ';
         $priemer = $this->getEntityManager()
@@ -96,10 +96,10 @@ class AnswerRepository extends EntityRepository {
     
     public function getAverageEvaluationForSubject($subject, $season) {
         $dql = 'SELECT AVG(a.evaluation), COUNT(a.evaluation)  FROM ' .
-                'AnketaBundle\Entity\Answer a ' .
+                'AnketaBundle\Entity\Answer a, AnketaBundle\Entity\Question q ' .
                 'WHERE ' .
                 'a.subject = :subject ' .
-                'AND a.question = 5 ' .
+                'AND a.question = q.id AND q.isSubjectEvaluation = 1 ' .
                 'AND a.option is not null ' .
                 'AND a.season = :season ';
         $priemer = $this->getEntityManager()
