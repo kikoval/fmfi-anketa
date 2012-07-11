@@ -31,6 +31,8 @@ class StatisticsMenu
         // (vid HlasovanieController#buildMenu ze ako to ma vyzerat)
         $em = $this->container->get('doctrine.orm.entity_manager');
         $access = $this->container->get('anketa.access.statistics');
+        // TODO: slugifier ako service
+        $slugifier = new \AnketaBundle\Lib\Slugifier();
 
         $menu = array();
         $seasons = $em->getRepository('AnketaBundle:Season')->findBy(array(), array('ordering' => 'DESC'));
@@ -78,7 +80,7 @@ class StatisticsMenu
                         $subjectsItem->children[$category] = $categoryItem = new MenuItem(
                             $category,
                             $this->generateUrl('statistics_list_subjects',
-                                array('season_slug' => $season->getSlug(), 'category' => $category)));
+                                array('season_slug' => $season->getSlug())).'#'.$slugifier->slugify($category));
                         if (isset($activeItems[2]) && $activeItems[2] == $category) {
                             $subjectsItem->only_expanded = true;
                             $categoryItem->expanded = true;

@@ -258,6 +258,8 @@ class StatisticsController extends Controller {
     }
 
     public function listSubjectsAction($season_slug) {
+        // TODO: slugifier ako service
+        $slugifier = new \AnketaBundle\Lib\Slugifier();
         $em = $this->get('doctrine.orm.entity_manager');
 
         $season = $this->getSeason($season_slug);
@@ -272,15 +274,14 @@ class StatisticsController extends Controller {
                 $section = StatisticsSection::makeSubjectSection($this->container, $season, $subject);
                 $links[$section->getTitle()] = $section->getStatisticsPath();
             }
-            $items[$category_id] = $links;
+            $items[$category_id] = array('anchor' => $slugifier->slugify($category_id), 'list' => $links);
         }
 
         $templateParams = array();
         $templateParams['class'] = 'subject-listing';
         $templateParams['activeMenuItems'] = array($season->getId(), 'subjects');
-        if ($category) $templateParams['activeMenuItems'][] = $category;
         $templateParams['items'] = $items;
-        return $this->render('AnketaBundle:Statistics:listing.html.twig', $templateParams);
+        return $this->render('AnketaBundle:Statistics:subjectListing.html.twig', $templateParams);
     }
     
     public function listMySubjectsAction($season_slug) {
