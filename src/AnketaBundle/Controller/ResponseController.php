@@ -17,7 +17,7 @@ class ResponseController extends Controller {
         $section = StatisticsSection::getSectionFromSlug($this->container, $section_slug);
 
         $access = $this->get('anketa.access.statistics');
-        if (!$access->canCreateResponse($section->getSeason())) throw new AccessDeniedException();
+        if (!$access->canCreateResponses($section->getSeason())) throw new AccessDeniedException();
         $user = $access->getUser();
         
         $response = new Response();
