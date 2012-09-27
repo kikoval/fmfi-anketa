@@ -1,4 +1,5 @@
 {
   "project_id" : "Anketa",
-  "conduit_uri" : "https://svt-devel.fmph.uniba.sk/"
+  "conduit_uri" : "https://svt-devel.fmph.uniba.sk/",
+  "history.immutable" : false
 }
