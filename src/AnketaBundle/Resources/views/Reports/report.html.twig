@@ -5,9 +5,9 @@
 {% block content %}
 <h1>{{ title }}
 </h1>
-{% if studyProgrammeLink is defined %}<a href="{{ studyProgrammeLink }}">Výsledky študijného programu</a>
+{% if studyProgrammeLink is defined %}<a href="{{ studyProgrammeLink }}">{% trans %}reports.report.vysledky.programu{% endtrans %}</a>
 {% endif %}
-<h2>Hodnotenia učiteľov:
+<h2>{% trans %}reports.report.hodnotenia.ucitelov{% endtrans %}:
 </h2>
 <div class="results-comments">
 {% for teacher in teachers %}

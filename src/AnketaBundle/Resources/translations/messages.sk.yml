@@ -80,3 +80,9 @@ question:
     ucitel.neuci: Učiteľ %teacher_code% daný predmet neučí.
     ziadne.podkategorie: Neexistujú žiadne všeobecné kategórie otázok.
     chybna.kategoria: Chybná kategória: %id%
+
+reports:
+  report:
+    vysledky.programu: Výsledky študijného programu
+    hodnotenia.ucitelov: Hodnotenia učiteľov
+    

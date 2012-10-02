@@ -79,3 +79,8 @@ question:
     ucitel.neuci: Teacher %teacher_code% is not associated with this course.
     ziadne.podkategorie: General question categories are missing.
     chybna.kategoria: Wrong category: %id%
+
+reports:
+  report:
+    vysledky.programu: Results for study program
+    hodnotenia.ucitelov: 
