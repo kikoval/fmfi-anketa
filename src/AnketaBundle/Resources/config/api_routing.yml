@@ -1,0 +1,5 @@
+api_results:
+    pattern: /api/results/{section_slug}
+    defaults: { _controller: AnketaBundle:Api:results,  _format: json }
+    requirements:
+      section_slug: ".+"
