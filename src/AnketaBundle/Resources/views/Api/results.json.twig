@@ -1,5 +1,5 @@
 {
-    "id": "{{ id }}",
-    "average": "{{ average }}",
-    "votes": "{{ votes }}"
+    "id": {{ id|json_encode|raw }},
+    "average": {{ average|json_encode|raw }},
+    "votes": {{ votes|json_encode|raw }}
 }
