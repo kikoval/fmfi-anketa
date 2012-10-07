@@ -5,25 +5,15 @@ namespace AnketaBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class ApiController extends Controller {
 
-    public function requestFailed($reason) {
-        return $this->render(
-            'AnketaBundle:Api:error.json.twig',
-            array('reason' => $reason)
-        );
-    }
-
     public function resultsAction($section_slug) {
 
-        try {
-            $section = StatisticsSection::getSectionFromSlug($this->container, $section_slug);
-        } catch (NotFoundHttpException $e) {
-            return $this->requestFailed($e->getMessage());
-        }
+        $section = StatisticsSection::getSectionFromSlug($this->container, $section_slug);
         if (!$this->get('anketa.access.statistics')->canSeeResults($section->getSeason())) {
-            return $this->requestFailed('Requested result is not available.');
+            throw new AccessDeniedException();
         }
 
         $em = $this->get('doctrine.orm.entity_manager');
