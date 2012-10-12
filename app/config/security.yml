@@ -1,0 +1,27 @@
+jms_security_extra:
+    secure_all_services: false
+    expressions: true
+
+security:
+    factories:
+        - "%kernel.root_dir%/../src/SVT/CosignBundle/Resources/config/security_factories.xml"
+
+    role_hierarchy:
+        ROLE_ADMIN:       ROLE_USER
+        ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+
+    providers:
+        main:
+            id: anketa.user_provider
+
+    firewalls:
+        main:
+            cosign:
+                login_route:     login
+            anonymous:           true
+            logout:
+                success_handler: security.logout.success_handler.cosign
+
+    access_control:
+        #- { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
+        #- { path: ^/_internal/secure, roles: IS_AUTHENTICATED_ANONYMOUSLY, ip: 127.0.0.1 }

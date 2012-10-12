@@ -1,6 +1,11 @@
-_homepage:
+_anketa:
     pattern:  /
     resource: "@AnketaBundle/Resources/config/routing.yml"
 
 logout:
     pattern: /logout
+
+# Internal routing configuration to handle ESI
+#_internal:
+#    resource: "@FrameworkBundle/Resources/config/routing/internal.xml"
+#    prefix:   /_internal

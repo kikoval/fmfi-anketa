@@ -2,8 +2,8 @@
 /report
 /app/cache
 /app/logs
-/app/config/parameters.ini
-/app/config/config.yml
+/app/bootstrap*
+/app/config/parameters.yml
 /web/bundles
 /vendor
 /db
