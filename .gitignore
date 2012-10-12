@@ -1,21 +1,13 @@
-
-# /
 /nbproject
 /report
-
-# /app/
 /app/cache
 /app/logs
-
-# /app/config/
 /app/config/parameters.ini
 /app/config/config.yml
-
-# /db/
-/db/*
-
-# /web/bundles/
-/web/bundles/*
+/web/bundles
+/vendor
+/db
+/composer.phar
 
 *~
 .DS_Store
