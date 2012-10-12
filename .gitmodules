@@ -1,9 +1,0 @@
-[submodule "vendor/libfajr/fajr/libfajr"]
-	path = vendor/libfajr/fajr/libfajr
-	url = https://code.google.com/p/fajr.libfajr/
-[submodule "vendor/doctrine-fixtures"]
-	path = vendor/doctrine-fixtures
-	url = http://github.com/doctrine/data-fixtures.git
-[submodule "vendor/bundles/Symfony/Bundle/DoctrineFixturesBundle"]
-	path = vendor/bundles/Symfony/Bundle/DoctrineFixturesBundle
-	url = http://github.com/symfony/DoctrineFixturesBundle.git
