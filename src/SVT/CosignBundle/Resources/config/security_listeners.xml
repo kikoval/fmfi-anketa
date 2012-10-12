@@ -6,7 +6,8 @@
 
     <parameters>
         <parameter key="security.authentication.listener.cosign.class">SVT\CosignBundle\Security\CosignAuthenticationListener</parameter>
-        <parameter key="security.logout.handler.cosign.class">SVT\CosignBundle\Security\CosignLogoutHandler</parameter>
+        <parameter key="security.authentication.cosign_entry_point.class">SVT\CosignBundle\Security\CosignAuthenticationEntryPoint</parameter>
+        <parameter key="security.logout.success_handler.cosign.class">SVT\CosignBundle\Security\CosignLogoutSuccessHandler</parameter>
     </parameters>
 
     <services>
@@ -18,7 +19,14 @@
             <argument type="service" id="logger" on-invalid="null" />
             <argument type="service" id="event_dispatcher" on-invalid="null"/>
         </service>
-        <service id="security.logout.handler.cosign" class="%security.logout.handler.cosign.class%">
+        <service id="security.authentication.cosign_entry_point" class="%security.authentication.cosign_entry_point.class%" public="false" abstract="true">
+            <argument type="service" id="http_kernel" />
+            <argument type="service" id="security.http_utils" />
+            <argument type="service" id="router" />
+        </service>
+        <service id="security.logout.success_handler.cosign" class="%security.logout.success_handler.cosign.class%">
+            <argument type="service" id="security.http_utils" />
+            <argument>%cosign_logout_prefix%</argument>
             <argument type="service" id="logger" on-invalid="null" />
         </service>
     </services>

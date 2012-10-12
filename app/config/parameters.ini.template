@@ -35,6 +35,7 @@
     locale=en
     secret=12341234123412341234123412341234
 
+    cosign_logout_prefix="https://login.uniba.sk/logout.cgi?"
 
     ais_cookie=napisSem
 

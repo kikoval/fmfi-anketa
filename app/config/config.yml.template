@@ -158,13 +158,12 @@ security:
     firewalls:
         main:
             pattern:    ^/.*
-            cosign:     true
+            cosign: { login_route: login }
             anonymous:  true
             switch_user: { role: ROLE_SUPER_ADMIN, parameter: _zmen_usera }
             logout:
-                path:     /logout
-                target:   "https://login.uniba.sk/logout.cgi?https://anketa.fmph.uniba.sk/"
-                handlers: [security.logout.handler.cosign]
+                path:            /logout
+                success_handler: security.logout.success_handler.cosign
     role_hierarchy:
         ROLE_ADMIN:       ROLE_USER
         ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN]
