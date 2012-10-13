@@ -3,7 +3,7 @@
 /app/cache
 /app/logs
 /app/bootstrap*
-/app/config/parameters.yml
+/app/config/config_local.yml
 /web/bundles
 /vendor
 /db
