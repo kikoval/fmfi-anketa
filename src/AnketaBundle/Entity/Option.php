@@ -97,7 +97,7 @@ class Option {
     }
 
     /**
-     * @returns int
+     * @return int
      */
     public function getPosition() {
         return $this->position;

@@ -19,7 +19,7 @@ class StatisticsController extends Controller {
 
     /**
      * @param string $season_slug if null, returns current active season
-     * @returns Season the season
+     * @return Season the season
      */
     private function getSeason($season_slug = null) {
         $em = $this->get('doctrine.orm.entity_manager');
@@ -74,7 +74,7 @@ class StatisticsController extends Controller {
     }
 
     /**
-     * @returns array(array('cnt'=>int,'title'=>string,'value'=>double))
+     * @return array(array('cnt'=>int,'title'=>string,'value'=>double))
      */
     public function getHistogramData($question, $answers) {
         if (!$question->hasOptions()) {
@@ -165,7 +165,7 @@ class StatisticsController extends Controller {
     /**
      * Returns statistics for given data
      *
-     * @returns array with following items:
+     * @return array with following items:
      *  - cnt count
      *  - avg (optional) average value
      *  - median (optional) mean value
