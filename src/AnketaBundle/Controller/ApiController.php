@@ -23,10 +23,10 @@ class ApiController extends Controller {
                 $section->getSeason()
             );
 
-        $templateParams['id'] = $section->getSubject()->getId();
-        $templateParams['average'] = $average[1];
-        $templateParams['votes'] = $average[2];
-        return $this->render('AnketaBundle:Api:results.json.twig', $templateParams);
+        $response['id'] = $section->getSubject()->getId();
+        $response['average'] = $average[1];
+        $response['votes'] = $average[2];
+        return new Response(json_encode($response));
     }
 
 }
