@@ -17,7 +17,7 @@ class Response {
     protected $id;
 
     /**
-     * @ORM\Column(type="text", nullable="true")
+     * @ORM\Column(type="text", nullable=true)
      */
     protected $comment;
 
@@ -60,7 +60,7 @@ class Response {
     protected $author_login;
 
     /**
-     * @ORM\Column(type="text", nullable="true")
+     * @ORM\Column(type="text", nullable=true)
      */
     protected $association;
 

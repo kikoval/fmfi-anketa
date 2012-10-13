@@ -32,7 +32,7 @@ class Category {
 
     /**
      * Subcategory of category, 
-     * @ORM\Column(type="string", unique="true")
+     * @ORM\Column(type="string", unique=true)
      */
     protected $specification;
     
