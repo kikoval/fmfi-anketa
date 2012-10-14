@@ -106,4 +106,36 @@ class AnswerRepository extends EntityRepository {
                         ->createQuery($dql)->execute(array('subject' => $subject, 'season' => $season));
         return $priemer[0];
     }
+
+    public function getMostRecentAverageEvaluations($subjectCodes) {
+        $codes = array();
+        for ($i=0; $i<count($subjectCodes); $i++) $codes[] = ':code'.$i;
+        $codes = implode($codes,',');
+        // pre kazdy predmet zistime priemer celkoveho hodnotenia
+        // z najnovsej sezony v ktorej sa vyskytol a vysledky su public
+        $sql = 'SELECT su.id, su.code, su.slug as subject_slug, AVG(a.evaluation) as average, '.
+               'COUNT(a.evaluation) as votes, s.slug as season_slug '.
+               'FROM Answer a, Question q, Season s, Subject su '.
+               'WHERE su.code IN ('.$codes.') '.
+               'AND a.subject_id = su.id '.
+               'AND a.question_id = q.id AND q.isSubjectEvaluation = 1 '.
+               'AND a.option_id IS NOT NULL '.
+               'AND a.season_id = s.id '.
+               'AND s.ordering = ( '.
+                    'SELECT MAX(s.ordering) '.
+                    'FROM Season s, SubjectSeason ss '.
+                    'WHERE s.id = ss.season_id '.
+                    'AND ss.subject_id = su.id '.
+                    'AND s.resultsPublic=1 '.
+                    'GROUP BY ss.subject_id '.
+               ') '.
+               'GROUP BY su.id;';
+        $query = $this->getEntityManager()->getConnection()->prepare($sql);
+        $i = 0;
+        foreach ($subjectCodes as $code) {
+            $query->bindValue('code'.$i++, $code);
+        }
+        $query->execute();
+        return $query->fetchAll(\PDO::FETCH_ASSOC);
+    }
 }
