@@ -4,42 +4,51 @@ cd "`dirname "$0"`/.."
 bold=$'\e[37;40;1m'
 normal=$'\e[0m'
 
-vyrobeny_config=
-vyrobeny_parameters=
-nemame_adresare=
+if [ "$1" == "" ] || [ "${1#-}" != "$1" ]; then
+  echo "usage: $0 webserver-username"
+  echo "(t.j. uzivatel pod ktorym bezi webserver, napriklad www-data)"
+  exit 1
+fi
 
 if ! [ -w app ]; then
   echo "${bold}init_all.sh treba spustat pod uzivatelom, co vlastni zdrojaky.${normal}"
   exit 1
 fi
 
-if ! [ -f app/config/config.yml ]; then
-  echo "${bold}vyrabam defaultny app/config/config.yml${normal}"
-  cp app/config/config.yml.template app/config/config.yml
-  vyrobeny_config=t
+if ! [ -O app ]; then
+  echo "${bold}init_all.sh treba spustat pod uzivatelom, co vlastni zdrojaky.${normal}
+tento ich sice moze prepisovat, ale nevlastni ich, takze ked vyrobi novy subor,
+uz nebudu mat vsetky subory toho isteho vlastnika.
+(ak vies, co robis, docasne tuto kontrolu mozes v init_all.sh zakomentovat.)"
+  exit 1
 fi
 
-if ! [ -f app/config/parameters.ini ]; then
-  echo "${bold}vyrabam defaultny app/config/parameters.ini s db_backend=sqlite${normal}"
-  sed "s/secret=.*/secret=`head -c1000 /dev/urandom | md5sum | head -c32`/" app/config/parameters.ini.template > app/config/parameters.ini
-  vyrobeny_parameters=t
+rm -rf app/cache/ app/logs/
+for dir in app/cache/ app/logs/ db/; do
+  if ! [ -d "$dir" ]; then
+    echo "vyrabam $dir"
+    mkdir $dir
+    if [ "$1" != "`whoami`" ]; then
+      setfacl -R -m u:$1:rwx -m u:`whoami`:rwx -m o::--- $dir
+      setfacl -dR -m u:$1:rwx -m u:`whoami`:rwx -m o::--- $dir
+    fi
+  fi
+done
+
+if ! [ -f app/config/config_local.yml ]; then
+  echo "vyrabam app/config/config_local.yml"
+  sed "s/secret:.*/secret: `head -c1000 /dev/urandom | md5sum | head -c32`/" app/config/config_local.yml.dist > app/config/config_local.yml
+  setfacl -b -m u::rw- -m u:$1:r-- -m g::--- -m o::--- app/config/config_local.yml
 fi
 
-[ -d ./db ] || nemame_adresare=t
-[ -d ./app/cache ] || nemame_adresare=t
-[ -d ./app/logs ] || nemame_adresare=t
-
-./scripts/install_assets.sh
-
-if [ "$vyrobeny_config" ] || [ "$vyrobeny_parameters" ] || [ "$nemame_adresare" ]; then
-  echo ""
-  echo "${bold}ok, este sprav toto:${normal}"
-  [ "$vyrobeny_config" ] && echo "- ak chces cosign alebo libfajr, nastav to v app/config/config.yml."
-  [ "$vyrobeny_parameters" ] && echo "- ak chces mysql namiesto sqlite, nastav to v app/config/parameters.ini."
-  [ "$nemame_adresare" ] && echo "- vyrob adresare ./db, ./app/cache a ./app/logs s pravami 700 a ownerom webserverom.
-  napriklad takto: ${bold}sudo install -o www-data -g www-data -m700 -d ./db ./app/cache ./app/logs${normal}"
-  echo "- spusti ./scripts/reset_all.sh pod uzivatelom webservera, cim vyrobis novu databazu.
-  napriklad takto: ${bold}sudo -u www-data ./scripts/reset_all.sh${normal}"
-  [ "$vyrobeny_parameters" ] && echo "- ak bude tato databaza produkcna a uz nikdy ju nechces vymazavat,
-  v app/config/parameters.ini nastav ${bold}db_allow_reset=false${normal}."
+if [ -d vendor/symfony/symfony ]; then
+  app/console assets:install --symlink --relative web
 fi
+
+echo "
+1. stiahni dependencies: ${bold}path/to/composer.phar install${normal}
+2. ak chces ${bold}cosign proxy${normal}, nastav to v app/config/config_local.yml
+3. ak chces ${bold}mysql${normal} namiesto sqlite, nastav to v app/config/config_local.yml
+4. vyrob novu databazu: ${bold}sudo -u $1 ./scripts/reset.sh${normal}
+5. ak mas ${bold}produkcne data${normal} a nechces db uz nikdy resetovat, nastav to v app/config/config_local.yml
+"
