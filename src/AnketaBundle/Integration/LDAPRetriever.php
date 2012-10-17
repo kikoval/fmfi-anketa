@@ -29,7 +29,7 @@ class LDAPRetriever {
     public function loginIfNotAlready()
     {
         if ($this->linkId !== null) return;
-        $this->linkId = @ldap_connect($this->serverUrl);
+        $this->linkId = ldap_connect($this->serverUrl);
         if ($this->linkId === false) {
             $this->linkId = null;
             throw new \Exception('Failed to create LDAP resource');
@@ -41,7 +41,7 @@ class LDAPRetriever {
         }
         
         // Bindneme sa
-        if (@!ldap_bind($this->linkId)) {
+        if (!ldap_bind($this->linkId)) {
             $this->throwException();
         }
         
@@ -63,12 +63,12 @@ class LDAPRetriever {
     
     private function fetchAttributes($entry) {
         $attrs = array();
-        $attr = @ldap_first_attribute($this->linkId, $entry);
+        $attr = ldap_first_attribute($this->linkId, $entry);
         if ($attr === false) {
             return $attrs;
         }
         $attrs[] = $attr;
-        while (($attr = @ldap_next_attribute($this->linkId, $entry)) !== false) {
+        while (($attr = ldap_next_attribute($this->linkId, $entry)) !== false) {
             $attrs[] = $attr;
         }
         return $attrs;
@@ -82,7 +82,7 @@ class LDAPRetriever {
         }
         
         foreach ($this->fetchAttributes($entry) as $attribute) {
-            $ldapValues = @ldap_get_values($this->linkId, $entry, $attribute);
+            $ldapValues = ldap_get_values($this->linkId, $entry, $attribute);
             if ($ldapValues === false) {
                 $this->throwException();
             }
@@ -95,7 +95,7 @@ class LDAPRetriever {
     
     private function freeResult($result)
     {
-        $ret = @ldap_free_result($result);
+        $ret = ldap_free_result($result);
         if ($ret === false) {
             $this->throwException();
         }
@@ -103,7 +103,7 @@ class LDAPRetriever {
     
     private function firstEntry($result)
     {
-        $entry = @ldap_first_entry($this->linkId, $result);
+        $entry = ldap_first_entry($this->linkId, $result);
         if ($entry === false) {
             $this->throwException();
         }
@@ -112,7 +112,7 @@ class LDAPRetriever {
     
     private function nextEntry($entry)
     {
-        $entry = @ldap_next_entry($this->linkId, $entry);
+        $entry = ldap_next_entry($this->linkId, $entry);
         if ($entry === false) {
             $this->throwException();
         }
@@ -121,7 +121,7 @@ class LDAPRetriever {
     
     private function getCount($result)
     {
-        $count = @ldap_count_entries($this->linkId, $result);
+        $count = ldap_count_entries($this->linkId, $result);
         if ($count === false) {
             $this->throwException();
         }
@@ -130,7 +130,7 @@ class LDAPRetriever {
     
     private function runSearch($filter, $attributes)
     {
-        $result = @ldap_search($this->linkId, $this->baseDN, $filter, $attributes);
+        $result = ldap_search($this->linkId, $this->baseDN, $filter, $attributes);
         if ($result === false) {
             $this->throwException();
         }
