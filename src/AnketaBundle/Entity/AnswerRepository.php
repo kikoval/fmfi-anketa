@@ -106,4 +106,39 @@ class AnswerRepository extends EntityRepository {
                         ->createQuery($dql)->execute(array('subject' => $subject, 'season' => $season));
         return $priemer[0];
     }
+
+    public function getMostRecentAverageEvaluations($subjectCodes) {
+        $codes = array_fill(0, count($subjectCodes), '?');
+        $codes = implode($codes,',');
+        // pre kazdy predmet zistime priemer celkoveho hodnotenia
+        // z najnovsej sezony v ktorej sa vyskytol, vysledky su public
+        // a ma aspon jedno celkove ohodnotenie
+        $sql = 'SELECT su.id, su.code, su.slug as subject_slug, AVG(a.evaluation) as average, '.
+               'COUNT(a.evaluation) as votes, s.slug as season_slug '.
+               'FROM Answer a, Question q, Season s, Subject su '.
+               'WHERE su.code IN ('.$codes.') '.
+               'AND a.subject_id = su.id '.
+               'AND a.question_id = q.id AND q.isSubjectEvaluation = 1 '.
+               'AND a.option_id IS NOT NULL '.
+               'AND a.season_id = s.id '.
+               'AND s.ordering = ( '.
+                // tento subselect vyberie najnovsiu sezonu s verejnymi vysledkami
+                // v ktorej sa nachadza predmet 'su' a je k nemu aspon jedno hodnotenie
+                    'SELECT MAX(s.ordering) '.
+                    'FROM Season s, SubjectSeason ss, Answer a, Question q '.
+                    'WHERE s.id = ss.season_id '.
+                    'AND ss.subject_id = su.id '.
+                    'AND s.resultsPublic = 1 '.
+                    'AND a.season_id = s.id '.
+                    'AND a.question_id = q.id '.
+                    'AND q.season_id = s.id '.
+                    'AND q.isSubjectEvaluation = 1 '.
+                    'GROUP BY ss.subject_id '.
+                    'HAVING COUNT(a.id) > 0'.
+               ') '.
+               'GROUP BY su.id;';
+        $query = $this->getEntityManager()->getConnection()->prepare($sql);
+        $query->execute($subjectCodes);
+        return $query->fetchAll(\PDO::FETCH_ASSOC);
+    }
 }

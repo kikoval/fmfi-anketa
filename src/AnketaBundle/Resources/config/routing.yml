@@ -37,3 +37,7 @@ anonymizuj:
 dakujeme:
     pattern: /dakujeme/
     defaults: { _controller: AnketaBundle:Anonymizacia:dakujeme }
+
+api:
+    pattern: /api/
+    resource: "@AnketaBundle/Resources/config/api_routing.yml"
