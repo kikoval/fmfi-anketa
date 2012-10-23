@@ -46,9 +46,12 @@ if [ -d vendor/symfony/symfony ]; then
 fi
 
 echo "
-1. stiahni dependencies: ${bold}path/to/composer.phar install${normal}
-2. ak chces ${bold}cosign proxy${normal}, nastav to v app/config/config_local.yml
-3. ak chces ${bold}mysql${normal} namiesto sqlite, nastav to v app/config/config_local.yml
-4. vyrob novu databazu: ${bold}sudo -u $1 ./scripts/reset.sh${normal}
-5. ak mas ${bold}produkcne data${normal} a nechces db uz nikdy resetovat, nastav to v app/config/config_local.yml
+1. stiahni composer.phar: ${bold}curl -s https://getcomposer.org/installer | php${normal}
+   niekam ho daj, napriklad do project rootu, alebo globalne do svojho \$PATH
+2. stiahni dependencies: ${bold}path/to/composer.phar install${normal}
+3. ak chces ${bold}cosign proxy${normal}, nastav to v app/config/config_local.yml
+4. ak chces ${bold}mysql${normal} namiesto sqlite, nastav to v app/config/config_local.yml
+5. vyrob novu databazu: ${bold}sudo -u $1 ./scripts/reset.sh${normal}
+6. ak mas ${bold}produkcne data${normal} a nechces db uz nikdy resetovat,
+   nastav to v app/config/config_local.yml
 "

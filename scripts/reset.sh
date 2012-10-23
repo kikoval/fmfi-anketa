@@ -57,6 +57,7 @@ reset_db () {
   # TODO dropni databazu
 
   # TODO vytvor databazu
+  # TODO ak je to sqlite, rucne daj db suboru potrebne ACL
 
   # TODO vytvor tabulky
 
