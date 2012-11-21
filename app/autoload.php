@@ -21,6 +21,7 @@ $loader->registerNamespaces(array(
     'Bundle'           => __DIR__.'/../src',
     'Doctrine\\Common\\DataFixtures' => __DIR__.'/../vendor/doctrine-fixtures/lib',
     'Doctrine\\Common' => __DIR__.'/../vendor/doctrine-common/lib',
+    'Candle' => __DIR__.'/../vendor/candle',
 ));
 $loader->registerPrefixes(array(
     'Twig_Extensions_' => __DIR__.'/../vendor/twig-extensions/lib',
