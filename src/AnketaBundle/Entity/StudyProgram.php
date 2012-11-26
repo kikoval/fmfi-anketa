@@ -24,13 +24,13 @@ class StudyProgram {
     protected $name;
 
     /**
-     * @ORM\Column(type="string", unique="true")
+     * @ORM\Column(type="string", unique=true)
      * @var string $code
      */
     protected $code;
 
     /**
-     * @ORM\Column(type="string", unique="true")
+     * @ORM\Column(type="string", unique=true)
      * @var string $slug
      */
     protected $slug;

@@ -1,53 +1,22 @@
-Tu sa nachadzaju rozne uzitocne skripty, ktore vedia pomahat pri vyvoji.
-Tieto skripty ale zvacsa vyzaduju, aby mal dany clovek nainstalovany nejake 
-pridavne php package
 
-Menovite tu mame:
-  update_cscope.sh
-    -- (potrebuje cscope), sluzi na vyhladavanie definicii tried, funkcii, ...
-  upgrade.sh <parametre>
-    - Updatne zdrojaky pomocou svn up <parametre>
-    - Potom spusti skripty make_version.sh a clear_cache.php
-  make_version.sh
-    - Vygeneruje version info, aby sme vedeli v aplikacii datum instalacie,
-      svn url a reviziu
-  clear_cache.php
-    - Vyprazdni twig template cache, ak je v konfiguracii zapnuta
+V cerstvom repozitari:
 
-Tieto skripty generuju svoje reporty do adresara ../report:
-  run_tests.sh
-    - (potrebuje PHPUnit), sluzi na spustanie unittestov
-  make_coding_standard.sh
-    - (potrebuje phpcs), sluzi na vygenerovanie reportu o chybach formatovania
-       zdrojakov
-  make_all_doc.sh
-    - (potrebuje phpdoc, graphviz), sluzi na vygenerovanie dokumentacie a grafov
-      reprezentujucich rozne aspekty kodu (triedy, package, adresarova struktura)
-Codereview:
-  upload.py
-    - posli diff na code review (viac na codereview.appspot.com)
-  gcl/gcl
-    - wrapper na upload.py aby podporoval rozumne changelisty.
-      Prebrate z chromium projektu.
+- curl -s https://getcomposer.org/installer | php
+- ./scripts/init_all.sh www-data
+- ./composer.phar install
 
-========================================
-Inštalácia PHPUnit na Windowse bez PEARu
-  1. Stiahneme si najnovší PHPUnit z http://pear.phpunit.de/get/.
-  2. Rozbalíme na vhodnom mieste.
-  3. V php.ini do premennej include_path pridáme toto miesto.
-  4. Do windowsovej premennej PATH pridáme toto miesto.
-     Dá sa to spraviť napríklad cez 
-      a. pravý klik na "Tento Počítač"
-      b. položka "Vlastnosti"
-      c. tab "Spresnenie"
-      d. tlačidlo "Premenné prostredia"
-      e. upraviť premennú PATH, či už používateľskú alebo systémovú
-  5. V súbore phpunit.bat posledné dva riadky nahraďte za
-      set PHPBIN="@php_bin@"
-      php -d safe_mode=Off "@phpunit@" %*
-     kde @php_bin@ bude cesta k php.exe a @phpunit@ k phpunit.php.
-  6. Po reštarte systému sa príkazovému riadku načítajú novonastavené premenné.
-     Potom už len stačí odkiaľkoľvek zadať príklaz phpunit a malo by to fungovať.
+Ked sa zmeni schema, controllery, templaty, configy, apod.:
 
-Tento návod bol z veľkej časti čerpaný z 
-http://www.nickbartlett.com/wordpress/how-to-install-phpunit-on-windows/
+- ./scripts/reset.sh
+
+Stare skripty:
+
+- update_cscope.sh (potrebuje cscope) - sluzi na vyhladavanie definicii tried,
+  funkcii, atd
+- run_tests.sh (potrebuje PHPUnit) - spusti unit testy a ulozi vysledok do
+  ../report
+- make_coding_standard.sh (potrebuje phpcs) - vygeneruje report o chybach
+  formatovania zdrojakov a da ho do ../report
+- make_all_doc.sh (potrebuje phpdoc, graphviz) - vygeneruje dokumentaciu a
+  grafy reprezentujuce rozne aspekty kodu (triedy, package, adresarova
+  struktura) a ulozi to do ../report

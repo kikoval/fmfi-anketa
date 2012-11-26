@@ -4,12 +4,13 @@ namespace AnketaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass="AnketaBundle\Entity\UserRepository")
  */
-class User implements UserInterface {
+class User implements UserInterface, EquatableInterface {
 
     /**
      * @ORM\Id 
@@ -144,7 +145,7 @@ class User implements UserInterface {
         $this->orgUnits = $orgUnits;
     }
 
-    public function equals(UserInterface $user) {
+    public function isEqualTo(UserInterface $user) {
         if (!$user instanceof User) {
             return false;
         }

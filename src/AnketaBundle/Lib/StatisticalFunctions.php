@@ -28,7 +28,7 @@ class StatisticalFunctions {
      * Warning: we do not "group" the same values, so for $data = array(1, 1, 1)
      * the output is array(3 x array(1, 1))
      *
-     * @returns array(array(value,count))
+     * @return array(array(value,count))
      */
     private static function checkAndNormalizeData(array $data) {
         $result = array();
@@ -54,7 +54,7 @@ class StatisticalFunctions {
      *
      * @param array $data @see checkAndNormalizeData for details
      *
-     * @returns int count
+     * @return int count
      */
     public static function cnt(array $data) {
         $data = self::checkAndNormalizeData($data);
@@ -68,7 +68,7 @@ class StatisticalFunctions {
      *
      * @param array $data @see checkAndNormalizeData for details
      *
-     * @returns double average value
+     * @return double average value
      * @throws
      */
     public static function average(array $data) {
@@ -94,7 +94,7 @@ class StatisticalFunctions {
      *
      * @param array $data @see checkAndNormalizeData for details
      *
-     * @returns double median value
+     * @return double median value
      * @throws
      */
     public static function median(array $data) {
@@ -125,7 +125,7 @@ class StatisticalFunctions {
      * Sample standard deviation is defined as
      * sqrt(1/(N-1) sum (x - avg)^2)
      *
-     * @returns *sample* standard deviation
+     * @return *sample* standard deviation
      */
     public static function stddev(array $data) {
         $data = self::checkAndNormalizeData($data);

@@ -28,12 +28,12 @@ class Teacher {
     protected $familyName;
 
     /**
-     * @ORM\Column(type="string", nullable="true")
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $displayName;
 
     /**
-     * @ORM\Column(type="string", nullable="true", unique="true")
+     * @ORM\Column(type="string", nullable=true, unique=true)
      */
     protected $login;
     
