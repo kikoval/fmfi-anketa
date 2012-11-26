@@ -104,6 +104,11 @@ class ImportUcitelPredmetXMLCommand extends AbstractImportCommand {
             $sql .= ' WHERE t.login IS NOT NULL AND NOT EXISTS (SELECT tt.id FROM Teacher tt WHERE tt.login = t.login)';
             $conn->exec($sql);
             
+            // Teachers subjects sa importuje v troch krokoch:
+            // 1) Najprv sa zisti, kto co uci, pricom sa to vklada iba raz ak uci viac hodin daneho predmetu
+            // 2) Potom sa zisti, ci je to prednasajuci (existuje prednaska, ktoru uci) alebo cviciaci (obdobne)
+            // 3) Potom sa zaznamy, ktore este v TeachersSubject nie su, prekopiruju z docasnej tabulky
+            
             $sql = 'INSERT INTO tmp_teachers_subjects (teacher, subject, lecturer, trainer)';
             $sql .= ' SELECT DISTINCT tl.teacher_external_id, l.subject, 0, 0';
             $sql .= ' FROM tmp_insert_lesson l, tmp_insert_lesson_teacher tl';
