@@ -112,12 +112,12 @@ class ImportUcitelPredmetXMLCommand extends AbstractImportCommand {
             
             foreach (array('lecturer' => 'P', 'trainer' => 'C') as $column => $lt) {
                 $sql = 'UPDATE tmp_teachers_subjects ts';
-                $sql .= " SET ts.$column = 1";
+                $sql .= ' SET ts.' . $column . ' = 1';
                 $sql .= ' WHERE EXISTS( ';
                 $sql .=   'SELECT l.external_id FROM tmp_insert_lesson l, ';
                 $sql .=   ' tmp_insert_lesson_teacher lt';
                 $sql .=   ' WHERE ts.subject = l.subject AND l.external_id = lt.lesson_external_id';
-                $sql .=   " AND lt.teacher_external_id = ts.teacher AND l.lesson_type = '$lt'";
+                $sql .=   " AND lt.teacher_external_id = ts.teacher AND l.lesson_type = '" . $lt . "'";
                 $sql .= ')';
                 $conn->exec($sql);
             }
