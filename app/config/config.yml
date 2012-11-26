@@ -64,7 +64,8 @@ doctrine:
         auto_mapping: true
 
 # Swiftmailer Configuration
-swiftmailer: %mailer%
+# moved to config_local.yml
+# (symfony refuses to substitute "toplevel_section: %parameter_name%")
 
 svt_libfajr:
     server: ais2.uniba.sk

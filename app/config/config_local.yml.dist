@@ -17,17 +17,7 @@ parameters:
 
     allow_db_reset: true
 
-    # ak chces moct posielat postu, nastav nizsie spravne prihlasovacie udaje
-    # (a ak len testujes tak zmen destinaciu nech nespamujes mailinglist)
-    mailer:
-        transport:  smtp
-        host:       smtp.gmail.com
-        username:   fmfi.svt
-        password:   ~
-        encryption: ssl
-        auth_mode:  login
-        port:       465
-        spool:      { type: memory }
+    # ak len testujes tak zmen destinaciu nech nespamujes mailinglist
     mail_sender:    anketa@anketa.fmph.uniba.sk
     mail_dest_new_teaching_association: fmfi-anketa-devel@googlegroups.com
 
@@ -61,3 +51,17 @@ parameters:
     ais_semestre: 
         - ["2011/2012", "Z"]
     ais_brat_opravnenia: Yes    # pouzit AIS ako zdroj opravneni?
+
+
+# ak chces posielat postu, nastav tu spravne prihlasovacie udaje
+swiftmailer:
+    # chceli sme mat "swiftmailer: %mailer%" v config.yml, ale symfony buguje a
+    # s toplevel sekciami to nefunguje (za %mailer% sa nic nedosadi)... :(
+    transport:  smtp
+    host:       smtp.gmail.com
+    username:   fmfi.svt
+    password:   ~
+    encryption: ssl
+    auth_mode:  login
+    port:       465
+    spool:      { type: memory }
