@@ -136,7 +136,7 @@ class ImportUcitelPredmetXMLCommand extends AbstractImportCommand {
             $sql .= ' AND NOT EXISTS(';
             $sql .=     ' SELECT target.teacher_id, target.subject_id';
             $sql .=     ' FROM TeachersSubjects target';
-            $sql .=     ' WHERE target.teacher_id = t.id AND target.subject_id = s.id';
+            $sql .=     ' WHERE target.teacher_id = t.id AND target.subject_id = s.id AND target.season_id = :season';
             $sql .= ' )';
             $prep = $conn->prepare($sql);
             $prep->execute(array('season' => $season->getId()));
