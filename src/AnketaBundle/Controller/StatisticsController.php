@@ -434,7 +434,7 @@ class StatisticsController extends Controller {
         return $result;
     }
 
-    public function reportInappropriateAction($season_slug, $answer_id) {
+    public function reportInappropriateAction($answer_id) {
         $em = $this->get('doctrine.orm.entity_manager');
         $request = $this->get('request');
 
@@ -486,7 +486,6 @@ class StatisticsController extends Controller {
         else {
             return $this->render('AnketaBundle:Statistics:reportForm.html.twig', array(
                 'section' => $section,
-                'season' => $this->getSeason($season_slug),
                 'answer_id' => $answer_id,
                 'comment_body' => $comment,
             ));
