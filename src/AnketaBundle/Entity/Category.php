@@ -111,13 +111,6 @@ class Category {
         return $this->questions;
     }
 
-    /**
-     * @return integer
-     */
-    public function getQuestionsCount() {
-        return $this->questions->count();
-    }
-    
     public function getSpecification() {
         return $this->specification;
     }
