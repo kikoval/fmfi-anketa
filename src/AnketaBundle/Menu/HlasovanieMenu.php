@@ -69,7 +69,7 @@ class HlasovanieMenu
         // pridame menu pre predmety
         $subjects = $em->getRepository('AnketaBundle\Entity\Subject')
                        ->getAttendedSubjectsForUser($user, $season);
-        $teacherRepository = $em->getRepository('AnketaBundle:Teacher');
+        $teacherSubjectRepository = $em->getRepository('AnketaBundle:TeachersSubjects');
         foreach($subjects as $subject) {
             $subjectMenu =
                 new MenuItem(
@@ -78,16 +78,18 @@ class HlasovanieMenu
                 );
             // TODO: optimalizovat selecty
             // pridame vnorene menu pre predmetoucitelov
-            $teachers = $teacherRepository->getTeachersForSubject($subject, $season);
-            foreach ($teachers as $teacher) {
-                $subjectMenu->children[$teacher->getId()] =
-                    new MenuItem(
+            $teachersSubjects = $teacherSubjectRepository->findBy(array('subject' => $subject->getId(), 'season' => $season->getId()));
+            foreach ($teachersSubjects as $teacherSubject) {
+                $teacher = $teacherSubject->getTeacher();
+                $teacherItem = new MenuItem(
                             $teacher->getName(),
                             $this->generateUrl('answer_subject_teacher',
                                 array('subject_slug' => $subject->getSlug(),
                                       'teacher_code' => $teacher->getId()))
                             );
-
+                if ($teacherSubject->getLecturer()) $teacherItem->lecturer = true;
+                if ($teacherSubject->getTrainer()) $teacherItem->trainer = true;
+                $subjectMenu->children[$teacher->getId()] = $teacherItem;
             }
             $menu['subject']->children[$subject->getId()] = $subjectMenu;
         }

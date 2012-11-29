@@ -183,17 +183,14 @@ class QuestionController extends Controller {
         $questions = $em->getRepository('AnketaBundle\Entity\Question')
                         ->getOrderedQuestionsByCategoryType(CategoryType::TEACHER_SUBJECT, $season);
         
-        $teacherRepository = $em->getRepository('AnketaBundle:Teacher');
-        // TODO: opravit nasledovne, nech to nacitava a kontroluje ucitelopredmet
-        // z databazy naraz v jednom kroku
-        $teachers = $teacherRepository->getTeachersForSubject($subject, $season);
-        $teacher = null;
-        foreach ($teachers as $tmp) {
-            if ($tmp->getId() == $teacher_code) $teacher = $tmp;
-        }
-        if ($teacher == null) {
+        $teacherSubject = $em->getRepository('AnketaBundle:TeachersSubjects')
+                             ->findOneBy(array('subject' => $subject->getId(),
+                                               'season' => $season->getId(),
+                                               'teacher' => $teacher_code));
+        if (!$teacherSubject) {
             throw new NotFoundHttpException("Ucitel " . $teacher_code . " neuci dany predmet");
         }
+        $teacher = $teacherSubject->getTeacher();
         $studyProgram = $em->getRepository('AnketaBundle:StudyProgram')
                            ->getStudyProgrammeForUserSubject($user, $subject, $season);
 
