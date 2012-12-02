@@ -38,7 +38,9 @@
                   <a class="menu-level-{{ level }} {{ item.children | length > 0 ? 'inner' : 'leaf' }}{{ item.expanded ? ' expanded' : '' }}{{ item.active ? ' active' : '' }}" href="{{ item.href }}">
                     {%- if item.progressbar.progressTotal > 0 -%}
                       {{ _self.progressbar(item.progressbar.percentDone) }}
-                    {%- endif -%}{{ item.title }}</a>
+                    {%- endif -%}{{ item.title }}{% if item.lecturer or item.trainer %}
+                      ({% if item.lecturer %}<abbr title="Prednášajúci">P</abbr>{% endif %}{% if item.lecturer and item.trainer %},{% endif %}{% if item.trainer %}<abbr title="Cvičiaci">C</abbr>{% endif %})
+                    {% endif %}</a>
                   {% if item.progressbar.progressTotal > 0 %}
                     <span class="for-screen-readers">{{ "%.0f%%" | format(item.progressbar.percentDone) }}</span>
                   {% endif %}
