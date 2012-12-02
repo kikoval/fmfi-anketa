@@ -883,8 +883,9 @@
             "source": {
                 "type": "git",
                 "url": "https://code.google.com/p/fajr.libfajr/",
-                "reference": "90ed559174c9c029d0c2636b40bc7460d31e234f"
+                "reference": "d0ea81423b045c01f98477ba64a4a3f061ba1cb1"
             },
+            "time": "2012-12-02 16:38:29",
             "type": "library",
             "installation-source": "source",
             "autoload": {
@@ -892,8 +893,7 @@
                     "./"
                 ]
             },
-            "description": "Functions for connecting to AIS2",
-            "time": "2012-10-14 10:23:12"
+            "description": "Functions for connecting to AIS2"
         },
         {
             "name": "swiftmailer/swiftmailer",

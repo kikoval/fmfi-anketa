@@ -14,10 +14,10 @@
 namespace SVT\LibfajrBundle\DataCollector;
 
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
-use fajr\libfajr\pub\base\Trace;
+use libfajr\trace\Trace;
 use SVT\LibfajrBundle\Connection\DecoratedHttpConnection;
-use fajr\libfajr\pub\connection\HttpConnection;
-use fajr\libfajr\connection\CurlConnection;
+use libfajr\connection\HttpConnection;
+use libfajr\connection\CurlConnection;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 

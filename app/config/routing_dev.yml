@@ -12,3 +12,7 @@ _configurator:
 
 _main:
     resource: routing.yml
+
+_debug:
+    resource: "@AnketaBundle/Resources/config/debug_routing.yml"
+    prefix:   /_debug

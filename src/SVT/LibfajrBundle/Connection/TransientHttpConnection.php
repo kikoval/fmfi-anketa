@@ -13,7 +13,7 @@
 
 namespace SVT\LibfajrBundle\Connection;
 
-use fajr\libfajr\pub\connection\HttpConnection;
+use libfajr\connection\HttpConnection;
 
 /**
  * A http connection implementation that is not persistent.

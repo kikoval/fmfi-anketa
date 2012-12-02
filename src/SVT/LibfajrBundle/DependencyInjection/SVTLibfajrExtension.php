@@ -20,7 +20,7 @@ use Symfony\Component\DependencyInjection\DefinitionDecorator;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Definition\Processor;
-use fajr\libfajr\pub\login\CosignServiceCookie;
+use libfajr\login\CosignServiceCookie;
 
 /**
  * Dependency injection extension for SVTLibfajrBundle

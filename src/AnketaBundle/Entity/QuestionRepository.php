@@ -19,7 +19,7 @@ use AnketaBundle\Entity\Question;
 use AnketaBundle\Entity\Category;
 use AnketaBundle\Entity\CategoryType;
 use AnketaBundle\Entity\User;
-use fajr\libfajr\base\Preconditions;
+use libfajr\base\Preconditions;
 /**
  * Repository class for Question Entity
  */
