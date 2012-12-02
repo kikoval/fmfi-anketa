@@ -25,6 +25,16 @@ class User implements UserInterface, EquatableInterface {
     protected $displayName;
     
     /**
+     * @ORM\Column(type="string")
+     */
+    protected $givenName;
+    
+    /**
+     * @ORM\Column(type="string")
+     */
+    protected $familyName;
+    
+    /**
      * @ORM\ManyToMany(targetEntity="Role")
      * @ORM\JoinTable(name="UsersRoles",
      *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},

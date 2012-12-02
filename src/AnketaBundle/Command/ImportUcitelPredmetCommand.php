@@ -78,11 +78,6 @@ class ImportUcitelPredmetCommand extends AbstractImportCommand {
                     VALUES (:id, :givenName, :familyName, :displayName, :login) 
                     ON DUPLICATE KEY UPDATE login=login");
 
-        $insertUser = $conn->prepare("
-                    INSERT INTO User (displayName, login) 
-                    VALUES (:displayName, :login) 
-		    ON DUPLICATE KEY UPDATE login=login");
-
         $insertSubject = $conn->prepare("
                     INSERT INTO Subject (code, name, slug)
                     VALUES (:code, :name, :slug)
