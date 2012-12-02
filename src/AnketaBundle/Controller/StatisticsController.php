@@ -302,7 +302,7 @@ class StatisticsController extends Controller {
         $user = $access->getUser();
         
         $em = $this->get('doctrine.orm.entity_manager');
-        $teacher = $em->getRepository('AnketaBundle:Teacher')->findOneBy(array('login' => $user->getUserName()));
+        $teacher = $em->getRepository('AnketaBundle:User')->findOneBy(array('login' => $user->getLogin()));
         
         if ($teacher === null) {
             throw new NotFoundHttpException('Ucitel sa nenasiel');
@@ -423,7 +423,7 @@ class StatisticsController extends Controller {
             if ($response->getAuthorLogin())
             {
                 $user = $userRepository
-                           ->findOneBy(array('userName' => $response->getAuthorLogin()));
+                           ->findOneBy(array('login' => $response->getAuthorLogin()));
                 if (!empty($user)) $item['author'] = $user->getDisplayName();
             }
             if ($response->getAssociation()) {

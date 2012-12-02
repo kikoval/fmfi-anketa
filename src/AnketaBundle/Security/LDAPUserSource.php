@@ -35,7 +35,7 @@ class LDAPUserSource implements UserSourceInterface
     public function load(UserSeason $userSeason)
     {
         $user = $userSeason->getUser();
-        $uidFilter = '(uid=' . $this->ldapRetriever->escape($user->getUserName()) . ')';
+        $uidFilter = '(uid=' . $this->ldapRetriever->escape($user->getLogin()) . ')';
         
         if ($this->logger !== null) {
             $this->logger->info(sprintf('LDAP search with filter: %s', $uidFilter));

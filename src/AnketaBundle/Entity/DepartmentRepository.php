@@ -34,7 +34,7 @@ class DepartmentRepository extends EntityRepository {
         
         // TODO odstranit hack: zmergujeme z teachera
         $depts = $query->getResult();
-        $teacherDepts = $this->findByTeacherLogin($user->getUserName());
+        $teacherDepts = $this->findByTeacherLogin($user->getLogin());
         foreach ($teacherDepts as $teacherDept) {
             $found = false;
             foreach ($depts as $dept) {
@@ -55,7 +55,7 @@ class DepartmentRepository extends EntityRepository {
         // TODO vyhodit
         $em = $this->getEntityManager();
         $query = $em->createQuery("SELECT d
-                           FROM AnketaBundle\\Entity\\Teacher t,
+                           FROM AnketaBundle\\Entity\\User t,
                            AnketaBundle\\Entity\\Department d
                            WHERE t.login = :login
                            AND t.department = d

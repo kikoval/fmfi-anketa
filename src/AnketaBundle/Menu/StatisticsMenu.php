@@ -92,7 +92,7 @@ class StatisticsMenu
                                     $subject->getName(), $subjectSection->getStatisticsPath());
                                 if (isset($activeItems[3]) && $activeItems[3] == $subject->getId()) {
                                     $categoryItem->only_expanded = true;
-                                    $teachers = $em->getRepository('AnketaBundle:Teacher')->getTeachersForSubject($subject, $season);
+                                    $teachers = $em->getRepository('AnketaBundle:User')->getTeachersForSubject($subject, $season);
                                     foreach ($teachers as $teacher) {
                                         // Add this teacher under this subject.
                                         $teacherSection = StatisticsSection::makeSubjectTeacherSection($this->container, $season, $subject, $teacher);

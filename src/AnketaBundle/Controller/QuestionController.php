@@ -183,7 +183,7 @@ class QuestionController extends Controller {
         $questions = $em->getRepository('AnketaBundle\Entity\Question')
                         ->getOrderedQuestionsByCategoryType(CategoryType::TEACHER_SUBJECT, $season);
         
-        $teacherRepository = $em->getRepository('AnketaBundle:Teacher');
+        $teacherRepository = $em->getRepository('AnketaBundle:User');
         // TODO: opravit nasledovne, nech to nacitava a kontroluje ucitelopredmet
         // z databazy naraz v jednom kroku
         $teachers = $teacherRepository->getTeachersForSubject($subject, $season);

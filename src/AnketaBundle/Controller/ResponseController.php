@@ -21,7 +21,7 @@ class ResponseController extends Controller {
         $user = $access->getUser();
         
         $response = new Response();
-        $response->setAuthorLogin($user->getUserName());
+        $response->setAuthorLogin($user->getLogin());
         $response->setAuthorText($user->getDisplayName());
         $response->setSeason($section->getSeason());
         $response->setTeacher($section->getTeacher());
@@ -99,7 +99,7 @@ class ResponseController extends Controller {
         }
         
         $responseRepo = $em->getRepository('AnketaBundle:Response');
-        $query = array('author_login' => $user->getUserName(), 'season' => $season->getId());
+        $query = array('author_login' => $user->getLogin(), 'season' => $season->getId());
         $responses = $responseRepo->findBy($query);
         $processedResponses = array();
         foreach ($responses as $response) {

@@ -40,9 +40,9 @@ class TeachingAssociation {
     protected $subject;
     
     /**
-     * @ORM\ManyToOne(targetEntity="Teacher")
+     * @ORM\ManyToOne(targetEntity="User")
      *
-     * @var Teacher $teacher
+     * @var User $teacher
      */
     protected $teacher;
     
@@ -55,7 +55,7 @@ class TeachingAssociation {
     /**
      * @param String $name
      */
-    public function __construct(Season $season, Subject $subject, Teacher $teacher = null, User $requestedBy = null, $note = '') {
+    public function __construct(Season $season, Subject $subject, User $teacher = null, User $requestedBy = null, $note = '') {
         Preconditions::checkIsString($note, 'note must be string');
         $this->requestedBy = $requestedBy;
         $this->teacher = $teacher;
@@ -100,7 +100,7 @@ class TeachingAssociation {
         return $this->teacher;
     }
 
-    public function setTeacher(Teacher $teacher = null) {
+    public function setTeacher(User $teacher = null) {
         $this->teacher = $teacher;
     }
     

@@ -93,10 +93,10 @@ class MigrateOldDatabaseCommand extends ContainerAwareCommand {
         $userSeasonsFound = 0;
 
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-            $userId = $this->getNewUserId($row['userName']);
+            $userId = $this->getNewUserId($row['login']);
             if ($userId === false) {
                 $this->newDB->insert('User', array(
-                    'userName' => $row['userName'],
+                    'login' => $row['login'],
                     'displayName' => $row['displayName']
                 ));
                 $usersInserted++;
@@ -133,7 +133,7 @@ class MigrateOldDatabaseCommand extends ContainerAwareCommand {
                                               JOIN subject s ON (ts.subject_id = s.id)"
         );
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-            if (!$this->rowId('Teacher', array('id' => $row['teacher_id']))) throw new \Exception('Teacher '.$row['id'].' '.$row['name']." not found!");
+            if (!$this->rowId('Teacher', array('id' => $row['teacher_id']))) throw new \Exception('User '.$row['id'].' '.$row['name']." not found!");
             $subjectId = $this->rowId('Subject', array('code' => $row['code']));
             if ($subjectId === false) throw new \Exception("Subject ".$row['code']." was not imported!");
             
@@ -161,11 +161,11 @@ class MigrateOldDatabaseCommand extends ContainerAwareCommand {
                                               JOIN subject s ON (r.subject_id = s.id)"
         );
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-            if ($row['teacher_id'] !== null) if (!$this->rowId('Teacher', array('id' => $row['teacher_id']))) throw new \Exception('Teacher '.$row['teacher_id'].' not found!');
+            if ($row['teacher_id'] !== null) if (!$this->rowId('Teacher', array('id' => $row['teacher_id']))) throw new \Exception('User '.$row['teacher_id'].' not found!');
             $subjectId = $this->rowId('Subject', array('code' => $row['code']));
             if ($subjectId === false) throw new \Exception("Subject ".$row['code']." was not imported!");
             if ($row['author_text'] === null) {
-                $row['author_text'] = $this->oldDB->fetchColumn("SELECT displayName FROM `User` WHERE userName = ? LIMIT 1", array($row['author_login']),0);
+                $row['author_text'] = $this->oldDB->fetchColumn("SELECT displayName FROM `User` WHERE login = ? LIMIT 1", array($row['author_login']),0);
             }
 
             if (!$this->rowId('Response', array('comment' => $row['comment'], 'season_id' => $this->newSeasonId))) {
@@ -278,7 +278,7 @@ class MigrateOldDatabaseCommand extends ContainerAwareCommand {
                 $subjectId = $this->rowId('Subject', array('code' => $row['code']));
                 if ($subjectId === false) throw new \Exception("Subject ".$row['code']." was not imported!");
             } else $subjectId = null;
-            if ($row['teacher_id'] !== null) if (!$this->rowId('Teacher', array('id' => $row['teacher_id']))) throw new \Exception('Teacher '.$row['teacher_id'].' not found!');
+            if ($row['teacher_id'] !== null) if (!$this->rowId('Teacher', array('id' => $row['teacher_id']))) throw new \Exception('User '.$row['teacher_id'].' not found!');
             
             $questionId = $this->rowId('Question', array(
                 'season_id' => $this->newSeasonId,
@@ -367,7 +367,7 @@ class MigrateOldDatabaseCommand extends ContainerAwareCommand {
     }
 
     private function getNewUserId($login) {
-        return $this->newDB->fetchColumn("SELECT id FROM `User` WHERE userName = ? LIMIT 1", array($login),0);
+        return $this->newDB->fetchColumn("SELECT id FROM `User` WHERE login = ? LIMIT 1", array($login),0);
     }
 
     private function rowId($table, $data) {

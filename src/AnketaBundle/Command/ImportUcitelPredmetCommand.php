@@ -74,14 +74,14 @@ class ImportUcitelPredmetCommand extends AbstractImportCommand {
         $conn->beginTransaction();
 
         $insertTeacher = $conn->prepare("
-                    INSERT INTO Teacher (id, givenName, familyName, displayName, login) 
+                    INSERT INTO User (id, givenName, familyName, displayName, login) 
                     VALUES (:id, :givenName, :familyName, :displayName, :login) 
                     ON DUPLICATE KEY UPDATE login=login");
 
         $insertUser = $conn->prepare("
-                    INSERT INTO User (displayName, userName) 
+                    INSERT INTO User (displayName, login) 
                     VALUES (:displayName, :login) 
-		    ON DUPLICATE KEY UPDATE userName=userName");
+		    ON DUPLICATE KEY UPDATE login=login");
 
         $insertSubject = $conn->prepare("
                     INSERT INTO Subject (code, name, slug)
@@ -91,7 +91,7 @@ class ImportUcitelPredmetCommand extends AbstractImportCommand {
         $insertTeacherSubject = $conn->prepare("
                     INSERT INTO TeachersSubjects (teacher_id, subject_id, season_id, lecturer, trainer) 
                     SELECT a.id, b.id, :season, :lecturer, :trainer
-                    FROM Teacher a, Subject b 
+                    FROM User a, Subject b 
                     WHERE a.login = :login and b.slug = :slug");
 
         try {

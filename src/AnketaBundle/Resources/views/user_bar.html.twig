@@ -1,5 +1,5 @@
 {% if user is not empty %}
-<span class="for-screen-readers">Prihlásený: </span><span class="user-fullname" title="{{ user.userName }}">{{ user.displayName }}</span>
+<span class="for-screen-readers">Prihlásený: </span><span class="user-fullname" title="{{ user.login }}">{{ user.displayName }}</span>
 &mdash; <a href="{{ path('logout') }}" class="logout">Odhlásiť</a>
 {% else %}
 <a href="{{ path('login', {'to': app.request.uri }) }}" class="login">Prihlásiť</a>

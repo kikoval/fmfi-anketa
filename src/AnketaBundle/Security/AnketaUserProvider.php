@@ -52,7 +52,7 @@ class AnketaUserProvider implements UserProviderInterface
     private $seasonRepository;
 
     /**
-     * Doctrine repository for Teacher entity
+     * Doctrine repository for User entity
      * @var AnketaBundle\Entity\SeasonRepository
      */
     private $teacherRepository;
@@ -76,7 +76,7 @@ class AnketaUserProvider implements UserProviderInterface
         $this->userSeasonRepository = $em->getRepository('AnketaBundle:UserSeason');
         $this->roleRepository = $em->getRepository('AnketaBundle:Role');
         $this->seasonRepository = $em->getRepository('AnketaBundle:Season');
-        $this->teacherRepository = $em->getRepository('AnketaBundle:Teacher');
+        $this->teacherRepository = $em->getRepository('AnketaBundle:User');
         $this->perSeasonUserSources = $perSeasonUserSources;
         $this->perLoginUserSources = $perLoginUserSources;
         $this->logger = $logger;
@@ -99,13 +99,13 @@ class AnketaUserProvider implements UserProviderInterface
         if ($this->logger) {
             $this->logger->debug('Searching in database');
         }
-        $user = $this->userRepository->findOneWithRolesByUserName($oldUser->getUserName());
+        $user = $this->userRepository->findOneWithRolesByLogin($oldUser->getLogin());
 
         if ($user === null) {
             if ($this->logger) {
                 $this->logger->debug('not found in database');
             }
-            throw new UsernameNotFoundException(sprintf("User %s not found in database!", $oldUser->getUserName()));
+            throw new UsernameNotFoundException(sprintf("User %s not found in database!", $oldUser->getLogin()));
         }
         
         $user->setOrgUnits($oldUser->getOrgUnits());
@@ -141,7 +141,7 @@ class AnketaUserProvider implements UserProviderInterface
         $username = (string) $username;
 
         // Try to load the user from database first
-        $user = $this->userRepository->findOneWithRolesByUserName($username);
+        $user = $this->userRepository->findOneWithRolesByLogin($username);
 
         if ($user === null) {
             $user = new User($username);
@@ -196,13 +196,13 @@ class AnketaUserProvider implements UserProviderInterface
             if ($this->logger) {
                 $this->logger->debug('User info not found in loadUserInfo');
             }
-            throw new UsernameNotFoundException(sprintf('User "%s" not found.', $user->getUserName()));
+            throw new UsernameNotFoundException(sprintf('User "%s" not found.', $user->getLogin()));
         }
         
         $this->entityManager->flush();
         
         // TODO: toto vyhodit s presunom teacherov do usera
-        $teacher = $this->teacherRepository->findOneBy(array('login' => $user->getUserName()));
+        $teacher = $this->teacherRepository->findOneBy(array('login' => $user->getLogin()));
         if ($teacher !== null) {
             if (!$user->hasRole('ROLE_TEACHER')) {
                 $user->addNonPersistentRole('ROLE_TEACHER');

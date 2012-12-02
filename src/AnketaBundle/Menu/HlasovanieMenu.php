@@ -69,7 +69,7 @@ class HlasovanieMenu
         // pridame menu pre predmety
         $subjects = $em->getRepository('AnketaBundle\Entity\Subject')
                        ->getAttendedSubjectsForUser($user, $season);
-        $teacherRepository = $em->getRepository('AnketaBundle:Teacher');
+        $teacherRepository = $em->getRepository('AnketaBundle:User');
         foreach($subjects as $subject) {
             $subjectMenu =
                 new MenuItem(

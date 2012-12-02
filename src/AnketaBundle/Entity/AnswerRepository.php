@@ -33,7 +33,7 @@ class AnswerRepository extends EntityRepository {
      */
     public function getAnswersByCriteria(
             array $questions, User $user, Season $season,
-            Subject $subject = null, Teacher $teacher = null,
+            Subject $subject = null, User $teacher = null,
             StudyProgram $studyProgramme = null)
     {
         // odpoved je jednoznacne identifikovana autorom, id otazky, id predmetu

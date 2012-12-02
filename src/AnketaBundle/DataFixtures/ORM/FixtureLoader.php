@@ -220,8 +220,8 @@ class FixtureLoader implements FixtureInterface {
         
         $subs = array($sub1, $sub2, $sub3);
         
-        foreach ($developers as $userName => $displayName) {
-            $user = new User($userName);
+        foreach ($developers as $login => $displayName) {
+            $user = new User($login);
             $user->setDisplayName($displayName);
             $user->addRole($roleSuperAdmin);
             

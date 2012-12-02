@@ -29,10 +29,10 @@ class StatisticsSection extends ContainerAware {
     protected function __construct() {
     }
 
-    public static function makeSubjectTeacherSection(ContainerInterface $container, Season $season, Subject $subject, Teacher $teacher) {
+    public static function makeSubjectTeacherSection(ContainerInterface $container, Season $season, Subject $subject, User $teacher) {
         $em = $container->get('doctrine.orm.entity_manager');
-        if ($em->getRepository('AnketaBundle:TeachersSubjects')->findOneBy(array('teacher' => $teacher->getId(), 'subject' => $subject->getId(), 'season' => $season->getId())) === null) {
-            throw new NotFoundHttpException('Section not found: Teacher "'.$teacher->getId().'" doesn\'t teach subject "'.$subject->getId().'".');
+        if ($em->getRepository('AnketaBundle:UsersSubjects')->findOneBy(array('teacher' => $teacher->getId(), 'subject' => $subject->getId(), 'season' => $season->getId())) === null) {
+            throw new NotFoundHttpException('Section not found: User "'.$teacher->getId().'" doesn\'t teach subject "'.$subject->getId().'".');
         }
         $result = new StatisticsSection();
         $result->setContainer($container);
@@ -157,9 +157,9 @@ class StatisticsSection extends ContainerAware {
             if ($subject === null) {
                 throw new NotFoundHttpException('Section not found: Subject "'.$matches[1].'" not found.');
             }
-            $teacher = $em->find('AnketaBundle:Teacher', $matches[2]);
+            $teacher = $em->find('AnketaBundle:User', $matches[2]);
             if ($teacher === null) {
-                throw new NotFoundHttpException('Section not found: Teacher "'.$matches[2].'" not found.');
+                throw new NotFoundHttpException('Section not found: User "'.$matches[2].'" not found.');
             }
             return self::makeSubjectTeacherSection($container, $season, $subject, $teacher);
         }

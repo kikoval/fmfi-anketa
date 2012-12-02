@@ -37,7 +37,7 @@ class SubjectRepository extends EntityRepository {
         $dql = 'SELECT DISTINCT s FROM AnketaBundle\Entity\UsersSubjects us, ' .
                 'AnketaBundle\Entity\Subject s, ' .
                 'AnketaBundle\Entity\TeachersSubjects ts, ' .
-                'AnketaBundle\Entity\Teacher t, ' .
+                'AnketaBundle\Entity\User t, ' .
                 'AnketaBundle\Entity\Answer a ' .
                 'WHERE us.subject = s ' .
                 'AND ts.subject = s ' .
@@ -72,7 +72,7 @@ class SubjectRepository extends EntityRepository {
      * odpoved o danom ucitelovi v danej season.
      * (t.j. nevrati predmety, kde su vyplnene otazky o predmete, ale nie o
      *  ucitelovi, napriek tomu ze ten predmet ucil)
-     * @param Teacher $teacher
+     * @param User $teacher
      * @param Season $season
      * @return array(Subject)
      */
@@ -100,7 +100,7 @@ class SubjectRepository extends EntityRepository {
      * odpoved o danom ucitelovi alebo predmete v danej season.
      * (t.j. vrati aj predmety, kde su vyplnene otazky o predmete, ale nie o
      *  ucitelovi, napriek tomu ze ten predmet ucil)
-     * @param Teacher $teacher
+     * @param User $teacher
      * @param Season $season
      * @return array(Subject)
      */

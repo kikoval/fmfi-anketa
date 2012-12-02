@@ -31,7 +31,7 @@ class ReportsController extends Controller {
         usort($teachers, array('AnketaBundle\Controller\ReportsController', 'compareAverageEvaluation'));
 
         foreach ($subjects as $subject) {
-            $subject->teacher = $em->getRepository('AnketaBundle:Teacher')->getTeachersForSubjectWithAnswers($subject, $season);
+            $subject->teacher = $em->getRepository('AnketaBundle:User')->getTeachersForSubjectWithAnswers($subject, $season);
             $subject->evaluation = $em->getRepository('AnketaBundle:Answer')->getAverageEvaluationForSubject($subject, $season);
             $subject->link = StatisticsSection::makeSubjectSection($this->container, $season, $subject)->getStatisticsPath();
             $subject->links = array();
@@ -67,7 +67,7 @@ class ReportsController extends Controller {
         }
 
         return $this->makeReport($season,
-            $em->getRepository('AnketaBundle:Teacher')->getTeachersForStudyProgramme($studyProgramme, $season),
+            $em->getRepository('AnketaBundle:User')->getTeachersForStudyProgramme($studyProgramme, $season),
             $em->getRepository('AnketaBundle:Subject')->getSubjectsForStudyProgramme($studyProgramme, $season),
             array('title' => $studyProgramme->getCode() . ' ' . $studyProgramme->getName(),
                 'studyProgrammeLink' => StatisticsSection::makeStudyProgramSection($this->container, $season, $studyProgramme)->getStatisticsPath(),
@@ -96,7 +96,7 @@ class ReportsController extends Controller {
         }
 
         return $this->makeReport($season,
-            $em->getRepository('AnketaBundle:Teacher')->getTeachersForDepartment($department, $season),
+            $em->getRepository('AnketaBundle:User')->getTeachersForDepartment($department, $season),
             $em->getRepository('AnketaBundle:Subject')->getSubjectsForDepartment($department, $season),
             array('title' => $department->getName()));
     }

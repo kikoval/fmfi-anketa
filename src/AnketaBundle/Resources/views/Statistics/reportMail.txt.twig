@@ -10,7 +10,7 @@ Komentár {{ answer_id }} bol nahlásený ako nevhodný.
 {{ note }}
 
 --- Nahlásil užívateľ: ---
-{{ user.userName }}
+{{ user.login }}
 
 --- SQL dotaz na schovanie komentáru: ---
 UPDATE Answer SET inappropriate = 1 WHERE id = {{ answer_id }};

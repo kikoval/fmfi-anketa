@@ -22,9 +22,9 @@ class Response {
     protected $comment;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Teacher")
+     * @ORM\ManyToOne(targetEntity="User")
      *
-     * @var Teacher $teacher
+     * @var User $teacher
      */
     protected $teacher;
 
@@ -88,14 +88,14 @@ class Response {
     }
 
     /**
-     * @param Teacher $value
+     * @param User $value
      */
     public function setTeacher($value) {
         $this->teacher = $value;
     }
 
     /**
-     * @return Teacher the teacher
+     * @return User the teacher
      */
     public function getTeacher() {
         return $this->teacher;

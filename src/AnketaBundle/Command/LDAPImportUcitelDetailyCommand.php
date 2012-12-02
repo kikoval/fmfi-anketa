@@ -54,7 +54,7 @@ class LDAPImportUcitelDetailyCommand extends ContainerAwareCommand {
         
         $withoutName = $conn->executeQuery(
             "SELECT t.login, t.givenName, t.familyName, t.displayName
-             FROM Teacher t 
+             FROM User t 
              WHERE (t.givenName = '' OR t.familyName = ''
                     OR t.displayName IS NULL OR t.displayName = '')
              AND t.login IS NOT NULL AND t.login != ''");
@@ -63,7 +63,7 @@ class LDAPImportUcitelDetailyCommand extends ContainerAwareCommand {
         
         try {
             $updateTeacher = $conn->prepare(
-                    'UPDATE Teacher 
+                    'UPDATE User 
                         SET givenName=:givenName, familyName=:familyName,
                         displayName=:displayName
                         WHERE login=:login LIMIT 1');

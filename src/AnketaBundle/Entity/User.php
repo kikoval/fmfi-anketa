@@ -20,11 +20,6 @@ class User implements UserInterface, EquatableInterface {
     protected $id;
 
     /**
-     * @ORM\Column(type="string", unique=true)
-     */
-    protected $userName;
-
-    /**
      * @ORM\Column(type="string")
      */
     protected $displayName;
@@ -55,30 +50,33 @@ class User implements UserInterface, EquatableInterface {
      * @var array(string)
      */
     protected $orgUnits = array(); // inicializator musi byt tu! (doctrine nevola konstruktor)
+    /**
+     * @ORM\Column(type="string", nullable=true, unique=true)
+     */
+    protected $login;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="Department")
+     * @var \AnketaBundle\Entity\Department
+     * @deprecated Docasny hack, chceme priradovat katedru k userom,
+     * ale najprv treba zmigrovat ucitelov do userov (je tam par corner-cases)
+     */
+    protected $department;
 
     /**
      * @param String $username
      */
-    public function __construct($username) {
+    public function __construct($username, $givenName, $familyName, $displayName, $login) {
         $this->roles = new ArrayCollection();
         $this->userSeasons = new ArrayCollection();
-        $this->setUserName($username);
-        $this->setDisplayName(null);
+	$this->setGivenName($givenName);
+        $this->setFamilyName($familyName);
+        $this->setDisplayName($displayName);
+        $this->setLogin($login);
     }
 
     public function getId() {
         return $this->id;
-    }
-
-    public function setUserName($value) {
-        if (!is_string($value)) {
-            throw new \InvalidArgumentException('User name must be string');
-        }
-        $this->userName = $value;
-    }
-
-    public function getUserName() {
-        return $this->userName;
     }
 
     public function setDisplayName($value) {
@@ -87,7 +85,7 @@ class User implements UserInterface, EquatableInterface {
 
     public function getDisplayName() {
         if (!$this->hasDisplayName()) {
-            return $this->userName;
+            return $this->login;
         }
         return $this->displayName;
     }
@@ -150,7 +148,7 @@ class User implements UserInterface, EquatableInterface {
             return false;
         }
         
-        return $this->userName === $user->getUserName();
+        return $this->login === $user->getLogin();
     }
 
     public function eraseCredentials() {
@@ -176,7 +174,7 @@ class User implements UserInterface, EquatableInterface {
 
 
     public function __toString() {
-        return $this->getUserName();
+        return $this->getLogin();
     }
 
 
@@ -199,4 +197,57 @@ class User implements UserInterface, EquatableInterface {
     {
         return $this->userSeasons;
     }
+
+    
+    public function getName() {
+        $name = trim($this->getGivenName() . ' ' . $this->getFamilyName());
+        if ($name !== '') return $name;
+        return $this->getDisplayName();
+    }
+
+    public function getGivenName() {
+        return $this->givenName;
+    }
+
+    public function setGivenName($givenName) {
+        $this->givenName = $givenName;
+    }
+
+    public function getFamilyName() {
+        return $this->familyName;
+    }
+
+    public function setFamilyName($familyName) {
+        $this->familyName = $familyName;
+    }
+
+
+    public function getFormattedName() {
+        if ($this->getDisplayName() === null) {
+            return $this->getName();
+        }
+        return $this->getDisplayName();
+    }
+
+    public function getLogin() {
+        return $this->login;
+    }
+
+    public function setLogin($login) {
+        $this->login = $login;
+    }
+    
+    /**
+     * @deprecated Docasny hack, chceme priradovat katedru k userom,
+     * ale najprv treba zmigrovat ucitelov do userov (je tam par corner-cases)
+     * @return \AnketaBundle\Entity\Department
+     */
+    public function getDepartment() {
+        return $this->department;
+    }
+
+	public function getUsername() {
+		return $this->getLogin();
+		
+	}
 }

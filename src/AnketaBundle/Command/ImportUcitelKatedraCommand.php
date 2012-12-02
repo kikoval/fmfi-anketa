@@ -60,7 +60,7 @@ class ImportUcitelKatedraCommand extends AbstractImportCommand {
         $conn->beginTransaction();
 
         $updateTeacher = $conn->prepare("
-                    UPDATE Teacher t, Department d
+                    UPDATE User t, Department d
                     SET t.department_id = d.id
                     WHERE t.login = :login AND d.code = :department
                     ");

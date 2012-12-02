@@ -139,7 +139,7 @@ class StatisticsAccess
     public function canEditResponse(Response $response) {
         if (!$this->canSeeResults($response->getSeason())) return false;
         $user = $this->getUser();
-        return $user && $user->getUserName() === $response->getAuthorLogin() && $response->getSeason()->getRespondingOpen();
+        return $user && $user->getLogin() === $response->getAuthorLogin() && $response->getSeason()->getRespondingOpen();
     }
 
     /**
