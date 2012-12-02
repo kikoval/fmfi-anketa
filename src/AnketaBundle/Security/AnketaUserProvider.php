@@ -200,14 +200,6 @@ class AnketaUserProvider implements UserProviderInterface
         }
         
         $this->entityManager->flush();
-        
-        // TODO: toto vyhodit s presunom teacherov do usera
-        $teacher = $this->teacherRepository->findOneBy(array('login' => $user->getLogin()));
-        if ($teacher !== null) {
-            if (!$user->hasRole('ROLE_TEACHER')) {
-                $user->addNonPersistentRole('ROLE_TEACHER');
-            }
-        }
     }
 
     /**

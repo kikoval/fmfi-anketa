@@ -59,6 +59,7 @@ class User implements UserInterface, EquatableInterface {
      * This is not persisted in the database, as it is always reloaded 
      * @var array(string)
      */
+    
     protected $orgUnits = array(); // inicializator musi byt tu! (doctrine nevola konstruktor)
     /**
      * @ORM\Column(type="string", nullable=true, unique=true)
@@ -253,8 +254,7 @@ class User implements UserInterface, EquatableInterface {
         return $this->department;
     }
 
-	public function getUsername() {
-		return $this->getLogin();
-		
-	}
+    public function getUsername() {
+        return $this->getLogin();
+    }
 }
