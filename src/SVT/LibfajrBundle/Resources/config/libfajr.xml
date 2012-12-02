@@ -5,15 +5,15 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
-        <parameter key="libfajr.trace.null.class">fajr\libfajr\pub\base\NullTrace</parameter>
-        <parameter key="libfajr.server.url_map.class">fajr\libfajr\pub\connection\AIS2ServerUrlMap</parameter>
-        <parameter key="libfajr.server.connection.class">fajr\libfajr\pub\connection\AIS2ServerConnection</parameter>
-        <parameter key="libfajr.login.cosign_proxy.class">fajr\libfajr\login\CosignProxyLogin</parameter>
-        <parameter key="libfajr.login.cosign_cookie.class">fajr\libfajr\login\CosignCookieLogin</parameter>
-        <parameter key="libfajr.login.cosign.class">fajr\libfajr\login\AIS2CosignLogin</parameter>
-        <parameter key="libfajr.window.main.class">fajr\libfajr\window\AIS2MainScreenImpl</parameter>
-        <parameter key="libfajr.window.factory.administracia_studia.class">fajr\libfajr\pub\window\VSES017_administracia_studia\VSES017_FactoryImpl</parameter>
-        <parameter key="libfajr.cosign.service_cookie.class">fajr\libfajr\pub\login\CosignServiceCookie</parameter>
+        <parameter key="libfajr.trace.null.class">libfajr\base\NullTrace</parameter>
+        <parameter key="libfajr.server.url_map.class">libfajr\connection\AIS2ServerUrlMap</parameter>
+        <parameter key="libfajr.server.connection.class">libfajr\connection\AIS2ServerConnection</parameter>
+        <parameter key="libfajr.login.cosign_proxy.class">libfajr\login\CosignProxyLogin</parameter>
+        <parameter key="libfajr.login.cosign_cookie.class">libfajr\login\CosignCookieLogin</parameter>
+        <parameter key="libfajr.login.cosign.class">libfajr\login\AIS2CosignLogin</parameter>
+        <parameter key="libfajr.window.main.class">libfajr\window\AIS2MainScreenImpl</parameter>
+        <parameter key="libfajr.window.factory.administracia_studia.class">libfajr\window\studium\StudiumFactoryImpl</parameter>
+        <parameter key="libfajr.cosign.service_cookie.class">libfajr\login\CosignServiceCookie</parameter>
     </parameters>
 
     <services>

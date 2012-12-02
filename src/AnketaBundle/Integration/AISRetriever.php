@@ -13,14 +13,14 @@
 
 namespace AnketaBundle\Integration;
 
-use fajr\libfajr\pub\base\Trace;
-use fajr\libfajr\pub\connection\AIS2ServerConnection;
-use fajr\libfajr\pub\login\Login;
-use fajr\libfajr\pub\connection\HttpConnection;
-use fajr\libfajr\pub\window\VSES017_administracia_studia\VSES017_Factory;
-use fajr\libfajr\pub\window\VSES017_administracia_studia\AdministraciaStudiaScreen;
-use fajr\libfajr\pub\window\AIS2MainScreen;
-use fajr\libfajr\pub\window\AIS2ApplicationEnum;
+use libfajr\trace\Trace;
+use libfajr\connection\AIS2ServerConnection;
+use libfajr\login\Login;
+use libfajr\connection\HttpConnection;
+use libfajr\window\studium\StudiumFactory;
+use libfajr\window\studium\AdministraciaStudiaScreen;
+use libfajr\window\AIS2MainScreen;
+use libfajr\window\AIS2ApplicationEnum;
 
 class AISRetriever
 {
@@ -31,7 +31,7 @@ class AISRetriever
     /** @var Login */
     private $login;
 
-    /** @var VSES017_Factory */
+    /** @var StudiumFactory */
     private $adminStudiaFactory;
 
     /** @var Trace */
@@ -56,7 +56,7 @@ class AISRetriever
                                 AIS2ServerConnection $connection,
                                 Login $login,
                                 AIS2MainScreen $mainScreen,
-                                VSES017_Factory $adminStudiaFactory)
+                                StudiumFactory $adminStudiaFactory)
     {
         $this->trace = $trace;
         $this->connection = $connection;
@@ -165,7 +165,7 @@ class AISRetriever
                 
                 $hodnoteniaPriemeryScreen = $this->adminStudiaFactory->
                         newHodnoteniaPriemeryScreen($this->trace,
-                        $adminStudiaScreen->getZapisnyListIdFromZapisnyListIndex($this->trace, $zapisnyList,
+                        $adminStudiaScreen->getParamNameFromZapisnyListIndex($this->trace, $zapisnyList,
                             AdministraciaStudiaScreen::ACTION_HODNOTENIA_PRIEMERY));
                 
                 $hodnotenia = $hodnoteniaPriemeryScreen->getHodnotenia($this->trace)->getData();

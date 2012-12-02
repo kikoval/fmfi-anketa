@@ -13,8 +13,8 @@
 
 namespace SVT\LibfajrBundle\Connection;
 
-use fajr\libfajr\pub\connection\HttpConnection;
-use fajr\libfajr\pub\base\Trace;
+use libfajr\connection\HttpConnection;
+use libfajr\trace\Trace;
 
 abstract class DecoratedHttpConnection implements HttpConnection
 {

@@ -12,7 +12,7 @@
 
 namespace AnketaBundle\Menu;
 
-use fajr\libfajr\base\Preconditions;
+use libfajr\base\Preconditions;
 
 // TODO(ppershing): make things private
 class MenuItem {

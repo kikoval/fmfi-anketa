@@ -13,7 +13,7 @@
 
 namespace SVT\LibfajrBundle\Connection;
 
-use fajr\libfajr\pub\connection\HttpConnection;
+use libfajr\connection\HttpConnection;
 
 interface HttpConnectionProviderInterface
 {
