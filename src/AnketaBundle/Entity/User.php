@@ -66,12 +66,9 @@ class User implements UserInterface, EquatableInterface {
     /**
      * @param String $username
      */
-    public function __construct($username, $givenName, $familyName, $displayName, $login) {
+    public function __construct($login) {
         $this->roles = new ArrayCollection();
         $this->userSeasons = new ArrayCollection();
-	$this->setGivenName($givenName);
-        $this->setFamilyName($familyName);
-        $this->setDisplayName($displayName);
         $this->setLogin($login);
     }
 

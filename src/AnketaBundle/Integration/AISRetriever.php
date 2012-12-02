@@ -189,7 +189,7 @@ class AISRetriever
     public function getFullName()
     {
         $this->loginIfNotAlready();
-        return $this->mainScreen->getFullLogin($this->trace);
+        return $this->mainScreen->getFullUserName($this->trace);
     }
 
     public function isAdministraciaStudiaAllowed()
