@@ -109,7 +109,7 @@ class ImportOtazkyCommand extends AbstractImportCommand {
             $manager->persist($category);
         } else {
             $spec = $import['id'];
-            echo "Kategoria s unique indexom $spec  sa uz v databaze nachadza.\n";
+            echo "Kategoria s unique indexom $spec sa uz v databaze nachadza.\n";
         }
     }
 
@@ -161,6 +161,18 @@ class ImportOtazkyCommand extends AbstractImportCommand {
                 $question->addOption($op);
             }
         }
+        if (array_key_exists("hlavne_hodnotenie_predmetu", $import)
+            && $import["hlavne_hodnotenie_predmetu"] == "Yes") {
+            $question->setIsSubjectEvaluation(true);
+        } else {
+            $question->setIsSubjectEvaluation(false);
+        }
+        if (array_key_exists("hlavne_hodnotenie_vyucujuceho", $import)
+            && $import["hlavne_hodnotenie_vyucujuceho"] == "Yes") {
+            $question->setIsTeacherEvaluation(true);
+        } else {
+            $question->setIsTeacherEvaluation(false);
+        }
 
         $question->setSeason($season);
         $manager->persist($question);
@@ -173,7 +185,8 @@ class ImportOtazkyCommand extends AbstractImportCommand {
         $sectionIdMap = array(
             'vseobecne' => 'general',
             'predmety' => 'subject',
-            'studijnyprogram' => 'studijnyprogram'
+            'studijnyprogram' => 'studijnyprogram',
+            'predmety_ucitel' => 'subject_teacher',
         );
         $categoryRepository = $manager->getRepository('AnketaBundle\Entity\Category');
         foreach ($categories as $category) {

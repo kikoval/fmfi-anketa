@@ -67,6 +67,7 @@ otazky:
       komentar:   No
       hviezdicky: Yes
       position:   1
+      hlavne_hodnotenie_predmetu: Yes
 
     - nazov:  Zložitosť predmetu
       text:   Ako náročná bola podľa vás preberaná látka?
@@ -226,6 +227,7 @@ otazky:
       hviezdicky: Yes
       ucitel:     Yes
       position:   1
+      hlavne_hodnotenie_ucitela: Yes
 
     - nazov:  Pripravenost
       text:   Vyučujúci ovládal predmet, bol vždy pripravený, prednášal zrozumiteľne.
