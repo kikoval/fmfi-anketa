@@ -31,8 +31,8 @@ class StatisticsSection extends ContainerAware {
 
     public static function makeSubjectTeacherSection(ContainerInterface $container, Season $season, Subject $subject, User $teacher) {
         $em = $container->get('doctrine.orm.entity_manager');
-        if ($em->getRepository('AnketaBundle:UsersSubjects')->findOneBy(array('teacher' => $teacher->getId(), 'subject' => $subject->getId(), 'season' => $season->getId())) === null) {
-            throw new NotFoundHttpException('Section not found: User "'.$teacher->getId().'" doesn\'t teach subject "'.$subject->getId().'".');
+        if ($em->getRepository('AnketaBundle:TeachersSubjects')->findOneBy(array('teacher' => $teacher->getId(), 'subject' => $subject->getId(), 'season' => $season->getId())) === null) {
+            throw new NotFoundHttpException('Section not found: Teacher "'.$teacher->getId().'" doesn\'t teach subject "'.$subject->getId().'".');
         }
         $result = new StatisticsSection();
         $result->setContainer($container);

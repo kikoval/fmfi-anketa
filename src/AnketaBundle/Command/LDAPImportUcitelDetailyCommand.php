@@ -26,12 +26,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 class LDAPImportUcitelDetailyCommand extends ContainerAwareCommand {
 
     protected function configure() {
-        //parent::configure();
-
-        $this
-                ->setName('anketa:ldap:ucitel-detaily')
-                ->setDescription('Importuj detaily ucitelov z LDAPu')
-        ;
+        $this->setName('anketa:ldap:ucitel-detaily')
+             ->setDescription('Importuj detaily ucitelov z LDAPu');
     }
 
     /**
@@ -80,7 +76,7 @@ class LDAPImportUcitelDetailyCommand extends ContainerAwareCommand {
                 
                 $usernameFilter = '(uid=' . $ldap->escape($login) . ')';
                 $ldapInfo = $ldap->searchOne($usernameFilter,
-                        array('givenNameU8', 'snU8', 'displayName'));
+                        array('givenNameU8', 'snU8', 'displayName')); //U8 == UTF-8, sn == surname
                 
                 if ($ldapInfo === null) {
                     $output->writeln('<info>Pouzivatel ' . $login . ' nebol '.

@@ -51,12 +51,6 @@ class AnketaUserProvider implements UserProviderInterface
      */
     private $seasonRepository;
 
-    /**
-     * Doctrine repository for User entity
-     * @var AnketaBundle\Entity\SeasonRepository
-     */
-    private $teacherRepository;
-
     /** @var EntityManager */
     private $entityManager;
 
@@ -76,7 +70,6 @@ class AnketaUserProvider implements UserProviderInterface
         $this->userSeasonRepository = $em->getRepository('AnketaBundle:UserSeason');
         $this->roleRepository = $em->getRepository('AnketaBundle:Role');
         $this->seasonRepository = $em->getRepository('AnketaBundle:Season');
-        $this->teacherRepository = $em->getRepository('AnketaBundle:User');
         $this->perSeasonUserSources = $perSeasonUserSources;
         $this->perLoginUserSources = $perLoginUserSources;
         $this->logger = $logger;
