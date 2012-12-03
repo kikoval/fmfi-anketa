@@ -299,10 +299,7 @@ class StatisticsController extends Controller {
     public function listMySubjectsAction($season_slug) {
         $access = $this->get('anketa.access.statistics');
         if (!$access->hasOwnSubjects()) throw new AccessDeniedException();
-        $user = $access->getUser();
-        
-        $em = $this->get('doctrine.orm.entity_manager');
-        $teacher = $em->getRepository('AnketaBundle:User')->findOneBy(array('login' => $user->getLogin()));
+        $teacher = $access->getUser();
         
         if ($teacher === null) {
             throw new NotFoundHttpException('Ucitel sa nenasiel');

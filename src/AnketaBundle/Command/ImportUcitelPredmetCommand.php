@@ -74,8 +74,8 @@ class ImportUcitelPredmetCommand extends AbstractImportCommand {
         $conn->beginTransaction();
 
         $insertTeacher = $conn->prepare("
-                    INSERT INTO User (id, givenName, familyName, displayName, login) 
-                    VALUES (:id, :givenName, :familyName, :displayName, :login) 
+                    INSERT INTO User ( givenName, familyName, displayName, login) 
+                    VALUES (:givenName, :familyName, :displayName, :login) 
                     ON DUPLICATE KEY UPDATE login=login");
 
         $insertSubject = $conn->prepare("
@@ -142,12 +142,6 @@ class ImportUcitelPredmetCommand extends AbstractImportCommand {
                     continue;
                 }
 
-                $insertUser->bindValue('login', $login);
-		$insertUser->bindValue('displayName', $plneMeno);
-                $insertUser->execute();
-                $userId = $conn->lastInsertId();
-                
-                $insertTeacher->bindValue('id', $userId);
                 $insertTeacher->bindValue('displayName', $plneMeno);
                 $insertTeacher->bindValue('givenName', $meno);
                 $insertTeacher->bindValue('familyName', $priezvisko);
