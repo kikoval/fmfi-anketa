@@ -28,6 +28,7 @@ WHERE t.login NOT IN ( SELECT uf.login FROM UserFinal uf);
 
 UPDATE Answer a
 SET a.teacher_id = (SELECT uf.id FROM UserFinal uf WHERE uf.tid = a.teacher_id);
+
 ALTER TABLE Answer DROP INDEX IDX_DD714F1341807E1D;
 
 UPDATE Response r
@@ -49,3 +50,19 @@ DROP TABLE User;
 DROP TABLE Teacher;
 
 RENAME TABLE UserFinal TO User;
+
+ALTER TABLE Answers
+ADD FOREIGN KEY (teacher_id)
+REFERENCES User(id)
+
+ALTER TABLE Response
+ADD FOREIGN KEY (teacher_id)
+REFERENCES User(id)
+
+ALTER TABLE TeachersSubjects
+ADD FOREIGN KEY (teacher_id)
+REFERENCES User(id)
+
+ALTER TABLE TeachingAssociation
+ADD FOREIGN KEY (teacher_id)
+REFERENCES User(id)

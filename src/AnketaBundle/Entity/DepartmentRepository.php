@@ -27,26 +27,12 @@ class DepartmentRepository extends EntityRepository {
                            AnketaBundle\\Entity\\UserSeason us
                            WHERE us.user = :user
                            AND us.season = :season
-                           AND us.department = d
-                           ORDER BY d.name ASC");
+                           AND us.department = d");
         $query->setParameter('user', $user);
         $query->setParameter('season', $season);
         
         // TODO odstranit hack: zmergujeme z teachera
         $depts = $query->getResult();
-        $teacherDepts = $this->findByTeacherLogin($user->getLogin());
-        foreach ($teacherDepts as $teacherDept) {
-            $found = false;
-            foreach ($depts as $dept) {
-                if ($teacherDept->getId() == $dept->getId()) {
-                    $found = true;
-                    break;
-                }
-            }
-            if (!$found) {
-                $depts[] = $teacherDept;
-            }
-        }
         
         return $depts;
     }
