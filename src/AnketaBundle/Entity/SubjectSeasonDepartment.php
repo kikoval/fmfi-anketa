@@ -12,7 +12,6 @@
 namespace AnketaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
 use AnketaBundle\Entity\SubjectSeason;
 use AnketaBundle\Entity\Department;
 
@@ -63,5 +62,4 @@ class SubjectSeasonDepartment {
     public function getId() {
         return $this->id;
     }
-    
 }

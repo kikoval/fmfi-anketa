@@ -11,13 +11,8 @@
 
 namespace AnketaBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\EntityRepository;
 use AnketaBundle\Entity\CategoryType;
-
-/**
- * Repository class for Category Entity
- */
 
 class CategoryRepository extends EntityRepository {
     

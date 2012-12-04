@@ -14,9 +14,6 @@ namespace AnketaBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
 
-/**
- * Repository class for Subject Entity
- */
 class SubjectRepository extends EntityRepository {
 
     public function getAttendedSubjectsForUser($user, $season) {

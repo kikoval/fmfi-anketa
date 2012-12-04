@@ -12,11 +12,6 @@
 namespace AnketaBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
-use AnketaBundle\Entity\Department;
-
-/**
- * Repository class for Program Entity
- */
 
 class DepartmentRepository extends EntityRepository {
 
@@ -31,24 +26,8 @@ class DepartmentRepository extends EntityRepository {
         $query->setParameter('user', $user);
         $query->setParameter('season', $season);
         
-        // TODO odstranit hack: zmergujeme z teachera
         $depts = $query->getResult();
         
         return $depts;
     }
-    
-    public function findByTeacherLogin($login) {
-        // TODO vyhodit
-        $em = $this->getEntityManager();
-        $query = $em->createQuery("SELECT d
-                           FROM AnketaBundle\\Entity\\User t,
-                           AnketaBundle\\Entity\\Department d
-                           WHERE t.login = :login
-                           AND t.department = d
-                           ORDER BY d.name ASC");
-        $query->setParameter('login', $login);
-
-        return $query->getResult();
-    }
-
 }

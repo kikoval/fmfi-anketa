@@ -10,12 +10,8 @@
  */
 
 namespace AnketaBundle\Entity;
-use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\EntityRepository;
 
-/**
- * Repository class for Option Entity
- */
+use Doctrine\ORM\EntityRepository;
 
 class OptionRepository extends EntityRepository {
     

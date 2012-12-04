@@ -12,17 +12,12 @@
 
 namespace AnketaBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\EntityRepository;
-use AnketaBundle\Entity\Question;
 use AnketaBundle\Entity\Category;
 use AnketaBundle\Entity\CategoryType;
 use AnketaBundle\Entity\User;
 use fajr\libfajr\base\Preconditions;
-/**
- * Repository class for Question Entity
- */
 
 class QuestionRepository extends EntityRepository {
     

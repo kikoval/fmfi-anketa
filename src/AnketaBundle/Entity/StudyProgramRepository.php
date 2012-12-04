@@ -17,10 +17,6 @@ use AnketaBundle\Entity\User;
 use AnketaBundle\Entity\Subject;
 use AnketaBundle\Entity\Season;
 
-/**
- * Repository class for Program Entity
- */
-
 class StudyProgramRepository extends EntityRepository {
 
     public function getStudyProgrammesForUser(User $user, Season $season) {

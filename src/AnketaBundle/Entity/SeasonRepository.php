@@ -9,10 +9,8 @@
  * @author     Peter Peresini <ppershing@gmail.com>
  */
 
-
 namespace AnketaBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;

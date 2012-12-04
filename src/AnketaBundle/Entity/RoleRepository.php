@@ -14,10 +14,6 @@ namespace AnketaBundle\Entity;
 use Doctrine\ORM\EntityRepository;
 use AnketaBundle\Entity\Role;
 
-/**
- * Repository class for Role Entity
- */
-
 class RoleRepository extends EntityRepository {
 
     public function findOrCreateRole($name) {

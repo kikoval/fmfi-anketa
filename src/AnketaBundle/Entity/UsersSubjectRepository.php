@@ -12,14 +12,7 @@
 namespace AnketaBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
-use AnketaBundle\Entity\UsersSubjects;
-
-/**
- * Repository class for UsersSubjects
- */
 
 class UsersSubjectsRepository extends EntityRepository {
-
-
 
 }

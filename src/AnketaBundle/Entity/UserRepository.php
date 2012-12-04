@@ -14,10 +14,6 @@ namespace AnketaBundle\Entity;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 
-/**
- * Repository class for User Entity
- */
-
 class UserRepository extends EntityRepository {
 
     public function findOneWithRolesByLogin($username)
