@@ -5,7 +5,7 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
-        <parameter key="libfajr.trace.null.class">libfajr\base\NullTrace</parameter>
+        <parameter key="libfajr.trace.null.class">libfajr\trace\NullTrace</parameter>
         <parameter key="libfajr.server.url_map.class">libfajr\connection\AIS2ServerUrlMap</parameter>
         <parameter key="libfajr.server.connection.class">libfajr\connection\AIS2ServerConnection</parameter>
         <parameter key="libfajr.login.cosign_proxy.class">libfajr\login\CosignProxyLogin</parameter>
