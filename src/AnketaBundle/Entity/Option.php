@@ -3,7 +3,7 @@
 namespace AnketaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use fajr\libfajr\base\Preconditions;
+use libfajr\base\Preconditions;
 
 /**
  * @ORM\Entity(repositoryClass="AnketaBundle\Entity\OptionRepository")
@@ -97,7 +97,7 @@ class Option {
     }
 
     /**
-     * @returns int
+     * @return int
      */
     public function getPosition() {
         return $this->position;

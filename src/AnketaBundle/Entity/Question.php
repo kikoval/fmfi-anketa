@@ -24,7 +24,7 @@ class Question {
     protected $position;
 
     /**
-     * @ORM\Column(type="string", nullable="true")
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $title;
 
@@ -41,7 +41,7 @@ class Question {
     protected $season;
 
     /**
-     * @ORM\Column(type="string", length=1024, nullable="true")
+     * @ORM\Column(type="string", length=1024, nullable=true)
      */
     protected $description;
 

@@ -19,7 +19,7 @@ class StatisticsController extends Controller {
 
     /**
      * @param string $season_slug if null, returns current active season
-     * @returns Season the season
+     * @return Season the season
      */
     private function getSeason($season_slug = null) {
         $em = $this->get('doctrine.orm.entity_manager');
@@ -74,7 +74,7 @@ class StatisticsController extends Controller {
     }
 
     /**
-     * @returns array(array('cnt'=>int,'title'=>string,'value'=>double))
+     * @return array(array('cnt'=>int,'title'=>string,'value'=>double))
      */
     public function getHistogramData($question, $answers) {
         if (!$question->hasOptions()) {
@@ -165,7 +165,7 @@ class StatisticsController extends Controller {
     /**
      * Returns statistics for given data
      *
-     * @returns array with following items:
+     * @return array with following items:
      *  - cnt count
      *  - avg (optional) average value
      *  - median (optional) mean value
@@ -434,7 +434,7 @@ class StatisticsController extends Controller {
         return $result;
     }
 
-    public function reportInappropriateAction($season_slug, $answer_id) {
+    public function flagInappropriateAction($answer_id) {
         $em = $this->get('doctrine.orm.entity_manager');
         $request = $this->get('request');
 
@@ -465,7 +465,7 @@ class StatisticsController extends Controller {
                     'user' => $user);
             $sender = $this->container->getParameter('mail_sender');
             $to = $this->container->getParameter('mail_dest_new_teaching_association');    // ten isty e-mail ako teaching associations
-            $body = $this->renderView('AnketaBundle:Statistics:reportMail.txt.twig', $emailTpl);
+            $body = $this->renderView('AnketaBundle:Statistics:flagMail.txt.twig', $emailTpl);
 
             $this->get('mailer'); // DO NOT DELETE THIS LINE
             // it autoloads required things before Swift_Message can be used
@@ -484,9 +484,8 @@ class StatisticsController extends Controller {
             return new RedirectResponse($section->getStatisticsPath());
         }
         else {
-            return $this->render('AnketaBundle:Statistics:reportForm.html.twig', array(
+            return $this->render('AnketaBundle:Statistics:flagForm.html.twig', array(
                 'section' => $section,
-                'season' => $this->getSeason($season_slug),
                 'answer_id' => $answer_id,
                 'comment_body' => $comment,
             ));

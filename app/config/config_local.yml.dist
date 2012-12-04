@@ -1,0 +1,66 @@
+imports:
+    - { resource: config.yml }
+
+parameters:
+    database:
+        driver:   pdo_sqlite
+        path:     %kernel.root_dir%/../db/anketa.sqlite
+
+#    database:
+#        driver:   pdo_mysql
+#        host:     localhost
+#        port:     ~
+#        dbname:   anketa
+#        user:     anketa
+#        password: ~
+#        charset:  UTF8
+
+    allow_db_reset: true
+
+    # ak len testujes tak zmen destinaciu nech nespamujes mailinglist
+    mail_sender:    anketa@anketa.fmph.uniba.sk
+    mail_dest_new_teaching_association: fmfi-anketa-devel@googlegroups.com
+
+    locale:            en
+    secret:            ThisTokenIsNotSoSecretChangeIt
+
+    # LDAP sucast, vid https://cit.uniba.sk/wiki/public/jas/ldap/groups
+    org_unit:          FMFI
+
+    # moznosti: dev, prod, beta, demo
+    anketa_instance:   dev
+
+    # viditelny nazov fakulty (na rozdiel od org_unit) - je v nadpise apod
+    skratka_fakulty:   FMFI
+
+    smernica_dekana:   "http://www.fmph.uniba.sk/index.php?id=2940"
+
+    google_analytics_tracking_code: ~
+
+    libfajr_cookie_path: /tmp
+
+    # ako sa anketa pripaja na AIS (odkomentuj prave jeden riadok):
+    # a) development - rucne sa prihlas do AISu a daj sem hodnotu cosign cookie
+    # b) cez cosign proxy
+    libfajr_login:
+        cosign_cookie: napisSem
+#        cosign_proxy: /opt/cosign/proxy
+
+    cosign_logout_prefix: "https://login.uniba.sk/logout.cgi?"
+
+    ais_semestre: 
+        - ["2011/2012", "Z"]
+    ais_brat_opravnenia: Yes    # pouzit AIS ako zdroj opravneni?
+
+
+# ak chces posielat postu, nastav tu spravne prihlasovacie udaje
+swiftmailer:
+    # chceli sme mat "swiftmailer: %mailer%" v config.yml, ale symfony buguje a
+    # s toplevel sekciami to nefunguje (za %mailer% sa nic nedosadi)... :(
+    transport:  smtp
+    host:       smtp.gmail.com
+    username:   fmfi.svt
+    password:   ~
+    encryption: ssl
+    auth_mode:  login
+    port:       465

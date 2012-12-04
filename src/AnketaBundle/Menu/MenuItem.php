@@ -12,7 +12,7 @@
 
 namespace AnketaBundle\Menu;
 
-use fajr\libfajr\base\Preconditions;
+use libfajr\base\Preconditions;
 
 // TODO(ppershing): make things private
 class MenuItem {
@@ -21,6 +21,8 @@ class MenuItem {
     public $children;
     public $expanded;
     public $active;
+    public $lecturer;
+    public $trainer;
     /**
      * show only expanded child.
      * Useful when the sub-menu list is extremely long
@@ -41,6 +43,8 @@ class MenuItem {
         $this->children = array();
         $this->expanded = false;
         $this->active = false;
+        $this->lecturer = false;
+        $this->trainer = false;
         $this->only_expanded = false;
         $this->progressbar = new MenuItemProgressbar($this);
     }

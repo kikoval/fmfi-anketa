@@ -19,7 +19,7 @@ use AnketaBundle\Entity\Question;
 use AnketaBundle\Entity\Category;
 use AnketaBundle\Entity\CategoryType;
 use AnketaBundle\Entity\User;
-use fajr\libfajr\base\Preconditions;
+use libfajr\base\Preconditions;
 /**
  * Repository class for Question Entity
  */
@@ -70,7 +70,7 @@ class QuestionRepository extends EntityRepository {
         return $this->getOrderedQuestions($category, $season);
     }
 
-     public function getNumberOfQuestionsForCategoryType($type, Season $season) {
+    public function getNumberOfQuestionsForCategoryType($type, Season $season) {
         Preconditions::check(CategoryType::isValid($type));
         $em = $this->getEntityManager();
         $query = $em->createQuery("SELECT COUNT(q.id) as questions
@@ -79,6 +79,18 @@ class QuestionRepository extends EntityRepository {
                                    WHERE c.type = :type
                                    AND q.season = :season");
         $query->setParameter('type', $type);
+        $query->setParameter('season', $season);
+        $result = $query->getResult();
+        return $result[0]['questions'];
+    }
+
+    public function getNumberOfQuestionsForCategory(Category $category, Season $season) {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery("SELECT COUNT(q.id) as questions
+                                   FROM AnketaBundle\Entity\Question q
+                                   WHERE q.category = :category
+                                   AND q.season = :season");
+        $query->setParameter('category', $category);
         $query->setParameter('season', $season);
         $result = $query->getResult();
         return $result[0]['questions'];
@@ -164,14 +176,13 @@ class QuestionRepository extends EntityRepository {
         $subjectTeachersQuestions = $this->getNumberOfQuestionsForCategoryType(CategoryType::TEACHER_SUBJECT, $season);
 
         $subjectRepository = $em->getRepository('AnketaBundle:Subject');
-        $teacherRepository = $em->getRepository('AnketaBundle:Teacher');
+        $teacherSubjectRepository = $em->getRepository('AnketaBundle:TeachersSubjects');
         $result = array();
         $subjects = $subjectRepository->getAttendedSubjectsForUser($user, $season);
-        // TODO: optimalizovat selectovanie
         foreach ($subjects as $subject) {
-            $teachers = $teacherRepository->getTeachersForSubject($subject, $season);
-            foreach ($teachers as $teacher) {
-                $result[$subject->getId()][$teacher->getId()] = array(
+            $teachersSubjects = $teacherSubjectRepository->findBy(array('subject' => $subject->getId(), 'season' => $season->getId()));
+            foreach ($teachersSubjects as $teacherSubject) {
+                $result[$subject->getId()][$teacherSubject->getTeacher()->getId()] = array(
                     'answered' => 0,
                     'total' => $subjectTeachersQuestions
                 );
@@ -211,7 +222,7 @@ class QuestionRepository extends EntityRepository {
         foreach ($em->getRepository('AnketaBundle\Entity\Category')->findAll() as $category) {
                 $result[$category->getId()] = array(
                     'answered' => 0,
-                    'total' => $category->getQuestionsCount()
+                    'total' => $this->getNumberOfQuestionsForCategory($category, $season)
                 );
         }
 

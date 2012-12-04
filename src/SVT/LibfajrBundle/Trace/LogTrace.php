@@ -13,7 +13,7 @@
 
 namespace SVT\LibfajrBundle\Trace;
 
-use fajr\libfajr\pub\base\Trace;
+use libfajr\trace\Trace;
 use Symfony\Component\HttpFoundation\Session;
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
 
@@ -27,30 +27,20 @@ class LogTrace implements Trace
     }
 
 
-    public function addChild($header = "") {
+    public function addChild($message, array $tags = null) {
         if ($this->logger !== null) {
-            $this->logger->debug(sprintf('Trace - child: %s', $header));
+            $this->logger->debug(sprintf('Trace - child: %s', $message));
         }
         return $this;
     }
 
-    public function setHeader($header) {
-        if ($this->logger !== null) {
-            $this->logger->debug(sprintf('Trace - set header: %s', $header));
-        }
-    }
-
-    public function tlog($text) {
+    public function tlog($text, array $tags = null) {
         if ($this->logger !== null) {
             $this->logger->debug(sprintf('Trace: %s', $text));
         }
     }
 
-    public function tlogData($string_data) {
-        // Don't log data as it is high volume
-    }
-
-    public function tlogVariable($name, $variable) {
+    public function tlogVariable($name, $variable, array $tags = null) {
         if ($this->logger !== null) {
             $value = preg_replace("@\\\\'@", "'", var_export($variable, true));
             // premenne tiez urveme, kedze niektore mozu obsahovat pomerne velke data

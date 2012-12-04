@@ -18,12 +18,12 @@ class Answer {
     protected $id;
 
     /**
-     * @ORM\Column(type="integer", nullable="true")
+     * @ORM\Column(type="integer", nullable=true)
      */
     protected $evaluation;
 
     /**
-     * @ORM\Column(type="text", nullable="true")
+     * @ORM\Column(type="text", nullable=true)
      */
     protected $comment;
 

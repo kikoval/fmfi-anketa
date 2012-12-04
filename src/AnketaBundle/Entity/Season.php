@@ -43,7 +43,7 @@ class Season {
      *
      * For example 2010-2011
      *
-     * @ORM\Column(type="string", unique="true")
+     * @ORM\Column(type="string", unique=true)
      * @var string $slug
      */
     protected $slug;

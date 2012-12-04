@@ -51,7 +51,7 @@ class SubjectSeason {
     /**
      * Pocet studentov fakulty, ktori mali zapisany tento predmet
      * danu sezonu.
-     * @ORM\Column(type="integer", nullable="true")
+     * @ORM\Column(type="integer", nullable=true)
      * @param int $studentCountFacutlty
      */
     protected $studentCountFaculty;
@@ -60,7 +60,7 @@ class SubjectSeason {
      * Pocet studentov, ktori mali tento predmet zapisany celkovo
      * (t.j. sem sa rata aj napr. niekto z managementu, kto mal zapisany
      *  predmet na matfyze)
-     * @ORM\Column(type="integer", nullable="true")
+     * @ORM\Column(type="integer", nullable=true)
      * @var int $studentCountAll
      */
     protected $studentCountAll;

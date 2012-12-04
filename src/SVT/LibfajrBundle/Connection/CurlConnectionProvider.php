@@ -13,9 +13,9 @@
 
 namespace SVT\LibfajrBundle\Connection;
 
-use fajr\libfajr\pub\connection\HttpConnection;
-use fajr\libfajr\connection\CurlConnection;
-use Symfony\Component\HttpFoundation\Session;
+use libfajr\connection\HttpConnection;
+use libfajr\connection\CurlConnection;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
 
 class CurlConnectionProvider implements HttpConnectionProviderInterface
