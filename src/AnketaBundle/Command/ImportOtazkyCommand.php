@@ -43,7 +43,8 @@ class ImportOtazkyCommand extends AbstractImportCommand {
                 ->setName('anketa:import:otazky')
                 ->setDescription('Importuj otazky z yaml')
                 ->addSeasonOption()
-                ->addOption('duplicates', 'c', InputOption::VALUE_NONE, 'Checks for Duplicate Categories', null)
+                ->addOption('duplicates', 'c', InputOption::VALUE_NONE, 'Checks for Duplicate Categories')
+                ->addOption('dry-run', 'r', InputOption::VALUE_NONE, 'Dry run. Won\'t modify database')
         ;
     }
 
@@ -61,6 +62,7 @@ class ImportOtazkyCommand extends AbstractImportCommand {
         $manager = $this->getContainer()->get('doctrine')->getEntityManager();
         $filename = $input->getArgument('file');
         $checkDuplicatesOption = $input->getOption('duplicates');
+        $manager->getConnection()->beginTransaction();
 
         $season = $this->getSeason($input);
 
@@ -88,6 +90,13 @@ class ImportOtazkyCommand extends AbstractImportCommand {
         }
 
         $manager->flush();
+
+        $dryRunOption = $input->getOption('dry-run');
+        if (!$dryRunOption) {
+            $manager->getConnection()->commit();
+        } else {
+            $manager->getConnection()->rollback();
+        }
     }
 
     private function processCategory(array $import, EntityManager $manager) {
@@ -183,10 +192,10 @@ class ImportOtazkyCommand extends AbstractImportCommand {
         $questions = $import["otazky"];
 
         $sectionIdMap = array(
-            'vseobecne' => 'general',
-            'predmety' => 'subject',
-            'studijnyprogram' => 'studijnyprogram',
-            'predmety_ucitel' => 'subject_teacher',
+            'vseobecne' => CategoryType::GENERAL,
+            'predmety' => CategoryType::SUBJECT,
+            'predmety_ucitel' => CategoryType::TEACHER_SUBJECT,
+            'studijnyprogram' => CategoryType::STUDY_PROGRAMME,
         );
         $categoryRepository = $manager->getRepository('AnketaBundle\Entity\Category');
         foreach ($categories as $category) {
