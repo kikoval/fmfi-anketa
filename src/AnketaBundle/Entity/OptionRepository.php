@@ -15,7 +15,7 @@ use Doctrine\ORM\EntityRepository;
 
 class OptionRepository extends EntityRepository {
     
-    public function getOptions($limit = 5) {
+    public function getOptions() {
         $dql = 'SELECT o, q FROM AnketaBundle\Entity\Option o ' .
                'INNER JOIN o.question q';
 

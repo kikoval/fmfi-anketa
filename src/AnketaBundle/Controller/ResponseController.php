@@ -9,7 +9,7 @@ use AnketaBundle\Entity\Season;
 use AnketaBundle\Entity\Subject;
 use AnketaBundle\Entity\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use AnketaBundle\Entity\Teacher;
+use AnketaBundleEntityUser;
 
 class ResponseController extends Controller {
     
@@ -89,11 +89,11 @@ class ResponseController extends Controller {
     public function listMineAction($season_slug) {
         $em = $this->get('doctrine.orm.entity_manager');
         $access = $this->get('anketa.access.statistics');
-        if (!$access->hasOwnResponses()) throw new AccessDeniedException();
-        $user = $access->getUser();
-        
         $seasonRepo = $em->getRepository('AnketaBundle\Entity\Season');
         $season = $seasonRepo->findOneBy(array('slug' => $season_slug));
+        if (!$access->hasOwnResponses($season)) throw new AccessDeniedException();
+        $user = $access->getUser();
+        
         if ($season == null) {
             throw new NotFoundHttpException('Chybna sezona: ' . $season_slug);
         }

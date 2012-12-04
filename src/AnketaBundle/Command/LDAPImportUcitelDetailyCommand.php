@@ -11,9 +11,6 @@
 namespace AnketaBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Input\InputDefinition;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -23,7 +20,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  * @package    Anketa
  * @author     Martin Sucha <anty.sk+svt@gmail.com>
  */
-class LDAPImportUcitelDetailyCommand extends ContainerAwareCommand {
+class LDAPImportUserDetailyCommand extends ContainerAwareCommand {
 
     protected function configure() {
         $this->setName('anketa:ldap:ucitel-detaily')

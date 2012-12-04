@@ -12,7 +12,6 @@
 namespace AnketaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
 use AnketaBundle\Entity\User;
 use AnketaBundle\Entity\Department;
 use AnketaBundle\Entity\Season;

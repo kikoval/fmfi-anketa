@@ -14,6 +14,7 @@ use Doctrine\ORM\EntityManager;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use AnketaBundle\Entity\Response;
 use AnketaBundle\Entity\Season;
+use AnketaBundle\Entity\UserSeason;
 
 class StatisticsAccess
 {
@@ -44,15 +45,29 @@ class StatisticsAccess
         }
         return $this->user;
     }
-
+	
+    /**
+     * Returns whether the current user is teacher in the specified season.
+     *
+     * @return boolean
+     */
+    public function isTeacher(Season $season) {
+		$userSeasonRepo = $this->em->getRepository('AnketaBundle:UserSeason');
+		$userSeason = $userSeasonRepo->findOneBy(array('season' => $season, 'user' => $this->getUser()));
+		if ($userSeason === NULL) {
+			return false;
+		}
+        return $userSeason->getIsTeacher();
+    }
+	
     /**
      * Returns whether the current user can or could have created comments,
      * and thus should see a "My comments" item in the menu.
      *
      * @return boolean
      */
-    public function hasOwnResponses() {
-        return $this->security->isGranted('ROLE_TEACHER');
+    public function hasOwnResponses(Season $season) {
+        return $this->isTeacher($season);
     }
 
     /**
@@ -61,8 +76,8 @@ class StatisticsAccess
      *
      * @return boolean
      */
-    public function hasOwnSubjects() {
-        return $this->security->isGranted('ROLE_TEACHER');
+    public function hasOwnSubjects(Season $season) {
+        return $this->isTeacher($season);
     }
 
     /**
@@ -127,7 +142,7 @@ class StatisticsAccess
      * @return boolean
      */
     public function canCreateResponses(Season $season) {
-        return $this->canSeeResults($season) && $this->hasOwnResponses() && $season->getRespondingOpen();
+        return $this->canSeeResults($season) && $this->hasOwnResponses($season) && $season->getRespondingOpen();
     }
 
     /**

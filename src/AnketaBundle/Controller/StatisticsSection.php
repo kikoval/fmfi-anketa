@@ -14,7 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use AnketaBundle\Entity\Season;
 use AnketaBundle\Entity\Subject;
-use AnketaBundle\Entity\Teacher;
+use AnketaBundle\Entity\User;
 use AnketaBundle\Entity\Question;
 use AnketaBundle\Entity\StudyProgram;
 use AnketaBundle\Entity\Answer;

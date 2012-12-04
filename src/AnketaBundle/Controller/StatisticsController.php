@@ -298,15 +298,15 @@ class StatisticsController extends Controller {
     
     public function listMySubjectsAction($season_slug) {
         $access = $this->get('anketa.access.statistics');
-        if (!$access->hasOwnSubjects()) throw new AccessDeniedException();
+        $season = $this->getSeason($season_slug);
+        if (!$this->get('anketa.access.statistics')->canSeeResults($season)) throw new AccessDeniedException();
+        if (!$access->hasOwnSubjects($season)) throw new AccessDeniedException();
         $teacher = $access->getUser();
         
         if ($teacher === null) {
             throw new NotFoundHttpException('Ucitel sa nenasiel');
         }
 
-        $season = $this->getSeason($season_slug);
-        if (!$this->get('anketa.access.statistics')->canSeeResults($season)) throw new AccessDeniedException();
 
         $subjects = $em->getRepository('AnketaBundle:Subject')->getSubjectsForTeacherWithAnyAnswers($teacher, $season);
 

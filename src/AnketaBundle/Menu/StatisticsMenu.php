@@ -106,7 +106,7 @@ class StatisticsMenu
                 }
 
                 // Add "My subjects" under this season.
-                if ($access->hasOwnSubjects()) {
+                if ($access->hasOwnSubjects($season)) {
                     $seasonItem->children['my_subjects'] = new MenuItem(
                         'Moje predmety',
                         $this->generateUrl('statistics_list_my_subjects',
@@ -114,7 +114,7 @@ class StatisticsMenu
                 }
 
                 // Add "My comments" under this section.
-                if ($access->hasOwnResponses()) {
+                if ($access->hasOwnResponses($season)) {
                     $seasonItem->children['my_comments'] = new MenuItem(
                         'Moje komentáre',
                         $this->generateUrl('response',

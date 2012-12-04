@@ -3,7 +3,6 @@
 namespace AnketaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
 use AnketaBundle\Entity\Season;
 
 /**
@@ -23,7 +22,7 @@ class Response {
 
     /**
      * @ORM\ManyToOne(targetEntity="User")
-     *
+     * ten na koho stranke sa to zobrazuje
      * @var User $teacher
      */
     protected $teacher;
