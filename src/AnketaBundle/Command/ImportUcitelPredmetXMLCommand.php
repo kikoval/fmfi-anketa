@@ -20,7 +20,7 @@ use AnketaBundle\Lib\SubjectIdentificationInterface;
 use AnketaBundle\Lib\NativeCSVTableReader;
 use AnketaBundle\Lib\FixedWidthTableReader;
 use AnketaBundle\Lib\RozvrhXMLImporter;
-use Candle\RozvrhXMLParser;
+use SVT\RozvrhXML\Parser;
 use Exception;
 
 /**
@@ -63,7 +63,7 @@ class ImportUcitelPredmetXMLCommand extends AbstractImportCommand {
         $importer = new RozvrhXMLImporter($conn, $subjectIdentification);
         $importer->prepareDatabase();
         
-        $parser = new RozvrhXMLParser($importer);
+        $parser = new Parser($importer);
 
         $conn->beginTransaction();
 

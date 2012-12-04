@@ -19,12 +19,17 @@
         "jms/security-extra-bundle": "1.2.*",
         "jms/di-extra-bundle": "1.1.*",
         "doctrine/doctrine-fixtures-bundle": "2.1.*",
-        "svt/libfajr": "@dev"
+        "svt/libfajr": "@dev",
+        "svt/rozvrhxml": "@dev"
     },
     "repositories": [
         {
             "type": "git",
             "url": "https://code.google.com/p/fajr.libfajr/"
+        },
+        {
+            "type": "git",
+            "url": "https://github.com/fmfi-svt/rozvrh-xml.git"
         }
     ],
     "scripts": {

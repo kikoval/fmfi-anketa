@@ -12,6 +12,7 @@
 namespace AnketaBundle\Lib;
 
 use PDO;
+use SVT\RozvrhXML\Importer;
 
 /**
  * Customized RozvrhXMLImporter that adds additional columns
@@ -19,7 +20,7 @@ use PDO;
  * @package    Anketa
  * @author     Martin Sucha <anty.sk@gmail.com>
  */
-class RozvrhXMLImporter extends \Candle\RozvrhXMLImporter {
+class RozvrhXMLImporter extends Importer {
     
     /** @var SubjectIdentification */
     private $subjectIdentification;

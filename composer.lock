@@ -1,5 +1,5 @@
 {
-    "hash": "3eb64e3b59c51f6e2d1017a63e445ad4",
+    "hash": "6e98b89c7c811a8ce613a4667ac56038",
     "packages": [
         {
             "name": "doctrine/common",
@@ -54,7 +54,7 @@
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "name": "Johannes M. Schmitt",
+                    "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
                     "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
@@ -460,7 +460,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/schmittjoh/JMSDiExtraBundle/zipball/1.1.1",
+                "url": "https://github.com/schmittjoh/JMSDiExtraBundle/archive/1.1.1.zip",
                 "reference": "1.1.1",
                 "shasum": ""
             },
@@ -499,7 +499,7 @@
                 {
                     "name": "Johannes M. Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "http://jmsyst.com",
+                    "homepage": "https://github.com/schmittjoh",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -542,7 +542,7 @@
                 {
                     "name": "Johannes M. Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "http://jmsyst.com",
+                    "homepage": "https://github.com/schmittjoh",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -894,6 +894,24 @@
                 ]
             },
             "description": "Functions for connecting to AIS2"
+        },
+        {
+            "name": "svt/rozvrhxml",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fmfi-svt/rozvrh-xml.git",
+                "reference": "a66eeed8702ffb6bbca04f5936f1e636813d9d8b"
+            },
+            "time": "2012-12-04 20:20:09",
+            "type": "library",
+            "installation-source": "source",
+            "autoload": {
+                "psr-0": {
+                    "SVT\\RozvrhXML": "lib/"
+                }
+            },
+            "description": "Parser and importer of FMPH timetable data"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -1312,6 +1330,7 @@
     ],
     "minimum-stability": "alpha",
     "stability-flags": {
-        "svt/libfajr": 20
+        "svt/libfajr": 20,
+        "svt/rozvrhxml": 20
     }
 }
