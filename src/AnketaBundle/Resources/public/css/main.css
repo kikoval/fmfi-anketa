@@ -366,17 +366,17 @@ div.faq {
     background: #E0EFFF;
 }
 
-.results-comments .report-link {
+.results-comments .flag-link {
     color: #7F9CBA;
     float: right;
     visibility: hidden;
 }
 
-.results-comments div.comment:hover .report-link {
+.results-comments div.comment:hover .flag-link {
     visibility: visible;
 }
 
-.results-comments div.comment .report-link:hover {
+.results-comments div.comment .flag-link:hover {
     color: #003A76;
     visibility: visible;
 }

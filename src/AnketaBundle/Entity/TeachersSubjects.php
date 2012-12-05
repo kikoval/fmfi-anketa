@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="AnketaBundle\Entity\TeachersSubjectsRepository")
+ * @ORM\Table(name="TeachersSubjects",uniqueConstraints={@ORM\UniqueConstraint(name="teacher_subject_unique", columns={"teacher_id", "subject_id", "season_id"})})
  */
 class TeachersSubjects {
 

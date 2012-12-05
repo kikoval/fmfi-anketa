@@ -30,9 +30,9 @@ statistics_list_general:
     requirements:
       season_slug:   "[a-z0-9-]+"
 
-statistics_report:
-    pattern: /vysledky/{season_slug}/report/{answer_id}
-    defaults: { _controller: AnketaBundle:Statistics:reportInappropriate}
+statistics_flag:
+    pattern: /flag/{answer_id}
+    defaults: { _controller: AnketaBundle:Statistics:flagInappropriate}
     requirements:
       season_slug:   "[a-z0-9-]+"
       answer_id: \d+

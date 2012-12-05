@@ -95,9 +95,12 @@ class StatisticsMenu
                                     $teachers = $em->getRepository('AnketaBundle:User')->getTeachersForSubject($subject, $season);
                                     foreach ($teachers as $teacher) {
                                         // Add this teacher under this subject.
+                                        $teacher = $teacherSubject->getTeacher();
                                         $teacherSection = StatisticsSection::makeSubjectTeacherSection($this->container, $season, $subject, $teacher);
-                                        $subjectItem->children[$teacher->getId()] = new MenuItem(
+                                        $subjectItem->children[$teacher->getId()] = $teacherItem = new MenuItem(
                                             $teacher->getName(), $teacherSection->getStatisticsPath());
+                                        if ($teacherSubject->getLecturer()) $teacherItem->lecturer = true;
+                                        if ($teacherSubject->getTrainer()) $teacherItem->trainer = true;
                                     }
                                 }
                             }

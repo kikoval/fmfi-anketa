@@ -4,7 +4,7 @@ namespace AnketaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use fajr\libfajr\base\Preconditions;
+use libfajr\base\Preconditions;
 
 /**
  * @ORM\Entity(repositoryClass="AnketaBundle\Entity\CategoryRepository")
@@ -111,13 +111,6 @@ class Category {
         return $this->questions;
     }
 
-    /**
-     * @return integer
-     */
-    public function getQuestionsCount() {
-        return $this->questions->count();
-    }
-    
     public function getSpecification() {
         return $this->specification;
     }
