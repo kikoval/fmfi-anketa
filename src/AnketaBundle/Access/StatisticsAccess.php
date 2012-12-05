@@ -45,21 +45,21 @@ class StatisticsAccess
         }
         return $this->user;
     }
-	
+
     /**
      * Returns whether the current user is teacher in the specified season.
      *
      * @return boolean
      */
     public function isTeacher(Season $season) {
-		$userSeasonRepo = $this->em->getRepository('AnketaBundle:UserSeason');
-		$userSeason = $userSeasonRepo->findOneBy(array('season' => $season, 'user' => $this->getUser()));
-		if ($userSeason === NULL) {
-			return false;
-		}
+        $userSeasonRepo = $this->em->getRepository('AnketaBundle:UserSeason');
+        $userSeason = $userSeasonRepo->findOneBy(array('season' => $season, 'user' => $this->getUser()));
+        if ($userSeason === NULL) {
+            return false;
+        }
         return $userSeason->getIsTeacher();
     }
-	
+
     /**
      * Returns whether the current user can or could have created comments,
      * and thus should see a "My comments" item in the menu.

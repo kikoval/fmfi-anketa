@@ -23,7 +23,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 
 use AnketaBundle\Entity\Answer;
 use AnketaBundle\Entity\User;
-use AnketaBundle\Entity\Category;
 use AnketaBundle\Entity\CategoryType;
 
 class QuestionController extends Controller {
@@ -34,7 +33,7 @@ class QuestionController extends Controller {
 
     /**
      * Processes the form.
-     * 
+     *
      * @param Request $request
      * @param User $user current user
      * @param ArrayCollection $questions questions which are expected in the form
@@ -182,7 +181,7 @@ class QuestionController extends Controller {
         $season = $em->getRepository('AnketaBundle:Season')->getActiveSeason();
         $questions = $em->getRepository('AnketaBundle\Entity\Question')
                         ->getOrderedQuestionsByCategoryType(CategoryType::TEACHER_SUBJECT, $season);
-        
+
         $userRepository = $em->getRepository('AnketaBundle:User');
         // TODO: opravit nasledovne, nech to nacitava a kontroluje ucitelopredmet
         // z databazy naraz v jednom kroku
@@ -249,7 +248,7 @@ class QuestionController extends Controller {
                       ->getAnswersByCriteria($questions, $user, $season, $subject);
         $studyProgram = $em->getRepository('AnketaBundle:StudyProgram')
                            ->getStudyProgrammeForUserSubject($user, $subject, $season);
-        
+
         if ('POST' == $request->getMethod()) {
             $answerArray = $this->processForm($request, $user, $questions, $answers, $season);
 
@@ -281,7 +280,7 @@ class QuestionController extends Controller {
     }
 
     public function answerStudyProgramAction($slug) {
-        
+
         $request = $this->get('request');
         $user = $this->get('security.context')->getToken()->getUser();
         $em = $this->get('doctrine.orm.entity_manager');
@@ -341,7 +340,7 @@ class QuestionController extends Controller {
         $request = $this->get('request');
         $user = $this->get('security.context')->getToken()->getUser();
         $em = $this->get('doctrine.orm.entity_manager');
-        
+
         // chceme vceobecne subkategorie - pre menu do templatu
         // TODO toto je code duplication s buildMenu, tuto informaciu aj tak dostaneme v templateParams
         $subcategories = $em->getRepository('AnketaBundle\Entity\Category')
@@ -361,20 +360,20 @@ class QuestionController extends Controller {
                 throw new NotFoundHttpException ('Chybna kategoria: ' . $id);
             }
         }
-        
+
         $season = $em->getRepository('AnketaBundle:Season')->getActiveSeason();
         $questions = $em->getRepository('AnketaBundle\Entity\Question')
                         ->getOrderedQuestions($category, $season);
         $answers = $em->getRepository('AnketaBundle\Entity\Answer')
                       ->getAnswersByCriteria($questions, $user, $season);
-        
+
         if ('POST' == $request->getMethod()) {
             $answerArray = $this->processForm($request, $user, $questions, $answers, $season);
             foreach ($answerArray AS $answer) {
                 // k odpovedi pridame prvy studijny odbor, co user ma
                 $ur = $em->getRepository('AnketaBundle\Entity\StudyProgram');
                 $answer->setStudyProgram($ur->getFirstStudyProgrammeForUser($user, $season));
-                
+
                 $em->persist($answer);
             }
 

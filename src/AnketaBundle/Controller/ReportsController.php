@@ -3,13 +3,8 @@
 namespace AnketaBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use AnketaBundle\Entity\Season;
-use AnketaBundle\Entity\Subject;
-use AnketaBundle\Entity\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use AnketaBundleEntityUser;
 
 class ReportsController extends Controller {
 
@@ -82,7 +77,7 @@ class ReportsController extends Controller {
         if ($season === null) {
             throw new NotFoundHttpException();
         }
-        
+
         // TODO: create separate slug column in entity
         $department_code = str_replace('-', '.', $department_slug);
         $department = $em->getRepository('AnketaBundle:Department')->findOneBy(array('code' => $department_code));
@@ -113,7 +108,7 @@ class ReportsController extends Controller {
         if (!$access->hasReports()) throw new AccessDeniedException();
 
         $items = array();
-        
+
         $departments = $access->getDepartmentReports($season);
         if (count($departments)) {
             $links = array();
@@ -123,7 +118,7 @@ class ReportsController extends Controller {
             }
             $items['Katedry'] = $links;
         }
-        
+
         $studyPrograms = $access->getStudyProgrammeReports($season);
         if (count($studyPrograms)) {
             $links = array();

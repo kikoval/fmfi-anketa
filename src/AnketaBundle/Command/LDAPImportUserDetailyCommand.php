@@ -23,8 +23,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 class LDAPImportUserDetailyCommand extends ContainerAwareCommand {
 
     protected function configure() {
-        $this->setName('anketa:ldap:ucitel-detaily')
-             ->setDescription('Importuj detaily ucitelov z LDAPu');
+        $this->setName('anketa:ldap:user-detaily')
+             ->setDescription('Importuj detaily userov z LDAPu');
     }
 
     /**

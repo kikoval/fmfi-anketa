@@ -6,7 +6,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use AnketaBundle\Menu\MenuItemProgressbar;
-use AnketaBundle\Entity\User;
 
 class HlasovanieController extends Controller
 {

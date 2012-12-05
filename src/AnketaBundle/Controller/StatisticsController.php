@@ -6,11 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use AnketaBundle\Entity\Question;
-use AnketaBundle\Entity\CategoryType;
 use AnketaBundle\Entity\Season;
-use AnketaBundle\Entity\Subject;
-use AnketaBundle\Entity\Response;
-use DateTime;
 use AnketaBundle\Lib\StatisticalFunctions;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -61,7 +57,7 @@ class StatisticsController extends Controller {
 
         return $comments;
     }
-    
+
     /**
      * Returns number of inappropriate comments in set of answers.
      * @param type $answers
@@ -137,7 +133,7 @@ class StatisticsController extends Controller {
         if (array_sum($counts) == 0) {
             return null;
         }
- 
+
         // docs at http://code.google.com/apis/chart/image/docs/gallery/bar_charts.html
         $options = array(
             'cht' => 'bhs',   // bar chart, horizontal, stacked
@@ -184,7 +180,7 @@ class StatisticsController extends Controller {
         }
         return $stats;
     }
-    
+
     /**
      * Check if the array contains at least one pair of different values
      * @param array $array
@@ -205,16 +201,16 @@ class StatisticsController extends Controller {
         }
         return false;
     }
-    
+
     /**
      * Function returns the statistics for a question in a format:
      *      result['results'] - array of number of options indexed by option id
      *      result['chart'] - chart of the results, or null if question has no options
      *      result['comments'] - array of comments
-     * 
+     *
      * @param Question $question
-     * @param array $answers 
-     * 
+     * @param array $answers
+     *
      * @return array see function description for more info
      */
     public function processQuestion(Question $question, $answers) {
@@ -266,7 +262,7 @@ class StatisticsController extends Controller {
         }
         throw new AccessDeniedException();
     }
-    
+
     public function listSubjectsAction($season_slug) {
         // TODO: slugifier ako service
         $slugifier = new \AnketaBundle\Lib\Slugifier();
@@ -295,14 +291,14 @@ class StatisticsController extends Controller {
         $templateParams['items'] = $items;
         return $this->render('AnketaBundle:Statistics:subjectListing.html.twig', $templateParams);
     }
-    
+
     public function listMySubjectsAction($season_slug) {
         $access = $this->get('anketa.access.statistics');
         $season = $this->getSeason($season_slug);
         if (!$this->get('anketa.access.statistics')->canSeeResults($season)) throw new AccessDeniedException();
         if (!$access->hasOwnSubjects($season)) throw new AccessDeniedException();
         $teacher = $access->getUser();
-        
+
         if ($teacher === null) {
             throw new NotFoundHttpException('Ucitel sa nenasiel');
         }

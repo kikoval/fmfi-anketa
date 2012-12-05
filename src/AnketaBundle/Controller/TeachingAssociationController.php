@@ -3,11 +3,9 @@
 namespace AnketaBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use AnketaBundle\Entity\TeachingAssociation;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use DateTime;
 
 class TeachingAssociationController extends Controller
 {
@@ -15,7 +13,7 @@ class TeachingAssociationController extends Controller
     public function preExecute() {
         if (!$this->get('anketa.access.hlasovanie')->userCanVote()) throw new AccessDeniedException();
     }
-    
+
     public function formAction($subject_slug)
     {
         $em = $this->get('doctrine.orm.entity_manager');
@@ -24,18 +22,18 @@ class TeachingAssociationController extends Controller
         if ($subject === null) {
             throw new NotFoundHttpException('Chybny slug predmetu: ' . $subject_slug);
         }
-        
+
         return $this->render('AnketaBundle:TeachingAssociation:form.html.twig',
                 array('subject'=>$subject));
     }
-    
+
     public function processFormAction($subject_slug)
     {
         $request = $this->get('request');
         $em = $this->get('doctrine.orm.entity_manager');
         $subjectRepository = $em->getRepository('AnketaBundle\Entity\Subject');
         $seasonRepository = $em->getRepository('AnketaBundle\Entity\Season');
-        
+
         $season = $seasonRepository->getActiveSeason();
         $subject = $subjectRepository->findOneBy(array('slug' => $subject_slug));
         if ($subject === null) {
@@ -44,7 +42,7 @@ class TeachingAssociationController extends Controller
         $security = $this->get('security.context');
         $user = $security->getToken()->getUser();
         $note = $request->request->get('note', '');
-        
+
         // TODO(anty): toto sa nastavi, az ked budeme mat UI na vybratie ucitela zo zoznamu
         $teacher = null;
 
@@ -71,15 +69,15 @@ class TeachingAssociationController extends Controller
                         ->setTo($to)
                         ->setBody($body);
         $this->get('mailer')->send($message);
-        
+
         $session = $this->get('session');
         $session->setFlash('success',
                 'Ďakujeme za informáciu. ' .
                 'V priebehu pár dní by mala byť spracovaná, preto si nezabudnite ' .
                 'otvoriť anketu znovu a ohodnotiť prípadných pridaných učiteľov.');
-        
+
         return new RedirectResponse($this->generateUrl(
                 'answer_subject', array('subject_slug'=>$subject->getSlug())));
     }
-    
+
 }

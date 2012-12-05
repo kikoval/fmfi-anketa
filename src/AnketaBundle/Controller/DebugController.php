@@ -12,8 +12,6 @@
 namespace AnketaBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Request;
-
 
 /**
  * Controller for testing (rarely used) services
