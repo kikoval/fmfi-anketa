@@ -2,7 +2,7 @@
 
 namespace AnketaBundle\Entity;
 
-use fajr\libfajr\base\Preconditions;
+use libfajr\base\Preconditions;
 
 class CategoryType {
     const GENERAL = "general";

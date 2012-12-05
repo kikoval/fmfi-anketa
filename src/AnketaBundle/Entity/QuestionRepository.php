@@ -17,17 +17,17 @@ use Doctrine\ORM\EntityRepository;
 use AnketaBundle\Entity\Category;
 use AnketaBundle\Entity\CategoryType;
 use AnketaBundle\Entity\User;
-use fajr\libfajr\base\Preconditions;
+use libfajr\base\Preconditions;
 
 class QuestionRepository extends EntityRepository {
-    
+
     public function getQuestion($id) {
         $dql = 'SELECT q, o FROM AnketaBundle\Entity\Question q '.
                'INNER JOIN q.options o WHERE q.id = :id';
-        
+
         $query = $this->getEntityManager()->createQuery($dql);
         $query->setParameter('id', $id);
-        
+
         return $query->getSingleResult();
     }
 
@@ -124,7 +124,7 @@ class QuestionRepository extends EntityRepository {
         {
             return \max(\array_map(function($value){return $value['answered'];}, $array));
         };
-        
+
         $subjectRepository = $em->getRepository('AnketaBundle:Subject');
 
         $result = array();
@@ -141,7 +141,7 @@ class QuestionRepository extends EntityRepository {
                 $result[$row['subject_id']]['total'] += $subjectTeachersQuestions;
             }
         }
-        
+
         return $result;
     }
 
@@ -227,7 +227,7 @@ class QuestionRepository extends EntityRepository {
 
         return $result;
     }
-    
+
 /**
      * Returned array contains progress for provided user in following format:
      * - result[studyprogram_code]['answered'] = number of answers for subject and teacher
