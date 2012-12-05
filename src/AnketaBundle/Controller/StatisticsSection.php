@@ -80,7 +80,7 @@ class StatisticsSection extends ContainerAware {
                 if ($sca >= 5) $result->preface .= 'malo zapísaných '.$sca.' študentov';
                 $result->preface .= '.';
             }
-            
+
         }
         $result->questionsCategoryType = CategoryType::SUBJECT;
         $result->answersQuery = array('subject' => $subject->getId());
@@ -159,7 +159,7 @@ class StatisticsSection extends ContainerAware {
             }
             $teacher = $em->find('AnketaBundle:User', $matches[2]);
             if ($teacher === null) {
-                throw new NotFoundHttpException('Section not found: User "'.$matches[2].'" not found.');
+                throw new NotFoundHttpException('Section not found: Teacher "'.$matches[2].'" not found.');
             }
             return self::makeSubjectTeacherSection($container, $season, $subject, $teacher);
         }
