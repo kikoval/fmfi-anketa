@@ -43,7 +43,7 @@ class ImportOtazkyCommand extends AbstractImportCommand {
                 ->setName('anketa:import:otazky')
                 ->setDescription('Importuj otazky z yaml')
                 ->addSeasonOption()
-                ->addOption('duplicates', 'c', InputOption::VALUE_NONE, 'Checks for Duplicate Categories')
+                ->addOption('no-duplicates-check', 'c', InputOption::VALUE_OPTIONAL, 'Don\'t check for duplicate categories', null)
                 ->addOption('dry-run', 'r', InputOption::VALUE_NONE, 'Dry run. Won\'t modify database')
         ;
     }
@@ -61,7 +61,7 @@ class ImportOtazkyCommand extends AbstractImportCommand {
     protected function execute(InputInterface $input, OutputInterface $output) {
         $manager = $this->getContainer()->get('doctrine')->getEntityManager();
         $filename = $input->getArgument('file');
-        $checkDuplicatesOption = $input->getOption('duplicates');
+        $checkDuplicatesOption = $input->getOption('no-duplicates-check');
         $manager->getConnection()->beginTransaction();
 
         $season = $this->getSeason($input);
@@ -69,7 +69,7 @@ class ImportOtazkyCommand extends AbstractImportCommand {
         $input_array = Yaml::parse($filename);
 
         // checkDuplicates
-        if ($checkDuplicatesOption != null) {
+        if ($checkDuplicatesOption === null) {
             $this->checkDuplicates($input_array, $manager, $output);
             return;
         }
