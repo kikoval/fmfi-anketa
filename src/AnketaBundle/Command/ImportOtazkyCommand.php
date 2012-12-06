@@ -129,7 +129,7 @@ class ImportOtazkyCommand extends AbstractImportCommand {
         if ($import["text"] != '') {
             $question = new Question($import["text"]);
         } else {
-            $question = new Question('defaultna otazka, chyba polozka text v anketa.yml');
+            throw new Exception('chyba polozka text vo vstupnom yml subore');
         }
 
         $question->setPosition($questionPos);
