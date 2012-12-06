@@ -70,14 +70,14 @@ class ImportOtazkyCommand extends AbstractImportCommand {
 
         // checkDuplicates
         if ($checkDuplicatesOption != null) {
-            $this->checkDuplicates($input_array, $manager);
+            $this->checkDuplicates($input_array, $manager, $output);
             return;
         }
 
         // spracuj kategorie
         $categories = $input_array["kategorie"];
         foreach ($categories as $category) {
-            $this->processCategory($category, $manager);
+            $this->processCategory($category, $manager, $output);
         }
         $manager->flush();
 	
@@ -88,18 +88,19 @@ class ImportOtazkyCommand extends AbstractImportCommand {
             $this->processQuestion($question, $manager, $season, $questionPos);
             $questionPos++;
         }
-
         $manager->flush();
+        $output->writeln('Naimportovanych otazok: '.$questionPos);
 
         $dryRunOption = $input->getOption('dry-run');
         if (!$dryRunOption) {
             $manager->getConnection()->commit();
         } else {
             $manager->getConnection()->rollback();
+            $output->writeln('Nastaveny dry run - rollbackujem transakciu!');
         }
     }
 
-    private function processCategory(array $import, EntityManager $manager) {
+    private function processCategory(array $import, EntityManager $manager, OutputInterface $output) {
 
         $sectionIdMap = array(
             'vseobecne' => CategoryType::GENERAL,
@@ -118,7 +119,7 @@ class ImportOtazkyCommand extends AbstractImportCommand {
             $manager->persist($category);
         } else {
             $spec = $import['id'];
-            echo "Kategoria s unique indexom $spec sa uz v databaze nachadza.\n";
+            $output->writeln('Kategoria s unique indexom '.$spec.' sa uz v databaze nachadza.');
         }
     }
 
@@ -187,7 +188,7 @@ class ImportOtazkyCommand extends AbstractImportCommand {
         $manager->persist($question);
     }
 
-    private function checkDuplicates(array $import, EntityManager $manager) {
+    private function checkDuplicates(array $import, EntityManager $manager, OutputInterface $output) {
         $categories = $import["kategorie"];
         $questions = $import["otazky"];
 
@@ -205,9 +206,9 @@ class ImportOtazkyCommand extends AbstractImportCommand {
                     array('type' => $kat,
                         'description' => $typ));
             if ($objekt == null) {
-                echo 'null';
+                $output->writeln('Kategoria '.$kat.' s typom '.$typ.' sa v databaze NEnachadza.');
             } else {
-                echo "Kategoria $kat s typom $typ sa uz v databaze nachadza.\n";
+                $output->writeln('Kategoria '.$kat.' s typom '.$typ.' sa uz v databaze nachadza.');
             }
         }
     }
