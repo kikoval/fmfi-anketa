@@ -43,7 +43,8 @@ class ImportOtazkyCommand extends AbstractImportCommand {
                 ->setName('anketa:import:otazky')
                 ->setDescription('Importuj otazky z yaml')
                 ->addSeasonOption()
-                ->addOption('duplicates', 'c', InputOption::VALUE_NONE, 'Checks for Duplicate Categories', null)
+                ->addOption('no-duplicates-check', 'c', InputOption::VALUE_OPTIONAL, 'Don\'t check for duplicate categories', null)
+                ->addOption('dry-run', 'r', InputOption::VALUE_NONE, 'Dry run. Won\'t modify database')
         ;
     }
 
@@ -60,22 +61,23 @@ class ImportOtazkyCommand extends AbstractImportCommand {
     protected function execute(InputInterface $input, OutputInterface $output) {
         $manager = $this->getContainer()->get('doctrine')->getEntityManager();
         $filename = $input->getArgument('file');
-        $checkDuplicatesOption = $input->getOption('duplicates');
+        $checkDuplicatesOption = $input->getOption('no-duplicates-check');
+        $manager->getConnection()->beginTransaction();
 
         $season = $this->getSeason($input);
 
         $input_array = Yaml::parse($filename);
 
         // checkDuplicates
-        if ($checkDuplicatesOption != null) {
-            $this->checkDuplicates($input_array, $manager);
+        if ($checkDuplicatesOption === null) {
+            $this->checkDuplicates($input_array, $manager, $output);
             return;
         }
 
         // spracuj kategorie
         $categories = $input_array["kategorie"];
         foreach ($categories as $category) {
-            $this->processCategory($category, $manager);
+            $this->processCategory($category, $manager, $output);
         }
         $manager->flush();
 	
@@ -86,11 +88,19 @@ class ImportOtazkyCommand extends AbstractImportCommand {
             $this->processQuestion($question, $manager, $season, $questionPos);
             $questionPos++;
         }
-
         $manager->flush();
+        $output->writeln('Naimportovanych otazok: '.$questionPos);
+
+        $dryRunOption = $input->getOption('dry-run');
+        if (!$dryRunOption) {
+            $manager->getConnection()->commit();
+        } else {
+            $manager->getConnection()->rollback();
+            $output->writeln('Nastaveny dry run - rollbackujem transakciu!');
+        }
     }
 
-    private function processCategory(array $import, EntityManager $manager) {
+    private function processCategory(array $import, EntityManager $manager, OutputInterface $output) {
 
         $sectionIdMap = array(
             'vseobecne' => CategoryType::GENERAL,
@@ -109,7 +119,7 @@ class ImportOtazkyCommand extends AbstractImportCommand {
             $manager->persist($category);
         } else {
             $spec = $import['id'];
-            echo "Kategoria s unique indexom $spec  sa uz v databaze nachadza.\n";
+            $output->writeln('Kategoria s unique indexom '.$spec.' sa uz v databaze nachadza.');
         }
     }
 
@@ -119,7 +129,7 @@ class ImportOtazkyCommand extends AbstractImportCommand {
         if ($import["text"] != '') {
             $question = new Question($import["text"]);
         } else {
-            $question = new Question('defaultna otazka, chyba polozka text v anketa.yml');
+            throw new Exception('chyba polozka text vo vstupnom yml subore');
         }
 
         $question->setPosition($questionPos);
@@ -161,19 +171,32 @@ class ImportOtazkyCommand extends AbstractImportCommand {
                 $question->addOption($op);
             }
         }
+        if (array_key_exists("hlavne_hodnotenie_predmetu", $import)
+            && $import["hlavne_hodnotenie_predmetu"] == "Yes") {
+            $question->setIsSubjectEvaluation(true);
+        } else {
+            $question->setIsSubjectEvaluation(false);
+        }
+        if (array_key_exists("hlavne_hodnotenie_vyucujuceho", $import)
+            && $import["hlavne_hodnotenie_vyucujuceho"] == "Yes") {
+            $question->setIsTeacherEvaluation(true);
+        } else {
+            $question->setIsTeacherEvaluation(false);
+        }
 
         $question->setSeason($season);
         $manager->persist($question);
     }
 
-    private function checkDuplicates(array $import, EntityManager $manager) {
+    private function checkDuplicates(array $import, EntityManager $manager, OutputInterface $output) {
         $categories = $import["kategorie"];
         $questions = $import["otazky"];
 
         $sectionIdMap = array(
-            'vseobecne' => 'general',
-            'predmety' => 'subject',
-            'studijnyprogram' => 'studijnyprogram'
+            'vseobecne' => CategoryType::GENERAL,
+            'predmety' => CategoryType::SUBJECT,
+            'predmety_ucitel' => CategoryType::TEACHER_SUBJECT,
+            'studijnyprogram' => CategoryType::STUDY_PROGRAMME,
         );
         $categoryRepository = $manager->getRepository('AnketaBundle\Entity\Category');
         foreach ($categories as $category) {
@@ -183,9 +206,9 @@ class ImportOtazkyCommand extends AbstractImportCommand {
                     array('type' => $kat,
                         'description' => $typ));
             if ($objekt == null) {
-                echo 'null';
+                $output->writeln('Kategoria '.$kat.' s typom '.$typ.' sa v databaze NEnachadza.');
             } else {
-                echo "Kategoria $kat s typom $typ sa uz v databaze nachadza.\n";
+                $output->writeln('Kategoria '.$kat.' s typom '.$typ.' sa uz v databaze nachadza.');
             }
         }
     }
