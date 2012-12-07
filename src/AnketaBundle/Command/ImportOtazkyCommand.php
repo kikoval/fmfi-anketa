@@ -115,7 +115,7 @@ class ImportOtazkyCommand extends AbstractImportCommand {
         $objekt = $categoryRepository->findOneBy(
                 array('specification' => $import['id']));
         
-        if ($objekt == null) {
+        if (!$objekt) {
             $manager->persist($category);
         } else {
             $spec = $import['id'];
@@ -205,7 +205,7 @@ class ImportOtazkyCommand extends AbstractImportCommand {
             $objekt = $categoryRepository->findOneBy(
                     array('type' => $kat,
                         'description' => $typ));
-            if ($objekt == null) {
+            if (!$objekt) {
                 $output->writeln('Kategoria '.$kat.' s typom '.$typ.' sa v databaze NEnachadza.');
             } else {
                 $output->writeln('Kategoria '.$kat.' s typom '.$typ.' sa uz v databaze nachadza.');
