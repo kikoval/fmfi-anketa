@@ -14,7 +14,6 @@ use Doctrine\ORM\EntityManager;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use AnketaBundle\Entity\Response;
 use AnketaBundle\Entity\Season;
-use AnketaBundle\Entity\UserSeason;
 
 class StatisticsAccess
 {
@@ -49,9 +48,10 @@ class StatisticsAccess
     /**
      * Returns whether the current user is teacher in the specified season.
      *
+     * @param Season $season
      * @return boolean
      */
-    public function isTeacher(Season $season) {
+    public function isATeacher(Season $season) {
         $userSeasonRepo = $this->em->getRepository('AnketaBundle:UserSeason');
         $userSeason = $userSeasonRepo->findOneBy(array('season' => $season, 'user' => $this->getUser()));
         if ($userSeason === NULL) {
@@ -64,20 +64,22 @@ class StatisticsAccess
      * Returns whether the current user can or could have created comments,
      * and thus should see a "My comments" item in the menu.
      *
+     * @param Season $season
      * @return boolean
      */
     public function hasOwnResponses(Season $season) {
-        return $this->isTeacher($season);
+        return $this->isATeacher($season);
     }
 
     /**
      * Returns whether the current user has taught some subjects, and thus
      * should see a "My subjects" item in the menu.
      *
+     * @param Season $season
      * @return boolean
      */
     public function hasOwnSubjects(Season $season) {
-        return $this->isTeacher($season);
+        return $this->isATeacher($season);
     }
 
     /**
@@ -192,7 +194,10 @@ class StatisticsAccess
             return $repository->findBy(array(), array('name' => 'ASC'));
         }
         else if ($this->security->isGranted('ROLE_DEPARTMENT_REPORT')) {
-            return $repository->findByUser($this->getUser(), $season);
+            $userSeasonRepo = $this->em->getRepository('AnketaBundle:UserSeason');
+            $user = $this->getUser();
+            $userSeason = $userSeasonRepo->findBy(array('user'=> $user, 'season'=>$season));
+            return $userSeason->getDepartment();
         }
         else {
             return array();

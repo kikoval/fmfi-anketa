@@ -13,8 +13,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class User implements UserInterface, EquatableInterface {
 
     /**
-     * @ORM\Id 
-     * @ORM\GeneratedValue 
+     * @ORM\Id
+     * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
     protected $id;
@@ -23,17 +23,17 @@ class User implements UserInterface, EquatableInterface {
      * @ORM\Column(type="string", nullable=true)
      */
     protected $displayName;
-    
+
     /**
      * @ORM\Column(type="string", nullable=true)
      */
     protected $givenName;
-    
+
     /**
      * @ORM\Column(type="string", nullable=true)
      */
     protected $familyName;
-    
+
     /**
      * @ORM\ManyToMany(targetEntity="Role")
      * @ORM\JoinTable(name="UsersRoles",
@@ -42,7 +42,7 @@ class User implements UserInterface, EquatableInterface {
      *      )
      */
     protected $roles;
-    
+
     /**
      * @ORM\OneToMany(targetEntity="UserSeason", mappedBy="user")
      */
@@ -56,21 +56,19 @@ class User implements UserInterface, EquatableInterface {
 
     /**
      * List of user's organizational units
-     * This is not persisted in the database, as it is always reloaded 
+     * This is not persisted in the database, as it is always reloaded
      * @var array(string)
      */
-    
+
     protected $orgUnits = array(); // inicializator musi byt tu! (doctrine nevola konstruktor)
     /**
      * @ORM\Column(type="string", nullable=true, unique=true)
      */
     protected $login;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="Department")
-     * @var \AnketaBundle\Entity\Department
-     * @deprecated Docasny hack, chceme priradovat katedru k userom,
-     * ale najprv treba zmigrovat ucitelov do userov (je tam par corner-cases)
+     * @var Department
      */
     protected $department;
 
@@ -97,7 +95,7 @@ class User implements UserInterface, EquatableInterface {
         }
         return $this->displayName;
     }
-    
+
     public function hasDisplayName() {
         return $this->displayName !== null;
     }
@@ -142,7 +140,7 @@ class User implements UserInterface, EquatableInterface {
         }
         return array_search($role, $this->getRoles()) !== false;
     }
-    
+
     public function getOrgUnits() {
         return $this->orgUnits;
     }
@@ -155,7 +153,7 @@ class User implements UserInterface, EquatableInterface {
         if (!$user instanceof User) {
             return false;
         }
-        
+
         return $this->login === $user->getLogin();
     }
 
@@ -189,7 +187,7 @@ class User implements UserInterface, EquatableInterface {
     /**
      * Add userSeason
      *
-     * @param AnketaBundle\Entity\UserSeason $userSeason
+     * @param UserSeason $userSeason
      */
     public function addUserSeason(\AnketaBundle\Entity\UserSeason $userSeason)
     {
@@ -199,14 +197,14 @@ class User implements UserInterface, EquatableInterface {
     /**
      * Get userSeasons
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return Collection
      */
     public function getUserSeasons()
     {
         return $this->userSeasons;
     }
 
-    
+
     public function getName() {
         $name = trim($this->getGivenName() . ' ' . $this->getFamilyName());
         if ($name !== '') return $name;
@@ -244,16 +242,24 @@ class User implements UserInterface, EquatableInterface {
     public function setLogin($login) {
         $this->login = $login;
     }
-    
+
     /**
-     * @deprecated Docasny hack, chceme priradovat katedru k userom,
-     * ale najprv treba zmigrovat ucitelov do userov (je tam par corner-cases)
-     * @return \AnketaBundle\Entity\Department
+     * @return Department
      */
     public function getDepartment() {
         return $this->department;
     }
 
+    /**
+     * @param Department $department
+     */
+    public function setDepartment($department) {
+        $this->department = $department;
+    }
+
+    /**
+     * Kvoli Symfony UserInterface
+     */
     public function getUsername() {
         return $this->getLogin();
     }

@@ -20,9 +20,7 @@ use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
 use Doctrine\ORM\EntityManager;
 use AnketaBundle\Entity\User;
-use AnketaBundle\Entity\Season;
 use AnketaBundle\Entity\UserSeason;
-use AnketaBundle\Entity\UsersSubjects;
 
 class AnketaUserProvider implements UserProviderInterface
 {
@@ -32,19 +30,19 @@ class AnketaUserProvider implements UserProviderInterface
      * @var AnketaBundle\Entity\UserRepository
      */
     private $userRepository;
-    
+
     /**
      * Doctrine repository for UserSeason entity
      * @var AnketaBundle\Entity\UserSeasonRepository
      */
     private $userSeasonRepository;
-    
+
     /**
      * Doctrine repository for Role entity
      * @var AnketaBundle\Entity\RoleRepository
      */
     private $roleRepository;
-    
+
     /**
      * Doctrine repository for Season entity
      * @var AnketaBundle\Entity\SeasonRepository
@@ -56,7 +54,7 @@ class AnketaUserProvider implements UserProviderInterface
 
     /** @var UserSourceInterface[] */
     private $perSeasonUserSources;
-    
+
     /** @var UserSourceInterface[] */
     private $perLoginUserSources;
 
@@ -88,7 +86,7 @@ class AnketaUserProvider implements UserProviderInterface
         if (!($oldUser instanceof User)) {
             throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', get_class($oldUser)));
         }
-        
+
         if ($this->logger) {
             $this->logger->debug('Searching in database');
         }
@@ -100,10 +98,10 @@ class AnketaUserProvider implements UserProviderInterface
             }
             throw new UsernameNotFoundException(sprintf("User %s not found in database!", $oldUser->getLogin()));
         }
-        
+
         $user->setOrgUnits($oldUser->getOrgUnits());
         $this->loadUserInfo($user, false);
-        
+
         if ($this->logger) {
               $this->logger->debug('Returning the user');
         }
@@ -113,12 +111,12 @@ class AnketaUserProvider implements UserProviderInterface
 
     /**
      * Load a user with given username.
-     * 
+     *
      * This function tries to load the user from database first.
      * If that is not successful, try to construct a user from
      * LDAP and AIS2, if enabled.
-     * 
-     * @param string $username 
+     *
+     * @param string $username
      * @return User the requested user
      * @throws UsernameNotFoundException if the given user cannot be found
      *                                   nor constructed
@@ -139,27 +137,31 @@ class AnketaUserProvider implements UserProviderInterface
         if ($user === null) {
             $user = new User($username);
             $this->entityManager->persist($user);
-            
+
             $user->addRole($this->roleRepository->findOrCreateRole('ROLE_USER'));
         }
-        
+
         assert($user !== null);
         $this->loadUserInfo($user, true);
         return $user;
     }
-    
+
     private function loadUserInfo(User $user, $firstTime) {
         $activeSeason = $this->seasonRepository->getActiveSeason();
         $userSeason = $this->userSeasonRepository->
                 findOneBy(array('user' => $user->getId(), 'season' => $activeSeason->getId()));
-        $foundUser = !$firstTime;
-
+//nacitaval som uz z aisu pre dany seoson?
         if ($userSeason === null) {
             $userSeason = new UserSeason();
             $userSeason->setUser($user);
             $userSeason->setSeason($activeSeason);
             $this->entityManager->persist($userSeason);
-            
+        }
+
+        $foundUser = !$firstTime;
+        //kvoli doktorantom, kedze su aj ucitelia, aby sme im prvykrat nacitali predmety
+        //su aj isStudent aj isTeacher
+        if (!$userSeason->getLoadedFromAis()) {
             foreach ($this->perSeasonUserSources as $userSource) {
                 $found = $userSource->load($userSeason);
 
@@ -170,8 +172,12 @@ class AnketaUserProvider implements UserProviderInterface
 
                 $foundUser |= $found;
             }
+
+            if ($foundUser) {
+                $userSeason->setLoadedFromAis(true);
+            }
         }
-        
+
         if ($firstTime) {
             foreach ($this->perLoginUserSources as $userSource) {
                 $found = $userSource->load($userSeason);
@@ -184,14 +190,14 @@ class AnketaUserProvider implements UserProviderInterface
                 $foundUser |= $found;
             }
         }
-        
+
         if (!$foundUser) {
             if ($this->logger) {
                 $this->logger->debug('User info not found in loadUserInfo');
             }
             throw new UsernameNotFoundException(sprintf('User "%s" not found.', $user->getLogin()));
         }
-        
+
         $this->entityManager->flush();
     }
 

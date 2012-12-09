@@ -11,9 +11,6 @@
 
 namespace AnketaBundle\Command;
 
-use Symfony\Component\Console\Input\InputDefinition;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use AnketaBundle\Lib\FixedWidthTableReader;
@@ -49,12 +46,12 @@ class ImportUcitelKatedraCommand extends AbstractImportCommand {
     protected function execute(InputInterface $input, OutputInterface $output) {
 
         $file = $this->openFile($input);
-        
+
         $tableReader = new FixedWidthTableReader($file);
         $tableResolver = new TableColumnResolver($tableReader);
         $tableResolver->mapColumnByTitle('LOGIN', 'login');
         $tableResolver->mapColumnByTitle('SKRATKAORGANIZACNAJEDNOTKA', 'orgunit');
-        
+
         $conn = $this->getContainer()->get('database_connection');
 
         $conn->beginTransaction();
@@ -69,11 +66,11 @@ class ImportUcitelKatedraCommand extends AbstractImportCommand {
             while (($row = $tableResolver->readRow()) !== false) {
                 $login = $row['login'];
                 $orgUnit = $row['orgunit'];
-                
+
                 $updateTeacher->bindValue('login', $login);
                 $updateTeacher->bindValue('department', $orgUnit);
                 $updateTeacher->execute();
-                
+
             }
         } catch (Exception $e) {
             $conn->rollback();

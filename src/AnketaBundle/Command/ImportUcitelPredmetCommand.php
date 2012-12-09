@@ -11,12 +11,9 @@
 
 namespace AnketaBundle\Command;
 
-use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use AnketaBundle\Lib\SubjectIdentificationInterface;
 use AnketaBundle\Lib\NativeCSVTableReader;
 use AnketaBundle\Lib\FixedWidthTableReader;
 
@@ -36,7 +33,7 @@ class ImportUcitelPredmetCommand extends AbstractImportCommand {
                 ->setName('anketa:import:ucitel-predmet')
                 ->setDescription('Importuj ucitelov predmety z textaku')
                 ->addSeasonOption()
-                ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Format of importted data', null)
+                ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Format of imported data', null)
         ;
     }
 
@@ -68,15 +65,22 @@ class ImportUcitelPredmetCommand extends AbstractImportCommand {
         else {
             $tableReader = new FixedWidthTableReader($file);
         }
-        
+
         $conn = $this->getContainer()->get('database_connection');
 
         $conn->beginTransaction();
 
-        $insertTeacher = $conn->prepare("
-                    INSERT INTO User ( givenName, familyName, displayName, login) 
-                    VALUES (:givenName, :familyName, :displayName, :login) 
+        $insertUser = $conn->prepare("
+                    INSERT INTO User ( givenName, familyName, displayName, login)
+                    VALUES (:givenName, :familyName, :displayName, :login)
                     ON DUPLICATE KEY UPDATE login=login");
+
+        $insertUserSeason = $conn->prepare("
+                    INSERT INTO UserSeason ( user_id, season_id, isTeacher, isStudent, loadedFromAis)
+                    SELECT a.id, :seasonId, :isTeacher, :isStudent, :loadedFromAis
+                    FROM User a
+                    WHERE a.login = :login
+                    ON DUPLICATE KEY UPDATE isTeacher=1");
 
         $insertSubject = $conn->prepare("
                     INSERT INTO Subject (code, name, slug)
@@ -84,9 +88,9 @@ class ImportUcitelPredmetCommand extends AbstractImportCommand {
                     ON DUPLICATE KEY UPDATE slug=slug");
 
         $insertTeacherSubject = $conn->prepare("
-                    INSERT INTO TeachersSubjects (teacher_id, subject_id, season_id, lecturer, trainer) 
+                    INSERT INTO TeachersSubjects (teacher_id, subject_id, season_id, lecturer, trainer)
                     SELECT a.id, b.id, :season, :lecturer, :trainer
-                    FROM User a, Subject b 
+                    FROM User a, Subject b
                     WHERE a.login = :login and b.slug = :slug");
 
         try {
@@ -125,7 +129,7 @@ class ImportUcitelPredmetCommand extends AbstractImportCommand {
                 $aisRokVzniku = substr($aisPopisRokVzniku, 2, 2);
                 // TODO: Hmm, je toto spravne? (i.e. aj pre CSV, kde je priamo dlhy kod?)
                 $aisDlhyKod = $aisStredisko . '/' . $aisKratkyKod . '/' . $aisRokVzniku;
-                
+
                 $props = $subjectIdentification->identify($aisDlhyKod, $aisNazov);
                 $kod = $props['code'];
                 $nazov = $props['name'];
@@ -142,11 +146,18 @@ class ImportUcitelPredmetCommand extends AbstractImportCommand {
                     continue;
                 }
 
-                $insertTeacher->bindValue('displayName', $plneMeno);
-                $insertTeacher->bindValue('givenName', $meno);
-                $insertTeacher->bindValue('familyName', $priezvisko);
-                $insertTeacher->bindValue('login', $login);
-                $insertTeacher->execute();
+                $insertUser->bindValue('displayName', $plneMeno);
+                $insertUser->bindValue('givenName', $meno);
+                $insertUser->bindValue('familyName', $priezvisko);
+                $insertUser->bindValue('login', $login);
+                $insertUser->execute();
+
+                $insertUserSeason->bindValue('seasonId', $season->getId());
+                $insertUserSeason->bindValue('isTeacher', 1);
+                $insertUserSeason->bindValue('isStudent', 0);
+                $insertUserSeason->bindValue('loadedDromAis', 0);
+                $insertUserSeason->bindValue('login', $login);
+                $insertUserSeason->execute();
 
                 $insertSubject->bindValue('code', $kod);
                 $insertSubject->bindValue('name', $nazov);

@@ -14,20 +14,4 @@ namespace AnketaBundle\Entity;
 use Doctrine\ORM\EntityRepository;
 
 class DepartmentRepository extends EntityRepository {
-
-    public function findByUser($user, $season) {
-        $em = $this->getEntityManager();
-        $query = $em->createQuery("SELECT d
-                           FROM AnketaBundle\\Entity\\Department d,
-                           AnketaBundle\\Entity\\UserSeason us
-                           WHERE us.user = :user
-                           AND us.season = :season
-                           AND us.department = d");
-        $query->setParameter('user', $user);
-        $query->setParameter('season', $season);
-        
-        $depts = $query->getResult();
-        
-        return $depts;
-    }
 }

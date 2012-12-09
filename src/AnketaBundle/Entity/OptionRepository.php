@@ -14,13 +14,4 @@ namespace AnketaBundle\Entity;
 use Doctrine\ORM\EntityRepository;
 
 class OptionRepository extends EntityRepository {
-    
-    public function getOptions() {
-        $dql = 'SELECT o, q FROM AnketaBundle\Entity\Option o ' .
-               'INNER JOIN o.question q';
-
-        $query = $this->getEntityManager()->createQuery($dql);
-        
-        return $query->getResult();
-    }
 }

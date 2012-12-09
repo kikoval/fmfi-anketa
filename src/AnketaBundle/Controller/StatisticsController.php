@@ -303,7 +303,7 @@ class StatisticsController extends Controller {
             throw new NotFoundHttpException('Ucitel sa nenasiel');
         }
 
-
+        $em = $this->get('doctrine.orm.entity_manager');
         $subjects = $em->getRepository('AnketaBundle:Subject')->getSubjectsForTeacherWithAnyAnswers($teacher, $season);
 
         $items = array();

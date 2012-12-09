@@ -18,12 +18,13 @@ use AnketaBundle\Entity\Season;
 
 /**
  * @ORM\Entity()
+ * @ORM\Table(name="UserSeason",uniqueConstraints={@ORM\UniqueConstraint(name="user_season_unique", columns={"user_id", "season_id"})})
  */
 class UserSeason {
-    
+
     /**
-     * @ORM\Id 
-     * @ORM\GeneratedValue 
+     * @ORM\Id
+     * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
     protected $id;
@@ -34,50 +35,50 @@ class UserSeason {
      * @var User $user
      */
     protected $user;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="Season")
      *
      * @var Season $season
      */
     protected $season;
-    
+
     /**
      * Do ktorej katedry pouzivatel patri (ktora ho zamestnava, etc.).
      * Studenti (asi okrem doktorandov) nepatria do ziadnej katedry a preto tu maju null.
-     * 
+     *
      * @ORM\ManyToOne(targetEntity="Department")
      *
      * @var Department $department
      */
     protected $department;
-    
+
     /**
      * Ci je pouzivatel v tejto sezone student.
      * Od tohto flagu sa odvija napriklad moznost hlasovat v ankete.
-     * 
+     *
      * @ORM\Column(type="boolean")
-     * 
+     *
      * @var boolean
      */
     protected $isStudent;
-    
+
     /**
      * Ci pouzivatel vyplnil odpoved na aspon jednu otazku
-     * 
+     *
      * @ORM\Column(type="boolean")
-     * 
+     *
      * @var boolean
      */
     protected $participated;
-    
+
     /**
      * Ci pouzivatel dohlasoval (anonymizoval) v tejto sezone.
      * Akonahle je nastavene na true, tak uz nemoze hlasovat.
      * Pri anonymizacii sa nastavi na true.
-     * 
+     *
      * @ORM\Column(type="boolean")
-     * 
+     *
      * @var boolean
      */
     protected $finished;
@@ -90,7 +91,16 @@ class UserSeason {
      * @var boolean
      */
     protected $isTeacher;
-    
+
+    /**
+     * Nacitavali sme uz z aisu?
+     *
+     * @ORM\Column(type="boolean")
+     *
+     * @var boolean
+     */
+    protected $loadedFromAis;
+
     public function __construct() {
         $this->department = null;
         $this->isStudent = false;
@@ -100,7 +110,7 @@ class UserSeason {
         $this->season = null;
         $this->user = null;
     }
-    
+
     /**
      * @return AnketaBundle\Entity\User
      */
@@ -114,6 +124,15 @@ class UserSeason {
 
     public function getDepartment() {
         return $this->department;
+    }
+
+
+    public function setLoadedFromAis($flag) {
+        $this->loadedFromAis = $flag;
+    }
+
+    public function getLoadedFromAis() {
+        return $this->loadedFromAis;
     }
 
     public function setDepartment($department) {
@@ -131,7 +150,7 @@ class UserSeason {
     public function getId() {
         return $this->id;
     }
-    
+
     public function getIsStudent() {
         return $this->isStudent;
     }
@@ -168,5 +187,5 @@ class UserSeason {
         $this->isTeacher = $isTeacher;
     }
 
-    
+
 }
