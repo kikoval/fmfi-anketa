@@ -1,17 +1,18 @@
 CREATE TABLE IF NOT EXISTS UserFinal
-( id	 int NOT NULL AUTO_INCREMENT, 
-tid	 int, 
+( id	 int NOT NULL AUTO_INCREMENT,
+tid	 int,
 login varchar(255) UNIQUE,
-givenName varchar(255), 
+givenName varchar(255),
 familyName varchar(255),
-displayName varchar(255), 
-department_id int, 
+displayName varchar(255),
+department_id int,
 INDEX(tid),
-PRIMARY KEY (id) );
+PRIMARY KEY (id),
+UNIQUE KEY (login) );
 
 INSERT INTO UserFinal
-SELECT u.id, t.id as tid, u.userName as login, t.givenName, t.familyName,u.displayName,t.department_id 
-FROM User u, Teacher t 
+SELECT u.id, t.id as tid, u.userName as login, t.givenName, t.familyName,u.displayName,t.department_id
+FROM User u, Teacher t
 WHERE u.userName=t.login;
 
 INSERT INTO UserFinal(id, login, displayname)
@@ -24,7 +25,7 @@ SELECT NULL, t.id, t.login, t.givenName, t.familyName, t.displayName, t.departme
 FROM Teacher t
 WHERE t.login NOT IN ( SELECT uf.login FROM UserFinal uf);
 
-##nazov foreign keyov zistime 
+##nazov foreign keyov zistime
 #SELECT CONSTRAINT_NAME
 #FROM information_schema.key_column_usage
 #WHERE constraint_schema =  'anketa'
@@ -63,8 +64,8 @@ SET foreign_key_checks = 1;
 RENAME TABLE UserFinal TO User;
 
 #INDEX vytvori foreign key automaticky
-ALTER TABLE User 
-ADD FOREIGN KEY (department_id) 
+ALTER TABLE User
+ADD FOREIGN KEY (department_id)
 REFERENCES Department (id);
 
 ALTER TABLE Answer
@@ -82,3 +83,6 @@ REFERENCES User(id);
 ALTER TABLE TeachingAssociation
 ADD FOREIGN KEY (teacher_id)
 REFERENCES User(id);
+
+ALTER TABLE  UserSeason ADD  loadedFromAis TINYINT NOT NULL;
+ALTER TABLE  UserSeason ADD UNIQUE  user_season_unique (user_id, season_id);
