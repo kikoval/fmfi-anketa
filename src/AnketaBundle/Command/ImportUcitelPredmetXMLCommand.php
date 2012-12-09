@@ -139,7 +139,7 @@ class ImportUcitelPredmetXMLCommand extends AbstractImportCommand {
             $insertUserSeason->bindValue('seasonId', $season->getId());
             $insertUserSeason->bindValue('isTeacher', 1);
             $insertUserSeason->bindValue('isStudent', 0);
-            $insertUserSeason->bindValue('loadedDromAis', 0);
+            $insertUserSeason->bindValue('loadedFromAis', 0);
             $insertUserSeason->execute();
 
         } catch (Exception $e) {

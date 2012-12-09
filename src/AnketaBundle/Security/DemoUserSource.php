@@ -16,12 +16,8 @@
 namespace AnketaBundle\Security;
 
 use Doctrine\ORM\EntityManager;
-use AnketaBundle\Entity\User;
 use AnketaBundle\Entity\UserSeason;
 use AnketaBundle\Entity\UsersSubjects;
-use AnketaBundle\Entity\Subject;
-use AnketaBundle\Integration\AISRetriever;
-use AnketaBundle\Entity\Role;
 
 class DemoUserSource implements UserSourceInterface
 {
@@ -37,7 +33,7 @@ class DemoUserSource implements UserSourceInterface
      * @var AnketaBundle\Entity\RoleRepository
      */
     private $roleRepository;
-    
+
     /**
      * Doctrine repository for StudyProgram entity
      * @var AnketaBundle\Entity\StudyProgramRepository
@@ -64,7 +60,7 @@ class DemoUserSource implements UserSourceInterface
         if (count($studyPrograms) == 0) {
             throw new \Exception('Chyba studijny program');
         }
-        
+
         foreach ($subjects as $index => $subject) {
             $userSubject = new UsersSubjects();
             $userSubject->setUser($user);
@@ -72,13 +68,13 @@ class DemoUserSource implements UserSourceInterface
             $userSubject->setSubject($subject);
             $studyProgram = $studyPrograms[$index % count($studyPrograms)];
             $userSubject->setStudyProgram($studyProgram);
-            
+
             $this->entityManager->persist($userSubject);
         }
 
         $userSeason->setIsStudent(true);
         $userSeason->setFinished(false);
-        
+
         return true;
     }
 }
