@@ -11,21 +11,16 @@
 
 namespace AnketaBundle\Command;
 
-use DateTime;
 use AnketaBundle\Entity\Category;
 use AnketaBundle\Entity\CategoryType;
 use AnketaBundle\Entity\Question;
 use AnketaBundle\Entity\Option;
 use AnketaBundle\Entity\Season;
-use AnketaBundle\Entity\SeasonRepository;
 use Doctrine\ORM\EntityManager;
-use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Yaml\Yaml;
-use Doctrine\Common\DataFixtures\FixtureInterface;
 
 /**
  * Class functioning as command/task for importing questions and categories
@@ -80,7 +75,7 @@ class ImportOtazkyCommand extends AbstractImportCommand {
             $this->processCategory($category, $manager, $output);
         }
         $manager->flush();
-	
+
         // spracuj otazky
         $questions = $input_array["otazky"];
         $questionPos = 0;
@@ -114,7 +109,7 @@ class ImportOtazkyCommand extends AbstractImportCommand {
         $categoryRepository = $manager->getRepository('AnketaBundle\Entity\Category');
         $objekt = $categoryRepository->findOneBy(
                 array('specification' => $import['id']));
-        
+
         if ($objekt == null) {
             $manager->persist($category);
         } else {
@@ -137,7 +132,7 @@ class ImportOtazkyCommand extends AbstractImportCommand {
         if (array_key_exists("popis", $import)) {
             $question->setDescription($import["popis"]);
         }
-        
+
         $categoryRepository = $manager->getRepository('AnketaBundle\Entity\Category');
         $category = $categoryRepository->findOneBy(
                 array('specification' => $import['kategoria']));

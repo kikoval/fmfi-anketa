@@ -77,7 +77,7 @@ class ImportUcitelPredmetCommand extends AbstractImportCommand {
 
         $insertUserSeason = $conn->prepare("
                     INSERT INTO UserSeason ( user_id, season_id, isTeacher, isStudent, loadedFromAis)
-                    SELECT a.id, :seasonId, :isTeacher, :isStudent, :loadedFromAis
+                    SELECT a.id, :seasonId, 1, 0, 0
                     FROM User a
                     WHERE a.login = :login
                     ON DUPLICATE KEY UPDATE isTeacher=1");
@@ -148,8 +148,10 @@ class ImportUcitelPredmetCommand extends AbstractImportCommand {
 
                 if ($hodnost == 'P') {
                     $prednasajuci = 1;
+                    $insertTeacherSubject = $insertTeacherSubjectLecturer;
                 } else if ($hodnost == 'C') {
                     $cviciaci = 1;
+                    $insertTeacherSubject = $insertTeacherSubjectTrainer;
                 } else {
                     continue;
                 }
@@ -161,9 +163,6 @@ class ImportUcitelPredmetCommand extends AbstractImportCommand {
                 $insertUser->execute();
 
                 $insertUserSeason->bindValue('seasonId', $season->getId());
-                $insertUserSeason->bindValue('isTeacher', 1);
-                $insertUserSeason->bindValue('isStudent', 0);
-                $insertUserSeason->bindValue('loadedFromAis', 0);
                 $insertUserSeason->bindValue('login', $login);
                 $insertUserSeason->execute();
 
@@ -171,19 +170,11 @@ class ImportUcitelPredmetCommand extends AbstractImportCommand {
                 $insertSubject->bindValue('name', $nazov);
                 $insertSubject->bindValue('slug', $slug);
                 $insertSubject->execute();
-                if ($prednasajuci) {
-                    $insertTeacherSubjectLecturer->bindValue('slug', $slug);
-                    $insertTeacherSubjectLecturer->bindValue('login', $login);
-                    $insertTeacherSubjectLecturer->bindValue('season', $season->getId());
-                    $insertTeacherSubjectLecturer->execute();
-                }
-                if ($cviciaci) {
-                    $insertTeacherSubjectTrainer->bindValue('slug', $slug);
-                    $insertTeacherSubjectTrainer->bindValue('login', $login);
-                    $insertTeacherSubjectTrainer->bindValue('season', $season->getId());
-                    $insertTeacherSubjectTrainer->execute();
-                }
 
+                $insertTeacherSubject->bindValue('slug', $slug);
+                $insertTeacherSubject->bindValue('login', $login);
+                $insertTeacherSubject->bindValue('season', $season->getId());
+                $insertTeacherSubject->execute();
             }
         } catch (Exception $e) {
             $conn->rollback();
