@@ -107,6 +107,7 @@ class UserSeason {
         $this->finished = false;
         $this->isTeacher = false;
         $this->participated = false;
+        $this->loadedFromAis = false;
         $this->season = null;
         $this->user = null;
     }
