@@ -129,17 +129,13 @@ class ImportUcitelPredmetXMLCommand extends AbstractImportCommand {
             $prep = $conn->prepare($sql);
             $prep->execute(array('season' => $season->getId()));
 
-
             $insertUserSeason = $conn->prepare("
                     INSERT INTO UserSeason ( user_id, season_id, isTeacher, isStudent, loadedFromAis)
-                    SELECT a.id, :seasonId, :isTeacher, :isStudent, :loadedFromAis
+                    SELECT a.id, :seasonId, 1, 0, 0
                     FROM User a, tmp_insert_teacher tt
                     WHERE a.login = tt.login AND tt.login IS NOT NULL
                     ON DUPLICATE KEY UPDATE isTeacher=1");
             $insertUserSeason->bindValue('seasonId', $season->getId());
-            $insertUserSeason->bindValue('isTeacher', 1);
-            $insertUserSeason->bindValue('isStudent', 0);
-            $insertUserSeason->bindValue('loadedFromAis', 0);
             $insertUserSeason->execute();
 
         } catch (Exception $e) {
