@@ -24,7 +24,18 @@ class DebugController extends Controller {
 
     public function aisAction() {
         $retriever = $this->get('anketa.ais_retriever');
-        $predmety = $retriever->getPredmety();
+        $semestre = $this->getRequest()->query->get('semestre');
+        $semestreArr = null;
+        if ($semestre != null) {
+            $semestreArr = array();
+            foreach (explode(';', $semestre) as $semester) {
+                $sem = explode(':', $semester, 2);
+                if (count($sem) == 2) {
+                    $semestreArr[] = $sem;
+                }
+            }
+        }
+        $predmety = $retriever->getPredmety($semestreArr);
         return $this->render('AnketaBundle:Debug:ais.html.twig',
                 array('predmety' => $predmety));
     }
