@@ -21,7 +21,7 @@ class AnonymizaciaController extends Controller {
             $userSeason->setFinished(true);
             $em->persist($user);
             $em->getRepository('AnketaBundle\Entity\User')
-               ->anonymizeAnswersByUser($user->getId(), $season);
+               ->anonymizeAnswersByUser($user, $season);
             $em->flush();
 
             $this->get('session')->setFlash('anonymizacia', 'Vaše hlasovanie v ankete bolo úspešne ukončené.');
