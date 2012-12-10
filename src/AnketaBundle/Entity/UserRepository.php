@@ -39,9 +39,9 @@ class UserRepository extends EntityRepository {
 
         //@TODO: ON DUPLICATE KEY UPDATE count=count+1
         $insertUserSeason = $conn->prepare("
-            INSERT INTO sectionvotesummary (category_id, subject_id, teacher_id, season_id, count)
+            INSERT INTO SectionVoteSummary (category_id, subject_id, teacher_id, season_id, count)
             SELECT DISTINCT q.category_id, a.subject_id, a.teacher_id, :season_id, 1
-            FROM answer a, question q
+            FROM Answer a, Question q
             WHERE a.author_id = :user_id AND a.season_id = :season_id
             AND q.id = a.question_id
             AND NOT(a.option_id IS NULL AND comment IS NULL)

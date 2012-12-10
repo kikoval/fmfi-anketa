@@ -4,6 +4,7 @@ namespace AnketaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 /**
+ * @ORM\Entity
  * @ORM\Table(name="SectionVoteSummary")
  */
 class SectionVoteSummary {
@@ -16,7 +17,8 @@ class SectionVoteSummary {
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Season", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Season")
+     * @ORM\JoinColumn(nullable=false)
      *
      * @var Season $season
      */
