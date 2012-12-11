@@ -43,6 +43,7 @@ class LoadFixturesCommand extends ContainerAwareCommand {
 
         $fixtures->createDepartments();
         $fixtures->createCategories();
+        $fixtures->createStudyPrograms();
 
         $em->flush();
     }

@@ -11,15 +11,18 @@
 namespace AnketaBundle\DataFixtures;
 
 use Symfony\Component\Console\Output\OutputInterface;
+use AnketaBundle\Lib\Slugifier;
 use AnketaBundle\Entity\CategoryType;
 use AnketaBundle\Entity\Category;
 use AnketaBundle\Entity\Department;
+use AnketaBundle\Entity\StudyProgram;
 
 class AnketaFixtures {
 
     public function __construct($em, OutputInterface $output) {
         $this->em = $em;
         $this->output = $output;
+        $this->slugifier = new Slugifier();
     }
 
     protected static function generateName($words, $length) {
@@ -68,6 +71,30 @@ class AnketaFixtures {
         foreach ($categories as $category) {
             $this->em->persist($category);
             $this->output->writeln('Category: ' . $category->getSpecification());
+        }
+    }
+
+    public function createStudyPrograms() {
+        $codes = array();
+        $num = rand(10, 30);
+        for ($i = 0; $i < $num; $i++) {
+            do {
+                $name = $this->generateName(self::$words, rand(1, 6));
+                $code = $this->makeAcronym($this->generateName(self::$words, rand(2, 4)));
+                if (rand(0, 5) == 0) $code .= '/x';
+            } while (isset($codes[$code]));
+            $codes[$code] = true;
+            $prefixes = array('');
+            if (rand(0, 1)) $prefixes[] = 'm';
+            if (rand(0, 1)) $prefixes[] = 'd';
+            foreach ($prefixes as $prefix) {
+                $program = new StudyProgram();
+                $program->setName($name);
+                $program->setCode($prefix . $code);
+                $program->setSlug($this->slugifier->slugify($prefix . $code));
+                $this->em->persist($program);
+                $this->output->writeln('StudyProgram: ' . $name . ' (' . $prefix . $code . ')');
+            }
         }
     }
 
