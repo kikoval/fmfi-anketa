@@ -42,26 +42,28 @@ reset_logs () {
 
 
 reset_db () {
-  echo "${bold}PRESKAKUJEM reset databazy lebo na symfony 2.1 to este nefuguje${normal}"
-  return 0
-
-  # TODO: ak nie je db_allow_reset, vypis ze PRESKAKUJEM a skonci
+  if ! ./app/console anketa:db-reset-allowed; then
+    echo "${bold}PRESKAKUJEM reset databazy lebo neni zapnute allow_db_reset${normal}"
+    return 0
+  fi
 
   read -p "${bold}Mozem zmazat celu databazu a spravit novu? (y/n) [y] ${normal}"
   if [ "$REPLY" != "y" ] && [ "$REPLY" != "Y" ] && [ "$REPLY" != "" ]; then
     echo "${bold}ok, PRESKAKUJEM reset databazy${normal}"
-    echo "(odporucam v config_local.yml vypnut db_allow_reset, nech si to pamatam)"
+    echo "(odporucam v config_local.yml vypnut allow_db_reset, nech si to pamatam)"
     return 0
   fi
 
-  # TODO dropni databazu
+  ./app/console doctrine:database:drop --force
 
-  # TODO vytvor databazu
-  # TODO ak je to sqlite, rucne daj db suboru potrebne ACL
+  ./app/console doctrine:database:create
+  # TODO: vyrobi sa mysql so spravnym charsetom?
+  if [ -f db/anketa.sqlite ]; then
+    getfacl -a app/cache/ | setfacl --set-file=- db/anketa.sqlite
+    chmod a-x db/anketa.sqlite
+  fi
 
-  # TODO vytvor tabulky
-
-  # TODO nacitaj ozajstne fixtures (tie co su aj na prod, napr otazky)
+  ./app/console doctrine:schema:create
 
   # TODO vytvor falosne fixtures (predmety, odpovede na otazky, atd)
 }
