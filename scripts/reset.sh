@@ -65,7 +65,7 @@ reset_db () {
 
   ./app/console doctrine:schema:create
 
-  # TODO vytvor falosne fixtures (predmety, odpovede na otazky, atd)
+  ./app/console anketa:fixtures:load "$@"
 }
 
 
@@ -79,10 +79,10 @@ reset_all () {
 reset_help () {
   echo "usage:
   $0 cache
-  $0 cache-total   (nerobi cache warmup, proste zmaze vsetko)
+  $0 cache-total             (nerobi cache warmup, proste zmaze vsetko)
   $0 logs
-  $0 db
-  $0 all           (default)"
+  $0 db [fixture-options]
+  $0 all                     (default)"
   exit 0
 }
 
