@@ -39,7 +39,7 @@ class StatisticsSection extends ContainerAware {
         $result->season = $season;
         $result->subject = $subject;
         $result->teacher = $teacher;
-        $result->title = $subject->getCode() . ' ' . $subject->getName() . ' - ' . $teacher->getName();
+        $result->title = $subject->getCode() . ' ' . $subject->getName() . ' - ' . $teacher->getDisplayName();
         $result->questionsCategoryType = CategoryType::TEACHER_SUBJECT;
         $result->answersQuery = array('subject' => $subject->getId(), 'teacher' => $teacher->getId());
         $result->responsesQuery = array('season' => $season->getId(), 'subject' => $subject->getId(), 'teacher' => $teacher->getId(), 'studyProgram' => null);

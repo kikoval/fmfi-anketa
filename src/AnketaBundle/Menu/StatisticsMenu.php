@@ -98,7 +98,7 @@ class StatisticsMenu
                                         $teacher = $teacherSubject->getTeacher();
                                         $teacherSection = StatisticsSection::makeSubjectTeacherSection($this->container, $season, $subject, $teacher);
                                         $subjectItem->children[$teacher->getId()] = $teacherItem = new MenuItem(
-                                            $teacher->getName(), $teacherSection->getStatisticsPath());
+                                            $teacher->getDisplayName(), $teacherSection->getStatisticsPath());
                                         if ($teacherSubject->getLecturer()) $teacherItem->lecturer = true;
                                         if ($teacherSubject->getTrainer()) $teacherItem->trainer = true;
                                     }
