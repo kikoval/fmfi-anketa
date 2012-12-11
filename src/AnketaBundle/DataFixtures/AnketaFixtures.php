@@ -11,6 +11,8 @@
 namespace AnketaBundle\DataFixtures;
 
 use Symfony\Component\Console\Output\OutputInterface;
+use AnketaBundle\Entity\CategoryType;
+use AnketaBundle\Entity\Category;
 use AnketaBundle\Entity\Department;
 
 class AnketaFixtures {
@@ -51,6 +53,21 @@ class AnketaFixtures {
             $department->setHomepage('http://svt.fmph.uniba.sk/department/' . $code);
             $this->em->persist($department);
             $this->output->writeln('Department: ' . $name);
+        }
+    }
+
+    public function createCategories() {
+        $categories = array(
+            new Category(CategoryType::SUBJECT, 'predmety', ''),
+            new Category(CategoryType::TEACHER_SUBJECT, 'predmety_ucitel', ''),
+            new Category(CategoryType::STUDY_PROGRAMME, 'studijnyprogram', ''),
+            new Category(CategoryType::GENERAL, 'fakulta', 'Otázky ku fakulte'),
+            new Category(CategoryType::GENERAL, 'ostatne', 'Ostatné'),
+        );
+
+        foreach ($categories as $category) {
+            $this->em->persist($category);
+            $this->output->writeln('Category: ' . $category->getSpecification());
         }
     }
 

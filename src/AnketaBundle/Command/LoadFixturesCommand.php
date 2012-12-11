@@ -42,6 +42,7 @@ class LoadFixturesCommand extends ContainerAwareCommand {
         $fixtures = new AnketaFixtures($em, $output);
 
         $fixtures->createDepartments();
+        $fixtures->createCategories();
 
         $em->flush();
     }
