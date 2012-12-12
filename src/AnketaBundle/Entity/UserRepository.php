@@ -32,21 +32,41 @@ class UserRepository extends EntityRepository {
         return array_shift($result);
     }
 
-    public function anonymizeAnswersByUser($user, $season) {
-        $q = $this->getEntityManager()->createQueryBuilder()
-                                      ->update('AnketaBundle\Entity\Answer', 'a')
-                                      ->set('a.author', ':nobody')
-                                      ->where('a.author = :user AND a.season = :season')
-                                      ->getQuery();
+    public function anonymizeAnswersByUser(User $user, Season $season) {
+        $em = $this->getEntityManager();
+        $conn = $em->getConnection();
+        $conn->beginTransaction();
+
+        // Mozno nevkladat nove riadky, ale rovno scitavat na sposob
+        // ON DUPLICATE KEY UPDATE count=count+1
+        // (neslo to priamo spravit, lebo problem s NULL v unique kluci)
+        $insertUserSeason = $conn->prepare("
+            INSERT INTO SectionVoteSummary (category_id, subject_id, teacher_id, season_id, count)
+            SELECT DISTINCT q.category_id, a.subject_id, a.teacher_id, :season_id, 1
+            FROM Answer a, Question q
+            WHERE a.author_id = :user_id AND a.season_id = :season_id
+            AND q.id = a.question_id
+            AND NOT(a.option_id IS NULL AND comment IS NULL)
+        ");
+
+        $insertUserSeason->bindValue('season_id', $season->getId());
+        $insertUserSeason->bindValue('user_id', $user->getId());
+        $insertUserSeason->execute();
+
+        $q = $em->createQueryBuilder()
+                ->update('AnketaBundle\Entity\Answer', 'a')
+                ->set('a.author', ':nobody')
+                ->where('a.author = :user AND a.season = :season')
+                ->getQuery();
         $q->setParameters(array(
             'nobody' => null,
             'user' => $user,
             'season' => $season
          ));
-
-        //TODO(majak): nikde som nenasiel, co tato funkcia vrati, ked to failne
-        //             normalne tu vracia pocet updatnutych riadkov
-        return $q->execute();
+        $result = $q->execute();
+        
+        $conn->commit();
+        return $result;
     }
 
     public function getNumberOfVoters($season) {
