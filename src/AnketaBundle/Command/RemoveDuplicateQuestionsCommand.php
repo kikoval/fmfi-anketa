@@ -59,6 +59,7 @@ class RemoveDuplicateQuestionsCommand extends ContainerAwareCommand {
                                         WHERE `season_id` = '2'
                                         ORDER BY `question_id` ASC, `id` ASC")
                                  ->fetchAll(PDO::FETCH_ASSOC);
+        if (count($answers) % 2 == 1) throw new \Exception('Some answer doesn\' have duplicate!');
         $half = count($answers) / 2;
         try {
             $index = 0;
