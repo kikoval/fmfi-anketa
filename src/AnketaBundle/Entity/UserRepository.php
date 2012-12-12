@@ -37,7 +37,9 @@ class UserRepository extends EntityRepository {
         $conn = $em->getConnection();
         $conn->beginTransaction();
 
-        //@TODO: ON DUPLICATE KEY UPDATE count=count+1
+        // Mozno nevkladat nove riadky, ale rovno scitavat na sposob
+        // ON DUPLICATE KEY UPDATE count=count+1
+        // (neslo to priamo spravit, lebo problem s NULL v unique kluci)
         $insertUserSeason = $conn->prepare("
             INSERT INTO SectionVoteSummary (category_id, subject_id, teacher_id, season_id, count)
             SELECT DISTINCT q.category_id, a.subject_id, a.teacher_id, :season_id, 1
@@ -61,8 +63,6 @@ class UserRepository extends EntityRepository {
             'user' => $user,
             'season' => $season
          ));
-        //TODO(majak): nikde som nenasiel, co tato funkcia vrati, ked to failne
-        //             normalne tu vracia pocet updatnutych riadkov
         $result = $q->execute();
         
         $conn->commit();
