@@ -1,0 +1,88 @@
+base:
+  svt: Študentský Vývojový Tím
+userbar:
+  prihlaseny: Prihlásený
+  odhlasit: Odhlásiť
+  prihlasit: Prihlásiť
+layout:
+   hlasuj: Hlasuj
+   vysledky: Výsledky
+   
+welcome:
+  index:
+    studentska.anketa: Študentská anketa
+    vitaj: Vitajte v Študentskej ankete
+    zapoj.sa: Zapojte sa aj Vy a prezentujte svoj názor!
+    hlasuj: Hlasuj!
+    otvorene.do: Otvorené do
+    hlasovanie.ukoncene: Hlasovanie v ankete je ukončené. Ďakujeme všetkým zúčastneným za vyplnenie :)
+    vysledky: Výsledky
+    zverejnenie.vysledkov: Výsledky budú k dispozícii po ukončení skúškového obdobia.
+    aka.je.anketa: Aká je nová anketa?
+    rychla: Rýchla
+    rychla.preco: vybrali sme len niekoľko najdôležitejších otázok, anketa Vám nezaberie veľa času
+    jednoducha: Jednoduchá
+    jednoducha.preco: pri otázkach sú na výber jasne formulované možnosti pre odpoveď
+    k.veci: K veci
+    k.veci.preco: automaticky načíta Váš zoznam predmetov s učiteľmi
+    flexibilna: Flexibilná
+    flexibilna.preco: môžete sa k nej vrátiť neskôr, nemusíte všetko vyplniť naraz
+    anonymna: Anonymná
+    anonymna.preco: po ukončení hlasovania sa nedá zistiť, komu patria ktoré odpovede
+    mobilna: Mobilná
+    mobilna.preco: hlasujte kdekoľvek a s čímkoľvek, vrátane mobilov a smartfónov
+    pekne.hviezdicky: Má prekrásne hviezdičky
+    pekne.hviezdicky.preco: náš tím tvrdo pracoval, aby Vám poskytol <em>state-of-the-art</em> hviezdičkové hlasovanie
+    aj.ty.hlasuj: AJ VÁŠ HLAS MÔŽE ZMENIŤ NAŠU ALMA-MÁTER K LEPŠIEMU ;-)
+#  faq: TODO
+
+anonymizacia:
+  anonymizuj:
+    anonymizacia: Anonymizácia
+    ukoncenie: Ukončenie hlasovania
+    vdaka: To je všetko. Ďakujeme!
+    co.sa.stane: Po kliknutí na tlačidlo "Ukončiť hlasovanie" anonymizujeme vaše odpovede &mdash; vymažeme z nich informáciu, že ste ich autorom. Preto si ich už nebudete môcť prezrieť alebo zmeniť.
+    skontrolujte: Skontrolujte, či ste vyplnili všetko tak, ako ste chceli.
+    nevratny.proces: Tento proces je nevratný. Nebudete môcť už nič zmeniť.
+    ukoncit: Ukončiť hlasovanie
+    este.hlasovat: Nie, ešte chcem hlasovať
+  controller:
+    uspesny.koniec: Vaše hlasovanie v ankete bolo úspešne ukončené.
+
+hlasovanie:
+  dakujeme:
+    dakujeme: Ďakujeme
+    dakujeme.za.cas: Ďakujeme Vám, že ste si našli čas vyplniť študentskú anketu.
+    potrebujeme.ucast: Aby mala anketa nejakú výpovednú hodnotu, treba, aby sa zúčastnil dostatočne vysoký počet študentov.
+    povedzte.ostatnym: Prosíme Vás preto, aby ste dali vedieť aj svojim spolužiakom, napríklad prostredníctvom rozhovoru, emailu či Facebooku.
+    vysledky.budu: Výsledky ankety budú k dispozícii po ukončení skúškového obdobia.
+  globalProgressbar:
+    kto.hlasoval: Doteraz sa zúčastnilo <strong>%voters% študentov</strong>, %anon% z nich už hlasovanie ukončilo.
+    ciel: Naším cieľom je dosiahnuť aspoň 50% účasť. Preto neváhajte a zapojte sa tiež!
+    zapojte.sa: Neváhajte a zapojte sa tiež!
+    kto.hlasoval.nakoniec: V ankete hlasovalo <strong>%voters%</strong> študentov.
+
+question:
+  index:
+    ak.neucil: Ak vás tento učiteľ neučil, môžete otázky preskočiť a zvoliť
+    uloz.a.chod: Ulož a choď ďalej
+    preskocte.predmet: Ak tento predmet nepodlieha priamej vyučbe, ale splneniu určitých povinností (ako napr. diplomová práca, vedecká činnosť, samostatné štúdium odbornej literatúry a pod.), prípadne ste tento predmet v aktuálnom semestri neobsolvovali lebo Vám bol uznaný, hodnotenie predmetu prosím preskočte.
+    chyba.v.uciteloch: Je v zozname učiteľov k tomuto predmetu chyba?
+    dajte.nam.vediet: Dajte nám vedieť a my to napravíme
+    uloz: Ulož
+    ziadna.odpoved: žiadna odpoveď
+    komentar: Komentár
+  controller:
+    chybny.slug.predmetu: Chybný slug predmetu: %slug%
+    nezapisany.predmet: Predmet %slug% nemáš zapísaný
+    ziadne.programy: Nemáš žiadne študijné programy.
+    program.neexistuje: Študijný program %slug% neštuduješ.
+    ucitel.neuci: Učiteľ %teacher_code% daný predmet neučí.
+    ziadne.podkategorie: Neexistujú žiadne všeobecné kategórie otázok.
+    chybna.kategoria: Chybná kategória: %id%
+
+reports:
+  report:
+    vysledky.programu: Výsledky študijného programu
+    hodnotenia.ucitelov: Hodnotenia učiteľov
+    

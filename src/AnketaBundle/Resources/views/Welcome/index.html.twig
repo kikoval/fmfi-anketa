@@ -1,11 +1,11 @@
 {% extends 'AnketaBundle::layout.html.twig' %}
 {% block content %}
 
-<h2>Študentská anketa {{ skratka_fakulty }} &mdash; {{ active_season.description }}</h2>
+<h2>{% trans %}welcome.index.studentska.anketa{% endtrans %} {{ skratka_fakulty }} &mdash; {{ active_season.description }}</h2>
 
 <p>
-    Vitajte v Študentskej ankete {{ skratka_fakulty }}!
-    Zapojte sa aj Vy a prezentujte svoj názor!
+    {% trans %}welcome.index.vitaj{% endtrans %} {{ skratka_fakulty }}!
+    {% trans %}welcome.index.zapoj.sa{% endtrans %}
 </p>
 
 {% if skratka_fakulty == 'FMFI' %}
@@ -15,14 +15,14 @@
 
 {% if access.hlasovanie.isVotingOpen %}
     <p><a class="bigbtn" href="{{ path('anketa') }}">
-    <span class="bigbtn_middle"><span class="bigbtn_left"><span class="bigbtn_right bigbtn_in">Hlasuj!</span></span></span></a></p>
+    <span class="bigbtn_middle"><span class="bigbtn_left"><span class="bigbtn_right bigbtn_in">{% trans %}welcome.index.hlasuj{% endtrans %}</span></span></span></a></p>
 {% else %}
-    <p>Hlasovanie v ankete je ukončené. Ďakujeme všetkým zúčastneným za vyplnenie :)</p>
+    <p>{% trans %}welcome.index.hlasovanie.ukoncene{% endtrans %}</p>
     {% if access.statistics.activeSeasonHasVisibleResults %}
         <p><a class="bigbtn" href="{{ path('statistics') }}">
-        <span class="bigbtn_middle"><span class="bigbtn_left"><span class="bigbtn_right bigbtn_in">Výsledky</span></span></span></a></p>
+        <span class="bigbtn_middle"><span class="bigbtn_left"><span class="bigbtn_right bigbtn_in">{% trans %}welcome.index.vysledky{% endtrans %}</span></span></span></a></p>
     {% elseif skratka_fakulty == 'FMFI' %}
-        <p><strong>Výsledky budú k dispozícii po ukončení skúškového obdobia.</strong></p>
+        <p><strong>{% trans %}welcome.index.zverejnenie.vysledkov{% endtrans %}</strong></p>
     {% else %}
         {# TODO: kedy sa zverejnuju vysledky na inych fakultach? #}
     {% endif %}
@@ -30,32 +30,18 @@
 
 {% render "AnketaBundle:Hlasovanie:globalProgressbar" %}
 
-{% if skratka_fakulty == 'FMFI' %}
-<p>Aká je nová anketa?</p>
+<p>{% trans %}welcome.index.aka.je.anketa{% endtrans %}</p>
 <ul>
-<li><b>Ešte rýchlejšia</b> &mdash; starostlivo sme znova prešli všetky pôvodné otázky a povyberali len tie najdôležitejšie</li>
-<li><b>Ešte jednoduchšia</b> &mdash; nejasné otázky boli preformulované, nevhodné možnosti pri odpovediach upravené</li>
-<li><b>K veci</b> &mdash; automaticky načíta Váš zoznam predmetov a učiteľov</li>
-<li><b>Flexibilná</b> &mdash; môžete sa k nej vrátiť neskôr, nemusíte všetko vyplniť naraz</li>
-<li><b>Anonymná</b> &mdash; po ukončení hlasovania sa nedá zistiť, komu patria ktoré odpovede</li>
-<li><b>Mobilná</b> &mdash; hlasujte kdekoľvek a s čímkoľvek, vrátane mobilov a smartfónov</li>
-<li><b>Má prekrásne hviezdičky</b> &mdash; náš tím tvrdo pracoval, aby Vám poskytol <em>state-of-the-art</em> hviezdičkové hlasovanie</li>
-</ul>
-{% else %}
-<p>Aká je nová anketa?</p>
-<ul>
-<li><b>Rýchla</b> &mdash; vybrali sme len niekoľko najdôležitejších otázok, anketa Vám nezaberie veľa času</li>
-<li><b>Jednoduchá</b> &mdash; pri otázkach sú na výber jasne formulované možnosti pre odpoveď</li>
-<li><b>K veci</b> &mdash; automaticky načíta Váš zoznam predmetov s učiteľmi</li>
-<li><b>Flexibilná</b> &mdash; môžete sa k nej vrátiť neskôr, nemusíte všetko vyplniť naraz</li>
-<li><b>Anonymná</b> &mdash; po ukončení hlasovania sa nedá zistiť, komu patria ktoré odpovede</li>
-<li><b>Mobilná</b> &mdash; hlasujte kdekoľvek a s čímkoľvek, vrátane mobilov a smartfónov</li>
-<li><b>Má prekrásne hviezdičky</b> &mdash; náš tím tvrdo pracoval, aby Vám poskytol <em>state-of-the-art</em> hviezdičkové hlasovanie</li>
+<li><b>{% trans %}welcome.index.rychla{% endtrans %}</b> &mdash; {% trans %}welcome.index.rychla.preco{% endtrans %}</li>
+<li><b>{% trans %}welcome.index.jednoducha{% endtrans %}</b> &mdash; {% trans %}welcome.index.jednoducha.preco{% endtrans %}</li>
+<li><b>{% trans %}welcome.index.k.veci{% endtrans %}</b> &mdash; {% trans %}welcome.index.k.veci.preco{% endtrans %}</li>
+<li><b>{% trans %}welcome.index.flexibilna{% endtrans %}</b> &mdash; {% trans %}welcome.index.flexibilna.preco{% endtrans %}</li>
+<li><b>{% trans %}welcome.index.anonymna{% endtrans %}</b> &mdash; {% trans %}welcome.index.anonymna.preco{% endtrans %}</li>
+<li><b>{% trans %}welcome.index.mobilna{% endtrans %}</b> &mdash; {% trans %}welcome.index.mobilna.preco{% endtrans %}</li>
+<li><b>{% trans %}welcome.index.pekne.hviezdicky{% endtrans %}</b> &mdash; {% trans %}welcome.index.pekne.hviezdicky.preco{% endtrans %}</li>
 </ul>
 
-{% endif %}
-
-<p><strong>AJ VÁŠ HLAS MÔŽE ZMENIŤ NAŠU ALMA-MÁTER K LEPŠIEMU ;-)</strong><p>
+<p><strong>{% trans %}welcome.index.aj.ty.hlasuj{% endtrans %}</strong><p>
 
 {% include 'AnketaBundle:Welcome:likebox.html.twig' %}
 
