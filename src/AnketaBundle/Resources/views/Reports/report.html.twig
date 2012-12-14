@@ -14,7 +14,10 @@
 {% if teacher.evaluation[2] != 0 %}
     <div class="comment">
         <table>
-<tr><td> {{ teacher.formattedName }}</td> <td>{{ teacher.evaluation[1] }} z 5 hviezdičiek</td> <td>({{ teacher.evaluation[2] }} hodnotení)</td></tr>
+            <tr>
+                <td> {{ teacher.formattedName }}</td>
+                <td>{% trans with {'%stars%': teacher.evaluation[1]} %}reports.report.pocet.hviezdiciek{% endtrans %}</td>
+                <td>({% trans with {'%votes%': teacher.evaluation[2]} %}reports.report.pocet.hodnoteni{% endtrans %})</td></tr>
         </table>
         <ul>
 {% for teacherSubject in teacher.subjects %}
@@ -27,20 +30,26 @@
 {% endif %}
 {% endfor %}
 </div>
-<h2>Hodnotenia predmetov:
+<h2>{% trans %}reports.report.hodnotenia.predmetov{% endtrans %}:
 </h2>
 <div class="results-comments">
 {% for subject in subjects %}
 {% if subject.evaluation[2] != 0 %}
     <div class="comment">
         <table>
-<tr> <td colspan="2"><a href="{{ subject.link }}">{{ subject.code }} {{  subject.name  }}</a></td></tr><tr> <td> {{ subject.evaluation[1] }} z 5 hviezdičiek </td> <td>({{ subject.evaluation[2] }} hodnotení)</td></tr>
+            <tr>
+                <td colspan="2"><a href="{{ subject.link }}">{{ subject.code }} {{  subject.name  }}</a></td>
+            </tr>
+            <tr>
+                <td>{% trans with {'%stars%': subject.evaluation[1]} %}reports.report.pocet.hviezdiciek{% endtrans %}</td>
+                <td>({% trans with {'%votes%': subject.evaluation[2]} %}reports.report.pocet.hodnoteni{% endtrans %})</td>
+            </tr>
 {% if subject.teacher | length != 0 %}
 <tr>
 <td colspan="2">
-(&nbsp;
+(
 {% for subjectTeacher in subject.teacher %}
-<a href="{{ subject.links[subjectTeacher.id] }}">{{ subjectTeacher.displayName }}</a> &nbsp;
+<a href="{{ subject.links[subjectTeacher.id] }}">{{ subjectTeacher.displayName }}</a> 
 {% endfor %}
 )
 </td>

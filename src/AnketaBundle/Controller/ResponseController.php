@@ -33,7 +33,8 @@ class ResponseController extends Controller {
         $em = $this->get('doctrine.orm.entity_manager');
         $response = $em->find('AnketaBundle:Response', $response_id);
         if ($response == null) {
-            throw new NotFoundHttpException('Neznama odpoved: ' . $response_id);
+            $message = $this->get('translator')->trans('response.controller.neznama.odpoved', array('%id%' => $response_id));
+            throw new NotFoundHttpException($message);
         }
 
         return $this->updateResponse($response, $delete);
@@ -58,13 +59,15 @@ class ResponseController extends Controller {
                     $em->persist($response);
                 }
                 $em->flush();
-                $this->get('session')->setFlash('success', 'Váš komentár bol uložený.');
+                $message = $this->get('translator')->trans('response.controller.komentar.bol.ulozeny');
+                $this->get('session')->setFlash('success', $message);
                 return new RedirectResponse($section->getStatisticsPath());
             }
             else {
                 $em->remove($response);
                 $em->flush();
-                $this->get('session')->setFlash('success', 'Váš komentár bol zmazaný.');
+                $message = $this->get('translator')->trans('response.controller.komentar.bol.zmazany');
+                $this->get('session')->setFlash('success', $message);
                 return new RedirectResponse($this->generateUrl('response'));
             }
         }
@@ -92,7 +95,8 @@ class ResponseController extends Controller {
         $user = $access->getUser();
 
         if ($season == null) {
-            throw new NotFoundHttpException('Chybna sezona: ' . $season_slug);
+            $message = $this->get('translator')->trans('response.controller.chybna.sezona', array('%slug%' => $season_slug));
+            throw new NotFoundHttpException($message);
         }
 
         $responseRepo = $em->getRepository('AnketaBundle:Response');

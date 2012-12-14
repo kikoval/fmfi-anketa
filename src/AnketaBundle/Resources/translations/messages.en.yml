@@ -83,4 +83,44 @@ question:
 reports:
   report:
     vysledky.programu: Results for study program
-    hodnotenia.ucitelov: 
+    hodnotenia.ucitelov: Evaluation of teachers
+    pocet.hviezdiciek: %stars% out of 5 stars
+    pocet.hodnoteni: %votes% votes
+    hodnotenia.predmetov: Evaluation of courses
+  controller:
+    katedry: Departments
+    studijne.programy: Study programs
+    moje.reporty: My reports
+
+response:
+  delete:
+    zmazat.komentar: Delete response
+    urcite.zmazat: Do you really want to delete this response?
+    komentar.ku: Response on
+    vasa.funkcia: Your association
+    text.komentaru: Response body
+    zmazat: Delete
+    nezmazat: No action
+  edit:
+    novy.komentar: New response
+    upravit.komentar: Edit response
+    komentar.ku: Response on
+    vasa.funkcia: Your association
+    napriklad: E.g.
+    zobrazene.pri.mene: Will be displayed next to your name.
+    text.komentaru: Response body
+    kto.moze.citat: Your response will be visible to all students and teachers.
+    da.sa.upravovat: You will be able to edit your response after submit.
+    odoslat: Submit
+  list:
+    moje.komentare: My responses
+    tu.su.komentare: This page contains all your responses.
+    pridavanie.z.vysledkov: You can create new responses on result pages.
+    upravit.komentar: Edit response
+    zmazat.komentar: Delete response
+    ziaden.komentar.pridany: You did not add any response so far.
+  controller:
+    neznama.odpoved: Unknown reponse: %id%
+    komentar.bol.ulozeny: Your response was saved.
+    komentar.bol.zmazany: Your response was removed.
+    chybna.sezona: Wrong season: %slug%

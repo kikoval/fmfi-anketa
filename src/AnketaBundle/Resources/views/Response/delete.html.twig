@@ -5,16 +5,17 @@
 {% endblock %}
 
 {% block content %}
-<h1>Zmazať komentár</h1>
-<p>Ste si istí, že chcete zmazať tento komentár?</p>
-<p>Komentár ku: <a href="{{ section.statisticsPath }}">{{ section.title }}</a></p>
+<h1>{% trans %}response.delete.zmazat.komentar{% endtrans %}</h1>
+<p>{% trans %}response.delete.urcite.zmazat{% endtrans %}</p>
+<p>{% trans %}response.delete.komentar.ku{% endtrans %}:
+<a href="{{ section.statisticsPath }}">{{ section.title }}</a></p>
 {% if association is not null %}
-    <p>Vaša funkcia: {{ association }}</p>
+    <p>{% trans %}response.delete.vasa.funkcia{% endtrans %}: {{ association }}</p>
 {% endif %}
-<p>Text komentáru:</p>
+<p>{% trans %}response.delete.text.komentaru{% endtrans %}:</p>
 <p>{{ responseText|escape|replace({"\n": "<br />"})|raw }}</p>
 <form action="{{ submitLink }}" method="POST">
-<button type="submit">Zmazať</button>
-<a href="{{ section.statisticsPath }}">Nič nemazať</a>
+<button type="submit">{% trans %}response.delete.zmazat{% endtrans %}</button>
+<a href="{{ section.statisticsPath }}">{% trans %}response.delete.nezmazat{% endtrans %}</a>
 </form>
 {% endblock %}

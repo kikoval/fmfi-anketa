@@ -5,11 +5,11 @@
 {% endblock %}
 
 {% block content %}
-    <h1>Moje komentáre</h1>
+    <h1>{% trans %}response.list.moje.komentare{% endtrans %}</h1>
     <p>
-        Tu sa nachádza zoznam vašich komentárov.
+        {% trans %}response.list.tu.su.komentare{% endtrans %}
         {% if access.statistics.canCreateResponses(season) %}
-            Komentáre môžete pridávať z jednotlivých stránok s výsledkami.
+            {% trans %}response.list.pridavanie.z.vysledkov{% endtrans %}
         {% endif %}
     </p>
 
@@ -22,13 +22,13 @@
             <p class="comment-comment">{{ item.response.comment|escape|replace({"\n": "<br />"})|raw }}</p>
             {% if access.statistics.canEditResponse(item.response) %}
             <div>
-                <a href="{{ path('response_edit', {'response_id': item.response.id}) }}">Upraviť komentár</a> |
-                <a href="{{ path('response_delete', {'response_id': item.response.id}) }}">Zmazať komentár</a>
+                <a href="{{ path('response_edit', {'response_id': item.response.id}) }}">{% trans %}response.list.upravit.komentar{% endtrans %}</a> |
+                <a href="{{ path('response_delete', {'response_id': item.response.id}) }}">{% trans %}response.list.zmazat.komentar{% endtrans %}</a>
             </div>
             {% endif %}
         </div>
     {% else %}
-        <p>Zatiaľ ste nepridali žiaden komentár.</p>
+        <p>{% trans %}response.list.ziaden.komentar.pridany{% endtrans %}</p>
     {% endfor %}
     </div>
 {% endblock %}
