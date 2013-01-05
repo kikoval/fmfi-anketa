@@ -71,12 +71,17 @@ class ImportOtazkyCommand extends AbstractImportCommand {
         // spracuj otazky
         $questions = $input_array["otazky"];
         $questionPos = 0;
+        $skippedQ = 0;
         foreach ($questions as $question) {
-            $this->processQuestion($question, $manager, $season, $questionPos);
-            $questionPos++;
+            if ($this->processQuestion($question, $manager, $season, $questionPos)) {
+                $questionPos++;
+            } else {
+                $skippedQ++;
+            }
         }
         $manager->flush();
-        $output->writeln('Naimportovanych otazok: '.$questionPos);
+        $output->writeln('Naimportovanych otazok: ' . $questionPos);
+        $output->writeln('Preskocenych uz existujucich otazok: ' . $skippedQ);
 
         $dryRunOption = $input->getOption('dry-run');
         if (!$dryRunOption) {
@@ -162,8 +167,24 @@ class ImportOtazkyCommand extends AbstractImportCommand {
         $question->setIsSubjectEvaluation($this->checkBool($import, "hlavne_hodnotenie_predmetu"));
         $question->setIsTeacherEvaluation($this->checkBool($import, "hlavne_hodnotenie_vyucujuceho"));
 
+        $questionRepository = $manager->getRepository('AnketaBundle\Entity\Question');
+        $objekt = $questionRepository->findOneBy(array(
+            'season' => $season,
+            'question' => $question->getQuestion(),
+            'stars' => $question->getStars(),
+            'hasComment' => $question->getHasComment(),
+        ));
+
+        if ($objekt != null) {
+            // Aj ked tato otazka este nie je v DB uz o nej vie asociovana kategoria.
+            // Toto prepojenie musime zrusit, inak nam to nepovoli otazku neulozit.
+            $associatedQ = $question->getCategory()->getQuestions()->removeElement($question);
+            return false;
+        }
+
         $question->setSeason($season);
         $manager->persist($question);
+        return true;
     }
 
     private function checkBool(array $arr, $key) {
