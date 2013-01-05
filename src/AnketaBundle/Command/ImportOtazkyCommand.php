@@ -165,7 +165,7 @@ class ImportOtazkyCommand extends AbstractImportCommand {
         }
 
         $question->setIsSubjectEvaluation($this->checkBool($import, "hlavne_hodnotenie_predmetu"));
-        $question->setIsTeacherEvaluation($this->checkBool($import, "hlavne_hodnotenie_vyucujuceho"));
+        $question->setIsTeacherEvaluation($this->checkBool($import, "hlavne_hodnotenie_ucitela"));
 
         $questionRepository = $manager->getRepository('AnketaBundle\Entity\Question');
         $objekt = $questionRepository->findOneBy(array(
