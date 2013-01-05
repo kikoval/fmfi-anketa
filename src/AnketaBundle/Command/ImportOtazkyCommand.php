@@ -166,18 +166,9 @@ class ImportOtazkyCommand extends AbstractImportCommand {
                 $question->addOption($op);
             }
         }
-        if (array_key_exists("hlavne_hodnotenie_predmetu", $import)
-            && $import["hlavne_hodnotenie_predmetu"] == "Yes") {
-            $question->setIsSubjectEvaluation(true);
-        } else {
-            $question->setIsSubjectEvaluation(false);
-        }
-        if (array_key_exists("hlavne_hodnotenie_vyucujuceho", $import)
-            && $import["hlavne_hodnotenie_vyucujuceho"] == "Yes") {
-            $question->setIsTeacherEvaluation(true);
-        } else {
-            $question->setIsTeacherEvaluation(false);
-        }
+
+        $question->setIsSubjectEvaluation($this->checkBool($import, "hlavne_hodnotenie_predmetu"));
+        $question->setIsTeacherEvaluation($this->checkBool($import, "hlavne_hodnotenie_vyucujuceho"));
 
         $question->setSeason($season);
         $manager->persist($question);
@@ -206,6 +197,10 @@ class ImportOtazkyCommand extends AbstractImportCommand {
                 $output->writeln('Kategoria '.$kat.' s typom '.$typ.' sa uz v databaze nachadza.');
             }
         }
+    }
+
+    private function checkBool(array $arr, $key) {
+        return array_key_exists($key, $arr) && $arr[$key] == 'Yes';
     }
 
 }
