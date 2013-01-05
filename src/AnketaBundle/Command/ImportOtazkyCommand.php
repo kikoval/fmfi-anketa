@@ -38,7 +38,6 @@ class ImportOtazkyCommand extends AbstractImportCommand {
                 ->setName('anketa:import:otazky')
                 ->setDescription('Importuj otazky z yaml')
                 ->addSeasonOption()
-                ->addOption('no-duplicates-check', 'c', InputOption::VALUE_OPTIONAL, 'Don\'t check for duplicate categories', null)
                 ->addOption('dry-run', 'r', InputOption::VALUE_NONE, 'Dry run. Won\'t modify database')
         ;
     }
@@ -56,18 +55,11 @@ class ImportOtazkyCommand extends AbstractImportCommand {
     protected function execute(InputInterface $input, OutputInterface $output) {
         $manager = $this->getContainer()->get('doctrine')->getEntityManager();
         $filename = $input->getArgument('file');
-        $checkDuplicatesOption = $input->getOption('no-duplicates-check');
         $manager->getConnection()->beginTransaction();
 
         $season = $this->getSeason($input);
 
         $input_array = Yaml::parse($filename);
-
-        // checkDuplicates
-        if ($checkDuplicatesOption === null) {
-            $this->checkDuplicates($input_array, $manager, $output);
-            return;
-        }
 
         // spracuj kategorie
         $categories = $input_array["kategorie"];
@@ -172,31 +164,6 @@ class ImportOtazkyCommand extends AbstractImportCommand {
 
         $question->setSeason($season);
         $manager->persist($question);
-    }
-
-    private function checkDuplicates(array $import, EntityManager $manager, OutputInterface $output) {
-        $categories = $import["kategorie"];
-        $questions = $import["otazky"];
-
-        $sectionIdMap = array(
-            'vseobecne' => CategoryType::GENERAL,
-            'predmety' => CategoryType::SUBJECT,
-            'predmety_ucitel' => CategoryType::TEACHER_SUBJECT,
-            'studijnyprogram' => CategoryType::STUDY_PROGRAMME,
-        );
-        $categoryRepository = $manager->getRepository('AnketaBundle\Entity\Category');
-        foreach ($categories as $category) {
-            $kat = $sectionIdMap[$category['kategoria']];
-            $typ = $category["popis"];
-            $objekt = $categoryRepository->findOneBy(
-                    array('type' => $kat,
-                        'description' => $typ));
-            if ($objekt == null) {
-                $output->writeln('Kategoria '.$kat.' s typom '.$typ.' sa v databaze NEnachadza.');
-            } else {
-                $output->writeln('Kategoria '.$kat.' s typom '.$typ.' sa uz v databaze nachadza.');
-            }
-        }
     }
 
     private function checkBool(array $arr, $key) {
