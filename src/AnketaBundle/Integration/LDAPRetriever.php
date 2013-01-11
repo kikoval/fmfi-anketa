@@ -21,6 +21,7 @@ class LDAPRetriever {
     
     public function __construct($serverUrl, $baseDN)
     {
+        if (!extension_loaded('ldap')) throw new \Exception('ldap extension is not enabled');
         $this->serverUrl = $serverUrl;
         $this->baseDN = $baseDN;
         $this->linkId = null;
@@ -130,7 +131,7 @@ class LDAPRetriever {
     
     private function runSearch($filter, $attributes)
     {
-        $result = ldap_search($this->linkId, $this->baseDN, $filter, $attributes);
+        $result = @ldap_search($this->linkId, $this->baseDN, $filter, $attributes);
         if ($result === false) {
             $this->throwException();
         }
@@ -142,7 +143,7 @@ class LDAPRetriever {
         $this->loginIfNotAlready();
         $result = $this->runSearch($filter, $attributes);
         $count = $this->getCount($result);
-        
+
         if ($count === 0) {
             return null;
         }
@@ -159,7 +160,14 @@ class LDAPRetriever {
         return $data;
     }
     
-    public function searchAll($filter, $attributes, $limit)
+    /**
+     * Contrary to the fuction name doesn't resturn all matching records.
+     * Result size is limited by server. Uniba doesn't return more than 5.
+     * @param string $filter
+     * @param array of string $attributes
+     * @return array
+     */
+    public function searchAll($filter, array $attributes)
     {
         $this->loginIfNotAlready();
         $result = $this->runSearch($filter, $attributes);
