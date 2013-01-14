@@ -16,19 +16,19 @@ namespace AnketaBundle\Lib;
  */
 interface TableReaderInterface
 {
-    
+
     /**
      * Get contents of table header (column names).
      * @return array fields of the header
      * @throws Exception if an error has occured
      */
     public function getHeader();
-    
+
     /**
      * Read a row of data from the data source
      * @return array fields of the row or false if no more are present
      * @throws Exception if an error has occured
      */
     public function readRow();
-    
+
 }

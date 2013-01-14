@@ -29,7 +29,7 @@ class SubjectRepository extends EntityRepository {
         return $subjects;
     }
 
-        
+
     public function getSubjectsForTeacherForStudyProgramme($teacher, $studyProgramme, $season) {
         $dql = 'SELECT DISTINCT s FROM AnketaBundle\Entity\UsersSubjects us, ' .
                 'AnketaBundle\Entity\Subject s, ' .
@@ -43,14 +43,14 @@ class SubjectRepository extends EntityRepository {
                 'AND a.teacher = t ' .
                 'AND us.season = :season ' .
                 'AND ts.season = :season ' .
-                'AND us.studyProgram = :studyProgramme ' . 
-                'AND t = :teacher ' . 
+                'AND us.studyProgram = :studyProgramme ' .
+                'AND t = :teacher ' .
                 'ORDER BY s.name';
         $subjects = $this->getEntityManager()
                         ->createQuery($dql)->execute(array('teacher' => $teacher, 'studyProgramme' => $studyProgramme, 'season' => $season));
         return $subjects;
     }
-    
+
     public function getSubjectsForTeacher($teacher, $season) {
         $dql = 'SELECT s FROM AnketaBundle\Entity\Subject s, ' .
                 'AnketaBundle\Entity\TeachersSubjects ts WHERE s = ts.subject ' .
@@ -76,7 +76,7 @@ class SubjectRepository extends EntityRepository {
     public function getSubjectsForTeacherWithAnswersAboutTeacher($teacher, $season) {
         $dql = 'SELECT s FROM AnketaBundle\Entity\Subject s, ' .
                 'AnketaBundle\Entity\Answer a, ' .
-                'AnketaBundle\Entity\TeachersSubjects ts ' . 
+                'AnketaBundle\Entity\TeachersSubjects ts ' .
                 'WHERE s = ts.subject ' .
                 'AND a.subject = s ' .
                 'AND a.teacher = :teacher ' .
@@ -91,7 +91,7 @@ class SubjectRepository extends EntityRepository {
             'season' => $season));
         return $subjects;
     }
-    
+
     /**
      * Vrati zoznam predmetov daneho ucitela, pre ktore je aspon jedna
      * odpoved o danom ucitelovi alebo predmete v danej season.
@@ -104,7 +104,7 @@ class SubjectRepository extends EntityRepository {
     public function getSubjectsForTeacherWithAnyAnswers($teacher, $season) {
         $dql = 'SELECT s FROM AnketaBundle\Entity\Subject s, ' .
                 'AnketaBundle\Entity\Answer a, ' .
-                'AnketaBundle\Entity\TeachersSubjects ts ' . 
+                'AnketaBundle\Entity\TeachersSubjects ts ' .
                 'WHERE s = ts.subject ' .
                 'AND a.subject = s ' .
                 'AND a.season = :season ' .
@@ -118,7 +118,7 @@ class SubjectRepository extends EntityRepository {
             'season' => $season));
         return $subjects;
     }
-    
+
     public function getCategorizedSubjects(Season $season) {
         // najdeme subjecty, co maju aspon jednu odpoved
         $dql = 'SELECT DISTINCT s FROM AnketaBundle\Entity\Answer a, ' .
@@ -155,7 +155,7 @@ class SubjectRepository extends EntityRepository {
                 'WHERE us.subject = s ' .
                 'AND a.subject = s ' .
                 'AND us.season = :season ' .
-                'AND us.studyProgram = :studyProgramme ' . 
+                'AND us.studyProgram = :studyProgramme ' .
                 'ORDER BY s.name';
         $subjects = $this->getEntityManager()
                         ->createQuery($dql)->execute(array('studyProgramme' => $studyProgramme, 'season' => $season));
@@ -174,7 +174,7 @@ class SubjectRepository extends EntityRepository {
                 'AND ss.subject = s ' .
                 'AND ss.season = :season ' .
                 'AND a.season = :season ' .
-                'AND d = :department ' . 
+                'AND d = :department ' .
                 'ORDER BY s.name';
         $subjects = $this->getEntityManager()
                         ->createQuery($dql)->execute(array('department' => $department, 'season' => $season));

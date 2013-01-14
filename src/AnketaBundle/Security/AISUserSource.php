@@ -33,7 +33,7 @@ class AISUserSource implements UserSourceInterface
      * @var AnketaBundle\Entity\SubjectRepository
      */
     private $subjectRepository;
-    
+
     /**
      * Doctrine repository for StudyProgram entity
      * @var AnketaBundle\Entity\StudyProgramRepository
@@ -60,10 +60,10 @@ class AISUserSource implements UserSourceInterface
 
     /** @var boolean */
     private $loadAuth;
-    
+
     /** @var LoggerInterface */
     private $logger;
-    
+
     /** @var SubjectIdentificationInterface */
     private $subjectIdentification;
 
@@ -89,11 +89,11 @@ class AISUserSource implements UserSourceInterface
         if (!$user->hasDisplayName()) {
             $user->setDisplayName($this->aisRetriever->getFullName());
         }
-        
+
         if ($this->aisRetriever->isAdministraciaStudiaAllowed()) {
             $this->loadSubjects($userSeason);
 
-            if ($this->loadAuth) {            
+            if ($this->loadAuth) {
                 $userSeason->setIsStudent(true);
             }
         }
@@ -108,12 +108,12 @@ class AISUserSource implements UserSourceInterface
     private function loadSubjects(UserSeason $userSeason)
     {
         $aisPredmety = $this->aisRetriever->getPredmety($this->semestre);
-        
+
         $slugy = array();
 
         foreach ($aisPredmety as $aisPredmet) {
             $props = $this->subjectIdentification->identify($aisPredmet['skratka'], $aisPredmet['nazov']);
-            
+
             // Ignorujme duplicitne predmety
             if (in_array($props['slug'], $slugy)) {
                 continue;
@@ -134,7 +134,7 @@ class AISUserSource implements UserSourceInterface
                 throw new \Exception("Nepodarilo sa pridať predmet do DB");
             }
             $stmt = null;
-            
+
             // Vytvorime studijny program v DB ak neexistuje
             // podobne ako predmet vyssie
             $stmt = $this->dbConn->prepare("INSERT INTO StudyProgram (code, name, slug) VALUES (:code, :name, :slug) ON DUPLICATE KEY UPDATE code=code");
@@ -156,7 +156,7 @@ class AISUserSource implements UserSourceInterface
             $userSubject->setSeason($userSeason->getSeason());
             $userSubject->setSubject($subject);
             $userSubject->setStudyProgram($studyProgram);
-            
+
             $this->entityManager->persist($userSubject);
         }
     }

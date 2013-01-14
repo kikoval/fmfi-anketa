@@ -8,10 +8,10 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="SectionVoteSummary")
  */
 class SectionVoteSummary {
-    
+
     /**
-     * @ORM\Id 
-     * @ORM\GeneratedValue 
+     * @ORM\Id
+     * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
     protected $id;

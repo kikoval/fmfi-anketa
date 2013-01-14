@@ -34,7 +34,7 @@ class TransientHttpConnection extends DecoratedHttpConnection
      * Return underlying connection.
      *
      * @param boolean $poll This argument has no effect
-     * 
+     *
      * @return HttpConnection underlying connection
      */
     public function getRealConnection($poll = false) {

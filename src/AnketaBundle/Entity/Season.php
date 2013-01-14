@@ -3,7 +3,7 @@
  * @copyright Copyright (c) 2011,2012 The FMFI Anketa authors (see AUTHORS).
  * Use of this source code is governed by a license that can be
  * found in the LICENSE file in the project root directory.
- * 
+ *
  * @package    Anketa
  * @subpackage Anketa__Entity
  */
@@ -18,7 +18,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Season {
 
     /**
-     * @ORM\Id @ORM\GeneratedValue 
+     * @ORM\Id @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
     protected $id;
@@ -28,7 +28,7 @@ class Season {
      * @ORM\Column(type="string")
      */
     protected $description;
-    
+
     /**
      * Total number of students in this season
      * @ORM\Column(type="integer")
@@ -78,11 +78,11 @@ class Season {
      * @ORM\Column(type="boolean")
      */
     protected $responsesVisible;
-    
+
     /**
      * Order seasons by this column in descending order in results.
      * The larger the number, the later in history the season will appear.
-     * 
+     *
      * @ORM\Column(type="integer")
      * @var int $ordering
      */
@@ -104,7 +104,7 @@ class Season {
     public function getDescription() {
         return $this->description;
     }
-    
+
     public function getStudentCount() {
         return $this->studentCount;
     }
@@ -171,7 +171,7 @@ class Season {
     public function setResponsesVisible($value) {
         $this->responsesVisible = $value;
     }
-    
+
     public function getOrdering() {
         return $this->ordering;
     }

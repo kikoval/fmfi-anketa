@@ -79,7 +79,7 @@ class AnswerRepository extends EntityRepository {
         return $query->getSingleScalarResult();
     }
 
-    
+
     public function getAverageEvaluationForTeacher($teacher, $season) {
         $dql = 'SELECT AVG(a.evaluation), COUNT(a.evaluation)  FROM ' .
                 'AnketaBundle\Entity\Answer a, AnketaBundle\Entity\Question q ' .
@@ -92,7 +92,7 @@ class AnswerRepository extends EntityRepository {
                         ->createQuery($dql)->execute(array('teacher' => $teacher, 'season' => $season));
         return $priemer[0];
     }
-    
+
     public function getAverageEvaluationForSubject($subject, $season) {
         $dql = 'SELECT AVG(a.evaluation), COUNT(a.evaluation)  FROM ' .
                 'AnketaBundle\Entity\Answer a, AnketaBundle\Entity\Question q ' .

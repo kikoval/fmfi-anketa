@@ -10,10 +10,10 @@ use libfajr\base\Preconditions;
  * @ORM\Entity(repositoryClass="AnketaBundle\Entity\CategoryRepository")
  */
 class Category {
-    
+
     /**
-     * @ORM\Id 
-     * @ORM\GeneratedValue 
+     * @ORM\Id
+     * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
     protected $id;
@@ -31,11 +31,11 @@ class Category {
     protected $type;
 
     /**
-     * Subcategory of category, 
+     * Subcategory of category,
      * @ORM\Column(type="string", unique=true)
      */
     protected $specification;
-    
+
     /**
      * Describes the subcategory, i.e. School properties/Food for students
      * If no subcategories are needed, it's the same as main category

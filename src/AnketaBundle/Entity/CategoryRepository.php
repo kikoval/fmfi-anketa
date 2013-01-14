@@ -15,9 +15,9 @@ use Doctrine\ORM\EntityRepository;
 use AnketaBundle\Entity\CategoryType;
 
 class CategoryRepository extends EntityRepository {
-    
+
     /**
-     * 
+     *
      * @return ArrayCollection general categories ordered by position
      */
     public function getOrderedGeneral() {

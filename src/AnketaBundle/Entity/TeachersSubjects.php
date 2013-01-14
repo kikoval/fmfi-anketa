@@ -37,7 +37,7 @@ class TeachersSubjects {
 
     /**
      * @ORM\Column(type="boolean")
-     * @var boolean ci cvici(l) 
+     * @var boolean ci cvici(l)
      */
     protected $trainer;
 
@@ -47,7 +47,7 @@ class TeachersSubjects {
      * @var Season $season
      */
     protected $season;
-    
+
     public function __construct($teacher, $subject, $season, $lecturer = false, $trainer = false) {
         $this->setTeacher($teacher);
         $this->setSubject($subject);
