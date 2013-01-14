@@ -12,7 +12,7 @@ namespace AnketaBundle\Lib;
 
 interface SubjectIdentificationInterface
 {
-    
+
     /**
      * Map long code and subject name (information received from AIS) to
      * internally usable information - a code and name (which are only
@@ -22,5 +22,5 @@ interface SubjectIdentificationInterface
      * @return array('code' => code, 'name' => name, 'slug' => slug)
      */
     public function identify($longCode, $subjectName);
-    
+
 }

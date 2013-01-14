@@ -181,7 +181,7 @@ class QuestionController extends Controller {
         $season = $em->getRepository('AnketaBundle:Season')->getActiveSeason();
         $questions = $em->getRepository('AnketaBundle\Entity\Question')
                         ->getOrderedQuestionsByCategoryType(CategoryType::TEACHER_SUBJECT, $season);
-        
+
         $teacherSubject = $em->getRepository('AnketaBundle:TeachersSubjects')
                              ->findOneBy(array('subject' => $subject->getId(),
                                                'season' => $season->getId(),

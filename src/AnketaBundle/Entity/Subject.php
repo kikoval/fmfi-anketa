@@ -10,9 +10,9 @@ use Doctrine\ORM\Mapping as ORM;
 class Subject {
 
     const NO_CATEGORY = 'XXX-nekategorizovane';
-    
+
     /**
-     * @ORM\Id @ORM\GeneratedValue 
+     * @ORM\Id @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
     protected $id;
@@ -22,13 +22,13 @@ class Subject {
      * @ORM\Column(type="string", nullable=false, unique=true)
      */
     protected $code;
-    
+
     /**
      * Uniquely identifies the subject, is suitable to be used as
      * part of an URL.
-     * 
+     *
      * (i.e. alphanumeric chars with not repeated dashes)
-     * 
+     *
      * @ORM\Column(type="string", nullable=false, unique=true)
      */
     protected $slug;
@@ -56,7 +56,7 @@ class Subject {
     public function getCode() {
         return $this->code;
     }
-    
+
     public function setSlug($slug) {
         $this->slug = $slug;
     }

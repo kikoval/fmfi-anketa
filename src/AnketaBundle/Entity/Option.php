@@ -10,10 +10,10 @@ use libfajr\base\Preconditions;
  * @ORM\Table(name="Choice")
  */
 class Option {
-    
+
     /**
-     * @ORM\Id 
-     * @ORM\GeneratedValue 
+     * @ORM\Id
+     * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
     protected $id;
@@ -73,7 +73,7 @@ class Option {
     public function getEvaluation() {
         return $this->evaluation;
     }
-    
+
     /**
      * @param Question $value
      */

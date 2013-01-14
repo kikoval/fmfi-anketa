@@ -12,7 +12,7 @@ namespace AnketaBundle\Lib;
 
 class Slugifier
 {
-    
+
     public function transliterate($string)
     {
         $oldLocale = setlocale(LC_CTYPE, "0");
@@ -31,7 +31,7 @@ class Slugifier
         }
         return $result;
     }
-    
+
     public function slugify($string)
     {
         $slug = $this->transliterate($string);
@@ -41,5 +41,5 @@ class Slugifier
         $slug = trim($slug, '-');
         return $slug;
     }
-    
+
 }

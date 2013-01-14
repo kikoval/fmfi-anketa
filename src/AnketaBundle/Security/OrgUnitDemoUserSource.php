@@ -25,7 +25,7 @@ use AnketaBundle\Entity\Role;
 
 class OrgUnitDemoUserSource implements UserSourceInterface
 {
-    
+
     /** @var array */
     private $orgUnits;
 
@@ -43,7 +43,7 @@ class OrgUnitDemoUserSource implements UserSourceInterface
         }
         $userSeason->setIsStudent(true);
         $userSeason->setFinished(false);
-        
+
         return true;
     }
 }

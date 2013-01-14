@@ -18,26 +18,26 @@ use Exception;
  */
 class NativeCSVTableReader implements TableReaderInterface
 {
-    
+
     /** @var string the field delimiter character */
     private $delimiter;
-    
+
     /** @var string string begin/end character */
     private $enclosure;
-    
+
     /** @var string escape character */
     private $escape;
-    
+
     /** @var array */
     private $header;
-    
+
     /**
      * Create a new NativeCSVTableReader instance.
-     * 
+     *
      * @param type $fp file handle to read from
      * @param type $delimiter
      * @param type $enclosure
-     * @param type $escape 
+     * @param type $escape
      */
     public function __construct($fp, $delimiter=';',$enclosure='"',$escape='\\')
     {
@@ -47,7 +47,7 @@ class NativeCSVTableReader implements TableReaderInterface
         $this->escape = $escape;
         $this->header = $this->readRow();
     }
-    
+
     public function readRow()
     {
         return fgetcsv($this->fp, 0, $this->delimiter, $this->enclosure, $this->escape);
@@ -56,5 +56,5 @@ class NativeCSVTableReader implements TableReaderInterface
     public function getHeader() {
         return $this->header;
     }
-    
+
 }

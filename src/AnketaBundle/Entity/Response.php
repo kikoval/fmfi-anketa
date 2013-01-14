@@ -9,7 +9,7 @@ use AnketaBundle\Entity\Season;
  * @ORM\Entity()
  */
 class Response {
-    
+
     /**
      * @ORM\Id @ORM\GeneratedValue @ORM\Column(type="integer")
      */
@@ -40,7 +40,7 @@ class Response {
      * @var StudyProgram $studyProgram
      */
     protected $studyProgram;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="Season")
      *
@@ -183,7 +183,7 @@ class Response {
     public function getQuestion() {
         return $this->question;
     }
-    
+
     /**
      * @return Season
      */
@@ -192,10 +192,10 @@ class Response {
     }
 
     /**
-     * @param Season $season 
+     * @param Season $season
      */
     public function setSeason(Season $season) {
         $this->season = $season;
     }
-    
+
 }

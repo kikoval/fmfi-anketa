@@ -64,7 +64,7 @@ class UserRepository extends EntityRepository {
             'season' => $season
          ));
         $result = $q->execute();
-        
+
         $conn->commit();
         return $result;
     }
@@ -110,7 +110,7 @@ class UserRepository extends EntityRepository {
                              'season' => $season));
         return $teachers;
     }
-    
+
     public function getTeachersForSubjectWithAnswers($subject, $season) {
         $dql = 'SELECT t FROM AnketaBundle\Entity\User t, ' .
                   'AnketaBundle\Entity\TeachersSubjects ts, ' .
@@ -130,7 +130,7 @@ class UserRepository extends EntityRepository {
                              'season' => $season));
         return $teachers;
     }
-    
+
     public function getTeachersForStudyProgramme($studyProgramme, $season) {
         $dql = 'SELECT DISTINCT t FROM AnketaBundle\Entity\UsersSubjects us, ' .
                 'AnketaBundle\Entity\Subject s, ' .
@@ -144,7 +144,7 @@ class UserRepository extends EntityRepository {
                 'AND a.season = :season ' .
                 'AND us.season = :season ' .
                 'AND ts.season = :season ' .
-                'AND us.studyProgram = :studyProgramme ' . 
+                'AND us.studyProgram = :studyProgramme ' .
                 'ORDER BY t.familyName';
         $teachers = $this->getEntityManager()
                         ->createQuery($dql)->execute(array('studyProgramme' => $studyProgramme, 'season' => $season));
@@ -158,7 +158,7 @@ class UserRepository extends EntityRepository {
                 'WHERE d = t.department ' .
                 'AND a.teacher = t ' .
                 'AND a.season = :season ' .
-                'AND d = :department ' . 
+                'AND d = :department ' .
                 'ORDER BY t.familyName';
         $teachers = $this->getEntityManager()
                         ->createQuery($dql)->execute(array('department' => $department, 'season' => $season));

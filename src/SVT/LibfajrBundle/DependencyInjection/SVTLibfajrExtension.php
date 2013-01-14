@@ -53,7 +53,7 @@ class SVTLibfajrExtension extends Extension
         }
 
         $container->setAlias('libfajr.trace', 'libfajr.trace.'.$config['trace']);
-        
+
         $this->addLogin($container, $config);
         $this->addConnection($container, $config);
     }
@@ -108,13 +108,13 @@ class SVTLibfajrExtension extends Extension
         }
 
         $conn = $config['connection'];
-        
+
         $container
             ->getDefinition('libfajr.http.connection.provider.curl')
             ->replaceArgument(1, $conn['curl']['directory'])
             ->replaceArgument(2, $conn['curl']['transient'])
             ->replaceArgument(3, $conn['curl']['user_agent']);
-        
+
     }
 
 }

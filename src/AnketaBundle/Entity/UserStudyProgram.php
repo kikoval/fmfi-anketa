@@ -21,10 +21,10 @@ use AnketaBundle\Entity\Season;
  * @ORM\Entity()
  */
 class UserStudyProgram {
-    
+
     /**
-     * @ORM\Id 
-     * @ORM\GeneratedValue 
+     * @ORM\Id
+     * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
     protected $id;
@@ -35,17 +35,17 @@ class UserStudyProgram {
      * @var User $user
      */
     protected $user;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="Season")
      *
      * @var Season $season
      */
     protected $season;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="StudyProgram")
-     * 
+     *
      * @var StudyProgram $studyProgram
      */
     protected $studyProgram;
@@ -61,7 +61,7 @@ class UserStudyProgram {
     public function getId() {
         return $this->id;
     }
-    
+
     public function getUser() {
         return $this->user;
     }
@@ -77,5 +77,5 @@ class UserStudyProgram {
     public function setStudyProgram($studyProgram) {
         $this->studyProgram = $studyProgram;
     }
-    
+
 }

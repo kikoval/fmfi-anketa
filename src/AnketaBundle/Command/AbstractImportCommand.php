@@ -36,27 +36,27 @@ abstract class AbstractImportCommand extends ContainerAwareCommand {
                 ->addArgument('file', InputArgument::REQUIRED)
         ;
     }
-    
+
     /**
-     * @return \AnketaBundle\Command\AbstractImportCommand 
+     * @return \AnketaBundle\Command\AbstractImportCommand
      */
     protected function addSeasonOption()
     {
         $this->addOption('season', 'd', InputOption::VALUE_OPTIONAL, 'Season to use', null);
         return $this;
     }
-    
+
     /**
      * Get Season that was selected as option (or active season if none was specified)
      * @param InputInterface $input
      * @return Season
-     * @throws Exception 
+     * @throws Exception
      */
     protected function getSeason(InputInterface $input)
     {
         $manager = $this->getContainer()->get('doctrine')->getEntityManager();
         $seasonSlug = $input->getOption('season');
-        
+
         /** @var SeasonRepository seasonRepository */
         $seasonRepository = $manager->getRepository('AnketaBundle:Season');
         if ($seasonSlug === null) {
@@ -72,7 +72,7 @@ abstract class AbstractImportCommand extends ContainerAwareCommand {
         }
         return $season;
     }
-    
+
     protected function openFile(InputInterface $input) {
         $filename = $input->getArgument('file');
 
@@ -80,7 +80,7 @@ abstract class AbstractImportCommand extends ContainerAwareCommand {
         if ($file === false) {
             throw new Exception('Failed to open file');
         }
-        
+
         return $file;
     }
 

@@ -9,10 +9,10 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Entity(repositoryClass="AnketaBundle\Entity\QuestionRepository")
  */
 class Question {
-    
+
     /**
-     * @ORM\Id 
-     * @ORM\GeneratedValue 
+     * @ORM\Id
+     * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
     protected $id;
@@ -69,7 +69,7 @@ class Question {
      * @ORM\Column(type="boolean")
      */
     protected $hasComment;
-    
+
     /**
      * Ci otazka je hodnotenim vyucujuceho (pouziva sa v reportoch napriklad)
      * @ORM\Column(type="boolean")
@@ -224,7 +224,7 @@ class Question {
     public function getHasComment() {
         return $this->hasComment;
     }
-    
+
     public function getIsTeacherEvaluation() {
         return $this->isTeacherEvaluation;
     }

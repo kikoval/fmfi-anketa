@@ -50,7 +50,7 @@ class StudyProgramRepository extends EntityRepository {
         $query->setParameters(array('user' => $user, 'subject' => $subject, 'season' => $season));
         return $query->getSingleResult();
     }
-    
+
     public function findByReportsUser(User $user, Season $season) {
         $em = $this->getEntityManager();
         $query = $em->createQuery("SELECT sp

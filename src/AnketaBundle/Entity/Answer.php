@@ -8,10 +8,10 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="AnketaBundle\Entity\AnswerRepository")
  */
 class Answer {
-    
+
     /**
-     * @ORM\Id 
-     * @ORM\GeneratedValue 
+     * @ORM\Id
+     * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
     protected $id;
@@ -37,14 +37,14 @@ class Answer {
      * @var Question $question
      */
     protected $question;
-   
+
     /**
      * @ORM\ManyToOne(targetEntity="Season")
      *
      * @var Season $season
      */
     protected $season;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="Option")
      *
@@ -72,7 +72,7 @@ class Answer {
      * @var User $user
      */
     protected $author;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="StudyProgram")
      *
@@ -204,7 +204,7 @@ class Answer {
     public function getAuthor() {
         return $this->author;
     }
-    
+
     /**
      * @param StudyProgram $value
      */
@@ -218,7 +218,7 @@ class Answer {
     public function getStudyProgram() {
         return $this->studyProgram;
     }
-    
+
     public function getSeason() {
         return $this->season;
     }
