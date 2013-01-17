@@ -13,7 +13,7 @@ namespace AnketaBundle\Integration;
 use AnketaBundle\Integration\LDAPRetriever;
 
 /**
- * Description of LDAPTeacherSearch
+ * Searches LDAP for teachers.
  *
  * @author Martin Kralik <majak47@gmail.com>
  */
@@ -32,11 +32,11 @@ class LDAPTeacherSearch {
     public function __destruct() {
         $this->ldap->logoutIfNotAlready();
     }
-
+    
     /**
      * Searches LDAP for users by substring of their full name (without accents).
-     * In addition, users must be are either teachers on any faculty
-     * or PhD students on faculty provided in class constructor.
+     * In addition, users must be either teachers on any faculty or PhD students
+     * on faculty provided in class constructor.
      *
      * Number of results is capped by settings on used LDAP server.
      *
@@ -61,12 +61,14 @@ class LDAPTeacherSearch {
      * @return array
      */
     public function byFullName($name) {
-        $filter = '(&(cn=*'.$name.'*)(|(group=zamestnanci)(group=doktorandi_'.$this->orgUnit.')))';
+        $safeName = $this->ldap->escape($name);
+        $safeOrgUnit = $this->ldap->escape($this->orgUnit);
+        $filter = '(&(cn=*'.$safeName.'*)(|(group=zamestnanci)(group=doktorandi_'.$safeOrgUnit.')))';
         $result = $this->ldap->searchAll($filter, array('displayName', 'uid', 'group'));
 
         $teachers = array();
         foreach ($result as $record) {
-            $teachers[$record['uid'][0]] = $record['displayName'][0];
+            $teachers[$record['uid'][0]]['name'] = $record['displayName'][0];
             $groups = array();
             foreach ($record['group'] as $group) {
                 $match = array();
@@ -74,7 +76,7 @@ class LDAPTeacherSearch {
                     $groups[] = $match['sucast'];
                 }
             }
-            if ($groups) $teachers[$record['uid'][0]] .= ' ('.  implode(', ', $groups).')';
+            $teachers[$record['uid'][0]]['groups'] = $groups;
         }
         return $teachers;
     }
