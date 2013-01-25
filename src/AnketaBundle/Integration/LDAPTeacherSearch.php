@@ -21,7 +21,7 @@ class LDAPTeacherSearch {
 
     private $ldap;
     private $orgUnit;
-    const GROUP_REGEXP = '@^pouzivatelia_(?P<sucast>[a-zA-Z]+)(?<!interni|externi)$@';
+    const GROUP_REGEXP = '@^pouzivatelia_(?P<orgUnits>[a-zA-Z]+)(?<!interni|externi)$@';
 
     public function __construct(LDAPRetriever $ldap, $orgUnit) {
         $this->ldap = $ldap;
@@ -44,18 +44,18 @@ class LDAPTeacherSearch {
      * followed by their faculties as values.
      *
      * Return value for $name='kralik' could look like this:
-     *    array(5) {
-     *      ["kralikova15"]=>
-     *      string(30) "Mgr. Silvia Králiková (PriF)"
-     *      ["kralik3"]=>
-     *      string(21) "Martin Králik (FMFI)"
-     *      ["kralik1"]=>
-     *`     string(33) "RNDr. Eduard Králik, CSc. (PriF)"
-     *      ["kralik24"]=>
-     *      string(32) "MUDr. Róbert Králik, PhD. (LF)"
-     *      ["kralik2"]=>
-     *      string(25) "RNDr. Tibor Králik (RUK)"
+     *  array(5) {
+     *    ["kralik1"]=> array(2) {
+     *      ["name"]=> string(26) "RNDr. Eduard Králik, CSc."
+     *      ["orgUnits"]=> array(1) { [0]=> string(4) "PriF" }
      *    }
+     *    ["kralik3"]=> array(2) {
+     *      ["name"]=> string(14) "Martin Králik"
+     *      ["orgUnits"]=> array(1) { [0]=> string(4) "FMFI" }
+     *    }
+     *    ...
+     *  }
+     *
      *
      * @param string $name Substring of name
      * @return array
@@ -69,14 +69,14 @@ class LDAPTeacherSearch {
         $teachers = array();
         foreach ($result as $record) {
             $teachers[$record['uid'][0]]['name'] = $record['displayName'][0];
-            $groups = array();
+            $orgUnits = array();
             foreach ($record['group'] as $group) {
                 $match = array();
                 if (preg_match(self::GROUP_REGEXP, $group, $match)) {
-                    $groups[] = $match['sucast'];
+                    $orgUnits[] = $match['orgUnits'];
                 }
             }
-            $teachers[$record['uid'][0]]['groups'] = $groups;
+            $teachers[$record['uid'][0]]['orgUnits'] = $orgUnits;
         }
         return $teachers;
     }
