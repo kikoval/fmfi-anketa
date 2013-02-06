@@ -84,12 +84,9 @@ vedecká činnosť, samostatné štúdium odbornej literatúry a pod.), prípadn
             {% if question.hasComment %}
             <div class="comment">
                 <div><label for="comment_{{ question.id }}">Komentár:</label></div>
-                <div class="expandingArea">
-                <pre><span></span><br /></pre>
-                <textarea id="comment_{{ question.id }}"
+                <textarea id="comment_{{ question.id }}" class="expanding"
                           name="question[{{ question.id }}][comment]"
                     >{{ answers[question.id] is not none ? answers[question.id].comment : "" }}</textarea>
-                </div>
             </div>
             {% endif %}
         </div>
