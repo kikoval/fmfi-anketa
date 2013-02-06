@@ -58,7 +58,7 @@ class LDAPUserSource implements UserSourceInterface
             return false;
         }
         
-        if (!$user->hasDisplayName() && isset($userInfo['displayName']) &&
+        if ($user->getDisplayName() === null && isset($userInfo['displayName']) &&
           count($userInfo['displayName']) > 0) {
             $user->setDisplayName($userInfo['displayName'][0]);
         }

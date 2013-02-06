@@ -417,7 +417,7 @@ class StatisticsController extends Controller {
             {
                 $user = $userRepository
                            ->findOneBy(array('login' => $response->getAuthorLogin()));
-                if (!empty($user)) $item['author'] = $user->getDisplayName();
+                if (!empty($user)) $item['author'] = $user->getFormattedName();
             }
             if ($response->getAssociation()) {
                 $item['author'] .= ' (' . $response->getAssociation() . ')';

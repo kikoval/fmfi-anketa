@@ -82,7 +82,7 @@ class HlasovanieMenu
             foreach ($teachersSubjects as $teacherSubject) {
                 $teacher = $teacherSubject->getTeacher();
                 $teacherItem = new MenuItem(
-                            $teacher->getDisplayName(),
+                            $teacher->getFormattedName(),
                             $this->generateUrl('answer_subject_teacher',
                                 array('subject_slug' => $subject->getSlug(),
                                       'teacher_code' => $teacher->getId()))
