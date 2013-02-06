@@ -19,6 +19,7 @@ class TeachingAssociation {
     
     /**
      * @ORM\ManyToOne(targetEntity="Season")
+     * @ORM\JoinColumn(nullable=false)
      *
      * @var Season $season
      */
@@ -33,6 +34,7 @@ class TeachingAssociation {
     
     /**
      * @ORM\ManyToOne(targetEntity="Subject")
+     * @ORM\JoinColumn(nullable=false)
      *
      * @var Subject $subject
      */
@@ -46,7 +48,7 @@ class TeachingAssociation {
     protected $teacher;
     
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable=false)
      * @var string $note 
      */
     protected $note;

@@ -26,13 +26,13 @@ class Department {
     protected $id;
 
     /**
-     * @ORM\Column(type="string", unique=true)
+     * @ORM\Column(type="string", unique=true, nullable=false)
      * @var string
      */
     protected $code;
     
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=false)
      * @var string
      */
     protected $name;

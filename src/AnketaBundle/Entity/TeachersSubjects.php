@@ -17,6 +17,7 @@ class TeachersSubjects {
 
     /**
      * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\JoinColumn(nullable=false)
      *
      * @var User $teacher
      */
@@ -24,6 +25,7 @@ class TeachersSubjects {
 
     /**
      * @ORM\ManyToOne(targetEntity="Subject")
+     * @ORM\JoinColumn(nullable=false)
      *
      * @var Subject $subject
      */
@@ -43,6 +45,7 @@ class TeachersSubjects {
 
     /**
      * @ORM\ManyToOne(targetEntity="Season")
+     * @ORM\JoinColumn(nullable=false)
      *
      * @var Season $season
      */

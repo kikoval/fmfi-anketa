@@ -31,6 +31,7 @@ class UserStudyProgram {
 
     /**
      * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\JoinColumn(nullable=false)
      *
      * @var User $user
      */
@@ -38,6 +39,7 @@ class UserStudyProgram {
     
     /**
      * @ORM\ManyToOne(targetEntity="Season")
+     * @ORM\JoinColumn(nullable=false)
      *
      * @var Season $season
      */
@@ -45,6 +47,7 @@ class UserStudyProgram {
     
     /**
      * @ORM\ManyToOne(targetEntity="StudyProgram")
+     * @ORM\JoinColumn(nullable=false)
      * 
      * @var StudyProgram $studyProgram
      */

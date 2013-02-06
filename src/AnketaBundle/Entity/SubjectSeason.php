@@ -31,6 +31,7 @@ class SubjectSeason {
 
     /**
      * @ORM\ManyToOne(targetEntity="Subject")
+     * @ORM\JoinColumn(nullable=false)
      *
      * @var Subject $subject
      */
@@ -38,6 +39,7 @@ class SubjectSeason {
     
     /**
      * @ORM\ManyToOne(targetEntity="Season")
+     * @ORM\JoinColumn(nullable=false)
      *
      * @var Season $season
      */
