@@ -116,7 +116,9 @@ class UserRepository extends EntityRepository {
                   'AnketaBundle\Entity\TeachersSubjects ts, ' .
                   'AnketaBundle\Entity\Answer a ' .
                   'WHERE t = ts.teacher ' .
-                  ' AND t.displayName IS NOT NULL ' . // XXX naco je toto treba?
+                  // TODO vyhodit riadok nizsie ked uz nebudu v DB "ucitelia"
+                  // typu .ucitelN
+                  ' AND t.displayName IS NOT NULL ' .
                   ' AND ts.subject = :subject ' .
                   ' AND ts.season = :season ' .
                   ' AND a.subject = :subject ' .
