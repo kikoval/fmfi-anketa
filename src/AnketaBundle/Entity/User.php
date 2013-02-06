@@ -222,16 +222,11 @@ class User implements UserInterface, EquatableInterface {
 
 
     public function getFormattedName() {
-        if ($this->getDisplayName() !== null) {
-            return $this->getDisplayName();
+        $formattedName = $this->getDisplayName() ?: $this->getName() ?: $this->getLogin() ?: null;
+        if ($formattedName === null) {
+                throw new \Exception('Neda sa vygenerovat formatovane meno pre pouzivatela s id ' . $this->getId());
         }
-        if ($this->getName() !== null) {
-            return $this->getName();
-        }
-        if ($this->getLogin() !== null) {
-            return $this->getLogin();
-        }
-        throw new \Exception('Neda sa vygenerovat formatovane meno pre pouzivatela s id ' . $this->getId());
+        return $formattedName;
     }
 
     public function getLogin() {
