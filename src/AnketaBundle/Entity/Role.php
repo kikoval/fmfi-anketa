@@ -18,7 +18,7 @@ class Role implements RoleInterface {
     protected $id;
 
     /**
-     * @ORM\Column(type="string", unique=true)
+     * @ORM\Column(type="string", unique=true, nullable=false)
      */
     protected $name;
 

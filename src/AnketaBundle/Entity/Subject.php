@@ -34,7 +34,7 @@ class Subject {
     protected $slug;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=false)
      */
     protected $name;
 
