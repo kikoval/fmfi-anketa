@@ -40,7 +40,7 @@
 <td colspan="2">
 (&nbsp;
 {% for subjectTeacher in subject.teacher %}
-<a href="{{ subject.links[subjectTeacher.id] }}">{{ subjectTeacher.displayName }}</a> &nbsp;
+<a href="{{ subject.links[subjectTeacher.id] }}">{{ subjectTeacher.formattedName }}</a> &nbsp;
 {% endfor %}
 )
 </td>

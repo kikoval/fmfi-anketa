@@ -90,14 +90,7 @@ class User implements UserInterface, EquatableInterface {
     }
 
     public function getDisplayName() {
-        if (!$this->hasDisplayName()) {
-            return $this->login;
-        }
         return $this->displayName;
-    }
-
-    public function hasDisplayName() {
-        return $this->displayName !== null;
     }
 
     /**
@@ -207,8 +200,8 @@ class User implements UserInterface, EquatableInterface {
 
     public function getName() {
         $name = trim($this->getGivenName() . ' ' . $this->getFamilyName());
-        if ($name !== '') return $name;
-        return $this->getDisplayName();
+        if ($name == '') return null;
+        return $name;
     }
 
     public function getGivenName() {
@@ -229,10 +222,11 @@ class User implements UserInterface, EquatableInterface {
 
 
     public function getFormattedName() {
-        if ($this->getDisplayName() === null) {
-            return $this->getName();
+        $formattedName = $this->getDisplayName() ?: $this->getName() ?: $this->getLogin() ?: null;
+        if ($formattedName === null) {
+                throw new \Exception('Neda sa vygenerovat formatovane meno pre pouzivatela s id ' . $this->getId());
         }
-        return $this->getDisplayName();
+        return $formattedName;
     }
 
     public function getLogin() {

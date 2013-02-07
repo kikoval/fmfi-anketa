@@ -86,7 +86,7 @@ class AISUserSource implements UserSourceInterface
     public function load(UserSeason $userSeason)
     {
         $user = $userSeason->getUser();
-        if (!$user->hasDisplayName()) {
+        if ($user->getDisplayName() === null) {
             $user->setDisplayName($this->aisRetriever->getFullName());
         }
         

@@ -19,7 +19,7 @@ class ResponseController extends Controller {
 
         $response = new Response();
         $response->setAuthorLogin($user->getLogin());
-        $response->setAuthorText($user->getDisplayName());
+        $response->setAuthorText($user->getFormattedName());
         $response->setSeason($section->getSeason());
         $response->setTeacher($section->getTeacher());
         $response->setSubject($section->getSubject());

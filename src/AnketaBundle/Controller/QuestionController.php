@@ -217,7 +217,7 @@ class QuestionController extends Controller {
         }
 
         $templateParams = array();
-        $templateParams['title'] = $subject->getName() . ' - ' . $teacher->getDisplayName();
+        $templateParams['title'] = $subject->getName() . ' - ' . $teacher->getFormattedName();
         $templateParams['activeItems'] = array('subject', $subject->getId(), $teacher->getId());
         $templateParams['questions'] = $questions;
         $templateParams['answers'] = $answers;
