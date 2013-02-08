@@ -13,7 +13,7 @@ namespace AnketaBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
-use \PDO;
+use PDO;
 
 class UserRepository extends EntityRepository {
 
@@ -37,117 +37,129 @@ class UserRepository extends EntityRepository {
         $em = $this->getEntityManager();
         $conn = $em->getConnection();
         $conn->beginTransaction();
+        try {
 
-        // Mozno nevkladat nove riadky, ale rovno scitavat na sposob
-        // ON DUPLICATE KEY UPDATE count=count+1
-        // (neslo to priamo spravit, lebo problem s NULL v unique kluci)
-        $insertVoteSummary = $conn->prepare("
-            INSERT INTO SectionVoteSummary (category_id, subject_id, teacher_id, season_id, count)
-            SELECT DISTINCT q.category_id, a.subject_id, a.teacher_id, :season_id, 1
-            FROM Answer a, Question q
-            WHERE a.author_id = :user_id AND a.season_id = :season_id
-            AND q.id = a.question_id
-            AND NOT(a.option_id IS NULL AND comment IS NULL)
-        ");
+            // Mozno nevkladat nove riadky, ale rovno scitavat na sposob
+            // ON DUPLICATE KEY UPDATE count=count+1
+            // (neslo to priamo spravit, lebo problem s NULL v unique kluci)
+            $insertVoteSummary = $conn->prepare("
+                INSERT INTO SectionVoteSummary (category_id, subject_id, teacher_id, season_id, count)
+                SELECT DISTINCT q.category_id, a.subject_id, a.teacher_id, :season_id, 1
+                FROM Answer a, Question q
+                WHERE a.author_id = :user_id AND a.season_id = :season_id
+                AND q.id = a.question_id
+                AND NOT(a.option_id IS NULL AND comment IS NULL)
+            ");
 
-        $insertVoteSummary->bindValue('season_id', $season->getId(), PDO::PARAM_INT);
-        $insertVoteSummary->bindValue('user_id', $user->getId(), PDO::PARAM_INT);
-        if (!$insertVoteSummary->execute()) {
-            throw new \Exception("Failed to create voting summaries!");
+            $insertVoteSummary->bindValue('season_id', $season->getId(), PDO::PARAM_INT);
+            $insertVoteSummary->bindValue('user_id', $user->getId(), PDO::PARAM_INT);
+            if (!$insertVoteSummary->execute()) {
+                throw new \Exception("Failed to create voting summaries!");
+            }
+
+            $q = $em->createQueryBuilder()
+                    ->update('AnketaBundle\Entity\Answer', 'a')
+                    ->set('a.author', ':nobody')
+                    ->where('a.author = :user AND a.season = :season')
+                    ->getQuery();
+            $q->setParameters(array(
+                'nobody' => null,
+                'user' => $user,
+                'season' => $season
+             ));
+            $result = $q->execute();
+
+            $conn->commit();
+            return $result;
+            
+        } catch (\Exception $e) {
+            $conn->rollback();
+            throw $e;
         }
-
-        $q = $em->createQueryBuilder()
-                ->update('AnketaBundle\Entity\Answer', 'a')
-                ->set('a.author', ':nobody')
-                ->where('a.author = :user AND a.season = :season')
-                ->getQuery();
-        $q->setParameters(array(
-            'nobody' => null,
-            'user' => $user,
-            'season' => $season
-         ));
-        $result = $q->execute();
-
-        $conn->commit();
-        return $result;
     }
 
     public function anonymizeAllAnswersAndCreateSummaries(Season $season) {
         $em = $this->getEntityManager();
         $conn = $em->getConnection();
-        $conn->beginTransaction();
+        try {
+            $conn->beginTransaction();
 
-        $insertVoteSubSummary = $conn->prepare("
-            INSERT INTO SectionVoteSummary (category_id, subject_id, teacher_id, season_id, count)
-            SELECT q.category_id, a.subject_id, a.teacher_id, :season_id, COUNT(*)
-            FROM Answer a, Question q
-            WHERE a.season_id = :season_id
-            AND q.id = a.question_id
-            AND a.author_id IS NOT NULL
-            AND NOT(a.option_id IS NULL AND comment IS NULL)
-            GROUP BY q.category_id, a.subject_id, a.teacher_id
-        ");
+            $insertVoteSubSummary = $conn->prepare("
+                INSERT INTO SectionVoteSummary (category_id, subject_id, teacher_id, season_id, count)
+                SELECT q.category_id, a.subject_id, a.teacher_id, :season_id, COUNT(*)
+                FROM Answer a, Question q
+                WHERE a.season_id = :season_id
+                AND q.id = a.question_id
+                AND a.author_id IS NOT NULL
+                AND NOT(a.option_id IS NULL AND comment IS NULL)
+                GROUP BY q.category_id, a.subject_id, a.teacher_id
+            ");
 
-        $insertVoteSubSummary->bindValue('season_id', $season->getId(), PDO::PARAM_INT);
-        if (!$insertVoteSubSummary->execute()) {
-            throw new \Exception("Failed to create voting summaries!");
-        }
+            $insertVoteSubSummary->bindValue('season_id', $season->getId(), PDO::PARAM_INT);
+            if (!$insertVoteSubSummary->execute()) {
+                throw new \Exception("Failed to create voting summaries!");
+            }
 
-        // vyselectujem sucty, pre kazdy zmazem relevantne riadky a pridam jeden novy
+            // vyselectujem sucty, pre kazdy zmazem relevantne riadky a pridam jeden novy
 
-        $computeVoteSummary = $conn->prepare("
-            SELECT teacher_id, subject_id, category_id, SUM(count) as count
-            FROM `sectionvotesummary`
-            WHERE season_id = :season_id
-            GROUP BY teacher_id, subject_id, category_id
-        ");
-        $computeVoteSummary->bindValue('season_id', $season->getId(), PDO::PARAM_INT);
-        if (!$computeVoteSummary->execute()) {
-            throw new \Exception("Failed to compute total voting summaries!");
-        }
-        $summaries = $computeVoteSummary->fetchAll();
+            $computeVoteSummary = $conn->prepare("
+                SELECT teacher_id, subject_id, category_id, SUM(count) as count
+                FROM `sectionvotesummary`
+                WHERE season_id = :season_id
+                GROUP BY teacher_id, subject_id, category_id
+            ");
+            $computeVoteSummary->bindValue('season_id', $season->getId(), PDO::PARAM_INT);
+            if (!$computeVoteSummary->execute()) {
+                throw new \Exception("Failed to compute total voting summaries!");
+            }
+            $summaries = $computeVoteSummary->fetchAll();
 
-        $deleteVoteSummary = $conn->prepare("
-            DELETE FROM `sectionvotesummary`
-            WHERE season_id = :season_id
-        ");
-        $deleteVoteSummary->bindValue('season_id', $season->getId(), PDO::PARAM_INT);
-        if (!$deleteVoteSummary->execute()) {
-            throw new \Exception("Failed to remove subtotal voting summaries!");
-        }
+            $deleteVoteSummary = $conn->prepare("
+                DELETE FROM `sectionvotesummary`
+                WHERE season_id = :season_id
+            ");
+            $deleteVoteSummary->bindValue('season_id', $season->getId(), PDO::PARAM_INT);
+            if (!$deleteVoteSummary->execute()) {
+                throw new \Exception("Failed to remove subtotal voting summaries!");
+            }
 
-        // This could be done faster by using just one insert query.
-        // Since this method will be called very seldom,
-        // the speed gain doesn't convince me to write ugly complicated code
-        // which would achieve it.
-        foreach ($summaries as $summary) {
+            // This could be done faster by using just one insert query.
+            // Since this method will be called very seldom,
+            // the speed gain doesn't convince me to write ugly complicated code
+            // which would achieve it.
             $insertVoteSummary = $conn->prepare("
                 INSERT INTO SectionVoteSummary (category_id, subject_id, teacher_id, season_id, count)
                 VALUES (:category_id, :subject_id, :teacher_id, :season_id, :count)
             ");
-            foreach ($summary as $name => $value) {
-                $insertVoteSummary->bindValue($name, $value, PDO::PARAM_INT);
+            foreach ($summaries as $summary) {
+                foreach ($summary as $name => $value) {
+                    $insertVoteSummary->bindValue($name, $value, PDO::PARAM_INT);
+                }
+                $insertVoteSummary->bindValue('season_id', $season->getId(), PDO::PARAM_INT);
+                if (!$insertVoteSummary->execute()) {
+                    throw new \Exception("Failed to insert SectionVoteSummary!");
+                }
             }
-            $insertVoteSummary->bindValue('season_id', $season->getId(), PDO::PARAM_INT);
-            if (!$insertVoteSummary->execute()) {
-                throw new \Exception("Failed to insert SectionVoteSummary!");
+
+            $q = $em->createQueryBuilder()
+                    ->update('AnketaBundle\Entity\Answer', 'a')
+                    ->set('a.author', ':nobody')
+                    ->where('a.season = :season')
+                    ->getQuery();
+            $q->setParameters(array(
+                'nobody' => null,
+                'season' => $season
+             ));
+            if (!$q->execute()) {
+                throw new \Exception('Failed to anonymize answers!');
             }
-        }
 
-        $q = $em->createQueryBuilder()
-                ->update('AnketaBundle\Entity\Answer', 'a')
-                ->set('a.author', ':nobody')
-                ->where('a.season = :season')
-                ->getQuery();
-        $q->setParameters(array(
-            'nobody' => null,
-            'season' => $season
-         ));
-        if (!$q->execute()) {
-            throw new \Exception('Failed to anonymize answers!');
+            $conn->commit();
+            
+        } catch (\Exception $e) {
+            $conn->rollback();
+            throw $e;
         }
-
-        $conn->commit();
     }
 
     public function getNumberOfVoters($season) {
