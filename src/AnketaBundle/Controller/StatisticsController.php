@@ -361,7 +361,7 @@ class StatisticsController extends Controller {
 
         $templateParams = array();
         $templateParams['section'] = $section;
-        $templateParams['responses'] = $this->processResponses($section->getResponses());
+        $templateParams['responses'] = $section->getResponses();
 
         $limit = $section->getMinVoters();
         if ($maxCnt >= $limit || $this->get('anketa.access.statistics')->hasFullResults()) {
@@ -400,31 +400,6 @@ class StatisticsController extends Controller {
         $templateParams['activeMenuItems'] = array($season->getId(), 'general');
         $templateParams['items'] = $items;
         return $this->render('AnketaBundle:Statistics:listing.html.twig', $templateParams);
-    }
-
-    private function processResponses($responses)
-    {
-        $result = array();
-        $em = $this->get('doctrine.orm.entity_manager');
-        $userRepository = $em->getRepository('AnketaBundle:User');
-        foreach ($responses as $response)
-        {
-            $item = array();
-            $item['response'] = $response;
-            // TODO: zjednotit nejak spravanie (author text vs author login)
-            $item['author'] = $response->getAuthorText();
-            if ($response->getAuthorLogin())
-            {
-                $user = $userRepository
-                           ->findOneBy(array('login' => $response->getAuthorLogin()));
-                if (!empty($user)) $item['author'] = $user->getFormattedName();
-            }
-            if ($response->getAssociation()) {
-                $item['author'] .= ' (' . $response->getAssociation() . ')';
-            }
-            $result[] = $item;
-        }
-        return $result;
     }
 
     public function flagInappropriateAction($answer_id) {

@@ -49,14 +49,10 @@ class Response {
     protected $season;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\JoinColumn(nullable=false)
      */
-    protected $author_text;
-
-    /**
-     * @ORM\Column(type="text")
-     */
-    protected $author_login;
+    protected $author;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -129,31 +125,17 @@ class Response {
     }
 
     /**
-     * @param string $value
+     * @param User $value
      */
-    public function setAuthorText($value) {
-        $this->author_text = $value;
+    public function setAuthor($value) {
+        $this->author = $value;
     }
 
     /**
-     * @return string the author
+     * @return User the author
      */
-    public function getAuthorText() {
-        return $this->author_text;
-    }
-
-    /**
-     * @param string $value
-     */
-    public function setAuthorLogin($value) {
-        $this->author_login = $value;
-    }
-
-    /**
-     * @return string the author
-     */
-    public function getAuthorLogin() {
-        return $this->author_login;
+    public function getAuthor() {
+        return $this->author;
     }
 
     /**
