@@ -104,7 +104,7 @@ class UserRepository extends EntityRepository {
 
             $computeVoteSummary = $conn->prepare("
                 SELECT teacher_id, subject_id, category_id, SUM(count) as count
-                FROM `sectionvotesummary`
+                FROM SectionVoteSummary
                 WHERE season_id = :season_id
                 GROUP BY teacher_id, subject_id, category_id
             ");
@@ -115,7 +115,7 @@ class UserRepository extends EntityRepository {
             $summaries = $computeVoteSummary->fetchAll();
 
             $deleteVoteSummary = $conn->prepare("
-                DELETE FROM `sectionvotesummary`
+                DELETE FROM SectionVoteSummary
                 WHERE season_id = :season_id
             ");
             $deleteVoteSummary->bindValue('season_id', $season->getId(), PDO::PARAM_INT);
