@@ -54,18 +54,21 @@ class StatisticsMenu
                         array('season_slug' => $season->getSlug())));
 
                 // Add "Study programmes" under this season.
-                $seasonItem->children['study_programs'] = $studyProgramsItem = new MenuItem(
-                    'Študijné programy',
-                    $this->generateUrl('statistics_list_programs',
-                        array('season_slug' => $season->getSlug())));
-                if (isset($activeItems[1]) && $activeItems[1] == 'study_programs') {
-                    $studyProgramsItem->expanded = true;
-                    $studyPrograms = $em->getRepository('AnketaBundle:StudyProgram')->getAllWithAnswers($season);
-                    foreach ($studyPrograms as $studyProgram) {
-                        // Add this study program under "Study programmes".
-                        $studyProgramSection = StatisticsSection::makeStudyProgramSection($this->container, $season, $studyProgram);
-                        $studyProgramsItem->children[$studyProgram->getCode()] = new MenuItem(
-                            $studyProgram->getCode(), $studyProgramSection->getStatisticsPath());
+                $studyProgramRepository = $em->getRepository('AnketaBundle:StudyProgram');
+                if ($studyProgramRepository->countForSeason($season) > 0) {
+                    $seasonItem->children['study_programs'] = $studyProgramsItem = new MenuItem(
+                        'Študijné programy',
+                        $this->generateUrl('statistics_list_programs',
+                            array('season_slug' => $season->getSlug())));
+                    if (isset($activeItems[1]) && $activeItems[1] == 'study_programs') {
+                        $studyProgramsItem->expanded = true;
+                        $studyPrograms = $studyProgramRepository->getAllWithAnswers($season);
+                        foreach ($studyPrograms as $studyProgram) {
+                            // Add this study program under "Study programmes".
+                            $studyProgramSection = StatisticsSection::makeStudyProgramSection($this->container, $season, $studyProgram);
+                            $studyProgramsItem->children[$studyProgram->getCode()] = new MenuItem(
+                                $studyProgram->getCode(), $studyProgramSection->getStatisticsPath());
+                        }
                     }
                 }
 

@@ -334,6 +334,10 @@ class StatisticsController extends Controller {
             $section = StatisticsSection::makeStudyProgramSection($this->container, $season, $studyProgram);
             $items[$section->getTitle()] = $section->getStatisticsPath();
         }
+        
+        if (count($items) == 0) {
+            throw new NotFoundHttpException("Žiadne študijné programy v tejto sezóne nenájdené");
+        }
 
         $templateParams = array();
         $templateParams['title'] = 'Študijné programy';

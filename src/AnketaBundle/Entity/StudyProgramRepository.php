@@ -80,5 +80,19 @@ class StudyProgramRepository extends EntityRepository {
         $query->setParameter('season', $season);
         return $query->getResult();
     }
+    
+    public function countForSeason(Season $season) {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery("SELECT COUNT(DISTINCT sp)
+                           FROM AnketaBundle\\Entity\\StudyProgram sp,
+                           AnketaBundle\\Entity\\Answer a
+                           WHERE sp.id = a.studyProgram
+                           AND a.teacher IS NULL
+                           AND a.subject IS NULL
+                           AND a.season = :season
+                           AND ((a.option IS NOT NULL) OR (a.comment IS NOT NULL))");
+        $query->setParameter('season', $season);
+        return $query->getSingleScalarResult();
+    }
 
 }
