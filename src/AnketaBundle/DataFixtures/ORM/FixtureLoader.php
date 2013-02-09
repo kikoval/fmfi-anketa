@@ -30,14 +30,14 @@ use DateTime;
 
 /**
  * Class for loading basic development data
- * 
+ *
  * @package    Anketa
  * @subpackage Anketa__Controller__DataFixtures__ORM
  * @author     Jakub Markoš <jakub.markos@gmail.com>
  */
 
 class FixtureLoader implements FixtureInterface {
-    
+
     /**
      * Load data fixtures with the passed EntityManager
      *
@@ -68,7 +68,7 @@ class FixtureLoader implements FixtureInterface {
         $o2 = new Option('nepaci sa mi', 0);
         $o3 = new Option('chcelo by to premalovat', 100);
         $question1->setOptions(new ArrayCollection(array('0' => $o1, $o2, $o3)));
-        
+
         $question2 = new Question('Co nove ste sa dozvedeli na tomto predmete?');
         $question2->setCategory($cat4);
         $question2->setDescription('Berte do uvahy mnozstvo informacii a podobne.');
@@ -90,7 +90,7 @@ class FixtureLoader implements FixtureInterface {
         $question5->addOption($opt4);
         $question5->addOption($opt5);
         $question5->setHasComment(false);
-        
+
         $question3 = new Question('Ohodnotte osvetlenie chodieb');
         $question3->setCategory($cat1);
         $question3->setStars(true);
@@ -100,7 +100,7 @@ class FixtureLoader implements FixtureInterface {
         $question4->setCategory($cat3);
         $question4->setStars(true);
         $question4->generateStarOptions();
-        
+
         $manager->persist($question1);
         $manager->persist($question2);
         $manager->persist($question3);
@@ -118,7 +118,7 @@ class FixtureLoader implements FixtureInterface {
         $season->setResponsesVisible(false);
         $season->setOrdering(0);
         $manager->persist($season);
-        
+
         // create teacher + subject
         $teacher1 = new Teacher('Janko', 'Hraško', 'RNDr. Janko Hraško, PhD.', 'hrasko1');
         $teacher2 = new Teacher('Jožko', 'Mrkvička', 'Mgr. Jožko Mrkvička', 'mrkvicka47');
@@ -137,7 +137,7 @@ class FixtureLoader implements FixtureInterface {
         // predmet ktory nikto nenavstevuje
         $sub4 = new Subject('FMFI voľno');
         $sub4->setCode('fmfi');
-        
+
         // priradenie ucitelov k predmetom
         $manager->persist(new TeachersSubjects($teacher1, $sub1, $season, true));
         $manager->persist(new TeachersSubjects($teacher2, $sub2, $season));
@@ -155,7 +155,7 @@ class FixtureLoader implements FixtureInterface {
         $manager->persist($sub2);
         $manager->persist($sub3);
         $manager->persist($sub4);
-        
+
         $subSeason1 = new SubjectSeason();
         $subSeason1->setSeason($season);
         $subSeason1->setSubject($sub1);
@@ -198,32 +198,32 @@ class FixtureLoader implements FixtureInterface {
         $roleAdmin = new Role('ROLE_ADMIN');
         $roleUser = new Role('ROLE_USER');
         $roleSuperAdmin = new Role('ROLE_SUPER_ADMIN');
-        
+
         $studyProgramINF = new StudyProgram();
         $studyProgramINF->setCode('INF');
         $studyProgramINF->setName('informatika');
         $studyProgramINF->setSlug('INF');
         $manager->persist($studyProgramINF);
-        
+
         $studyProgramMINF = new StudyProgram();
         $studyProgramMINF->setCode('mINF');
         $studyProgramMINF->setName('informatika');
         $studyProgramMINF->setSlug('mINF');
         $manager->persist($studyProgramMINF);
-	
+
         $developers = array('sucha14'   =>  'Bc. Martin Sucha',
                             'trancik1'  =>  'Bc. Ivan Trančík',
                             'marek11'   =>  'Bc. Jakub Marek',
                             'belan14'   =>  'Tomáš Belan',
                             'kralik3'   =>  'Mgr. Martin Králik');
-        
+
         $subs = array($sub1, $sub2, $sub3);
-        
+
         foreach ($developers as $login => $displayName) {
             $user = new User($login);
             $user->setDisplayName($displayName);
             $user->addRole($roleSuperAdmin);
-            
+
             foreach ($subs as $idx=>$sub) {
                 $usersSubjects = new UsersSubjects();
                 $usersSubjects->setSeason($season);
@@ -232,15 +232,15 @@ class FixtureLoader implements FixtureInterface {
                 $usersSubjects->setUser($user);
                 $manager->persist($usersSubjects);
             }
-            
+
             $manager->persist($user);
-            
+
             $userSeason = new UserSeason();
             $userSeason->setUser($user);
             $userSeason->setSeason($season);
             $manager->persist($userSeason);
         }
-        
+
 //
         foreach ($subs as $idx=>$sub) {
             $usersSubjects = new UsersSubjects();
@@ -250,7 +250,7 @@ class FixtureLoader implements FixtureInterface {
             $usersSubjects->setUser($userFoo);
             $manager->persist($usersSubjects);
         }
-            
+
         $userFoo->addRole($roleUser);
 
         $userAdmin->addRole($roleAdmin);

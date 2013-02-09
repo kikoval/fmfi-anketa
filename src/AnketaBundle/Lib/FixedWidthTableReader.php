@@ -15,26 +15,26 @@ use Exception;
 
 /**
  * Parses fixed width tables.
- * @todo Make multibyte aware 
+ * @todo Make multibyte aware
  */
 class FixedWidthTableReader implements TableReaderInterface
 {
-    
+
     /** @var resource file handle */
     private $fp;
-    
+
     /** @var array */
     private $columns;
-    
+
     /** @var array */
     private $header;
-    
+
     /**
      *
      * @param type $fp file handle to read from
      * @param type $delimiter
      * @param type $enclosure
-     * @param type $escape 
+     * @param type $escape
      */
     public function __construct($fp)
     {
@@ -43,7 +43,7 @@ class FixedWidthTableReader implements TableReaderInterface
         $this->header = array();
         $this->parseHeader();
     }
-    
+
     private function parseHeader()
     {
         $firstLine = $this->readLine();
@@ -60,7 +60,7 @@ class FixedWidthTableReader implements TableReaderInterface
         }
         $this->header = $this->parseLine($firstLine);
     }
-    
+
     private function readLine()
     {
         $line = fgets($this->fp);
@@ -71,14 +71,14 @@ class FixedWidthTableReader implements TableReaderInterface
         }
         return $line;
     }
-    
+
     public function readRow()
     {
        $line = $this->readLine();
        if ($line === false) return false;
        return $this->parseLine($line);
     }
-    
+
     private function parseLine($line)
     {
         $vals = array();
@@ -95,5 +95,5 @@ class FixedWidthTableReader implements TableReaderInterface
         return $this->header;
     }
 
-    
+
 }

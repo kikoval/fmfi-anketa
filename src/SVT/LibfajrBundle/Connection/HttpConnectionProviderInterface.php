@@ -19,7 +19,7 @@ interface HttpConnectionProviderInterface
 {
     /**
      * Provide a connection to be used to connect to a server
-     * 
+     *
      * @return HttpConnection
      */
     function provideConnection();

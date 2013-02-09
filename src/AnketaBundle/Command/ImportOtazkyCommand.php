@@ -38,7 +38,6 @@ class ImportOtazkyCommand extends AbstractImportCommand {
                 ->setName('anketa:import:otazky')
                 ->setDescription('Importuj otazky z yaml')
                 ->addSeasonOption()
-                ->addOption('no-duplicates-check', 'c', InputOption::VALUE_OPTIONAL, 'Don\'t check for duplicate categories', null)
                 ->addOption('dry-run', 'r', InputOption::VALUE_NONE, 'Dry run. Won\'t modify database')
         ;
     }
@@ -56,18 +55,11 @@ class ImportOtazkyCommand extends AbstractImportCommand {
     protected function execute(InputInterface $input, OutputInterface $output) {
         $manager = $this->getContainer()->get('doctrine')->getEntityManager();
         $filename = $input->getArgument('file');
-        $checkDuplicatesOption = $input->getOption('no-duplicates-check');
         $manager->getConnection()->beginTransaction();
 
         $season = $this->getSeason($input);
 
         $input_array = Yaml::parse($filename);
-
-        // checkDuplicates
-        if ($checkDuplicatesOption === null) {
-            $this->checkDuplicates($input_array, $manager, $output);
-            return;
-        }
 
         // spracuj kategorie
         $categories = $input_array["kategorie"];
@@ -79,12 +71,17 @@ class ImportOtazkyCommand extends AbstractImportCommand {
         // spracuj otazky
         $questions = $input_array["otazky"];
         $questionPos = 0;
+        $skippedQ = 0;
         foreach ($questions as $question) {
-            $this->processQuestion($question, $manager, $season, $questionPos);
-            $questionPos++;
+            if ($this->processQuestion($question, $manager, $season, $questionPos)) {
+                $questionPos++;
+            } else {
+                $skippedQ++;
+            }
         }
         $manager->flush();
-        $output->writeln('Naimportovanych otazok: '.$questionPos);
+        $output->writeln('Naimportovanych otazok: ' . $questionPos);
+        $output->writeln('Preskocenych uz existujucich otazok: ' . $skippedQ);
 
         $dryRunOption = $input->getOption('dry-run');
         if (!$dryRunOption) {
@@ -166,46 +163,32 @@ class ImportOtazkyCommand extends AbstractImportCommand {
                 $question->addOption($op);
             }
         }
-        if (array_key_exists("hlavne_hodnotenie_predmetu", $import)
-            && $import["hlavne_hodnotenie_predmetu"] == "Yes") {
-            $question->setIsSubjectEvaluation(true);
-        } else {
-            $question->setIsSubjectEvaluation(false);
-        }
-        if (array_key_exists("hlavne_hodnotenie_vyucujuceho", $import)
-            && $import["hlavne_hodnotenie_vyucujuceho"] == "Yes") {
-            $question->setIsTeacherEvaluation(true);
-        } else {
-            $question->setIsTeacherEvaluation(false);
+
+        $question->setIsSubjectEvaluation($this->checkBool($import, "hlavne_hodnotenie_predmetu"));
+        $question->setIsTeacherEvaluation($this->checkBool($import, "hlavne_hodnotenie_ucitela"));
+
+        $questionRepository = $manager->getRepository('AnketaBundle\Entity\Question');
+        $objekt = $questionRepository->findOneBy(array(
+            'season' => $season,
+            'question' => $question->getQuestion(),
+            'stars' => $question->getStars(),
+            'hasComment' => $question->getHasComment(),
+        ));
+
+        if ($objekt != null) {
+            // Aj ked tato otazka este nie je v DB uz o nej vie asociovana kategoria.
+            // Toto prepojenie musime zrusit, inak nam to nepovoli otazku neulozit.
+            $associatedQ = $question->getCategory()->getQuestions()->removeElement($question);
+            return false;
         }
 
         $question->setSeason($season);
         $manager->persist($question);
+        return true;
     }
 
-    private function checkDuplicates(array $import, EntityManager $manager, OutputInterface $output) {
-        $categories = $import["kategorie"];
-        $questions = $import["otazky"];
-
-        $sectionIdMap = array(
-            'vseobecne' => CategoryType::GENERAL,
-            'predmety' => CategoryType::SUBJECT,
-            'predmety_ucitel' => CategoryType::TEACHER_SUBJECT,
-            'studijnyprogram' => CategoryType::STUDY_PROGRAMME,
-        );
-        $categoryRepository = $manager->getRepository('AnketaBundle\Entity\Category');
-        foreach ($categories as $category) {
-            $kat = $sectionIdMap[$category['kategoria']];
-            $typ = $category["popis"];
-            $objekt = $categoryRepository->findOneBy(
-                    array('type' => $kat,
-                        'description' => $typ));
-            if ($objekt == null) {
-                $output->writeln('Kategoria '.$kat.' s typom '.$typ.' sa v databaze NEnachadza.');
-            } else {
-                $output->writeln('Kategoria '.$kat.' s typom '.$typ.' sa uz v databaze nachadza.');
-            }
-        }
+    private function checkBool(array $arr, $key) {
+        return array_key_exists($key, $arr) && $arr[$key] == 'Yes';
     }
 
 }

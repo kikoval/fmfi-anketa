@@ -17,10 +17,10 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="AnketaBundle\Entity\DepartmentRepository")
  */
 class Department {
-    
+
     /**
-     * @ORM\Id 
-     * @ORM\GeneratedValue 
+     * @ORM\Id
+     * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
     protected $id;
@@ -30,20 +30,20 @@ class Department {
      * @var string
      */
     protected $code;
-    
+
     /**
      * @ORM\Column(type="string")
      * @var string
      */
     protected $name;
-    
+
     /**
      * Homepage URL
      * @ORM\Column(type="string", nullable=true)
      * @var string
      */
     protected $homepage;
-    
+
     public function getCode() {
         return $this->code;
     }
@@ -55,7 +55,7 @@ class Department {
     public function getId() {
         return $this->id;
     }
-    
+
     public function getName() {
         return $this->name;
     }
@@ -71,10 +71,10 @@ class Department {
     public function setHomepage($homepage) {
         $this->homepage = $homepage;
     }
-    
+
     public function getSlug() {
         // TODO make slug a real column
         return str_replace('.', '-', $this->getCode());
     }
-    
+
 }

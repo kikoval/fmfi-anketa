@@ -1,6 +1,6 @@
 <?php
 /**
- * This file contains user source interface 
+ * This file contains user source interface
  *
  * @copyright Copyright (c) 2011,2012 The FMFI Anketa authors (see AUTHORS).
  * Use of this source code is governed by a license that can be

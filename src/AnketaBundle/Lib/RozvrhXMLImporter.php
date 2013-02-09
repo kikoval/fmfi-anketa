@@ -21,15 +21,15 @@ use SVT\RozvrhXML\Importer;
  * @author     Martin Sucha <anty.sk@gmail.com>
  */
 class RozvrhXMLImporter extends Importer {
-    
+
     /** @var SubjectIdentification */
     private $subjectIdentification;
-    
+
     public function __construct(PDO $connection, SubjectIdentificationInterface $subjectIdentification) {
         parent::__construct($connection);
         $this->subjectIdentification = $subjectIdentification;
     }
-    
+
     protected function getTableDefinitions() {
         $tables = parent::getTableDefinitions();
         $tables['predmet']['columns']['slug'] = 'varchar(255)';

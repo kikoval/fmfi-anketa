@@ -47,13 +47,13 @@ class ImportPredmetKatedraCommand extends AbstractImportCommand {
      * @throws \LogicException When this abstract class is not implemented
      */
     protected function execute(InputInterface $input, OutputInterface $output) {
-        
+
         $file = $this->openFile($input);
         $season = $this->getSeason($input);
 
         $subjectIdentification = $this->getContainer()->get('anketa.subject_identification');
         $tableReader = new NativeCSVTableReader($file);
-        
+
         $conn = $this->getContainer()->get('database_connection');
 
         $conn->beginTransaction();
@@ -63,7 +63,7 @@ class ImportPredmetKatedraCommand extends AbstractImportCommand {
                     SELECT s.id, :season FROM Subject s WHERE s.slug = :subject_slug
                     ON DUPLICATE KEY UPDATE subject_id=subject_id
                     ");
-        
+
         $insertSubjectSeasonDepartment = $conn->prepare("
                     INSERT INTO SubjectSeasonDepartment (subjectSeason_id, department_id)
                     SELECT ss.id, d.id FROM Subject s, SubjectSeason ss, Department d
@@ -73,20 +73,20 @@ class ImportPredmetKatedraCommand extends AbstractImportCommand {
 
         try {
             while (($row = $tableReader->readRow()) !== false) {
-                
+
                 $subjectCode = $row[0];
                 $stredisko = $row[1];
                 $subjectName = $row[2];
-                
+
                 $props = $subjectIdentification->identify($subjectCode, $subjectName);
                 $kod = $props['code'];
                 $nazov = $props['name'];
                 $slug = $props['slug'];
-                
+
                 $insertSubjectSeason->bindValue('subject_slug', $slug);
                 $insertSubjectSeason->bindValue('season', $season->getId());
                 $insertSubjectSeason->execute();
-                
+
                 $insertSubjectSeasonDepartment->bindValue('season_id', $season->getId());
                 $insertSubjectSeasonDepartment->bindValue('subject_slug', $slug);
                 $insertSubjectSeasonDepartment->bindValue('department_code', $stredisko);

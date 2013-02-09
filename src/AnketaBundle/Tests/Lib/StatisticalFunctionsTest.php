@@ -29,37 +29,37 @@ class StatisticalFunctionsTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(1.379, StatisticalFunctions::average($data),
                 '', 0.001);
     }
-    
+
     public function testMedianOdd() {
         $data = array(0.86, 1.53, 1.57, 1.81, 0.99, 1.09, 1.29, 1.78, 1.29);
         $this->assertEquals(1.29, StatisticalFunctions::median($data),
                 '', 0.001);
     }
-    
+
     public function testMedianOddMore() {
         $data = array(0.86, 1.53, 1.57, 1.81, 0.99, 1.09, array(1.29, 2), 1.78);
         $this->assertEquals(1.29, StatisticalFunctions::median($data),
                 '', 0.001);
     }
-    
+
     public function testMedianEvenMore() {
         $data = array(0.86, 1.53, 1.57, 1.81, 0.99, 1.09, array(1.29, 2), 1.78, 1.58);
         $this->assertEquals(1.41, StatisticalFunctions::median($data),
                 '', 0.001);
     }
-    
+
     public function testMedianEvenInside() {
         $data = array(array(2.56, 4), array(1.29, 6));
         $this->assertEquals(1.29, StatisticalFunctions::median($data),
                 '', 0.001);
     }
-    
+
     public function testMedian2() {
         $data = array(array(-1, 2), array(1, 3));
         $this->assertEquals(1, StatisticalFunctions::median($data),
                 '', 0.001);
     }
-    
+
     public function testMedian3() {
         $data = array(-1, -1, 1, 1, 1);
         $this->assertEquals(1, StatisticalFunctions::median($data),
@@ -85,7 +85,7 @@ class StatisticalFunctionsTest extends PHPUnit_Framework_TestCase
         $this->setExpectedException("AnketaBundle\Lib\StatisticalException");
         StatisticalFunctions::average(array());
     }
-    
+
     public function testMedianNoPoint() {
         $this->setExpectedException("AnketaBundle\Lib\StatisticalException");
         StatisticalFunctions::median(array());

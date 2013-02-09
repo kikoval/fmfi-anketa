@@ -79,12 +79,12 @@ class StatisticalFunctions {
         }
         return array_sum(array_map(function ($x) {return $x[0] * $x[1];}, $data)) / $cnt;
     }
-    
+
     static function compareDataByValue($a, $b) {
         if ($a[0] == $b[0]) return 0;
         return ($a[0] < $b[0]) ? -1 : 1;
     }
-    
+
     /**
      * Return median of data points
      *

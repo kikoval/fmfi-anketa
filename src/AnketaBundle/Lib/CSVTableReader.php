@@ -15,33 +15,33 @@ use Exception;
 
 /**
  * Parses CSV lines.
- * @todo Make multibyte aware 
+ * @todo Make multibyte aware
  */
 class CSVTableReader implements TableReaderInterface
 {
-    
+
     /** @var string the field delimiter character */
     private $delimiter;
-    
+
     /** @var string string begin/end character */
     private $enclosure;
-    
+
     /** @var string escape character */
     private $escape;
-    
+
     /** @var resource file handle */
     private $fp;
-    
+
     /** @var array */
     private $header;
-    
-    
+
+
     /**
      *
      * @param type $fp file handle to read from
      * @param type $delimiter
      * @param type $enclosure
-     * @param type $escape 
+     * @param type $escape
      */
     public function __construct($fp, $delimiter=';',$enclosure='"',$escape='\\')
     {
@@ -51,7 +51,7 @@ class CSVTableReader implements TableReaderInterface
         $this->escape = $escape;
         $this->header = $this->readRow();
     }
-    
+
     public function readRow()
     {
         $line = fgets($this->fp);
@@ -114,5 +114,5 @@ class CSVTableReader implements TableReaderInterface
     public function getHeader() {
         return $this->header;
     }
-    
+
 }

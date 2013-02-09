@@ -36,11 +36,11 @@ class LDAPUserSource implements UserSourceInterface
     {
         $user = $userSeason->getUser();
         $uidFilter = '(uid=' . $this->ldapRetriever->escape($user->getLogin()) . ')';
-        
+
         if ($this->logger !== null) {
             $this->logger->info(sprintf('LDAP search with filter: %s', $uidFilter));
         }
-        
+
         $this->ldapRetriever->loginIfNotAlready();
         try {
             $userInfo = $this->ldapRetriever->searchOne($uidFilter, array('group', 'displayName'));
@@ -50,7 +50,7 @@ class LDAPUserSource implements UserSourceInterface
             $this->ldapRetriever->logoutIfNotAlready();
             throw $e;
         }
-        
+
         if ($userInfo === null) {
             if ($this->logger !== null) {
                 $this->logger->info(sprintf('User %s not found in LDAP'));
@@ -62,7 +62,7 @@ class LDAPUserSource implements UserSourceInterface
           count($userInfo['displayName']) > 0) {
             $user->setDisplayName($userInfo['displayName'][0]);
         }
-        
+
         $orgUnits = array();
         foreach ($userInfo['group'] as $group) {
             $matches = array();
@@ -70,7 +70,7 @@ class LDAPUserSource implements UserSourceInterface
                 $orgUnits[] = $matches[1];
             }
         }
-        
+
         $user->setOrgUnits($orgUnits);
         return true;
     }

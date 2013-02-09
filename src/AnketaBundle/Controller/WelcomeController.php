@@ -9,7 +9,7 @@
  * @package    Anketa
  * @subpackage Controller
  * @author     Martin Sucha <anty.sk+svt@gmail.com>
- * 
+ *
  */
 
 namespace AnketaBundle\Controller;

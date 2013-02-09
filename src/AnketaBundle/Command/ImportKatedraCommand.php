@@ -63,13 +63,13 @@ class ImportKatedraCommand extends AbstractImportCommand {
         $tableResolver->mapColumnByTitle('Typ OJ ', 'type');
         $tableResolver->mapColumnByTitle('Org. jednotka ', 'name');
         $tableResolver->mapColumnByTitle('Homepage ', 'homepage');
-        
+
         $conn = $this->getContainer()->get('database_connection');
 
         $conn->beginTransaction();
 
         $insertDepartment = $conn->prepare("
-                    INSERT INTO Department (code, name, homepage) 
+                    INSERT INTO Department (code, name, homepage)
                     VALUES (:code, :name, :homepage)");
 
         try {
@@ -79,21 +79,21 @@ class ImportKatedraCommand extends AbstractImportCommand {
                 $type = $row['type'];
                 $name = $row['name'];
                 $homepage = $row['homepage'];
-                
+
                 if ($type !== 'Kated') continue;
                 if ($parentFilter !== null && $parentOrgUnit !== $parentFilter) {
                     continue;
                 }
-                
+
                 if ($homepage === 'http://' || $homepage === '') {
                     $homepage = null;
                 }
-                
+
                 $insertDepartment->bindValue('code', $code);
                 $insertDepartment->bindValue('name', $name);
                 $insertDepartment->bindValue('homepage', $homepage);
                 $insertDepartment->execute();
-                
+
             }
         } catch (Exception $e) {
             $conn->rollback();

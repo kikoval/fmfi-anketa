@@ -28,7 +28,7 @@ class AnonymizaciaController extends Controller {
 
             return new RedirectResponse($this->generateUrl('anketa'));
         }
-        
+
         return $this->render('AnketaBundle:Anonymizacia:anonymizuj.html.twig');
     }
 

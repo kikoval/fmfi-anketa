@@ -18,9 +18,10 @@ class LDAPRetriever {
     private $linkId;
     private $serverUrl;
     private $baseDN;
-    
+
     public function __construct($serverUrl, $baseDN)
     {
+        if (!extension_loaded('ldap')) throw new \Exception('ldap extension is not enabled');
         $this->serverUrl = $serverUrl;
         $this->baseDN = $baseDN;
         $this->linkId = null;
@@ -34,19 +35,19 @@ class LDAPRetriever {
             $this->linkId = null;
             throw new \Exception('Failed to create LDAP resource');
         }
-        
+
         // Toto treba pre JAS-ovsky server
         if (!ldap_set_option($this->linkId, LDAP_OPT_PROTOCOL_VERSION, 3)) {
             $this->throwException();
         }
-        
+
         // Bindneme sa
         if (!ldap_bind($this->linkId)) {
             $this->throwException();
         }
-        
+
     }
-    
+
     public function logoutIfNotAlready()
     {
         if ($this->linkId !== null) {
@@ -60,7 +61,7 @@ class LDAPRetriever {
         $error = ldap_error($this->linkId);
         throw new \Exception('LDAP ' . $errno . ': ' . $error);
     }
-    
+
     private function fetchAttributes($entry) {
         $attrs = array();
         $attr = ldap_first_attribute($this->linkId, $entry);
@@ -73,14 +74,14 @@ class LDAPRetriever {
         }
         return $attrs;
     }
-    
+
     private function fetchEntry($entry, $attributes)
     {
         $data = array();
         foreach ($attributes as $attribute) {
             $data[$attribute] = array();
         }
-        
+
         foreach ($this->fetchAttributes($entry) as $attribute) {
             $ldapValues = ldap_get_values($this->linkId, $entry, $attribute);
             if ($ldapValues === false) {
@@ -92,7 +93,7 @@ class LDAPRetriever {
         }
         return $data;
     }
-    
+
     private function freeResult($result)
     {
         $ret = ldap_free_result($result);
@@ -100,7 +101,7 @@ class LDAPRetriever {
             $this->throwException();
         }
     }
-    
+
     private function firstEntry($result)
     {
         $entry = ldap_first_entry($this->linkId, $result);
@@ -109,7 +110,7 @@ class LDAPRetriever {
         }
         return $entry;
     }
-    
+
     private function nextEntry($entry)
     {
         $entry = ldap_next_entry($this->linkId, $entry);
@@ -118,7 +119,7 @@ class LDAPRetriever {
         }
         return $entry;
     }
-    
+
     private function getCount($result)
     {
         $count = ldap_count_entries($this->linkId, $result);
@@ -127,10 +128,10 @@ class LDAPRetriever {
         }
         return $count;
     }
-    
+
     private function runSearch($filter, $attributes)
     {
-        $result = ldap_search($this->linkId, $this->baseDN, $filter, $attributes);
+        $result = @ldap_search($this->linkId, $this->baseDN, $filter, $attributes);
         if ($result === false) {
             $this->throwException();
         }
@@ -142,50 +143,57 @@ class LDAPRetriever {
         $this->loginIfNotAlready();
         $result = $this->runSearch($filter, $attributes);
         $count = $this->getCount($result);
-        
+
         if ($count === 0) {
             return null;
         }
-        
+
         if ($count !== 1) {
             throw new \Exception('Only one result exected');
         }
-        
+
         $entry = $this->firstEntry($result);
         $data = $this->fetchEntry($entry, $attributes);
-        
+
         $this->freeResult($result);
-        
+
         return $data;
     }
-    
-    public function searchAll($filter, $attributes, $limit)
+
+    /**
+     * Contrary to the fuction name doesn't resturn all matching records.
+     * Result size is limited by server. Uniba doesn't return more than 5.
+     * @param string $filter
+     * @param array of string $attributes
+     * @return array
+     */
+    public function searchAll($filter, array $attributes)
     {
         $this->loginIfNotAlready();
         $result = $this->runSearch($filter, $attributes);
-        
+
         $count = $this->getCount($result);
-        
+
         $data = array();
-        
+
         if ($count === 0) {
             return $data;
         }
-        
+
         $entry = $this->firstEntry($result);
         $data[] = $this->fetchEntry($entry, $attributes);
-        
+
         for ($i = 1; $i < $count; $i++) {
             $entry = $this->nextEntry($entry);
             $data[] = $this->fetchEntry($entry, $attributes);
         }
-        
+
         $this->freeResult($result);
-        
+
         return $data;
-        
+
     }
-    
+
     /**
      * Escape LDAP filter value
      * @see http://www.ietf.org/rfc/rfc2254.txt

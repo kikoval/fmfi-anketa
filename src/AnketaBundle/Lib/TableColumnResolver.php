@@ -18,18 +18,18 @@ use Exception;
  */
 class TableColumnResolver
 {
-    
+
     /** @var array */
     private $columnMapping;
-    
+
     /** @var array */
     private $columnHeader;
-    
+
     /** @var TableReaderInterface */
     private $reader;
-    
+
     /**
-     * 
+     *
      * @param array $header table column headers
      */
     public function __construct(TableReaderInterface $reader)
@@ -38,7 +38,7 @@ class TableColumnResolver
         $this->columnHeader = $reader->getHeader();
         $this->reader = $reader;
     }
-    
+
     public function mapColumnByTitle($title, $label)
     {
         $keys = array_keys($this->columnHeader, $title, true);
@@ -50,7 +50,7 @@ class TableColumnResolver
         }
         $this->columnMapping[$label] = $keys[0];
     }
-    
+
     public function mapColumnByIndex($index, $label)
     {
         if (count($this->columnHeader) <= $index) {
@@ -58,7 +58,7 @@ class TableColumnResolver
         }
         $this->columnMapping[$label] = $index;
     }
-    
+
     public function readRow() {
         $row = $this->reader->readRow();
         if ($row === false) return false;
@@ -68,7 +68,7 @@ class TableColumnResolver
         }
         return $ret;
     }
-    
-    
-    
+
+
+
 }
