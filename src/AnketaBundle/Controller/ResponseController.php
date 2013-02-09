@@ -61,10 +61,11 @@ class ResponseController extends Controller {
                 return new RedirectResponse($section->getStatisticsPath());
             }
             else {
+                // delete
                 $em->remove($response);
                 $em->flush();
                 $this->get('session')->setFlash('success', 'Váš komentár bol zmazaný.');
-                return new RedirectResponse($this->generateUrl('response'));
+                return new RedirectResponse($this->generateUrl('response', array('season_slug' => $response->getSeason()->getSlug())));
             }
         }
         else {
