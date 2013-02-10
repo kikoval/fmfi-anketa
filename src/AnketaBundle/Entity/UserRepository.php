@@ -132,12 +132,6 @@ class UserRepository extends EntityRepository {
                 VALUES (:category_id, :subject_id, :teacher_id, :season_id, :count)
             ");
             foreach ($summaries as $summary) {
-                if ($summary['subject_id'] == 3324 && !$summary['teacher_id']) {
-                    var_dump($summary);
-                    var_dump($season->getId());
-                    throw new \Exception("found!");
-                }
-
                 foreach ($summary as $name => $value) {
                     $insertVoteSummary->bindValue($name, $value, PDO::PARAM_INT);
                 }
