@@ -69,6 +69,18 @@ abstract class AbstractSvtLinter extends ArcanistLinter {
         $output = array();
         $return = 0;
 
+        //get initial errors
+        $had_problems = false;
+        $func_ret = $this->runSvtLintScript(AbstractSvtLinter::ARG_ONLY_PRINT, $path_on_disk,
+                $output, $return);
+        if ($func_ret == AbstractSvtLinter::C_SCRIPT_ERR) {
+            $this->lintError($path_on_disk, "Error running external script");
+            return;
+        }
+        if ($func_ret == AbstractSvtLinter::C_PROB_DET) {
+            $had_problems = true;
+        }
+
         //per-file confirmation
         if ($perfile_confirm_opt) {
             if ($correct_opt) {
@@ -131,6 +143,19 @@ abstract class AbstractSvtLinter extends ArcanistLinter {
 
         //compose linter output
         $this->createLintMsgs($output, $path);
+
+        //if there were initially errors, report it
+        if ($had_problems) {
+            $message = new ArcanistLintMessage();
+            $message->setPath($path);
+            $message->setCode("SVT-LINTER");
+            $message->setName($this->getLinterName());
+            $message->setDescription("There were problems detected in the code. They might have been " .
+                    "corrected (if you do not see other warnings except for this one), but the ".
+                    "corrections will be included only in the next commit.");
+            $message->setSeverity(ArcanistLintSeverity::SEVERITY_WARNING);
+            $this->addLintMessage($message);
+        }
     }
 
     /********************************************************/
@@ -272,6 +297,12 @@ abstract class AbstractSvtLinter extends ArcanistLinter {
         $this->addLintMessage($message);
     }
 }
+
+
+
+
+
+
 
 
 
