@@ -15,3 +15,4 @@
 Thumbs.db
 *.pyc
 /src/lint/linters/bck/*.bck
+/src/lint/.phutil_module_cache
