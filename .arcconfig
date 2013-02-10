@@ -1,5 +1,13 @@
 {
   "project_id" : "Anketa",
   "conduit_uri" : "https://svt-devel.fmph.uniba.sk/",
-  "history.immutable" : true
+  "history.immutable" : true,
+  "load" : [
+    "src/lint"
+  ],
+  "lint.engine" : "SvtLintEngine",
+  "svtlint.print" : true,
+  "svtlint.correct" : true,
+  "svtlint.confirm" : true,
+  "svtlint.perfile" : false
 }

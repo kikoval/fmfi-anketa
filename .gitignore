@@ -13,3 +13,5 @@
 .DS_Store
 .*.sw[a-z]
 Thumbs.db
+*.pyc
+/src/lint/linters/bck/*.bck
