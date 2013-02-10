@@ -79,4 +79,3 @@ final class PhpLintSvtLinter extends AbstractSvtLinter {
         }
     }
 }
-

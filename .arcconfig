@@ -3,7 +3,7 @@
   "conduit_uri" : "https://svt-devel.fmph.uniba.sk/",
   "history.immutable" : true,
   "load" : [
-    "src/lint"
+    "lint"
   ],
   "lint.engine" : "SvtLintEngine",
   "svtlint.print" : true,

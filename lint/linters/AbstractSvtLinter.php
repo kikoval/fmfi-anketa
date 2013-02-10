@@ -14,7 +14,7 @@ abstract class AbstractSvtLinter extends ArcanistLinter {
     /* Constants
     /********************************************************/
 
-    const LINT_FOLDER = './src/lint/';
+    const LINT_FOLDER = './lint/';
 
     const C_ALL_OK = 0;
     const C_SCRIPT_ERR = 1;
@@ -297,13 +297,3 @@ abstract class AbstractSvtLinter extends ArcanistLinter {
         $this->addLintMessage($message);
     }
 }
-
-
-
-
-
-
-
-
-
-

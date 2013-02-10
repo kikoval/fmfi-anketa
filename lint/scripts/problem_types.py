@@ -69,6 +69,3 @@ class FileCorrector:
 
     def getCode(self):
         raise NotImplementedError
-
-
-

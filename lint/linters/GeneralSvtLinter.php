@@ -38,5 +38,3 @@ final class GeneralSvtLinter extends AbstractSvtLinter {
         }
     }
 }
-
-

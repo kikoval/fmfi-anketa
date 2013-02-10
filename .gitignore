@@ -14,5 +14,5 @@
 .*.sw[a-z]
 Thumbs.db
 *.pyc
-/src/lint/linters/bck/*.bck
-/src/lint/.phutil_module_cache
+/lint/linters/bck/*.bck
+/lint/.phutil_module_cache
