@@ -86,7 +86,7 @@ class UserRepository extends EntityRepository {
 
             $insertVoteSubSummary = $conn->prepare("
                 INSERT INTO SectionVoteSummary (category_id, subject_id, teacher_id, season_id, count)
-                SELECT q.category_id, a.subject_id, a.teacher_id, :season_id, COUNT(*)
+                SELECT q.category_id, a.subject_id, a.teacher_id, :season_id, COUNT(DISTINCT a.author_id)
                 FROM Answer a, Question q
                 WHERE a.season_id = :season_id
                 AND q.id = a.question_id
@@ -132,6 +132,12 @@ class UserRepository extends EntityRepository {
                 VALUES (:category_id, :subject_id, :teacher_id, :season_id, :count)
             ");
             foreach ($summaries as $summary) {
+                if ($summary['subject_id'] == 3324 && !$summary['teacher_id']) {
+                    var_dump($summary);
+                    var_dump($season->getId());
+                    throw new \Exception("found!");
+                }
+
                 foreach ($summary as $name => $value) {
                     $insertVoteSummary->bindValue($name, $value, PDO::PARAM_INT);
                 }
