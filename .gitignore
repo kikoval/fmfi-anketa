@@ -13,6 +13,4 @@
 .DS_Store
 .*.sw[a-z]
 Thumbs.db
-*.pyc
-/lint/linters/bck/*.bck
 /lint/.phutil_module_cache

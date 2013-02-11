@@ -5,9 +5,5 @@
   "load" : [
     "lint"
   ],
-  "lint.engine" : "SvtLintEngine",
-  "svtlint.print" : true,
-  "svtlint.correct" : true,
-  "svtlint.confirm" : false,
-  "svtlint.perfile" : false
+  "lint.engine" : "SvtLintEngine"
 }
