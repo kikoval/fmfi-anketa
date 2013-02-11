@@ -1,3 +1,6 @@
+-- Pred spustenim migracie teacherov chceme fixnut NOT NULL atributy stlpcov,
+-- nech zachytime pripadne porusenie constraintov
+
 CREATE TABLE IF NOT EXISTS UserFinal
 ( id	 int NOT NULL AUTO_INCREMENT,
 tid	 int,
@@ -23,7 +26,7 @@ WHERE u.userName NOT IN ( SELECT uf.login FROM UserFinal uf);
 INSERT INTO UserFinal
 SELECT NULL, t.id, t.login, t.givenName, t.familyName, t.displayName, t.department_id
 FROM Teacher t
-WHERE t.login NOT IN ( SELECT uf.login FROM UserFinal uf);
+WHERE t.login NOT IN ( SELECT uf.login FROM UserFinal uf) OR t.login IS NULL;
 
 ##nazov foreign keyov zistime
 #SELECT CONSTRAINT_NAME
