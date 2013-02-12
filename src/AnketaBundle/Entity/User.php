@@ -67,6 +67,9 @@ class User implements UserInterface, EquatableInterface {
     protected $login;
 
     /**
+     * Ak sa niekedy bude menit department na NOT NULL, tak treba updatnut
+     * ImportRozvrhXMLCommand, vid koment tam.
+     * 
      * @ORM\ManyToOne(targetEntity="Department")
      * @var Department
      */

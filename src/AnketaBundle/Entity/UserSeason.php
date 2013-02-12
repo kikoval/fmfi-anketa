@@ -46,6 +46,9 @@ class UserSeason {
     /**
      * Do ktorej katedry pouzivatel patri (ktora ho zamestnava, etc.).
      * Studenti (asi okrem doktorandov) nepatria do ziadnej katedry a preto tu maju null.
+     * 
+     * Ak sa niekedy bude menit department na NOT NULL, tak treba updatnut
+     * ImportRozvrhXMLCommand, vid koment tam.
      *
      * @ORM\ManyToOne(targetEntity="Department")
      *

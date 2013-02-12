@@ -24,10 +24,15 @@ class RozvrhXMLImporter extends Importer {
 
     /** @var SubjectIdentification */
     private $subjectIdentification;
+    
+    /** @var array('katedra' => 'code') */
+    private $katedraCodeMap;
 
-    public function __construct(PDO $connection, SubjectIdentificationInterface $subjectIdentification) {
+    public function __construct(PDO $connection, SubjectIdentificationInterface $subjectIdentification,
+            array $katedraCodeMap) {
         parent::__construct($connection);
         $this->subjectIdentification = $subjectIdentification;
+        $this->katedraCodeMap = $katedraCodeMap;
     }
 
     protected function getTableDefinitions() {
@@ -43,5 +48,18 @@ class RozvrhXMLImporter extends Importer {
         $predmet['code'] = $props['code'];
         $predmet['slug'] = $props['slug'];
         return $predmet;
+    }
+    
+    protected function convertUcitel(array $location, array $ucitel) {
+        $ucitel = parent::convertUcitel($location, $ucitel);
+        if ($ucitel['katedra'] !== null) {
+            if (!array_key_exists($ucitel['katedra'], $this->katedraCodeMap)) {
+                $ucitel['katedra'] = null;
+            }
+            else {
+                $ucitel['katedra'] = $this->katedraCodeMap[$ucitel['katedra']];
+            }
+        }
+        return $ucitel;
     }
 }
