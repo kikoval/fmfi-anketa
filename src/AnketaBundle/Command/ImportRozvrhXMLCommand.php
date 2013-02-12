@@ -18,20 +18,19 @@ use SVT\RozvrhXML\Parser;
 use Exception;
 
 /**
- * Class functioning as command/task for importing teachers, subjects,
- * and relationship between teachers and subjects from text file.
+ * Command for importing Teachers/Subjects from rozvrh.xml
  *
  * @package    Anketa
  * @author     Martin Sucha <anty.sk@gmail.com>
  */
-class ImportUcitelPredmetXMLCommand extends AbstractImportCommand {
+class ImportRozvrhXMLCommand extends AbstractImportCommand {
 
     protected function configure() {
         parent::configure();
 
         $this
-                ->setName('anketa:import:ucitel-predmet-xml')
-                ->setDescription('Importuj ucitelov predmety z xml-ka')
+                ->setName('anketa:import:rozvrh-xml')
+                ->setDescription('Importuj ucitelov-predmety a ucitelov-katedry z xml-ka')
                 ->addSeasonOption()
         ;
     }
@@ -47,6 +46,21 @@ class ImportUcitelPredmetXMLCommand extends AbstractImportCommand {
      * @throws \LogicException When this abstract class is not implemented
      */
     protected function execute(InputInterface $input, OutputInterface $output) {
+        $katedraCodeMap = array(
+            'KAFZM' => 'FMFI.KAFZM',
+            'KAGDM' => 'FMFI.KAGDM',
+            'KAI' => 'FMFI.KAI',
+            'KAMS' => 'FMFI.KAMŠ',
+            'KEF' => 'FMFI.KEF',
+            'KI' => 'FMFI.KI',
+            'KJFB' => 'FMFI.KJFB',
+            'KJP' => 'FMFI.KJP',
+            'KMANM' => 'FMFI.KMANM',
+            'KTFDF' => 'FMFI.KTFDF',
+            'KZVI' => 'FMFI.KZVI',
+            'KTVS' => 'FMFI.KTV',
+        );
+        
         $subjectIdentification = $this->getContainer()->get('anketa.subject_identification');
 
         $season = $this->getSeason($input);
@@ -54,7 +68,7 @@ class ImportUcitelPredmetXMLCommand extends AbstractImportCommand {
 
         $conn = $this->getContainer()->get('database_connection')->getWrappedConnection();
 
-        $importer = new RozvrhXMLImporter($conn, $subjectIdentification);
+        $importer = new RozvrhXMLImporter($conn, $subjectIdentification, $katedraCodeMap);
         $importer->prepareDatabase();
 
         $parser = new Parser($importer);
@@ -86,10 +100,15 @@ class ImportUcitelPredmetXMLCommand extends AbstractImportCommand {
             $sql .= ' WHERE NOT EXISTS (SELECT s2.id FROM Subject s2 WHERE s2.slug = s.slug)';
             $conn->exec($sql);
 
-            $sql = 'INSERT INTO User (givenName, familyName, login) ';
-            $sql .= " SELECT t.given_name, t.family_name, t.login ";
-            $sql .= " FROM tmp_insert_teacher t";
-            $sql .= ' WHERE t.login IS NOT NULL AND NOT EXISTS (SELECT u.id FROM User u WHERE u.login = t.login)';
+            $sql = 'INSERT INTO User (givenName, familyName, login, department_id) ';
+            $sql .= " SELECT t.given_name, t.family_name, t.login, d.id ";
+            $sql .= " FROM tmp_insert_teacher t LEFT JOIN Department d";
+            $sql .= ' ON d.code = t.katedra';
+            $sql .= ' WHERE t.login IS NOT NULL';
+            // updatneme department, ak pri importe mame nejaky, ktory nie je NULL
+            // Ak niekedy bude User.department_id NOT NULL, treba upravit tento riadok
+            // vid http://mysqlsoapbox.blogspot.sk/2010/06/on-duplicate-key-update-gotcha.html
+            $sql .= ' ON DUPLICATE KEY UPDATE department_id = IFNULL(VALUES(department_id), User.department_id)';
             $conn->exec($sql);
 
             // Teachers subjects sa importuje v troch krokoch:
@@ -129,12 +148,17 @@ class ImportUcitelPredmetXMLCommand extends AbstractImportCommand {
             $prep = $conn->prepare($sql);
             $prep->execute(array('season' => $season->getId()));
 
+            // updatneme department, ak pri importe mame nejaky, ktory nie je NULL
+            // Ak niekedy bude UserSeason.department_id NOT NULL, treba upravit tento statement
+            // vid http://mysqlsoapbox.blogspot.sk/2010/06/on-duplicate-key-update-gotcha.html
             $insertUserSeason = $conn->prepare("
-                    INSERT INTO UserSeason ( user_id, season_id, isTeacher, isStudent, loadedFromAis)
-                    SELECT a.id, :seasonId, 1, 0, 0
+                    INSERT INTO UserSeason ( user_id, season_id, isTeacher, isStudent, loadedFromAis, department_id)
+                    SELECT a.id, :seasonId, 1, 0, 0, d.id
                     FROM User a, tmp_insert_teacher tt
+                    LEFT JOIN Department d ON d.code = tt.katedra
                     WHERE a.login = tt.login AND tt.login IS NOT NULL
-                    ON DUPLICATE KEY UPDATE isTeacher=1");
+                    ON DUPLICATE KEY UPDATE isTeacher=1,
+                      department_id = IFNULL(VALUES(department_id), UserSeason.department_id)");
             $insertUserSeason->bindValue('seasonId', $season->getId());
             $insertUserSeason->execute();
 
