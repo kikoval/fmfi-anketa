@@ -41,7 +41,7 @@ class StatisticsMenu
             // Add this season.
             $menu[$season->getId()] = $seasonItem = new MenuItem(
                 $season->getDescription(),
-                $this->generateUrl('statistics_list_general',
+                $this->generateUrl('statistics_season',
                     array('season_slug' => $season->getSlug())));
             if (!$access->canSeeResults($season)) continue;
             if (isset($activeItems[0]) && $activeItems[0] == $season->getId()) {

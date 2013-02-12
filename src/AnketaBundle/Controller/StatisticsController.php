@@ -9,6 +9,7 @@ use AnketaBundle\Entity\Question;
 use AnketaBundle\Entity\Season;
 use AnketaBundle\Lib\StatisticalFunctions;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use AnketaBundle\Menu\MenuItemProgressbar;
 
 class StatisticsController extends Controller {
     const GRAPH_PALETTE = 'ff1e1e|ff8f1e|f5f51d|b4ff1e|1eff1e';
@@ -376,6 +377,25 @@ class StatisticsController extends Controller {
             $templateParams['limit'] = $limit;
             return $this->render('AnketaBundle:Statistics:requestResults.html.twig', $templateParams);
         }
+    }
+    
+    public function seasonReportAction($season_slug = null) {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $season = $this->getSeason($season_slug);
+        if (!$this->get('anketa.access.statistics')->canSeeResults($season)) {
+            return $this->accessDeniedForSeason($season);
+        }
+        
+        $total = $season->getStudentCount();
+        $voters = $em->getRepository('AnketaBundle\Entity\User')
+                     ->getNumberOfVoters($season);
+        
+        $templateParams = array();
+        $templateParams['voters'] = $voters;
+        $templateParams['season'] = $season;
+        $templateParams['voteProgress'] = new MenuItemProgressbar(null, $total, $voters);
+        $templateParams['activeMenuItems'] = array($season->getId());
+        return $this->render('AnketaBundle:Statistics:seasonReport.html.twig', $templateParams);
     }
 
     public function listGeneralAction($season_slug = null) {
