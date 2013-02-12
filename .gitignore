@@ -13,3 +13,4 @@
 .DS_Store
 .*.sw[a-z]
 Thumbs.db
+/lint/.phutil_module_cache
