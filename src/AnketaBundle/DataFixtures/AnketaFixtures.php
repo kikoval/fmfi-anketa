@@ -15,6 +15,7 @@ use AnketaBundle\Lib\Slugifier;
 use AnketaBundle\Entity\CategoryType;
 use AnketaBundle\Entity\Category;
 use AnketaBundle\Entity\Department;
+use AnketaBundle\Entity\Season;
 use AnketaBundle\Entity\StudyProgram;
 
 class AnketaFixtures {
@@ -95,6 +96,20 @@ class AnketaFixtures {
                 $this->em->persist($program);
                 $this->output->writeln('StudyProgram: ' . $name . ' (' . $prefix . $code . ')');
             }
+        }
+    }
+
+    public function createSeasons($phase) {
+        $season = new Season('2042/2043', '2042-2043');
+        $season->setStudentCount(12345);
+        $seasons = array(
+            array('2042/2043', 12345, '2042-2043'),
+        );
+        $seasons = array();
+        $seasons[] = array('2042/2043', 12345, '2042-2043', false, true, true, false, true, 1);
+        $seasons[] = array('Zima 2043/2044', 13579, '2043-2044-zima', false, true, true, false, true, 2);
+        $seasons[] = array('Leto 2043/2044', 12481, '2043-2044-leto', );
+        foreach ($seasons as $season) {
         }
     }
 
