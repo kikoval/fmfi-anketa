@@ -205,76 +205,80 @@ class StatisticsSection extends ContainerAware {
         return $this->headingVisible;
     }
 
-    private $preface = '';
+    private $preface = null;
 
     public function getPreface() {
-        if ($this->preface == '' && $this->getSubject() && $this->getSeason()) {
-            $preface = '';
-            $em = $this->container->get('doctrine.orm.entity_manager');
-            $subject = $this->getSubject();
-            $teacher = $this->getTeacher();
-            $season = $this->getSeason();
-            $skratka_fakulty = $this->container->getParameter('skratka_fakulty');
-            $totalStudents = 0;
-            $subjectSeason = $em->getRepository('AnketaBundle:SubjectSeason')->findOneBy(array(
-                'subject' => $subject,
-                'season' => $season
-            ));
-            if (isset($subjectSeason)) {
-                if ($subjectSeason->getStudentCountFaculty() !== null) {
-                    $scf = $subjectSeason->getStudentCountFaculty();
-                    $preface .= 'Tento predmet ';
-                    if ($scf == 0) $preface .= 'nemal nikto z '.$skratka_fakulty.' zapísaný';
-                    if ($scf == 1) $preface .= 'mal zapísaný '.$scf.' študent '.$skratka_fakulty;
-                    if ($scf >= 2 && $scf <= 4) $preface .= 'mali zapísaní '.$scf.' študenti '.$skratka_fakulty;
-                    if ($scf >= 5) $preface .= 'malo zapísaných '.$scf.' študentov '.$skratka_fakulty;
-                    if ($subjectSeason->getStudentCountAll() !== null) {
-                        $totalStudents = $subjectSeason->getStudentCountAll();
-                        $sco = $totalStudents - $scf;
-                        if ($sco) $preface .= ' ('.$sco.' z iných fakúlt)';
+        if ($this->preface === null) {
+            if ($this->getSubject() && $this->getSeason()) {
+                $preface = '';
+                $em = $this->container->get('doctrine.orm.entity_manager');
+                $subject = $this->getSubject();
+                $teacher = $this->getTeacher();
+                $season = $this->getSeason();
+                $skratka_fakulty = $this->container->getParameter('skratka_fakulty');
+                $totalStudents = 0;
+                $subjectSeason = $em->getRepository('AnketaBundle:SubjectSeason')->findOneBy(array(
+                    'subject' => $subject,
+                    'season' => $season
+                ));
+                if (isset($subjectSeason)) {
+                    if ($subjectSeason->getStudentCountFaculty() !== null) {
+                        $scf = $subjectSeason->getStudentCountFaculty();
+                        $preface .= 'Tento predmet ';
+                        if ($scf == 0) $preface .= 'nemal nikto z '.$skratka_fakulty.' zapísaný';
+                        if ($scf == 1) $preface .= 'mal zapísaný '.$scf.' študent '.$skratka_fakulty;
+                        if ($scf >= 2 && $scf <= 4) $preface .= 'mali zapísaní '.$scf.' študenti '.$skratka_fakulty;
+                        if ($scf >= 5) $preface .= 'malo zapísaných '.$scf.' študentov '.$skratka_fakulty;
+                        if ($subjectSeason->getStudentCountAll() !== null) {
+                            $totalStudents = $subjectSeason->getStudentCountAll();
+                            $sco = $totalStudents - $scf;
+                            if ($sco) $preface .= ' ('.$sco.' z iných fakúlt)';
+                        }
+                        $preface .= '.';
                     }
-                    $preface .= '.';
-                }
-                else if ($subjectSeason->getStudentCountAll() !== null) {
-                    $sca = $subjectSeason->getStudentCountAll();
-                    $preface .= 'Tento predmet ';
-                    if ($sca == 0) $preface .= 'nemal nikto zapísaný';
-                    if ($sca == 1) $preface .= 'mal zapísaný '.$sca.' študent';
-                    if ($sca >= 2 && $sca <= 4) $preface .= 'mali zapísaní '.$sca.' študenti';
-                    if ($sca >= 5) $preface .= 'malo zapísaných '.$sca.' študentov';
-                    $preface .= '.';
-                    $totalStudents = $sca;
+                    else if ($subjectSeason->getStudentCountAll() !== null) {
+                        $sca = $subjectSeason->getStudentCountAll();
+                        $preface .= 'Tento predmet ';
+                        if ($sca == 0) $preface .= 'nemal nikto zapísaný';
+                        if ($sca == 1) $preface .= 'mal zapísaný '.$sca.' študent';
+                        if ($sca >= 2 && $sca <= 4) $preface .= 'mali zapísaní '.$sca.' študenti';
+                        if ($sca >= 5) $preface .= 'malo zapísaných '.$sca.' študentov';
+                        $preface .= '.';
+                        $totalStudents = $sca;
+                    }
+
                 }
 
+                $studentov = function ($count) {
+                    if ($count == 0) return 'sa nevyjadril žiaden študent';
+                    if ($count == 1) return 'sa vyjadril jeden študent';
+                    if ($count < 4) return 'sa vyjadrili '.$count.' študenti';
+                    if ($count >= 4) return 'sa vyjadrilo '.$count.' študentov';
+                };
+
+                $votingSummary = $em->getRepository('AnketaBundle:SectionVoteSummary')->findOneBy(array(
+                    'subject' => $subject,
+                    'season' => $season,
+                    'teacher' => $teacher
+                ));
+                if ($votingSummary) {
+                    $voters = $votingSummary->getCount();
+                    if ($teacher) {
+                        $preface .= ' K tomuto vyučujúcemu ';
+                    } else {
+                        $preface .= ' K predmetu ';
+                    }
+                    $preface .= $studentov($voters);
+                    if ($totalStudents) {
+                        $preface .= ' ('.round($voters/$totalStudents * 100, 2). '% z '.$totalStudents.').';
+                    } else {
+                        $preface .= '.';
+                    }
+                }
+                $this->preface = $preface;
+            } else {
+                $this->preface = '';
             }
-
-            $studentov = function ($count) {
-                if ($count == 0) return 'sa nevyjadril žiaden študent';
-                if ($count == 1) return 'sa vyjadril jeden študent';
-                if ($count < 4) return 'sa vyjadrili '.$count.' študenti';
-                if ($count >= 4) return 'sa vyjadrilo '.$count.' študentov';
-            };
-
-            $votingSummary = $em->getRepository('AnketaBundle:SectionVoteSummary')->findOneBy(array(
-                'subject' => $subject,
-                'season' => $season,
-                'teacher' => $teacher
-            ));
-            if ($votingSummary) {
-                $voters = $votingSummary->getCount();
-                if ($teacher) {
-                    $preface .= ' K tomuto vyučujúcemu ';
-                } else {
-                    $preface .= ' K predmetu ';
-                }
-                $preface .= $studentov($voters);
-                if ($totalStudents) {
-                    $preface .= ' ('.round($voters/$totalStudents * 100, 2). '% z '.$totalStudents.').';
-                } else {
-                    $preface .= '.';
-                }
-            }
-            $this->preface = $preface;
         }
         return $this->preface;
     }
