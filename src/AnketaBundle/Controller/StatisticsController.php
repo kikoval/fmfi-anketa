@@ -388,7 +388,7 @@ class StatisticsController extends Controller {
         
         $total = $season->getStudentCount();
         $voters = $em->getRepository('AnketaBundle\Entity\User')
-                     ->getNumberOfVoters($season);
+                     ->getNumberOfAnonymizations($season);
         
         $templateParams = array();
         $templateParams['voters'] = $voters;
