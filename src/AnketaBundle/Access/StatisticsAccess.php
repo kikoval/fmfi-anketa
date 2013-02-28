@@ -197,7 +197,8 @@ class StatisticsAccess
             $userSeasonRepo = $this->em->getRepository('AnketaBundle:UserSeason');
             $user = $this->getUser();
             $userSeason = $userSeasonRepo->findOneBy(array('user'=> $user, 'season'=>$season));
-            return array($userSeason->getDepartment());
+            $department = $userSeason->getDepartment();
+            return $department ? array($department) : array();
         }
         else {
             return array();
