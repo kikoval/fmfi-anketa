@@ -18,7 +18,7 @@
     <p><a class="bigbtn" href="{{ path('anketa') }}">
     <span class="bigbtn_middle"><span class="bigbtn_left"><span class="bigbtn_right bigbtn_in">Hlasuj!</span></span></span></a></p>
     {% if skratka_fakulty in ['FMFI', 'FaF'] %}
-        <p style="text-align: center"> Otvorené do <strong>31.1.2013 23:59:59</strong></p>
+        <p style="text-align: center"> Otvorené do <strong>{{ active_season.endTime }}</strong></p>
     {% endif %}
 {% else %}
     <p>Hlasovanie v ankete je ukončené. Ďakujeme všetkým zúčastneným za vyplnenie :)</p>

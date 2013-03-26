@@ -87,6 +87,14 @@ class Season {
      * @var int $ordering
      */
     protected $ordering;
+    
+    /**
+     *    
+     * @ORM\Column(type="string")
+     * @var string $endTime;
+     */
+    
+    protected $endTime;
 
     public function __construct($description, $slug) {
         $this->setDescription($description);
@@ -178,6 +186,14 @@ class Season {
 
     public function setOrdering($ordering) {
         $this->ordering = $ordering;
+    }
+
+    public function getEndTime() {
+        return $this->endTime;
+    }
+
+    public function setEndTime($endTime) {
+        $this->endTime = $endTime;
     }
 
 }
