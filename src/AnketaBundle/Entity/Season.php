@@ -87,13 +87,13 @@ class Season {
      * @var int $ordering
      */
     protected $ordering;
-    
+
     /**
-     *    
+     *
      * @ORM\Column(type="string")
      * @var string $endTime;
      */
-    
+
     protected $endTime;
 
     public function __construct($description, $slug) {

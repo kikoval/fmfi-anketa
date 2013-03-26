@@ -17,7 +17,7 @@
 {% if access.hlasovanie.isVotingOpen %}
     <p><a class="bigbtn" href="{{ path('anketa') }}">
     <span class="bigbtn_middle"><span class="bigbtn_left"><span class="bigbtn_right bigbtn_in">Hlasuj!</span></span></span></a></p>
-    {% if skratka_fakulty in ['FMFI', 'FaF'] %}
+    {% if skratka_fakulty in ['FMFI', 'FaF'] and active_season.endTime != null %}
         <p style="text-align: center"> Otvorené do <strong>{{ active_season.endTime }}</strong></p>
     {% endif %}
 {% else %}
