@@ -37,7 +37,7 @@ class SeasonRepository extends EntityRepository {
             throw new NoResultException();
         }
         $now = new \DateTime("now");
-        $diff = $now->diff($result[0]->getEndTime()); //difference between now and endTime
+        $diff = $now->diff($result[0]->getEndTime()); //difference between $now and $endTime
         if ($diff->format('%R') == '+') { //checks if $endTime is later than $now
             if ($diff->m == 0) {
                 $result[0]->timeToEnd = $diff->format('%d dni %h hodín a %i minút');
