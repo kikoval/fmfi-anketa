@@ -36,6 +36,19 @@ class SeasonRepository extends EntityRepository {
         if (count($result) == 0) {
             throw new NoResultException();
         }
+        $now = new \DateTime("now");
+        $diff = $now->diff($result[0]->getEndTime()); //difference between now and endTime
+        if ($diff->format('%R') == '+') { //checks if $endTime is later than $now
+            if ($diff->m == 0) {
+                $result[0]->timeToEnd = $diff->format('%d dni %h hodín a %i minút');
+            } else {
+                $result[0]->timeToEnd = $diff->format('%d dni a %m mesiacov');
+            }
+        }else{
+            $result[0]->timeToEnd = '0 dní 0 hodín a 0 minút';
+        }
+       
+//        $result[0]->timeToEnd = 'foo';
         return array_shift($result);
     }
 

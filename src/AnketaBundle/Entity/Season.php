@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright Copyright (c) 2011,2012 The FMFI Anketa authors (see AUTHORS).
  * Use of this source code is governed by a license that can be
@@ -90,10 +91,9 @@ class Season {
 
     /**
      *
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="datetime")
      * @var string $endTime;
      */
-
     protected $endTime;
 
     public function __construct($description, $slug) {
