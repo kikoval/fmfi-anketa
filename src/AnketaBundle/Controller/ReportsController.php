@@ -20,7 +20,7 @@ class ReportsController extends Controller {
             $teacher->evaluation = $em->getRepository('AnketaBundle:Answer')->getAverageEvaluationForTeacher($teacher, $season);
             $teacher->links = array();
             foreach ($teacher->subjects as $subject) {
-                $teacher->links[$subject->getId()] = StatisticsSection::makeSubjectTeacherSection($this->container, $season, $subject, $teacher)->getStatisticsPath();
+                 $teacher->links[$subject->getId()] = new StatisticsTeacherSection($this->container, $season, $subject, $teacher)->getStatisticsPath();
             }
         }
         usort($teachers, array('AnketaBundle\Controller\ReportsController', 'compareAverageEvaluation'));
@@ -28,10 +28,10 @@ class ReportsController extends Controller {
         foreach ($subjects as $subject) {
             $subject->teacher = $em->getRepository('AnketaBundle:User')->getTeachersForSubjectWithAnswers($subject, $season);
             $subject->evaluation = $em->getRepository('AnketaBundle:Answer')->getAverageEvaluationForSubject($subject, $season);
-            $subject->link = StatisticsSection::makeSubjectSection($this->container, $season, $subject)->getStatisticsPath();
+            $subject->link = new StatisticsSubjectSection($this->container, $season, $subject)->getStatisticsPath();
             $subject->links = array();
             foreach ($subject->teacher as $teacher) {
-                $subject->links[$teacher->getId()] = StatisticsSection::makeSubjectTeacherSection($this->container, $season, $subject, $teacher)->getStatisticsPath();
+                $subject->links[$teacher->getId()] = new StatisticsTeacherSection($this->container, $season, $subject, $teacher)->getStatisticsPath();
             }
         }
         usort($subjects, array('AnketaBundle\Controller\ReportsController', 'compareAverageEvaluation'));
