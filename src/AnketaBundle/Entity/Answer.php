@@ -27,12 +27,13 @@ class Answer {
     protected $comment;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=false)
      */
     protected $attended = false;
 
     /**
      * @ORM\ManyToOne(targetEntity="Question")
+     * @ORM\JoinColumn(nullable=false)
      *
      * @var Question $question
      */
@@ -40,6 +41,7 @@ class Answer {
 
     /**
      * @ORM\ManyToOne(targetEntity="Season")
+     * @ORM\JoinColumn(nullable=false)
      *
      * @var Season $season
      */

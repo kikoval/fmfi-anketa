@@ -25,7 +25,7 @@ class Season {
 
     /**
      * Full name, i.e. 2010/2011
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=false)
      */
     protected $description;
 
@@ -41,7 +41,7 @@ class Season {
      *
      * For example 2010-2011
      *
-     * @ORM\Column(type="string", unique=true)
+     * @ORM\Column(type="string", unique=true, nullable=false)
      * @var string $slug
      */
     protected $slug;
@@ -49,41 +49,41 @@ class Season {
     /**
      * Marks active season.
      *
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=false)
      * @var boolean $active
      */
     protected $active = false;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=false)
      */
     protected $votingOpen;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=false)
      */
     protected $resultsVisible;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=false)
      */
     protected $resultsPublic;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=false)
      */
     protected $respondingOpen;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=false)
      */
     protected $responsesVisible;
 
     /**
      * Order seasons by this column in descending order in results.
      * The larger the number, the later in history the season will appear.
-     *
-     * @ORM\Column(type="integer")
+     * 
+     * @ORM\Column(type="integer", nullable=false)
      * @var int $ordering
      */
     protected $ordering;

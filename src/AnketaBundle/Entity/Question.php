@@ -19,7 +19,7 @@ class Question {
 
     /**
      * Defaults to 100
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=false)
      */
     protected $position;
 
@@ -29,12 +29,13 @@ class Question {
     protected $title;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=false)
      */
     protected $question;
 
     /**
      * @ORM\ManyToOne(targetEntity="Season")
+     * @ORM\JoinColumn(nullable=false)
      *
      * @var Season $season
      */
@@ -46,7 +47,7 @@ class Question {
     protected $description;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=false)
      */
     protected $stars;
 
@@ -60,25 +61,26 @@ class Question {
 
     /**
      * @ORM\ManyToOne(targetEntity="Category", inversedBy="questions")
+     * @ORM\JoinColumn(nullable=false)
      *
      * @var Category $category
      */
     protected $category;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=false)
      */
     protected $hasComment;
 
     /**
      * Ci otazka je hodnotenim vyucujuceho (pouziva sa v reportoch napriklad)
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=false)
      */
     protected $isTeacherEvaluation;
 
     /**
      * Ci otazka je hodnotenim predmetu (pouziva sa v reportoch napriklad)
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=false)
      */
     protected $isSubjectEvaluation;
 

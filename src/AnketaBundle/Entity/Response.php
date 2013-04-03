@@ -43,6 +43,7 @@ class Response {
 
     /**
      * @ORM\ManyToOne(targetEntity="Season")
+     * @ORM\JoinColumn(nullable=false)
      *
      * @var Season $season
      */
@@ -61,6 +62,7 @@ class Response {
 
     /**
      * @ORM\ManyToOne(targetEntity="Question")
+     * @ORM\JoinColumn(nullable=false)
      *
      * @var Question $question
      */

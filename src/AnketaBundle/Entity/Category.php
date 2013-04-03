@@ -20,13 +20,13 @@ class Category {
 
     /**
      * Defaults to 100
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=false)
      */
     protected $position;
 
     /**
      * The type of the category, i.e. "general", "subject"
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=false)
      */
     protected $type;
 

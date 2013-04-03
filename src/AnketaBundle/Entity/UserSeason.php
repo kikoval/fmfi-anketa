@@ -31,6 +31,7 @@ class UserSeason {
 
     /**
      * @ORM\ManyToOne(targetEntity="User", inversedBy="userSeasons")
+     * @ORM\JoinColumn(nullable=false)
      *
      * @var User $user
      */
@@ -38,6 +39,7 @@ class UserSeason {
 
     /**
      * @ORM\ManyToOne(targetEntity="Season")
+     * @ORM\JoinColumn(nullable=false)
      *
      * @var Season $season
      */

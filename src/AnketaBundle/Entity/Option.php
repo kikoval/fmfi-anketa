@@ -19,7 +19,7 @@ class Option {
     protected $id;
 
     /**
-     * @ORM\Column(type="integer", name="position")
+     * @ORM\Column(type="integer", name="position", nullable=false)
      * Describes position of current choice in the choice list.
      * Smallest position means top of the list.
      * Note: the positions need not to be continuous.
@@ -27,18 +27,18 @@ class Option {
     protected $position;
 
     /**
-     * @ORM\Column(type="string", name="choice")
+     * @ORM\Column(type="string", name="choice", nullable=false)
      */
     protected $option;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=false)
      */
     protected $evaluation;
 
     /**
      * @ORM\ManyToOne(targetEntity="Question", inversedBy="options")
-     * @ORM\JoinColumn(name="question_id", referencedColumnName="id")
+     * @ORM\JoinColumn(nullable=false)
      *
      * @var Question $question
      */
