@@ -26,7 +26,7 @@ abstract class StatisticsSection extends ContainerAware {
 
     public static function getSectionOfAnswer(ContainerInterface $container, Answer $answer) {
         $category = $answer->getQuestion()->getCategory()->getType();
-        if ($category == CategoryType::TEACHER_SUBJECT) return new StatisticsSubjectTeacherSection($container, $answer->getSeason(), $answer->getSubject(), $answer->getTeacher());
+        if ($category == CategoryType::TEACHER_SUBJECT) return new StatisticsTeacherSubjectSection($container, $answer->getSeason(), $answer->getSubject(), $answer->getTeacher());
         if ($category == CategoryType::SUBJECT) return new StatisticsSubjectSection($container, $answer->getSeason(), $answer->getSubject());
         if ($category == CategoryType::GENERAL) return new StatisticsGeneralSection($container, $answer->getSeason(), $answer->getQuestion());
         if ($category == CategoryType::STUDY_PROGRAMME) return new StatisticsStudyProgramSection($container, $answer->getSeason(), $answer->getStudyProgram());
@@ -34,7 +34,7 @@ abstract class StatisticsSection extends ContainerAware {
     }
 
     public static function getSectionOfResponse(ContainerInterface $container, Response $response) {
-        if ($response->getTeacher() !== null) return new StatisticsSubjectTeacherSection($container, $response->getSeason(), $response->getSubject(), $response->getTeacher());
+        if ($response->getTeacher() !== null) return new StatisticsTeacherSubjectSection($container, $response->getSeason(), $response->getSubject(), $response->getTeacher());
         if ($response->getSubject() !== null) return new StatisticsSubjectSection($container, $response->getSeason(), $response->getSubject());
         if ($response->getQuestion() !== null) return new StatisticsGeneralSection($container, $response->getSeason(), $response->getQuestion());
         if ($response->getStudyProgram() !== null) return new StatisticsStudyProgramSection($container, $response->getSeason(), $response->getStudyProgram());
@@ -61,7 +61,7 @@ abstract class StatisticsSection extends ContainerAware {
             if ($teacher === null) {
                 throw new NotFoundHttpException('Section not found: Teacher "'.$matches[2].'" not found.');
             }
-            return new StatisticsTeacherSection($container, $season, $subject, $teacher);
+            return new StatisticsTeacherSubjectSection($container, $season, $subject, $teacher);
         }
         if (preg_match('@^predmet/([a-zA-Z0-9-_]+)$@', $slug, $matches)) {
             $subject = $em->getRepository('AnketaBundle:Subject')->findOneBy(array('slug' => $matches[1]));
@@ -248,48 +248,57 @@ abstract class StatisticsSection extends ContainerAware {
 
     protected $slug = null;
 
+    /**
+     * Get slug for the section.
+     * 
+     * @return string
+     */
     abstract public function getSlug();
 
+    /**
+     * Get path for the section based on the slug.
+     * 
+     * @param bool $absolute
+     * @param string $slug
+     * @return string
+     */
     public function getStatisticsPath($absolute = false, $slug = null) {
-    	if ($slug === null) $slug = $this->getSlug();
+        if ($slug === null) $slug = $this->getSlug();
         return $this->container->get('router')->generate('statistics_results', array('section_slug' => $slug), $absolute);
     }
+    
+    protected $prevSeason = null;
+    
+    /**
+     * Get string description of the previous season (@see getPrevSeason()).
+     * 
+     * @return string
+     */
+    public function getPrevSeasonDesc() {
+    	if ($this->prevSeason === null) $this->prevSeason = $this->getPrevSeason();
+    	return $this->prevSeason->getDescription();
+    }
+    
+    /**
+     * Get the first previous season where there is an entry for particular section.
+     * 
+     * @return Season
+     */
+    abstract public function getPrevSeason();
     
     protected $prevLink = null;
     
     /**
-     * Get the previous season by exploiting the slug.
-     *
-     * @return Season
-     */
-    public function getPrevSeason() {
-    	if ($this->season == null) return null;
-    	// transforming the slug
-    	// example: 2012-2013-zima -> 2011-2012-zima
-    	$currentSlug = $this->season->getSlug();
-    	// checking for correct slug format
-    	//     	if (preg_match('/\d{4}-d{4}-[\w]+/', $currentSlug) == 0) return null;
-    	$currentSlug = explode('-', $currentSlug);
-    	// decrementing years
-    	$currentSlug[0] -= 1;
-    	$currentSlug[1] -= 1;
-    	$prev_slug = implode('-', $currentSlug);
-    	 
-    	$em = $this->container->get('doctrine.orm.entity_manager');
-    	$prevSeason = $em->getRepository('AnketaBundle:Season')->findOneBy(array('slug' => $prev_slug));
-    	return $prevSeason;
-    }
-    
-    /**
-     * Get link to stats for previous academic year.
+     * Get link to stats for previous season.
      * 
      * @param bool $absolute
      * @return string
      */
     public function getPrevLink($absolute = false) {
-    	if ($this->getPrevSeason() == null) return null;
-    	$prevSlug = $this->getSlug($this->getPrevSeason());
-    	return $this->getStatisticsPath($absolute, $prevSlug);
+        if ($this->getPrevSeason() == null) return null;
+        $this->prevSeason = $this->getPrevSeason();
+        $prevSlug = $this->getSlug($this->prevSeason);
+        return $this->getStatisticsPath($absolute, $prevSlug);
     }
 
     protected $associationExamples = null;

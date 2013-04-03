@@ -22,8 +22,8 @@ use AnketaBundle\Entity\Response;
 use AnketaBundle\Entity\CategoryType;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class StatisticsTeacherSection extends StatisticsSection {
-	
+class StatisticsTeacherSubjectSection extends StatisticsSection {
+
     public function __construct(ContainerInterface $container, Season $season, Subject $subject, User $teacher) {
         $em = $container->get('doctrine.orm.entity_manager');
         if ($em->getRepository('AnketaBundle:TeachersSubjects')->findOneBy(array('teacher' => $teacher->getId(), 'subject' => $subject->getId(), 'season' => $season->getId())) === null) {
@@ -43,9 +43,33 @@ class StatisticsTeacherSection extends StatisticsSection {
     }
 
     public function getSlug(Season $season = null) {
-    	if ($season !== null) {
-    		return $season->getSlug() . '/predmet/' . $this->subject->getSlug() . '/ucitel/' . $this->teacher->getId();
-    	}
-    	return $this->slug;
+        if ($season !== null) {
+            return $season->getSlug() . '/predmet/' . $this->subject->getSlug() . '/ucitel/' . $this->teacher->getId();
+        }
+        return $this->slug;
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see \AnketaBundle\Controller\StatisticsSection::getPrevSeason()
+     */
+ 	public function getPrevSeason() {
+		$dql = 'SELECT ss
+       			FROM AnketaBundle:SubjectSeason ss JOIN ss.season sn JOIN ss.subject st JOIN AnketaBundle:TeachersSubjects ts
+       			WHERE sn.ordering < :ordering AND st.id = :subjectid AND ss.studentCountAll IS NOT NULL AND ts.id = :teacherid
+       			ORDER BY sn.ordering DESC
+				';
+		$em = $this->container->get('doctrine.orm.entity_manager');
+    	$query = $em->createQuery($dql)->setMaxResults(1);
+    	$query->setParameter('ordering', $this->season->getOrdering());
+    	$query->setParameter('subjectid', $this->subject->getId());
+    	$query->setParameter('teacherid', $this->teacher->getId());
+    	$result = $query->getResult();
+    	
+    	$prevSeason = null;
+    	if ($result !== null && isset($result[0]))
+    		$prevSeason = $result[0]->getSeason();
+    	
+    	return $prevSeason;
     }
 }

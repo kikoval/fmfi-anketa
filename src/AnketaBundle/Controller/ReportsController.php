@@ -20,7 +20,8 @@ class ReportsController extends Controller {
             $teacher->evaluation = $em->getRepository('AnketaBundle:Answer')->getAverageEvaluationForTeacher($teacher, $season);
             $teacher->links = array();
             foreach ($teacher->subjects as $subject) {
-                 $teacher->links[$subject->getId()] = new StatisticsTeacherSection($this->container, $season, $subject, $teacher)->getStatisticsPath();
+            	$teacherStatsSection = new StatisticsTeacherSubjectSection($this->container, $season, $subject, $teacher);
+                $teacher->links[$subject->getId()] = $teacherStatsSection->getStatisticsPath();
             }
         }
         usort($teachers, array('AnketaBundle\Controller\ReportsController', 'compareAverageEvaluation'));
@@ -28,10 +29,12 @@ class ReportsController extends Controller {
         foreach ($subjects as $subject) {
             $subject->teacher = $em->getRepository('AnketaBundle:User')->getTeachersForSubjectWithAnswers($subject, $season);
             $subject->evaluation = $em->getRepository('AnketaBundle:Answer')->getAverageEvaluationForSubject($subject, $season);
-            $subject->link = new StatisticsSubjectSection($this->container, $season, $subject)->getStatisticsPath();
+            $subjectStatsSection = new StatisticsSubjectSection($this->container, $season, $subject);
+            $subject->link = $subjectStatsSection->getStatisticsPath();
             $subject->links = array();
             foreach ($subject->teacher as $teacher) {
-                $subject->links[$teacher->getId()] = new StatisticsTeacherSection($this->container, $season, $subject, $teacher)->getStatisticsPath();
+            	$teacherStatsSection = new StatisticsTeacherSubjectSection($this->container, $season, $subject, $teacher);
+                $subject->links[$teacher->getId()] = $teacherStatsSection->getStatisticsPath();
             }
         }
         usort($subjects, array('AnketaBundle\Controller\ReportsController', 'compareAverageEvaluation'));

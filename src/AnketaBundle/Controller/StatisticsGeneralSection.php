@@ -41,10 +41,29 @@ class StatisticsGeneralSection extends StatisticsSection {
     }
     
     public function getSlug(Season $season = null) {
-    	if ($season !== null) {
-    		return $season->getSlug() . '/vseobecne/' . $this->generalQuestion->getId();
-    	}
-    	return $this->slug;
+        if ($season !== null) {
+            return $season->getSlug() . '/vseobecne/' . $this->generalQuestion->getId();
+        }
+        return $this->slug;
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see \AnketaBundle\Controller\StatisticsSection::getPrevSeason()
+     */
+    // TODO relation general-season is missing, so assuming general are there for all seasons
+    public function getPrevSeason() {
+    	$dql = 'SELECT sn
+       			FROM AnketaBundle:Season sn
+       			WHERE sn.ordering < :ordering
+       			ORDER BY sn.ordering DESC
+				';
+    	$em = $this->container->get('doctrine.orm.entity_manager');
+    	$query = $em->createQuery($dql)->setMaxResults(1);
+    	$query->setParameter('ordering', $this->season->getOrdering());
+    	$prevSeason = $query->getOneOrNullResult();
+    
+    	return $prevSeason;
     }
 }
 

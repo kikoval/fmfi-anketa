@@ -309,7 +309,7 @@ class StatisticsController extends Controller {
 
         $items = array();
         foreach ($subjects as $subject) {
-        	$section = new StatisticsSubjectSection($this->container, $season, $subject);
+            $section = new StatisticsSubjectSection($this->container, $season, $subject);
             $items[$section->getTitle()] = $section->getStatisticsPath();
         }
 

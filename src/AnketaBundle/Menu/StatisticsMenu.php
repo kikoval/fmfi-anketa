@@ -11,10 +11,9 @@
 namespace AnketaBundle\Menu;
 
 use AnketaBundle\Controller\StatisticsProgramSection;
-
 use AnketaBundle\Controller\StatisticsSection;
 use AnketaBundle\Controller\StatisticsSubjectSection;
-use AnketaBundle\Controller\StatisticsTeacherSection;
+use AnketaBundle\Controller\StatisticsTeacherSubjectSection;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -104,7 +103,7 @@ class StatisticsMenu
                                     foreach ($teachersSubjects as $teacherSubject) {
                                         // Add this teacher under this subject.
                                         $teacher = $teacherSubject->getTeacher();
-                                        $teacherSection = new StatisticsTeacherSection($this->container, $season, $subject, $teacher);
+                                        $teacherSection = new StatisticsTeacherSubjectSection($this->container, $season, $subject, $teacher);
                                         $subjectItem->children[$teacher->getId()] = $teacherItem = new MenuItem(
                                             $teacher->getFormattedName(), $teacherSection->getStatisticsPath());
                                         if ($teacherSubject->getLecturer()) $teacherItem->lecturer = true;
