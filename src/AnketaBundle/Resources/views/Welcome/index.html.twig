@@ -17,8 +17,12 @@
 {% if access.hlasovanie.isVotingOpen %}
     <p><a class="bigbtn" href="{{ path('anketa') }}">
     <span class="bigbtn_middle"><span class="bigbtn_left"><span class="bigbtn_right bigbtn_in">Hlasuj!</span></span></span></a></p>
-    {% if skratka_fakulty in ['FMFI', 'FaF'] and active_season.endTime != null %}
-        <p style="text-align: center"> Čas do ukončenia ankety: <strong>{{ active_season.timeToEnd }}</strong>.</p>
+    {% if active_season.endTime != null %}
+        <p style="text-align: center"> Otvorené do: <strong>{{ active_season.endTime|date("d.m.Y") }}</strong>
+            {% if active_season.timeToEnd != null %}
+                (ostáva {{ active_season.timeToEnd|date("%a") }}  dní)
+            {% endif %}
+        </p>
     {% endif %}
 {% else %}
     <p>Hlasovanie v ankete je ukončené. Ďakujeme všetkým zúčastneným za vyplnenie :)</p>
