@@ -30,7 +30,7 @@ class UserSeason {
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="userSeasons")
+     * @ORM\ManyToOne(targetEntity="User")
      * @ORM\JoinColumn(nullable=false)
      *
      * @var User $user
