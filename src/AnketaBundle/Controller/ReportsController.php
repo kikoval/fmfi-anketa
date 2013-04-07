@@ -20,7 +20,7 @@ class ReportsController extends Controller {
             $teacher->evaluation = $em->getRepository('AnketaBundle:Answer')->getAverageEvaluationForTeacher($teacher, $season);
             $teacher->links = array();
             foreach ($teacher->subjects as $subject) {
-            	$teacherStatsSection = new StatisticsTeacherSubjectSection($this->container, $season, $subject, $teacher);
+                $teacherStatsSection = new StatisticsTeacherSubjectSection($this->container, $season, $subject, $teacher);
                 $teacher->links[$subject->getId()] = $teacherStatsSection->getStatisticsPath();
             }
         }
@@ -33,7 +33,7 @@ class ReportsController extends Controller {
             $subject->link = $subjectStatsSection->getStatisticsPath();
             $subject->links = array();
             foreach ($subject->teacher as $teacher) {
-            	$teacherStatsSection = new StatisticsTeacherSubjectSection($this->container, $season, $subject, $teacher);
+                $teacherStatsSection = new StatisticsTeacherSubjectSection($this->container, $season, $subject, $teacher);
                 $subject->links[$teacher->getId()] = $teacherStatsSection->getStatisticsPath();
             }
         }

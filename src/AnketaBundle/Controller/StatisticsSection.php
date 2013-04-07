@@ -275,8 +275,8 @@ abstract class StatisticsSection extends ContainerAware {
      * @return string
      */
     public function getPrevSeasonDesc() {
-    	if ($this->prevSeason === null) $this->prevSeason = $this->getPrevSeason();
-    	return $this->prevSeason->getDescription();
+        if ($this->prevSeason === null) $this->prevSeason = $this->getPrevSeason();
+        return $this->prevSeason->getDescription();
     }
     
     /**

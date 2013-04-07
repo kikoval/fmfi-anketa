@@ -52,22 +52,22 @@ class StatisticsSubjectSection extends StatisticsSection {
      * @see \AnketaBundle\Controller\StatisticsSection::getPrevSeason()
      */
     public function getPrevSeason() {
-		$dql = 'SELECT ss
-       			FROM AnketaBundle:SubjectSeason ss JOIN ss.season sn JOIN ss.subject st
-       			WHERE sn.ordering < :ordering AND st.id = :subjectid AND ss.studentCountAll IS NOT NULL
-       			ORDER BY sn.ordering DESC
-				';
-		$em = $this->container->get('doctrine.orm.entity_manager');
-    	$query = $em->createQuery($dql)->setMaxResults(1);
-    	$query->setParameter('ordering', $this->season->getOrdering());
-    	$query->setParameter('subjectid', $this->subject->getId());
-    	$result = $query->getResult();
-    	
-    	$prevSeason = null;
-    	if ($result !== null && isset($result[0]))
-    		$prevSeason = $result[0]->getSeason();
-    	
-    	return $prevSeason;
+        $dql = 'SELECT ss
+                   FROM AnketaBundle:SubjectSeason ss JOIN ss.season sn JOIN ss.subject st
+                   WHERE sn.ordering < :ordering AND st.id = :subjectid AND ss.studentCountAll IS NOT NULL
+                   ORDER BY sn.ordering DESC
+                ';
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $query = $em->createQuery($dql)->setMaxResults(1);
+        $query->setParameter('ordering', $this->season->getOrdering());
+        $query->setParameter('subjectid', $this->subject->getId());
+        $result = $query->getResult();
+
+        $prevSeason = null;
+        if ($result !== null && isset($result[0]))
+            $prevSeason = $result[0]->getSeason();
+
+        return $prevSeason;
     }
 
 }

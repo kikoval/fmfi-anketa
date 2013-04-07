@@ -50,16 +50,16 @@ class StatisticsProgramSection extends StatisticsSection {
      */
     // TODO relation programme-season is missing, so assuming programmes are there for all seasons
     public function getPrevSeason() {
-    	$dql = 'SELECT sn
-       			FROM AnketaBundle:Season sn
-       			WHERE sn.ordering < :ordering
-       			ORDER BY sn.ordering DESC
-				';
-    	$em = $this->container->get('doctrine.orm.entity_manager');
-    	$query = $em->createQuery($dql)->setMaxResults(1);
-    	$query->setParameter('ordering', $this->season->getOrdering());
-    	$prevSeason = $query->getOneOrNullResult();
-    	 
-    	return $prevSeason;
+        $dql = 'SELECT sn
+                   FROM AnketaBundle:Season sn
+                   WHERE sn.ordering < :ordering
+                   ORDER BY sn.ordering DESC
+                ';
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $query = $em->createQuery($dql)->setMaxResults(1);
+        $query->setParameter('ordering', $this->season->getOrdering());
+        $prevSeason = $query->getOneOrNullResult();
+
+        return $prevSeason;
     }
 }
