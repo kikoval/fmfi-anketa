@@ -80,12 +80,8 @@ services:
     anketa.user_provider:
         class: AnketaBundle\Security\AnketaUserProvider
         arguments:
-            - "@doctrine.orm.entity_manager"
-            - ["@anketa.ais_user_source"]
-            #- ["@anketa.demo_user_source"]
-            - ["@anketa.ldap_user_source"]
-            #- ["@anketa.orgunit_demo_user_source"]
-            # TODO nech je above zmenitelne
+            - "@service_container"
+            - %user_info_zdroje%
             - "@logger"
     anketa.ais_retriever:
         class: AnketaBundle\Integration\AISRetriever
@@ -102,7 +98,6 @@ services:
             - "@doctrine.orm.entity_manager"
             - "@anketa.ais_retriever"
             - %ais_semestre%
-            - %ais_brat_opravnenia%
             - "@anketa.subject_identification"
             - "@logger"
     anketa.ldap_retriever:
@@ -119,10 +114,9 @@ services:
         class: AnketaBundle\Security\DemoUserSource
         arguments:
             - "@doctrine.orm.entity_manager"
-    anketa.orgunit_demo_user_source:
-        class: AnketaBundle\Security\OrgUnitDemoUserSource
-        arguments:
             - [%org_unit%]
+    anketa.none_user_source:
+        class: AnketaBundle\Security\NoneUserSource
     anketa.subject_identification:
         class: AnketaBundle\Lib\SubjectIdentification
         # class: AnketaBundle\Lib\OldPriFSubjectIdentification # Pre PriF instanciu

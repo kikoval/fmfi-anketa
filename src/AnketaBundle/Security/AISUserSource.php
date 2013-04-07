@@ -28,26 +28,8 @@ use Symfony\Component\HttpKernel\Log\LoggerInterface;
 class AISUserSource implements UserSourceInterface
 {
 
-    /**
-     * Doctrine repository for Subject entity
-     * @var AnketaBundle\Entity\SubjectRepository
-     */
-    private $subjectRepository;
-
-    /**
-     * Doctrine repository for StudyProgram entity
-     * @var AnketaBundle\Entity\StudyProgramRepository
-     */
-    private $studyProgramRepository;
-
-    /**
-     * Doctrine repository for Role entity
-     * @var AnketaBundle\Entity\RoleRepository
-     */
-    private $roleRepository;
-
     /** @var EntityManager */
-    private $entityManager;
+    private $em;
 
     /** @var Connection */
     private $dbConn;
@@ -58,9 +40,6 @@ class AISUserSource implements UserSourceInterface
     /** @var array(array(rok,semester)) */
     private $semestre;
 
-    /** @var boolean */
-    private $loadAuth;
-
     /** @var LoggerInterface */
     private $logger;
 
@@ -68,38 +47,36 @@ class AISUserSource implements UserSourceInterface
     private $subjectIdentification;
 
     public function __construct(Connection $dbConn, EntityManager $em, AISRetriever $aisRetriever,
-            array $semestre, $loadAuth, SubjectIdentificationInterface $subjectIdentification,
+            array $semestre, SubjectIdentificationInterface $subjectIdentification,
             LoggerInterface $logger = null)
     {
         $this->dbConn = $dbConn;
-        $this->entityManager = $em;
-        $this->subjectRepository = $em->getRepository('AnketaBundle:Subject');
-        $this->roleRepository = $em->getRepository('AnketaBundle:Role');
-        $this->studyProgramRepository = $em->getRepository('AnketaBundle:StudyProgram');
+        $this->em = $em;
         $this->aisRetriever = $aisRetriever;
         $this->semestre = $semestre;
-        $this->loadAuth = $loadAuth;
         $this->logger = $logger;
         $this->subjectIdentification = $subjectIdentification;
     }
 
-    public function load(UserSeason $userSeason)
+    public function load(UserSeason $userSeason, array $want)
     {
-        $user = $userSeason->getUser();
-        if ($user->getDisplayName() === null) {
-            $user->setDisplayName($this->aisRetriever->getFullName());
+        if (isset($want['displayName'])) {
+            $userSeason->getUser()->setDisplayName($this->aisRetriever->getFullName());
         }
 
-        if ($this->aisRetriever->isAdministraciaStudiaAllowed()) {
-            $this->loadSubjects($userSeason);
+        if (isset($want['subjects']) || isset($want['isStudent'])) {
+            if ($this->aisRetriever->isAdministraciaStudiaAllowed()) {
+                if (isset($want['subjects'])) {
+                    $this->loadSubjects($userSeason);
+                }
 
-            if ($this->loadAuth) {
-                $userSeason->setIsStudent(true);
+                if (isset($want['isStudent'])) {
+                    $userSeason->setIsStudent(true);
+                }
             }
         }
 
         $this->aisRetriever->logoutIfNotAlready();
-        return true;
     }
 
     /**
@@ -129,7 +106,7 @@ class AISUserSource implements UserSourceInterface
             $stmt->bindValue('slug', $props['slug']);
             $stmt->execute();
 
-            $subject = $this->subjectRepository->findOneBy(array('slug' => $props['slug']));
+            $subject = $this->em->getRepository('AnketaBundle:Subject')->findOneBy(array('slug' => $props['slug']));
             if ($subject == null) {
                 throw new \Exception("Nepodarilo sa pridať predmet do DB");
             }
@@ -143,7 +120,7 @@ class AISUserSource implements UserSourceInterface
             $stmt->bindValue('slug', $this->generateSlug($aisPredmet['studijnyProgram']['skratka']));
             $stmt->execute();
 
-            $studyProgram = $this->studyProgramRepository->findOneBy(array('code' => $aisPredmet['studijnyProgram']['skratka']));
+            $studyProgram = $this->em->getRepository('AnketaBundle:StudyProgram')->findOneBy(array('code' => $aisPredmet['studijnyProgram']['skratka']));
             if ($studyProgram == null) {
                 throw new \Exception("Nepodarilo sa pridať študijný program do DB");
             }
@@ -155,12 +132,13 @@ class AISUserSource implements UserSourceInterface
             $userSubject->setSubject($subject);
             $userSubject->setStudyProgram($studyProgram);
 
-            $this->entityManager->persist($userSubject);
+            $this->em->persist($userSubject);
         }
     }
 
     /**
      * @todo presunut do samostatnej triedy a spravit lepsie
+     *   (uz sa to pouziva len na studijne programy)
      */
     private function generateSlug($slug)
     {
