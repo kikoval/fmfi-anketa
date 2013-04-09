@@ -23,10 +23,10 @@ class WelcomeController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $activeSeason = $em->getRepository('AnketaBundle:Season')->getActiveSeason();
         $now = new \DateTime("now");
-        $diff = $now->diff($activeSeason->getEndTime()); //difference between $now and $endTime
-        if ($diff->format('%R') == '+') { //checks if $endTime is later than $now
+        $diff = $now->diff($activeSeason->getEndTime());
+        if ($diff->format('%R') == '+') { //$endTime is later than $now
             $activeSeason->timeToEnd = $diff;
-        }else{
+        } else {
             $activeSeason->timeToEnd = null;
         }
         return $this->render('AnketaBundle:Welcome:index.html.twig',
