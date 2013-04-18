@@ -91,7 +91,7 @@ class Season {
 
     /**
      *
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=true)
      * @var string $endTime;
      */
     protected $endTime;

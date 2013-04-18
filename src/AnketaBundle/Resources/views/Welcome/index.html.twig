@@ -17,8 +17,8 @@
     <span class="bigbtn_middle"><span class="bigbtn_left"><span class="bigbtn_right bigbtn_in">Hlasuj!</span></span></span></a></p>
     {% if active_season.endTime != null %}
         <p style="text-align: center"> Otvorené do: <strong>{{ active_season.endTime|date("d.m.Y") }}</strong>
-            {% if active_season.timeToEnd != null %}
-                {% set dni = active_season.timeToEnd|date("%a") %}
+            {% if countdown != null %}
+                {% set dni = countdown|date("%a") %}
                 {% if dni == 1 %}
                     (ostáva 1 deň)
                 {% elseif dni >= 2 and dni <= 4 %}
