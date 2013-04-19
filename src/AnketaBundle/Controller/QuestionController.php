@@ -38,27 +38,24 @@ class QuestionController extends Controller {
      * @param User $user current user
      * @param ArrayCollection $questions questions which are expected in the form
      * @param ArrayCollection $answers answers already filled before
-     * @return array array of updated or created answers
+     * @param array $answerColumns method names and values to set on the answer
      */
-    private function processForm($request, $user, $questions, $answers, $season) {
+    private function processForm($request, $user, $questions, $answers, $season, $answerColumns) {
         $em = $this->get('doctrine.orm.entity_manager');
 
         $questionArray = $request->request->get('question');
+        $savedSomething = false;
 
         $result = array();
         // prechadzame otazky na ktore sa ocakava mozna odpoved
         foreach ($questions as $question) {
-            // ak vobec vyplnil otazku - tzn vybral nejaku moznost (a nejake existovali)
-            // a/alebo vyplnil komentar (a otazka komentar mala)
-            $optionFilled = isset($questionArray[$question->getId()]['answer']);
             $id = $question->getId();
             if (!array_key_exists($id, $questionArray)) {
                 // TODO(ppershing): throw an exception here?
                 continue;
             }
 
-            // Warning: do not use array_key_exists, $answers[$id] may be NULL
-            if (isset($answers[$id])) {
+            if (!empty($answers[$id])) {
                 $answer = $answers[$id];
             } else {
                 $answer = new Answer();
@@ -66,6 +63,10 @@ class QuestionController extends Controller {
                 $answer->setQuestion($question);
                 $answer->setAuthor($user);
                 $answer->setSeason($season);
+            }
+
+            foreach ($answerColumns as $method => $value) {
+                $answer->$method($value);
             }
 
             if (isset($questionArray[$id]['answer'])) {
@@ -93,9 +94,18 @@ class QuestionController extends Controller {
                 $answer->setComment(null);
             }
 
-            $result[] = $answer;
+            if (empty($answer->getOption()) && empty($answer->getComment())) {
+                $em->remove($answer);
+            } else {
+                $em->persist($answer);
+                $savedSomething = true;
+            }
         }
-        return $result;
+
+        if ($savedSomething) {
+            $userSeason = $em->getRepository('AnketaBundle:UserSeason')->findOneBy(array('user' => $user->getId(), 'season' => $season->getId()));
+            $userSeason->setParticipated(true);
+        }
     }
 
     private function redirectAfterProcessing($activeItems = array()) {
@@ -203,19 +213,12 @@ class QuestionController extends Controller {
                       ->getAnswersByCriteria($questions, $user, $season, $subject, $teacher);
 
         if ('POST' == $request->getMethod()) {
-            $answerArray = $this->processForm($request, $user, $questions, $answers, $season);
-
-            foreach ($answerArray AS $answer) {
-                $answer->setSubject($subject);
-                $answer->setTeacher($teacher);
-                $answer->setStudyProgram($studyProgram);
-                $answer->setAttended(true);
-
-                $em->persist($answer);
-            }
-
-            $userSeason = $em->getRepository('AnketaBundle:UserSeason')->findOneBy(array('user' => $user->getId(), 'season' => $season->getId()));
-            $userSeason->setParticipated(true);
+            $this->processForm($request, $user, $questions, $answers, $season, array(
+                'setSubject' => $subject,
+                'setTeacher' => $teacher,
+                'setStudyProgram' => $studyProgram,
+                'setAttended' => true,
+            ));
 
             $em->flush();
 
@@ -253,19 +256,12 @@ class QuestionController extends Controller {
                            ->getStudyProgrammeForUserSubject($user, $subject, $season);
 
         if ('POST' == $request->getMethod()) {
-            $answerArray = $this->processForm($request, $user, $questions, $answers, $season);
-
-            foreach ($answerArray AS $answer) {
-                $answer->setSubject($subject);
-                $answer->setTeacher(null);
-                $answer->setStudyProgram($studyProgram);
-                $answer->setAttended(true);
-
-                $em->persist($answer);
-            }
-
-            $userSeason = $em->getRepository('AnketaBundle:UserSeason')->findOneBy(array('user' => $user->getId(), 'season' => $season->getId()));
-            $userSeason->setParticipated(true);
+            $this->processForm($request, $user, $questions, $answers, $season, array(
+                'setSubject' => $subject,
+                'setTeacher' => null,
+                'setStudyProgram' => $studyProgram,
+                'setAttended' => true,
+            ));
 
             $em->flush();
 
@@ -299,20 +295,13 @@ class QuestionController extends Controller {
                       ->getAnswersByCriteria($questions, $user, $season, null, null, $studyProgramme);
 
         if ('POST' == $request->getMethod()) {
-            $answerArray = $this->processForm($request, $user, $questions, $answers, $season);
-
-            foreach ($answerArray AS $answer) {
-                $answer->setStudyProgram($studyProgramme);
-                $answer->setSubject(null);
-                $answer->setTeacher(null);
+            $this->processForm($request, $user, $questions, $answers, $season, array(
+                'setStudyProgram' => $studyProgramme,
+                'setSubject' => null,
+                'setTeacher' => null,
                 // aktualne sa daju vyplnat iba predmety ktore sme navstevovali
-                $answer->setAttended(true);
-
-                $em->persist($answer);
-            }
-
-            $userSeason = $em->getRepository('AnketaBundle:UserSeason')->findOneBy(array('user' => $user->getId(), 'season' => $season->getId()));
-            $userSeason->setParticipated(true);
+                'setAttended' => true,
+            ));
 
             $em->flush();
 
@@ -324,7 +313,7 @@ class QuestionController extends Controller {
         $templateParams['activeItems'] = array('study_program', $studyProgramme->getCode());
         $templateParams['questions'] = $questions;
         $templateParams['answers'] = $answers;
-        $templateParams['categoryType'] = 'general'; // @TODO(majak): co to tu ma byt?
+        $templateParams['categoryType'] = 'study_program';
         $templateParams['subject'] = null;
         return $this->render('AnketaBundle:Question:index.html.twig', $templateParams);
     }
@@ -374,17 +363,13 @@ class QuestionController extends Controller {
                       ->getAnswersByCriteria($questions, $user, $season);
 
         if ('POST' == $request->getMethod()) {
-            $answerArray = $this->processForm($request, $user, $questions, $answers, $season);
-            foreach ($answerArray AS $answer) {
-                // k odpovedi pridame prvy studijny odbor, co user ma
-                $ur = $em->getRepository('AnketaBundle\Entity\StudyProgram');
-                $answer->setStudyProgram($ur->getFirstStudyProgrammeForUser($user, $season));
+            // k odpovediam pridame prvy studijny odbor, co user ma
+            $studyProgram = $em->getRepository('AnketaBundle\Entity\StudyProgram')->
+                getFirstStudyProgrammeForUser($user, $season);
 
-                $em->persist($answer);
-            }
-
-            $userSeason = $em->getRepository('AnketaBundle:UserSeason')->findOneBy(array('user' => $user->getId(), 'season' => $season->getId()));
-            $userSeason->setParticipated(true);
+            $this->processForm($request, $user, $questions, $answers, $season, array(
+                'setStudyProgram' => $studyProgram,
+            ));
 
             $em->flush();
 
