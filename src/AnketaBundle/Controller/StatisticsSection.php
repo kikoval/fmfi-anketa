@@ -22,22 +22,97 @@ use AnketaBundle\Entity\Response;
 use AnketaBundle\Entity\CategoryType;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-abstract class StatisticsSection extends ContainerAware {
+class StatisticsSection extends ContainerAware {
+
+    ///// I. the interesting part: various constructors
+
+    protected function __construct() {
+    }
+
+    public static function makeSubjectTeacherSection(ContainerInterface $container, Season $season, Subject $subject, User $teacher) {
+        $em = $container->get('doctrine.orm.entity_manager');
+        if ($em->getRepository('AnketaBundle:TeachersSubjects')->findOneBy(array('teacher' => $teacher->getId(), 'subject' => $subject->getId(), 'season' => $season->getId())) === null) {
+            throw new NotFoundHttpException('Section not found: Teacher "'.$teacher->getId().'" doesn\'t teach subject "'.$subject->getId().'".');
+        }
+        $result = new StatisticsSection();
+        $result->setContainer($container);
+        $result->season = $season;
+        $result->subject = $subject;
+        $result->teacher = $teacher;
+        $result->title = $subject->getCode() . ' ' . $subject->getName() . ' - ' . $teacher->getFormattedName();
+        $result->questionsCategoryType = CategoryType::TEACHER_SUBJECT;
+        $result->answersQuery = array('subject' => $subject->getId(), 'teacher' => $teacher->getId());
+        $result->responsesQuery = array('season' => $season->getId(), 'subject' => $subject->getId(), 'teacher' => $teacher->getId(), 'studyProgram' => null);
+        $result->activeMenuItems = array($season->getId(), 'subjects', $subject->getCategory(), $subject->getId(), $teacher->getId());
+        $result->slug = $season->getSlug() . '/predmet/' . $subject->getSlug() . '/ucitel/' . $teacher->getId();
+        $result->associationExamples = 'prednášajúci, cvičiaci, garant predmetu';
+        return $result;
+    }
+
+    public static function makeSubjectSection(ContainerInterface $container, Season $season, Subject $subject) {
+        $em = $container->get('doctrine.orm.entity_manager');
+        $result = new StatisticsSection();
+        $result->setContainer($container);
+        $result->season = $season;
+        $result->subject = $subject;
+        $result->title = $subject->getCode() . ' ' . $subject->getName();
+        $result->questionsCategoryType = CategoryType::SUBJECT;
+        $result->answersQuery = array('subject' => $subject->getId());
+        $result->responsesQuery = array('season' => $season->getId(), 'subject' => $subject->getId(), 'teacher' => null, 'studyProgram' => null);
+        $result->activeMenuItems = array($season->getId(), 'subjects', $subject->getCategory(), $subject->getId());
+        $result->slug = $season->getSlug() . '/predmet/' . $subject->getSlug();
+        $result->associationExamples = 'prednášajúci, cvičiaci, garant predmetu';
+        return $result;
+    }
+
+    public static function makeGeneralSection(ContainerInterface $container, Season $season, Question $generalQuestion) {
+        if ($generalQuestion->getCategory()->getType() != CategoryType::GENERAL) {
+            throw new NotFoundHttpException('Section not found: Question is not general.');
+        }
+        $result = new StatisticsSection();
+        $result->setContainer($container);
+        $result->season = $season;
+        $result->generalQuestion = $generalQuestion;
+        $result->title = $generalQuestion->getQuestion();
+        $result->questionsCategoryType = CategoryType::GENERAL;
+        $result->headingVisible = false;
+        $result->answersQuery = array();
+        $result->responsesQuery = array('season' => $season->getId(), 'question' => $generalQuestion->getId());
+        $result->activeMenuItems = array($season->getId(), 'general');
+        $result->slug = $season->getSlug() . '/vseobecne/' . $generalQuestion->getId();
+        $result->associationExamples = 'vedenie fakulty, vedúci katedry, vyučujúci';
+        return $result;
+    }
+
+    public static function makeStudyProgramSection(ContainerInterface $container, Season $season, StudyProgram $studyProgram) {
+        $result = new StatisticsSection();
+        $result->setContainer($container);
+        $result->season = $season;
+        $result->studyProgram = $studyProgram;
+        $result->title = $studyProgram->getCode() . ' ' . $studyProgram->getName();
+        $result->questionsCategoryType = CategoryType::STUDY_PROGRAMME;
+        $result->answersQuery = array('studyProgram' => $studyProgram->getId());
+        $result->responsesQuery = array('season' => $season->getId(), 'studyProgram' => $studyProgram->getId(), 'teacher' => null, 'subject' => null);
+        $result->activeMenuItems = array($season->getId(), 'study_programs', $studyProgram->getCode());
+        $result->slug = $season->getSlug() . '/program/' . $studyProgram->getSlug();
+        $result->associationExamples = 'garant, tútor, vedúci katedry, vyučujúci niektorého predmetu';
+        return $result;
+    }
 
     public static function getSectionOfAnswer(ContainerInterface $container, Answer $answer) {
         $category = $answer->getQuestion()->getCategory()->getType();
-        if ($category == CategoryType::TEACHER_SUBJECT) return new StatisticsTeacherSubjectSection($container, $answer->getSeason(), $answer->getSubject(), $answer->getTeacher());
-        if ($category == CategoryType::SUBJECT) return new StatisticsSubjectSection($container, $answer->getSeason(), $answer->getSubject());
-        if ($category == CategoryType::GENERAL) return new StatisticsGeneralSection($container, $answer->getSeason(), $answer->getQuestion());
-        if ($category == CategoryType::STUDY_PROGRAMME) return new StatisticsStudyProgramSection($container, $answer->getSeason(), $answer->getStudyProgram());
+        if ($category == CategoryType::TEACHER_SUBJECT) return self::makeSubjectTeacherSection($container, $answer->getSeason(), $answer->getSubject(), $answer->getTeacher());
+        if ($category == CategoryType::SUBJECT) return self::makeSubjectSection($container, $answer->getSeason(), $answer->getSubject());
+        if ($category == CategoryType::GENERAL) return self::makeGeneralSection($container, $answer->getSeason(), $answer->getQuestion());
+        if ($category == CategoryType::STUDY_PROGRAMME) return self::makeStudyProgramSection($container, $answer->getSeason(), $answer->getStudyProgram());
         throw new \Exception('Unknown category type');
     }
 
     public static function getSectionOfResponse(ContainerInterface $container, Response $response) {
-        if ($response->getTeacher() !== null) return new StatisticsTeacherSubjectSection($container, $response->getSeason(), $response->getSubject(), $response->getTeacher());
-        if ($response->getSubject() !== null) return new StatisticsSubjectSection($container, $response->getSeason(), $response->getSubject());
-        if ($response->getQuestion() !== null) return new StatisticsGeneralSection($container, $response->getSeason(), $response->getQuestion());
-        if ($response->getStudyProgram() !== null) return new StatisticsStudyProgramSection($container, $response->getSeason(), $response->getStudyProgram());
+        if ($response->getTeacher() !== null) return self::makeSubjectTeacherSection($container, $response->getSeason(), $response->getSubject(), $response->getTeacher());
+        if ($response->getSubject() !== null) return self::makeSubjectSection($container, $response->getSeason(), $response->getSubject());
+        if ($response->getQuestion() !== null) return self::makeGeneralSection($container, $response->getSeason(), $response->getQuestion());
+        if ($response->getStudyProgram() !== null) return self::makeStudyProgramSection($container, $response->getSeason(), $response->getStudyProgram());
         throw new \Exception('Unknown type of response');
     }
 
@@ -61,71 +136,71 @@ abstract class StatisticsSection extends ContainerAware {
             if ($teacher === null) {
                 throw new NotFoundHttpException('Section not found: Teacher "'.$matches[2].'" not found.');
             }
-            return new StatisticsTeacherSubjectSection($container, $season, $subject, $teacher);
+            return self::makeSubjectTeacherSection($container, $season, $subject, $teacher);
         }
         if (preg_match('@^predmet/([a-zA-Z0-9-_]+)$@', $slug, $matches)) {
             $subject = $em->getRepository('AnketaBundle:Subject')->findOneBy(array('slug' => $matches[1]));
             if ($subject === null) {
                 throw new NotFoundHttpException('Section not found: Subject "'.$matches[1].'" not found.');
             }
-            return new StatisticsSubjectSection($container, $season, $subject);
+            return self::makeSubjectSection($container, $season, $subject);
         }
         if (preg_match('@^vseobecne/(\d+)$@', $slug, $matches)) {
             $question = $em->find('AnketaBundle:Question', $matches[1]);
             if ($question === null) {
                 throw new NotFoundHttpException('Section not found: Question "'.$matches[1].'" not found.');
             }
-            return new StatisticsGeneralSection($container, $season, $question);
+            return self::makeGeneralSection($container, $season, $question);
         }
         if (preg_match('@^program/([a-zA-Z0-9-_]+)$@', $slug, $matches)) {
             $program = $em->getRepository('AnketaBundle:StudyProgram')->findOneBy(array('slug' => $matches[1]));
             if ($program === null) {
                 throw new NotFoundHttpException('Section not found: Program "'.$matches[1].'" not found.');
             }
-            return new StatisticsProgramSection($container, $season, $program);
+            return self::makeStudyProgramSection($container, $season, $program);
         }
         throw new NotFoundHttpException('Section not found: Bad section slug format.');
     }
 
     ///// II. the boring part: instance variables and their accessors
 
-    protected $season = null;
+    private $season = null;
 
     public function getSeason() {
         return $this->season;
     }
-    
-    protected $subject = null;
+
+    private $subject = null;
 
     public function getSubject() {
         return $this->subject;
     }
 
-    protected $teacher = null;
+    private $teacher = null;
 
     public function getTeacher() {
         return $this->teacher;
     }
 
-    protected $generalQuestion = null;
+    private $generalQuestion = null;
 
     public function getGeneralQuestion() {
         return $this->generalQuestion;
     }
 
-    protected $studyProgram = null;
+    private $studyProgram = null;
 
     public function getStudyProgram() {
         return $this->studyProgram;
     }
 
-    protected $title = null;
+    private $title = null;
 
     public function getTitle() {
         return $this->title;
     }
 
-    protected $headingVisible = true;
+    private $headingVisible = true;
 
     public function getHeadingVisible() {
         return $this->headingVisible;
@@ -209,13 +284,13 @@ abstract class StatisticsSection extends ContainerAware {
         return $this->preface;
     }
 
-    protected $minVoters = 0;
+    private $minVoters = 0;
 
     public function getMinVoters() {
         return $this->minVoters;
     }
 
-    protected $questionsCategoryType = null;
+    private $questionsCategoryType = null;
 
     public function getQuestions() {
         if ($this->generalQuestion) return array($this->generalQuestion);
@@ -223,7 +298,7 @@ abstract class StatisticsSection extends ContainerAware {
         return $em->getRepository('AnketaBundle:Question')->getOrderedQuestionsByCategoryType($this->questionsCategoryType, $this->season);
     }
 
-    protected $answersQuery = null;
+    private $answersQuery = null;
 
     public function getAnswers($question) {
         $query = array_merge($this->answersQuery, array('question' => $question->getId()));
@@ -233,27 +308,29 @@ abstract class StatisticsSection extends ContainerAware {
 
     // TODO public function getQuestionsAndAnswers() or something like that
 
-    protected $responsesQuery = null;
+    private $responsesQuery = null;
 
     public function getResponses() {
         $em = $this->container->get('doctrine.orm.entity_manager');
         return $em->getRepository('AnketaBundle:Response')->findBy($this->responsesQuery);
     }
 
-    protected $activeMenuItems = null;
+    private $activeMenuItems = null;
 
     public function getActiveMenuItems() {
         return $this->activeMenuItems;
     }
 
-    protected $slug = null;
+    private $slug = null;
 
     /**
      * Get slug for the section.
      * 
      * @return string
      */
-    abstract public function getSlug();
+    public function getSlug() {
+        return $this->slug;
+    }
 
     /**
      * Get path for the section based on the slug.
@@ -262,46 +339,50 @@ abstract class StatisticsSection extends ContainerAware {
      * @param string $slug
      * @return string
      */
-    public function getStatisticsPath($absolute = false, $slug = null) {
-        if ($slug === null) $slug = $this->getSlug();
-        return $this->container->get('router')->generate('statistics_results', array('section_slug' => $slug), $absolute);
+    public function getStatisticsPath($absolute = false) {
+        return $this->container->get('router')->generate('statistics_results', array('section_slug' => $this->getSlug()), $absolute);
     }
     
-    protected $prevSeason = null;
+    private $previousSection = null;
     
     /**
-     * Get string description of the previous season (@see getPrevSeason()).
-     * 
-     * @return string
+     * Gets the section in previous season
      */
-    public function getPrevSeasonDesc() {
-        if ($this->prevSeason === null) $this->prevSeason = $this->getPrevSeason();
-        return $this->prevSeason->getDescription();
-    }
-    
-    /**
-     * Get the first previous season where there is an entry for particular section.
-     * 
-     * @return Season
-     */
-    abstract public function getPrevSeason();
-    
-    protected $prevLink = null;
-    
-    /**
-     * Get link to stats for previous season.
-     * 
-     * @param bool $absolute
-     * @return string
-     */
-    public function getPrevLink($absolute = false) {
-        if ($this->getPrevSeason() == null) return null;
-        $this->prevSeason = $this->getPrevSeason();
-        $prevSlug = $this->getSlug($this->prevSeason);
-        return $this->getStatisticsPath($absolute, $prevSlug);
-    }
+    public function getPreviousSection() {
+    	$em = $this->container->get('doctrine.orm.entity_manager');
+    	
+    	$qb = $em->createQueryBuilder();
+    	$qb->select('a')
+    	->from('AnketaBundle:Answer', 'a')->from('AnketaBundle:Question', 'q')
+    	->from('AnketaBundle:Category', 'c')->from('AnketaBundle:Season', 'sn')
+    	->where('a.question = q')
+    	->andWhere('q.category = c')
+    	->andWhere($qb->expr()->eq('c.type', '?1'))
+    	->andWhere('a.season = sn')
+    	->andWhere($qb->expr()->lt('sn.ordering', '?2'))
+    	->orderBy('sn.ordering', 'DESC');
+    	foreach (array('teacher', 'subject', 'studyProgram') as $col) {
+    		if (empty($this->answersQuery[$col])) {
+//     			$qb->andWhere($qb->expr()->isNull("a.$col"));
+    		}
+    		else {
+    			$qb->andWhere($qb->expr()->eq("a.$col", $this->answersQuery[$col]));
+    		}
+    	}
+    	
+    	// Treba vylucit prazdne odpovede
+    	// TODO: nedavat do DB prazdne odpovede
+    	$qb->andWhere('NOT(a.evaluation IS NULL AND a.comment IS NULL AND a.option IS NULL)');
+    	$qb->setParameters(array(1 => $this->questionsCategoryType, 2 => $this->season->getOrdering()));
+    	$qb->setMaxResults(1);
+    	$answer = $qb->getQuery()->getResult();
+    	
+    	if ($answer == null) return null;
 
-    protected $associationExamples = null;
+    	return self::getSectionOfAnswer($this->container, $answer[0]);
+    }
+    
+    private $associationExamples = null;
 
     public function getAssociationExamples() {
         return $this->associationExamples;

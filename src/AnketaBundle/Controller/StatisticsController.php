@@ -280,7 +280,7 @@ class StatisticsController extends Controller {
         foreach ($categories as $category_id => $subjects) {
             $links = array();
             foreach ($subjects as $subject) {
-                $section = new StatisticsSubjectSection($this->container, $season, $subject);
+                $section = StatisticsSection::makeSubjectSection($this->container, $season, $subject);
                 $links[$section->getTitle()] = $section->getStatisticsPath();
             }
             $items[$category_id] = array('anchor' => $slugifier->slugify($category_id), 'list' => $links);
@@ -309,7 +309,7 @@ class StatisticsController extends Controller {
 
         $items = array();
         foreach ($subjects as $subject) {
-            $section = new StatisticsSubjectSection($this->container, $season, $subject);
+            $section = StatisticsSection::makeSubjectSection($this->container, $season, $subject);
             $items[$section->getTitle()] = $section->getStatisticsPath();
         }
 
@@ -332,7 +332,7 @@ class StatisticsController extends Controller {
 
         $items = array();
         foreach ($studyPrograms as $studyProgram) {
-            $section = new StatisticsProgramSection($this->container, $season, $studyProgram);
+            $section = StatisticsSection::makeStudyProgramSection($this->container, $season, $studyProgram);
             $items[$section->getTitle()] = $section->getStatisticsPath();
         }
         
@@ -414,7 +414,7 @@ class StatisticsController extends Controller {
             $items[$category->getDescription()] = array();
             $questions = $em->getRepository('AnketaBundle:Question')->getOrderedQuestions($category, $season);
             foreach ($questions as $question) {
-                $section = new StatisticsGeneralSection($this->container, $season, $question);
+                $section = StatisticsSection::makeGeneralSection($this->container, $season, $question);
                 $items[$category->getDescription()][$question->getQuestion()] = $section->getStatisticsPath();
             }
         }

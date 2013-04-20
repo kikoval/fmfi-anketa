@@ -10,12 +10,8 @@
 
 namespace AnketaBundle\Menu;
 
-use AnketaBundle\Controller\StatisticsProgramSection;
-use AnketaBundle\Controller\StatisticsSection;
-use AnketaBundle\Controller\StatisticsSubjectSection;
-use AnketaBundle\Controller\StatisticsTeacherSubjectSection;
-
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use AnketaBundle\Controller\StatisticsSection;
 
 class StatisticsMenu
 {
@@ -69,7 +65,7 @@ class StatisticsMenu
                         $studyPrograms = $studyProgramRepository->getAllWithAnswers($season);
                         foreach ($studyPrograms as $studyProgram) {
                             // Add this study program under "Study programmes".
-                            $studyProgramSection = new StatisticsProgramSection($this->container, $season, $studyProgram);
+                            $studyProgramSection = StatisticsSection::makeStudyProgramSection($this->container, $season, $studyProgram);
                             $studyProgramsItem->children[$studyProgram->getCode()] = new MenuItem(
                                 $studyProgram->getCode(), $studyProgramSection->getStatisticsPath());
                         }
@@ -94,7 +90,7 @@ class StatisticsMenu
                             $categoryItem->expanded = true;
                             foreach ($subjectsByCategory[$category] as $subject) {
                                 // Add this subject under this category.
-                                $subjectSection = new StatisticsSubjectSection($this->container, $season, $subject);
+                                $subjectSection = StatisticsSection::makeSubjectSection($this->container, $season, $subject);
                                 $categoryItem->children[$subject->getId()] = $subjectItem = new MenuItem(
                                     $subject->getName(), $subjectSection->getStatisticsPath());
                                 if (isset($activeItems[3]) && $activeItems[3] == $subject->getId()) {
@@ -103,9 +99,11 @@ class StatisticsMenu
                                     foreach ($teachersSubjects as $teacherSubject) {
                                         // Add this teacher under this subject.
                                         $teacher = $teacherSubject->getTeacher();
-                                        $teacherSection = new StatisticsTeacherSubjectSection($this->container, $season, $subject, $teacher);
-                                        $subjectItem->children[$teacher->getId()] = $teacherItem = new MenuItem(
-                                            $teacher->getFormattedName(), $teacherSection->getStatisticsPath());
+                                        if ($teacher !== null) {
+	                                        $teacherSection = StatisticsSection::makeSubjectTeacherSection($this->container, $season, $subject, $teacher);
+	                                        $subjectItem->children[$teacher->getId()] = $teacherItem = new MenuItem(
+	                                            $teacher->getFormattedName(), $teacherSection->getStatisticsPath());
+                                        }
                                         if ($teacherSubject->getLecturer()) $teacherItem->lecturer = true;
                                         if ($teacherSubject->getTrainer()) $teacherItem->trainer = true;
                                     }
