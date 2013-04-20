@@ -349,37 +349,37 @@ class StatisticsSection extends ContainerAware {
      * Gets the section in previous season
      */
     public function getPreviousSection() {
-    	$em = $this->container->get('doctrine.orm.entity_manager');
-    	
-    	$qb = $em->createQueryBuilder();
-    	$qb->select('a')
-    	->from('AnketaBundle:Answer', 'a')->from('AnketaBundle:Question', 'q')
-    	->from('AnketaBundle:Category', 'c')->from('AnketaBundle:Season', 'sn')
-    	->where('a.question = q')
-    	->andWhere('q.category = c')
-    	->andWhere($qb->expr()->eq('c.type', '?1'))
-    	->andWhere('a.season = sn')
-    	->andWhere($qb->expr()->lt('sn.ordering', '?2'))
-    	->orderBy('sn.ordering', 'DESC');
-    	foreach (array('teacher', 'subject', 'studyProgram') as $col) {
-    		if (empty($this->answersQuery[$col])) {
-//     			$qb->andWhere($qb->expr()->isNull("a.$col"));
-    		}
-    		else {
-    			$qb->andWhere($qb->expr()->eq("a.$col", $this->answersQuery[$col]));
-    		}
-    	}
-    	
-    	// Treba vylucit prazdne odpovede
-    	// TODO: nedavat do DB prazdne odpovede
-    	$qb->andWhere('NOT(a.evaluation IS NULL AND a.comment IS NULL AND a.option IS NULL)');
-    	$qb->setParameters(array(1 => $this->questionsCategoryType, 2 => $this->season->getOrdering()));
-    	$qb->setMaxResults(1);
-    	$answer = $qb->getQuery()->getResult();
-    	
-    	if ($answer == null) return null;
+        $em = $this->container->get('doctrine.orm.entity_manager');
 
-    	return self::getSectionOfAnswer($this->container, $answer[0]);
+        $qb = $em->createQueryBuilder();
+        $qb->select('a')
+        ->from('AnketaBundle:Answer', 'a')->from('AnketaBundle:Question', 'q')
+        ->from('AnketaBundle:Category', 'c')->from('AnketaBundle:Season', 'sn')
+        ->where('a.question = q')
+        ->andWhere('q.category = c')
+        ->andWhere($qb->expr()->eq('c.type', '?1'))
+        ->andWhere('a.season = sn')
+        ->andWhere($qb->expr()->lt('sn.ordering', '?2'))
+        ->orderBy('sn.ordering', 'DESC');
+        foreach (array('teacher', 'subject', 'studyProgram') as $col) {
+            if (empty($this->answersQuery[$col])) {
+//                 $qb->andWhere($qb->expr()->isNull("a.$col"));
+            }
+            else {
+                $qb->andWhere($qb->expr()->eq("a.$col", $this->answersQuery[$col]));
+            }
+        }
+
+        // Treba vylucit prazdne odpovede
+        // TODO: nedavat do DB prazdne odpovede
+        $qb->andWhere('NOT(a.evaluation IS NULL AND a.comment IS NULL AND a.option IS NULL)');
+        $qb->setParameters(array(1 => $this->questionsCategoryType, 2 => $this->season->getOrdering()));
+        $qb->setMaxResults(1);
+        $answer = $qb->getQuery()->getResult();
+
+        if ($answer == null) return null;
+
+        return self::getSectionOfAnswer($this->container, $answer[0]);
     }
     
     private $associationExamples = null;
