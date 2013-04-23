@@ -99,11 +99,9 @@ class StatisticsMenu
                                     foreach ($teachersSubjects as $teacherSubject) {
                                         // Add this teacher under this subject.
                                         $teacher = $teacherSubject->getTeacher();
-                                        if ($teacher !== null) {
-                                            $teacherSection = StatisticsSection::makeSubjectTeacherSection($this->container, $season, $subject, $teacher);
-                                            $subjectItem->children[$teacher->getId()] = $teacherItem = new MenuItem(
-                                                $teacher->getFormattedName(), $teacherSection->getStatisticsPath());
-                                        }
+                                        $teacherSection = StatisticsSection::makeSubjectTeacherSection($this->container, $season, $subject, $teacher);
+                                        $subjectItem->children[$teacher->getId()] = $teacherItem = new MenuItem(
+                                            $teacher->getFormattedName(), $teacherSection->getStatisticsPath());
                                         if ($teacherSubject->getLecturer()) $teacherItem->lecturer = true;
                                         if ($teacherSubject->getTrainer()) $teacherItem->trainer = true;
                                     }

@@ -346,9 +346,11 @@ class StatisticsSection extends ContainerAware {
     private $previousSection = null;
     
     /**
-     * Gets the section in previous season
+     * Gets the previous section object.
      */
     public function getPreviousSection() {
+    	if ($this->previousSection !== null) return $this->previousSection;
+    	
         $em = $this->container->get('doctrine.orm.entity_manager');
 
         $qb = $em->createQueryBuilder();
@@ -362,11 +364,8 @@ class StatisticsSection extends ContainerAware {
         ->andWhere($qb->expr()->lt('sn.ordering', '?2'))
         ->orderBy('sn.ordering', 'DESC');
         foreach (array('teacher', 'subject', 'studyProgram') as $col) {
-            if (empty($this->answersQuery[$col])) {
-//                 $qb->andWhere($qb->expr()->isNull("a.$col"));
-            }
-            else {
-                $qb->andWhere($qb->expr()->eq("a.$col", $this->answersQuery[$col]));
+            if (!empty($this->answersQuery[$col])) {
+            	$qb->andWhere($qb->expr()->eq("a.$col", $this->answersQuery[$col]));
             }
         }
 
@@ -375,11 +374,12 @@ class StatisticsSection extends ContainerAware {
         $qb->andWhere('NOT(a.evaluation IS NULL AND a.comment IS NULL AND a.option IS NULL)');
         $qb->setParameters(array(1 => $this->questionsCategoryType, 2 => $this->season->getOrdering()));
         $qb->setMaxResults(1);
-        $answer = $qb->getQuery()->getResult();
+        $answer = $qb->getQuery()->getOneOrNullResult();
 
         if ($answer == null) return null;
 
-        return self::getSectionOfAnswer($this->container, $answer[0]);
+        $this->previousSection = self::getSectionOfAnswer($this->container, $answer);
+        return $this->previousSection;
     }
     
     private $associationExamples = null;
