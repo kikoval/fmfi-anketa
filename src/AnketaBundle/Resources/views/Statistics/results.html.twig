@@ -12,6 +12,13 @@
     {% if section.preface is not null and section.preface is not empty %}
         <p>{{ section.preface }}</p>
     {% endif %}
+
+    {% set prevSection = section.previousSection %}
+    {% if prevSection is not empty %}
+        <h2>Predchádzajúce hodnotenie</h2>
+        <p>Pozrite si <a href="{{ prevSection.statisticsPath }}">hodnotenie pre obdobie {{ prevSection.season.description }}</a>.</p>
+    {% endif %}
+    
     {{ responseMacro.displayResponses(responses, section) }}
     {% for result in results %}
         {% if not loop.first %}
