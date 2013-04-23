@@ -349,8 +349,8 @@ class StatisticsSection extends ContainerAware {
      * Gets the previous section object.
      */
     public function getPreviousSection() {
-    	if ($this->previousSection !== null) return $this->previousSection;
-    	
+        if ($this->previousSection !== null) return $this->previousSection;
+
         $em = $this->container->get('doctrine.orm.entity_manager');
 
         $qb = $em->createQueryBuilder();
@@ -365,7 +365,7 @@ class StatisticsSection extends ContainerAware {
         ->orderBy('sn.ordering', 'DESC');
         foreach (array('teacher', 'subject', 'studyProgram') as $col) {
             if (!empty($this->answersQuery[$col])) {
-            	$qb->andWhere($qb->expr()->eq("a.$col", $this->answersQuery[$col]));
+                $qb->andWhere($qb->expr()->eq("a.$col", $this->answersQuery[$col]));
             }
         }
 
