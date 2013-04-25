@@ -22,14 +22,14 @@
         <p>Ak vás tento učiteľ neučil, môžete otázky preskočiť a zvoliť <em>Ulož a choď ďalej</em>.</p>
     {% elseif categoryType == 'subject' %}
         <p style="color: #888;">
-            Ak tento predmet nepodlieha priamej vyučbe, ale splneniu určitých povinností (ako napr. diplomová práca,
-vedecká činnosť, samostatné štúdium odbornej literatúry a pod.), prípadne ste tento predmet v aktuálnom semestri neobsolvovali lebo Vám bol uznaný, hodnotenie predmetu prosím preskočte.
+            {% trans %}Ak tento predmet nepodlieha priamej vyučbe, ale splneniu určitých povinností (ako napr. diplomová práca,
+vedecká činnosť, samostatné štúdium odbornej literatúry a pod.), prípadne ste tento predmet v aktuálnom semestri neobsolvovali lebo Vám bol uznaný, hodnotenie predmetu prosím preskočte.{% endtrans %}
         </p>
     {% endif %}
     {% if categoryType == 'teacher_subject' or categoryType == 'subject' %}
-        <p>Je v zozname učiteľov k tomuto predmetu chyba?
+        <p>{% trans %}Je v zozname učiteľov k tomuto predmetu chyba?{% endtrans %}
         <a href="{{ path('assoc_teacher_with_subject', {'subject_slug': subject.slug}) }}"
-           >Dajte nám vedieť a my to napravíme</a>.
+           >{% trans %}Dajte nám vedieť a my to napravíme{% endtrans %}</a>.
         </p>
     {% endif %}
     {% block submit %}
@@ -40,9 +40,9 @@ vedecká činnosť, samostatné štúdium odbornej literatúry a pod.), prípadn
     {% endblock %}
     {% for question in questions %}
         <div class="question{{ question.stars ? ' stars' : '' }}">
-            <h3>{{ question.question }}</h3>
+            <h3>{{ question.question | trans}}</h3>
             {% if question.hasDescription %}
-                <div class="description">{{ question.description }}</div>
+                <div class="description">{{ question.description | trans }}</div>
             {% endif %}
 
             {% if question.options | length %}
@@ -75,7 +75,7 @@ vedecká činnosť, samostatné štúdium odbornej literatúry a pod.), prípadn
                         {% if answers[question.id] is not none and answers[question.id].hasOption and answers[question.id].option.id == option.id %}
                             checked="checked"
                         {% endif %} />
-                    {{ option.option }}
+                    {{ option.option | trans}}
                   </label>
                 </div>
             {% endfor %}
