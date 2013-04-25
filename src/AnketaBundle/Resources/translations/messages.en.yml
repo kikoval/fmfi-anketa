@@ -3,7 +3,7 @@ base:
 userbar:
   prihlaseny: Logged in
   odhlasit: logout
-  prihlasit: Prihlásiť
+  prihlasit: log in
 layout:
    hlasuj: Vote
    vysledky: Results
