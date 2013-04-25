@@ -9,45 +9,47 @@ use libfajr\base\Preconditions;
  * @ORM\Entity()
  */
 class TeachingAssociation {
-    
+
     /**
-     * @ORM\Id 
-     * @ORM\GeneratedValue 
+     * @ORM\Id
+     * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
     protected $id;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="Season")
+     * @ORM\JoinColumn(nullable=false)
      *
      * @var Season $season
      */
     protected $season;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="User")
      *
      * @var User $requestedBy
      */
     protected $requestedBy;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="Subject")
+     * @ORM\JoinColumn(nullable=false)
      *
      * @var Subject $subject
      */
     protected $subject;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="User")
      *
      * @var User $teacher
      */
     protected $teacher;
-    
+
     /**
-     * @ORM\Column(type="text")
-     * @var string $note 
+     * @ORM\Column(type="text", nullable=false)
+     * @var string $note
      */
     protected $note;
 
@@ -102,7 +104,7 @@ class TeachingAssociation {
     public function setTeacher(User $teacher = null) {
         $this->teacher = $teacher;
     }
-    
+
     public function getNote() {
         return $this->note;
     }

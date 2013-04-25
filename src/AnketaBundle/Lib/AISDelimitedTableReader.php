@@ -15,31 +15,31 @@ use Exception;
 
 /**
  * Parses AIS .tbl files.
- * @todo Make multibyte aware 
+ * @todo Make multibyte aware
  */
 class AISDelimitedTableReader implements TableReaderInterface
 {
-    
+
     /** @var resource file handle */
     private $fp;
-    
+
     /** @var array */
     private $header;
-    
-    
+
+
     /**
      *
      * @param type $fp file handle to read from
      * @param type $delimiter
      * @param type $enclosure
-     * @param type $escape 
+     * @param type $escape
      */
     public function __construct($fp)
     {
         $this->fp = $fp;
         $this->parseHeader();
     }
-    
+
     private function parseHeader()
     {
         $this->header = array();
@@ -49,7 +49,7 @@ class AISDelimitedTableReader implements TableReaderInterface
             $this->header[] = $parsed[0];
         }
     }
-    
+
     private function readLine()
     {
         $line = fgets($this->fp);
@@ -60,7 +60,7 @@ class AISDelimitedTableReader implements TableReaderInterface
         }
         return $line;
     }
-    
+
     public function readRow()
     {
         $line = $this->readLine();
@@ -76,5 +76,5 @@ class AISDelimitedTableReader implements TableReaderInterface
     public function getHeader() {
         return $this->header;
     }
-    
+
 }

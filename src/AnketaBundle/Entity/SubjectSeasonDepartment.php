@@ -21,10 +21,10 @@ use AnketaBundle\Entity\Department;
  *      uniqueConstraints={@ORM\UniqueConstraint(name="subject_season_department_unique",columns={"subjectSeason_id","department_id"})})
  */
 class SubjectSeasonDepartment {
-    
+
     /**
-     * @ORM\Id 
-     * @ORM\GeneratedValue 
+     * @ORM\Id
+     * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
     private $id;
@@ -35,14 +35,14 @@ class SubjectSeasonDepartment {
      * @var SubjectSeason $subjectSeason
      */
     private $subjectSeason;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="Department")
      *
      * @var Department $department
      */
     private $department;
-    
+
     public function getSubjectSeason() {
         return $this->subject;
     }

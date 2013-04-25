@@ -18,8 +18,7 @@ class ResponseController extends Controller {
         $user = $access->getUser();
 
         $response = new Response();
-        $response->setAuthorLogin($user->getLogin());
-        $response->setAuthorText($user->getDisplayName());
+        $response->setAuthor($user);
         $response->setSeason($section->getSeason());
         $response->setTeacher($section->getTeacher());
         $response->setSubject($section->getSubject());
@@ -64,11 +63,12 @@ class ResponseController extends Controller {
                 return new RedirectResponse($section->getStatisticsPath());
             }
             else {
+                // delete
                 $em->remove($response);
                 $em->flush();
                 $message = $this->get('translator')->trans('response.controller.komentar.bol.zmazany');
                 $this->get('session')->setFlash('success', $message);
-                return new RedirectResponse($this->generateUrl('response'));
+                return new RedirectResponse($this->generateUrl('response', array('season_slug' => $response->getSeason()->getSlug())));
             }
         }
         else {
@@ -100,7 +100,7 @@ class ResponseController extends Controller {
         }
 
         $responseRepo = $em->getRepository('AnketaBundle:Response');
-        $query = array('author_login' => $user->getLogin(), 'season' => $season->getId());
+        $query = array('author' => $user, 'season' => $season->getId());
         $responses = $responseRepo->findBy($query);
         $processedResponses = array();
         foreach ($responses as $response) {

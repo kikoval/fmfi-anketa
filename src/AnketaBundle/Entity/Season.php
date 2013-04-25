@@ -1,9 +1,10 @@
 <?php
+
 /**
  * @copyright Copyright (c) 2011,2012 The FMFI Anketa authors (see AUTHORS).
  * Use of this source code is governed by a license that can be
  * found in the LICENSE file in the project root directory.
- * 
+ *
  * @package    Anketa
  * @subpackage Anketa__Entity
  */
@@ -18,17 +19,17 @@ use Doctrine\ORM\Mapping as ORM;
 class Season {
 
     /**
-     * @ORM\Id @ORM\GeneratedValue 
+     * @ORM\Id @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
     protected $id;
 
     /**
      * Full name, i.e. 2010/2011
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=false)
      */
     protected $description;
-    
+
     /**
      * Total number of students in this season
      * @ORM\Column(type="integer")
@@ -41,7 +42,7 @@ class Season {
      *
      * For example 2010-2011
      *
-     * @ORM\Column(type="string", unique=true)
+     * @ORM\Column(type="string", unique=true, nullable=false)
      * @var string $slug
      */
     protected $slug;
@@ -49,44 +50,51 @@ class Season {
     /**
      * Marks active season.
      *
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=false)
      * @var boolean $active
      */
     protected $active = false;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=false)
      */
     protected $votingOpen;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=false)
      */
     protected $resultsVisible;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=false)
      */
     protected $resultsPublic;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=false)
      */
     protected $respondingOpen;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=false)
      */
     protected $responsesVisible;
-    
+
     /**
      * Order seasons by this column in descending order in results.
      * The larger the number, the later in history the season will appear.
      * 
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=false)
      * @var int $ordering
      */
     protected $ordering;
+
+    /**
+     *
+     * @ORM\Column(type="datetime")
+     * @var string $endTime;
+     */
+    protected $endTime;
 
     public function __construct($description, $slug) {
         $this->setDescription($description);
@@ -104,7 +112,7 @@ class Season {
     public function getDescription() {
         return $this->description;
     }
-    
+
     public function getStudentCount() {
         return $this->studentCount;
     }
@@ -171,13 +179,21 @@ class Season {
     public function setResponsesVisible($value) {
         $this->responsesVisible = $value;
     }
-    
+
     public function getOrdering() {
         return $this->ordering;
     }
 
     public function setOrdering($ordering) {
         $this->ordering = $ordering;
+    }
+
+    public function getEndTime() {
+        return $this->endTime;
+    }
+
+    public function setEndTime($endTime) {
+        $this->endTime = $endTime;
     }
 
 }

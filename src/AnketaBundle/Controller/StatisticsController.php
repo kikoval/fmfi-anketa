@@ -9,6 +9,7 @@ use AnketaBundle\Entity\Question;
 use AnketaBundle\Entity\Season;
 use AnketaBundle\Lib\StatisticalFunctions;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use AnketaBundle\Menu\MenuItemProgressbar;
 
 class StatisticsController extends Controller {
     const GRAPH_PALETTE = 'ff1e1e|ff8f1e|f5f51d|b4ff1e|1eff1e';
@@ -334,6 +335,10 @@ class StatisticsController extends Controller {
             $section = StatisticsSection::makeStudyProgramSection($this->container, $season, $studyProgram);
             $items[$section->getTitle()] = $section->getStatisticsPath();
         }
+        
+        if (count($items) == 0) {
+            throw new NotFoundHttpException("Žiadne študijné programy v tejto sezóne nenájdené");
+        }
 
         $templateParams = array();
         $templateParams['title'] = 'Študijné programy';
@@ -361,7 +366,7 @@ class StatisticsController extends Controller {
 
         $templateParams = array();
         $templateParams['section'] = $section;
-        $templateParams['responses'] = $this->processResponses($section->getResponses());
+        $templateParams['responses'] = $section->getResponses();
 
         $limit = $section->getMinVoters();
         if ($maxCnt >= $limit || $this->get('anketa.access.statistics')->hasFullResults()) {
@@ -372,6 +377,25 @@ class StatisticsController extends Controller {
             $templateParams['limit'] = $limit;
             return $this->render('AnketaBundle:Statistics:requestResults.html.twig', $templateParams);
         }
+    }
+    
+    public function seasonReportAction($season_slug = null) {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $season = $this->getSeason($season_slug);
+        if (!$this->get('anketa.access.statistics')->canSeeResults($season)) {
+            return $this->accessDeniedForSeason($season);
+        }
+        
+        $total = $season->getStudentCount();
+        $voters = $em->getRepository('AnketaBundle\Entity\User')
+                     ->getNumberOfAnonymizations($season);
+        
+        $templateParams = array();
+        $templateParams['voters'] = $voters;
+        $templateParams['season'] = $season;
+        $templateParams['voteProgress'] = new MenuItemProgressbar(null, $total, $voters);
+        $templateParams['activeMenuItems'] = array($season->getId());
+        return $this->render('AnketaBundle:Statistics:seasonReport.html.twig', $templateParams);
     }
 
     public function listGeneralAction($season_slug = null) {
@@ -400,31 +424,6 @@ class StatisticsController extends Controller {
         $templateParams['activeMenuItems'] = array($season->getId(), 'general');
         $templateParams['items'] = $items;
         return $this->render('AnketaBundle:Statistics:listing.html.twig', $templateParams);
-    }
-
-    private function processResponses($responses)
-    {
-        $result = array();
-        $em = $this->get('doctrine.orm.entity_manager');
-        $userRepository = $em->getRepository('AnketaBundle:User');
-        foreach ($responses as $response)
-        {
-            $item = array();
-            $item['response'] = $response;
-            // TODO: zjednotit nejak spravanie (author text vs author login)
-            $item['author'] = $response->getAuthorText();
-            if ($response->getAuthorLogin())
-            {
-                $user = $userRepository
-                           ->findOneBy(array('login' => $response->getAuthorLogin()));
-                if (!empty($user)) $item['author'] = $user->getDisplayName();
-            }
-            if ($response->getAssociation()) {
-                $item['author'] .= ' (' . $response->getAssociation() . ')';
-            }
-            $result[] = $item;
-        }
-        return $result;
     }
 
     public function flagInappropriateAction($answer_id) {

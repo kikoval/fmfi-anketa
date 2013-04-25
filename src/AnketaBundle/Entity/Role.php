@@ -11,14 +11,14 @@ use Symfony\Component\Security\Core\Role\RoleInterface;
 class Role implements RoleInterface {
 
     /**
-     * @ORM\Id 
-     * @ORM\GeneratedValue 
+     * @ORM\Id
+     * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
     protected $id;
 
     /**
-     * @ORM\Column(type="string", unique=true)
+     * @ORM\Column(type="string", unique=true, nullable=false)
      */
     protected $name;
 

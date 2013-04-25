@@ -28,7 +28,7 @@ class MenuItem {
      * Useful when the sub-menu list is extremely long
      */
     public $only_expanded;
-    
+
     /*
      * @var MenuItemProgressbar Cointains information about completion progress
      *                          for this menu item.

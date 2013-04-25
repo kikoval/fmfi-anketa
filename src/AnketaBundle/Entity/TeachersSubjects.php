@@ -17,6 +17,7 @@ class TeachersSubjects {
 
     /**
      * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\JoinColumn(nullable=false)
      *
      * @var User $teacher
      */
@@ -24,6 +25,7 @@ class TeachersSubjects {
 
     /**
      * @ORM\ManyToOne(targetEntity="Subject")
+     * @ORM\JoinColumn(nullable=false)
      *
      * @var Subject $subject
      */
@@ -37,17 +39,18 @@ class TeachersSubjects {
 
     /**
      * @ORM\Column(type="boolean")
-     * @var boolean ci cvici(l) 
+     * @var boolean ci cvici(l)
      */
     protected $trainer;
 
     /**
      * @ORM\ManyToOne(targetEntity="Season")
+     * @ORM\JoinColumn(nullable=false)
      *
      * @var Season $season
      */
     protected $season;
-    
+
     public function __construct($teacher, $subject, $season, $lecturer = false, $trainer = false) {
         $this->setTeacher($teacher);
         $this->setSubject($subject);

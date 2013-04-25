@@ -116,7 +116,7 @@ class AISRetriever
         if ($this->studia !== null) {
             return $this->studia;
         }
-        
+
         $this->loginIfNotAlready();
         $zoznamStudii = $this->getAdminStudiaScreen()->getZoznamStudii($this->trace);
         $this->studia = $zoznamStudii->getData();
@@ -125,12 +125,12 @@ class AISRetriever
 
     /**
      * Get a list of subjects
-     * 
+     *
      * @param array(array(string(rok/rok),string(Z/L)))
      *        $semestre a list of semesters to return or null if all are to
      *                  be returned. Default is to return subjects for all
      *                  semesters.
-     *        
+     *
      * @return array(array()) a list of subjects
      */
     public function getPredmety(array $semestre = null)
@@ -144,7 +144,7 @@ class AISRetriever
         $studia = $this->getStudia();
 
         $vsetky_predmety = array();
-        
+
         if ($semestre !== null) {
             $roky = array();
             foreach ($semestre as $semester) {
@@ -156,20 +156,20 @@ class AISRetriever
         }
 
         foreach ($studia as $studium => $studiumInfo) {
-            
+
             $zapisneListy = $adminStudiaScreen->getZapisneListy($this->trace, $studium)->getData();
-            
+
             foreach ($zapisneListy as $zapisnyList => $zapisnyListInfo) {
                 $akadRok = $zapisnyListInfo['popisAkadRok'];
                 if ($semestre !== null && !array_key_exists($akadRok, $roky)) continue;
-                
+
                 $hodnoteniaPriemeryScreen = $this->adminStudiaFactory->
                         newHodnoteniaPriemeryScreen($this->trace,
                         $adminStudiaScreen->getParamNameFromZapisnyListIndex($this->trace, $zapisnyList,
                             AdministraciaStudiaScreen::ACTION_HODNOTENIA_PRIEMERY));
-                
+
                 $hodnotenia = $hodnoteniaPriemeryScreen->getHodnotenia($this->trace)->getData();
-                
+
                 foreach ($hodnotenia as $hodnotenie) {
                     if ($semestre !== null && !in_array($hodnotenie['semester'], $roky[$akadRok])) continue;
                     $hodnotenie['akRok'] = $akadRok;
@@ -177,7 +177,7 @@ class AISRetriever
                         'nazov' => $studiumInfo['studijnyProgramPopis']);
                     $vsetky_predmety[] = $hodnotenie;
                 }
-                
+
                 $hodnoteniaPriemeryScreen->closeIfNeeded($this->trace);
             }
         }

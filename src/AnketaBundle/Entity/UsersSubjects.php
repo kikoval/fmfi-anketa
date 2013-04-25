@@ -10,14 +10,15 @@ use Doctrine\ORM\Mapping as ORM;
 class UsersSubjects {
 
     /**
-     * @ORM\Id 
-     * @ORM\GeneratedValue 
+     * @ORM\Id
+     * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
     protected $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\JoinColumn(nullable=false)
      *
      * @var User $user
      */
@@ -25,6 +26,7 @@ class UsersSubjects {
 
     /**
      * @ORM\ManyToOne(targetEntity="Subject")
+     * @ORM\JoinColumn(nullable=false)
      *
      * @var Subject $subject
      */
@@ -32,13 +34,15 @@ class UsersSubjects {
 
     /**
      * @ORM\ManyToOne(targetEntity="Season")
+     * @ORM\JoinColumn(nullable=false)
      *
      * @var Season $season
      */
     protected $season;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="StudyProgram")
+     * @ORM\JoinColumn(nullable=false)
      * @var StudyProgram $studyProgram
      */
     protected $studyProgram;
@@ -76,7 +80,7 @@ class UsersSubjects {
     public function getSeason() {
         return $this->season;
     }
-    
+
     /**
      * @param StudyProgram $value
      */

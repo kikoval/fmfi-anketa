@@ -7,10 +7,10 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
- * 
+ *
  * ----
  * Modified for Anketa project
- * 
+ *
  * Copyright (c) 2012 The FMFI Anketa authors (see AUTHORS).
  * Use of this source code is governed by a license that can be
  * found in the LICENSE file in the project root directory.
@@ -44,7 +44,7 @@ class ExceptionListener implements EventSubscriberInterface
         $this->controller = $controller;
         $this->logger = $logger;
     }
-    
+
     protected function logException(Exception $exception, $prefix)
     {
         $flat = FlattenException::create($exception);
@@ -70,7 +70,7 @@ class ExceptionListener implements EventSubscriberInterface
                 $message .= sprintf(' on line %s', $trace['line']);
             }
         }
-        
+
         if ($this->logger !== null) {
             if (!$exception instanceof HttpExceptionInterface || $exception->getStatusCode() >= 500) {
                 $this->logger->crit($message);
@@ -95,7 +95,7 @@ class ExceptionListener implements EventSubscriberInterface
 
         $exception = $event->getException();
         $request = $event->getRequest();
-        
+
         $this->logException($exception, 'Uncaught exception ');
 
         $logger = $this->logger instanceof DebugLoggerInterface ? $this->logger : null;

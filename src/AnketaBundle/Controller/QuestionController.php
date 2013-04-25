@@ -185,7 +185,7 @@ class QuestionController extends Controller {
         $season = $em->getRepository('AnketaBundle:Season')->getActiveSeason();
         $questions = $em->getRepository('AnketaBundle\Entity\Question')
                         ->getOrderedQuestionsByCategoryType(CategoryType::TEACHER_SUBJECT, $season);
-        
+
         $teacherSubject = $em->getRepository('AnketaBundle:TeachersSubjects')
                              ->findOneBy(array('subject' => $subject->getId(),
                                                'season' => $season->getId(),
@@ -222,7 +222,7 @@ class QuestionController extends Controller {
         }
 
         $templateParams = array();
-        $templateParams['title'] = $subject->getName() . ' - ' . $teacher->getName();
+        $templateParams['title'] = $subject->getName() . ' - ' . $teacher->getFormattedName();
         $templateParams['activeItems'] = array('subject', $subject->getId(), $teacher->getId());
         $templateParams['questions'] = $questions;
         $templateParams['answers'] = $answers;

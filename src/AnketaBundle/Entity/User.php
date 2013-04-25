@@ -44,29 +44,21 @@ class User implements UserInterface, EquatableInterface {
     protected $roles;
 
     /**
-     * @ORM\OneToMany(targetEntity="UserSeason", mappedBy="user")
-     */
-    protected $userSeasons;
-
-    /**
-     * Roles that are not persisted in the database
-     * @var array(string)
-     */
-    protected $nonPersistentRoles = array(); // inicializator musi byt tu! (doctrine nevola konstruktor)
-
-    /**
      * List of user's organizational units
      * This is not persisted in the database, as it is always reloaded
      * @var array(string)
      */
-
     protected $orgUnits = array(); // inicializator musi byt tu! (doctrine nevola konstruktor)
+
     /**
      * @ORM\Column(type="string", nullable=true, unique=true)
      */
     protected $login;
 
     /**
+     * Ak sa niekedy bude menit department na NOT NULL, tak treba updatnut
+     * ImportRozvrhXMLCommand, vid koment tam.
+     * 
      * @ORM\ManyToOne(targetEntity="Department")
      * @var Department
      */
@@ -77,7 +69,6 @@ class User implements UserInterface, EquatableInterface {
      */
     public function __construct($login) {
         $this->roles = new ArrayCollection();
-        $this->userSeasons = new ArrayCollection();
         $this->setLogin($login);
     }
 
@@ -90,14 +81,7 @@ class User implements UserInterface, EquatableInterface {
     }
 
     public function getDisplayName() {
-        if (!$this->hasDisplayName()) {
-            return $this->login;
-        }
         return $this->displayName;
-    }
-
-    public function hasDisplayName() {
-        return $this->displayName !== null;
     }
 
     /**
@@ -115,14 +99,6 @@ class User implements UserInterface, EquatableInterface {
     }
 
     /**
-     * Add a role that is not persisted in the database
-     * @param string $value
-     */
-    public function addNonPersistentRole($value) {
-        $this->nonPersistentRoles[] = $value;
-    }
-
-    /**
      * @return string[] roles
      */
     public function getRoles() {
@@ -130,7 +106,6 @@ class User implements UserInterface, EquatableInterface {
         foreach ($this->roles as $role) {
             $roles[] = $role->getRole();
         }
-        $roles = array_merge($roles, $this->nonPersistentRoles);
         return $roles;
     }
 
@@ -168,47 +143,14 @@ class User implements UserInterface, EquatableInterface {
         return null;
     }
 
-    public function forSeason($season) {
-        if ($season instanceof Season) $season = $season->getId();
-        foreach ($this->getUserSeasons() as $us) {
-            if ($us->getSeason()->getId() == $season) {
-                return $us;
-            }
-        }
-        return null;
-    }
-
-
     public function __toString() {
         return $this->getLogin();
     }
 
-
-    /**
-     * Add userSeason
-     *
-     * @param UserSeason $userSeason
-     */
-    public function addUserSeason(\AnketaBundle\Entity\UserSeason $userSeason)
-    {
-        $this->userSeasons[] = $userSeason;
-    }
-
-    /**
-     * Get userSeasons
-     *
-     * @return Collection
-     */
-    public function getUserSeasons()
-    {
-        return $this->userSeasons;
-    }
-
-
     public function getName() {
         $name = trim($this->getGivenName() . ' ' . $this->getFamilyName());
-        if ($name !== '') return $name;
-        return $this->getDisplayName();
+        if ($name == '') return null;
+        return $name;
     }
 
     public function getGivenName() {
@@ -229,10 +171,11 @@ class User implements UserInterface, EquatableInterface {
 
 
     public function getFormattedName() {
-        if ($this->getDisplayName() === null) {
-            return $this->getName();
+        $formattedName = $this->getDisplayName() ?: $this->getName() ?: $this->getLogin() ?: null;
+        if ($formattedName === null) {
+                throw new \Exception('Neda sa vygenerovat formatovane meno pre pouzivatela s id ' . $this->getId());
         }
-        return $this->getDisplayName();
+        return $formattedName;
     }
 
     public function getLogin() {

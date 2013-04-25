@@ -50,7 +50,7 @@ class StudyProgramRepository extends EntityRepository {
         $query->setParameters(array('user' => $user, 'subject' => $subject, 'season' => $season));
         return $query->getSingleResult();
     }
-    
+
     public function findByReportsUser(User $user, Season $season) {
         $em = $this->getEntityManager();
         $query = $em->createQuery("SELECT sp
@@ -70,15 +70,41 @@ class StudyProgramRepository extends EntityRepository {
         $em = $this->getEntityManager();
         $query = $em->createQuery("SELECT DISTINCT sp
                            FROM AnketaBundle\\Entity\\StudyProgram sp,
-                           AnketaBundle\\Entity\\Answer a
+                           AnketaBundle\\Entity\\Answer a,
+                           AnketaBundle\\Entity\\Category c,
+                           AnketaBundle\\Entity\\Question q
                            WHERE sp.id = a.studyProgram
                            AND a.teacher IS NULL
                            AND a.subject IS NULL
                            AND a.season = :season
                            AND ((a.option IS NOT NULL) OR (a.comment IS NOT NULL))
+                           AND a.question = q
+                           AND q.category = c
+                           AND c.type = :category_type
                            ORDER BY " . ($orderByName ? "sp.name, " : "") . "sp.code ASC");
         $query->setParameter('season', $season);
+        $query->setParameter('category_type', CategoryType::STUDY_PROGRAMME);
         return $query->getResult();
+    }
+    
+    public function countForSeason(Season $season) {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery("SELECT COUNT(DISTINCT sp)
+                           FROM AnketaBundle\\Entity\\StudyProgram sp,
+                           AnketaBundle\\Entity\\Answer a,
+                           AnketaBundle\\Entity\\Category c,
+                           AnketaBundle\\Entity\\Question q
+                           WHERE sp.id = a.studyProgram
+                           AND a.teacher IS NULL
+                           AND a.subject IS NULL
+                           AND a.season = :season
+                           AND ((a.option IS NOT NULL) OR (a.comment IS NOT NULL))
+                           AND a.question = q
+                           AND q.category = c
+                           AND c.type = :category_type");
+        $query->setParameter('season', $season);
+        $query->setParameter('category_type', CategoryType::STUDY_PROGRAMME);
+        return $query->getSingleScalarResult();
     }
 
 }

@@ -12,7 +12,7 @@ namespace AnketaBundle\Lib;
 
 class SubjectIdentification implements SubjectIdentificationInterface
 {
-    
+
     /**
      * {@inheritdoc}
      */
@@ -34,7 +34,7 @@ class SubjectIdentification implements SubjectIdentificationInterface
             );
         }
     }
-    
+
     private function transliterate($string)
     {
         $oldLocale = setlocale(LC_CTYPE, "0");
@@ -53,7 +53,7 @@ class SubjectIdentification implements SubjectIdentificationInterface
         }
         return $result;
     }
-    
+
     private function slugify($string)
     {
         $slug = $this->transliterate($string);
@@ -63,13 +63,13 @@ class SubjectIdentification implements SubjectIdentificationInterface
         $slug = trim($slug, '-');
         return $slug;
     }
-    
+
     private function getFaculty($longCode)
     {
         $parts = explode(".", $longCode);
         return $parts[0];
     }
-    
+
     private function getShortCode($longCode)
     {
         $matches = array();
@@ -80,5 +80,5 @@ class SubjectIdentification implements SubjectIdentificationInterface
 
         return $matches[1];
     }
-    
+
 }

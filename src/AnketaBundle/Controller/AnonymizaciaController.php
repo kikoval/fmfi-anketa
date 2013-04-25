@@ -21,14 +21,14 @@ class AnonymizaciaController extends Controller {
             $userSeason->setFinished(true);
             $em->persist($user);
             $em->getRepository('AnketaBundle\Entity\User')
-               ->anonymizeAnswersByUser($user->getId(), $season);
+               ->anonymizeAnswersByUser($user, $season);
             $em->flush();
 
             $this->get('session')->setFlash('anonymizacia', $this->get('translator')->trans('anonymizacia.controller.uspesny.koniec'));
 
             return new RedirectResponse($this->generateUrl('anketa'));
         }
-        
+
         return $this->render('AnketaBundle:Anonymizacia:anonymizuj.html.twig');
     }
 

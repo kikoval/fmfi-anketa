@@ -156,7 +156,7 @@ class StatisticsAccess
     public function canEditResponse(Response $response) {
         if (!$this->canSeeResults($response->getSeason())) return false;
         $user = $this->getUser();
-        return $user && $user->getLogin() === $response->getAuthorLogin() && $response->getSeason()->getRespondingOpen();
+        return $user && $user->getId() === $response->getAuthor()->getId() && $response->getSeason()->getRespondingOpen();
     }
 
     /**
@@ -196,8 +196,9 @@ class StatisticsAccess
         else if ($this->security->isGranted('ROLE_DEPARTMENT_REPORT')) {
             $userSeasonRepo = $this->em->getRepository('AnketaBundle:UserSeason');
             $user = $this->getUser();
-            $userSeason = $userSeasonRepo->findBy(array('user'=> $user, 'season'=>$season));
-            return $userSeason->getDepartment();
+            $userSeason = $userSeasonRepo->findOneBy(array('user'=> $user, 'season'=>$season));
+            $department = $userSeason->getDepartment();
+            return $department ? array($department) : array();
         }
         else {
             return array();

@@ -51,9 +51,9 @@ class ImportPocetStudentovCommand extends AbstractImportCommand {
      * @throws \LogicException When this abstract class is not implemented
      */
     protected function execute(InputInterface $input, OutputInterface $output) {
-        
+
         $file = $this->openFile($input);
-        
+
         $secondFile = null;
         if ($input->getOption('second') !== null) {
             $secondFile = fopen($input->getOption('second'), "r");
@@ -61,7 +61,7 @@ class ImportPocetStudentovCommand extends AbstractImportCommand {
                 throw new Exception('Failed to open file');
             }
         }
-        
+
         if ($input->getArgument('column') === 'faculty') {
             $column = 'studentCountFaculty';
         }
@@ -78,19 +78,19 @@ class ImportPocetStudentovCommand extends AbstractImportCommand {
         else {
             $season_id = $this->getSeason($input)->getId();
         }
-        
+
         $subjectIdentification = $this->getContainer()->get('anketa.subject_identification');
         $tableReader = new AISDelimitedTableReader($file);
         if ($secondFile !== null) {
             $tableReader = new ConcatTableReader(array($tableReader, new AISDelimitedTableReader($secondFile)));
         }
-        
+
         $conn = $this->getContainer()->get('database_connection');
 
         $conn->beginTransaction();
-        
+
         $dumpSQL = $input->getOption('dump-sql');
-        
+
         if (!$dumpSQL) {
             $insertSubjectSeason = $conn->prepare("
                     INSERT INTO SubjectSeason (subject_id, season_id, $column)
@@ -106,29 +106,29 @@ class ImportPocetStudentovCommand extends AbstractImportCommand {
 
         try {
             $pocty = array();
-            
+
             while (($row = $tableReader->readRow()) !== false) {
                 $level = $row[0];
                 if ($level !== '0') continue;
-                
+
                 $uoc = $row[1];
                 $subjectCode = $row[2];
                 $studyProgramCode = $row[5];
-                
+
                 $props = $subjectIdentification->identify($subjectCode, null);
                 $kod = $props['code'];
                 $slug = $props['slug'];
-                
+
                 if (!isset($pocty[$kod])) {
                     $pocty[$kod] = array();
                 }
-                
+
                 if (!isset($pocty[$kod][$uoc])) {
                     $pocty[$kod][$uoc] = true;
                 }
-                
+
             }
-            
+
             if ($dumpSQL) {
                 foreach ($pocty as $kod => $students) {
                     $output->writeln(sprintf($insertTemplate, $season_id, count($students), $conn->quote($kod)));

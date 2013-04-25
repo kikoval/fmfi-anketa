@@ -276,9 +276,11 @@ div.faq {
   padding: 0.15em 0;
 }
 
-#content textarea {
-  margin-top: 0.5em;
+/* width/height/margin/padding/font a pod. treba mat nastavene rovnako na
+   textarea aj .textareaClone, aby spravne fungovalo expandovanie */
+#content textarea, #content .textareaClone {
   width: 90%;
+  min-height: 3.5em;
 }
 
 #content .submit {

@@ -22,14 +22,21 @@
         "svt/libfajr": "@dev",
         "svt/rozvrhxml": "@dev"
     },
+    "require-dev": {
+        "svt/linters": "@dev"
+    },
     "repositories": [
         {
             "type": "git",
-            "url": "https://code.google.com/p/fajr.libfajr/"
+            "url": "https://code.google.com/p/libfajr/"
         },
         {
             "type": "git",
             "url": "https://github.com/fmfi-svt/rozvrh-xml.git"
+        },
+        {
+            "type": "git",
+            "url": "https://github.com/fmfi-svt/linters.git"
         }
     ],
     "scripts": {

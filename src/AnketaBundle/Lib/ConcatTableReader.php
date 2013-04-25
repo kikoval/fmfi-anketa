@@ -18,19 +18,19 @@ use Exception;
  */
 class ConcatTableReader implements TableReaderInterface
 {
-    
+
     /** @var array */
     private $readers;
-    
+
     /** @var int */
     private $currentReader;
-    
-    
+
+
     public function __construct(array $readers)
     {
         $this->readers = $readers;
         $this->currentReader = 0;
-        
+
         //Check that the tables have the same columns
         $firstHeader = null;
         foreach ($readers as $reader) {
@@ -44,7 +44,7 @@ class ConcatTableReader implements TableReaderInterface
             }
         }
     }
-    
+
     public function readRow()
     {
         if ($this->currentReader >= count($this->readers)) return false;
@@ -59,5 +59,5 @@ class ConcatTableReader implements TableReaderInterface
     public function getHeader() {
         return $this->readers[0]->getHeader();
     }
-    
+
 }

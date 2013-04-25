@@ -12,7 +12,7 @@ namespace AnketaBundle\Lib;
 
 class OldPriFSubjectIdentification implements SubjectIdentificationInterface
 {
-    
+
     /**
      * {@inheritdoc}
      */
@@ -35,7 +35,7 @@ class OldPriFSubjectIdentification implements SubjectIdentificationInterface
             );
         }
     }
-    
+
     private function transliterate($string)
     {
         $oldLocale = setlocale(LC_CTYPE, "0");
@@ -54,7 +54,7 @@ class OldPriFSubjectIdentification implements SubjectIdentificationInterface
         }
         return $result;
     }
-    
+
     private function slugify($string)
     {
         $slug = $this->transliterate($string);
@@ -63,13 +63,13 @@ class OldPriFSubjectIdentification implements SubjectIdentificationInterface
         $slug = trim($slug, '-');
         return $slug;
     }
-    
+
     private function getFaculty($longCode)
     {
         $parts = explode(".", $longCode);
         return $parts[0];
     }
-    
+
     private function getMediumCode($longCode)
     {
         // Ozajstny "dlhy kod" je (aspon na FMFI) tvaru "FMFI.KI/1-INF-150/01",
@@ -89,5 +89,5 @@ class OldPriFSubjectIdentification implements SubjectIdentificationInterface
 
         return $matches[1];
     }
-    
+
 }

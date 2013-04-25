@@ -21,15 +21,20 @@ use SVT\RozvrhXML\Importer;
  * @author     Martin Sucha <anty.sk@gmail.com>
  */
 class RozvrhXMLImporter extends Importer {
-    
+
     /** @var SubjectIdentification */
     private $subjectIdentification;
     
-    public function __construct(PDO $connection, SubjectIdentificationInterface $subjectIdentification) {
+    /** @var array('katedra' => 'code') */
+    private $katedraCodeMap;
+
+    public function __construct(PDO $connection, SubjectIdentificationInterface $subjectIdentification,
+            array $katedraCodeMap) {
         parent::__construct($connection);
         $this->subjectIdentification = $subjectIdentification;
+        $this->katedraCodeMap = $katedraCodeMap;
     }
-    
+
     protected function getTableDefinitions() {
         $tables = parent::getTableDefinitions();
         $tables['predmet']['columns']['slug'] = 'varchar(255)';
@@ -43,5 +48,18 @@ class RozvrhXMLImporter extends Importer {
         $predmet['code'] = $props['code'];
         $predmet['slug'] = $props['slug'];
         return $predmet;
+    }
+    
+    protected function convertUcitel(array $location, array $ucitel) {
+        $ucitel = parent::convertUcitel($location, $ucitel);
+        if ($ucitel['katedra'] !== null) {
+            if (!array_key_exists($ucitel['katedra'], $this->katedraCodeMap)) {
+                $ucitel['katedra'] = null;
+            }
+            else {
+                $ucitel['katedra'] = $this->katedraCodeMap[$ucitel['katedra']];
+            }
+        }
+        return $ucitel;
     }
 }
