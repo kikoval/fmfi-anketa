@@ -39,18 +39,23 @@ class NativeCSVTableReader implements TableReaderInterface
      * @param type $enclosure
      * @param type $escape
      */
-    public function __construct($fp, $delimiter=';',$enclosure='"',$escape='\\')
-    {
+    public function __construct($fp, $skipLines=0, $delimiter=';',$enclosure='"',$escape='\\') {
         $this->fp = $fp;
         $this->delimiter = $delimiter;
         $this->enclosure = $enclosure;
         $this->escape = $escape;
+        while ($skipLines--) $this->readRow();
         $this->header = $this->readRow();
     }
 
-    public function readRow()
-    {
+    public function readRow() {
         return fgetcsv($this->fp, 0, $this->delimiter, $this->enclosure, $this->escape);
+    }
+
+    public function readAssocRow() {
+        $row = $this->readRow();
+        if (!$row) return $row;
+        return array_combine($this->header, $row);
     }
 
     public function getHeader() {
