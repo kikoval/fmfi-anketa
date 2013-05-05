@@ -1,11 +1,11 @@
 {% extends 'AnketaBundle::layout.html.twig' %}
 {% block content %}
 
-<h2>{% trans %}welcome.index.studentska.anketa{% endtrans %} {{ skratka_fakulty }} &mdash; {{ active_season.description }}</h2>
+<h2>{% trans %}welcome.index.studentska_anketa{% endtrans %} {{ skratka_fakulty }} &mdash; {{ active_season.description }}</h2>
 
 <p>
     {% trans %}welcome.index.vitaj{% endtrans %} {{ skratka_fakulty }}!
-    {% trans %}welcome.index.zapoj.sa{% endtrans %}
+    {% trans %}welcome.index.zapoj_sa{% endtrans %}
 </p>
 
 {% if skratka_fakulty == 'FMFI' %}
@@ -16,7 +16,7 @@
     <p><a class="bigbtn" href="{{ path('anketa') }}">
     <span class="bigbtn_middle"><span class="bigbtn_left"><span class="bigbtn_right bigbtn_in">{% trans %}welcome.index.hlasuj{% endtrans %}</span></span></span></a></p>
     {% if active_season.endTime != null %}
-        <p style="text-align: center"> Otvorené do: <strong>{{ active_season.endTime|date("d.m.Y") }}</strong>
+        <p style="text-align: center">{% trans %}welcome.index.otvorene_do{% endtrans %}: <strong>{{ active_season.endTime|date("d.m.Y") }}</strong>
             {% if active_season.timeToEnd != null %}
                 {% set dni = active_season.timeToEnd|date("%a") %}
                 {% if dni == 1 %}
@@ -30,12 +30,12 @@
         </p>
     {% endif %}
 {% else %}
-    <p>{% trans %}welcome.index.hlasovanie.ukoncene{% endtrans %}</p>
+    <p>{% trans %}welcome.index.hlasovanie_ukoncene{% endtrans %}</p>
     {% if access.statistics.activeSeasonHasVisibleResults %}
         <p><a class="bigbtn" href="{{ path('statistics') }}">
         <span class="bigbtn_middle"><span class="bigbtn_left"><span class="bigbtn_right bigbtn_in">{% trans %}welcome.index.vysledky{% endtrans %}</span></span></span></a></p>
     {% elseif skratka_fakulty == 'FMFI' %}
-        <p><strong>{% trans %}welcome.index.zverejnenie.vysledkov{% endtrans %}</strong></p>
+        <p><strong>{% trans %}welcome.index.zverejnenie_vysledkov{% endtrans %}</strong></p>
     {% else %}
         {# TODO: kedy sa zverejnuju vysledky na inych fakultach? #}
     {% endif %}
@@ -43,16 +43,16 @@
 
 {% render "AnketaBundle:Hlasovanie:globalProgressbar" %}
 
-<p>{% trans %}welcome.index.aka.je.anketa{% endtrans %}</p>
+<p>{% trans %}welcome.index.aka_je_anketa{% endtrans %}</p>
 <ul>
-<li><b>{% trans %}welcome.index.k.veci{% endtrans %}</b> &mdash; {% trans %}welcome.index.k.veci.preco{% endtrans %}</li>
-<li><b>{% trans %}welcome.index.flexibilna{% endtrans %}</b> &mdash; {% trans %}welcome.index.flexibilna.preco{% endtrans %}</li>
-<li><b>{% trans %}welcome.index.anonymna{% endtrans %}</b> &mdash; {% trans %}welcome.index.anonymna.preco{% endtrans %}</li>
-<li><b>{% trans %}welcome.index.mobilna{% endtrans %}</b> &mdash; {% trans %}welcome.index.mobilna.preco{% endtrans %}</li>
-<li><b>{% trans %}welcome.index.pekne.hviezdicky{% endtrans %}</b> &mdash; {% trans %}welcome.index.pekne.hviezdicky.preco{% endtrans %}</li>
+<li><b>{% trans %}welcome.index.k_veci{% endtrans %}</b> &mdash; {% trans %}welcome.index.k_veci_preco{% endtrans %}</li>
+<li><b>{% trans %}welcome.index.flexibilna{% endtrans %}</b> &mdash; {% trans %}welcome.index.flexibilna_preco{% endtrans %}</li>
+<li><b>{% trans %}welcome.index.anonymna{% endtrans %}</b> &mdash; {% trans %}welcome.index.anonymna_preco{% endtrans %}</li>
+<li><b>{% trans %}welcome.index.mobilna{% endtrans %}</b> &mdash; {% trans %}welcome.index.mobilna_preco{% endtrans %}</li>
+<li><b>{% trans %}welcome.index.pekne_hviezdicky{% endtrans %}</b> &mdash; {% trans %}welcome.index.pekne_hviezdicky_preco{% endtrans %}</li>
 </ul>
 
-<p><strong>{% trans %}welcome.index.aj.ty.hlasuj{% endtrans %}</strong><p>
+<p><strong>{% trans %}welcome.index.aj_ty_hlasuj{% endtrans %}</strong><p>
 
 {% if skratka_fakulty == 'FMFI' %}
 <p>Prečítajte si <a href="{{ asset('bundles/anketa/files/anketa-stanovisko-2012-leto.pdf') }}">stanovisko vedenia fakulty k výsledkom ankety za letný semester akademického roku 2011/2012</a>.</p>

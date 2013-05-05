@@ -7,29 +7,29 @@ userbar:
 layout:
    hlasuj: Vote
    vysledky: Results
-   
+
 welcome:
   index:
-    studentska.anketa: Student poll
+    studentska_anketa: Student poll
     vitaj: Welcome to the Student poll
-    zapoj.sa: Get involved and cast your vote!
+    zapoj_sa: Get involved and cast your vote!
     hlasuj: Vote!
-    otvorene.do: Voting period ends on
-    hlasovanie.ukoncene: Voting period is over. Thanks to all participants :)
+    otvorene_do: Voting period ends on
+    hlasovanie_ukoncene: Voting period is over. Thanks to all participants :)
     vysledky: Results
-    zverejnenie.vysledkov: Results will be available after the examination period.
-    aka.je.anketa: This poll is
-    k.veci: On topic
-    k.veci.preco: your courses and teachers are automatically loaded
+    zverejnenie_vysledkov: Results will be available after the examination period.
+    aka_je_anketa: This poll is
+    k_veci: On topic
+    k_veci_preco: your courses and teachers are automatically loaded
     flexibilna: Flexible
-    flexibilna.preco: you don't have to fill everything in at once
+    flexibilna_preco: you don't have to fill everything in at once
     anonymna: Anonymous
-    anonymna.preco: noone can find out your answers after the voting period
+    anonymna_preco: noone can find out your answers after the voting period
     mobilna: Mobile
-    mobilna.preco: vote on whatever device you want, including smartphones
-    pekne.hviezdicky: Has beautiful stars
-    pekne.hviezdicky.preco: out team worked hard to bring you <em>state-of-the-art</em> stars
-    aj.ty.hlasuj: EVEN YOUR VOTE CAN IMPROVE OUR ALMA MATER ;-)
+    mobilna_preco: vote on whatever device you want, including smartphones
+    pekne_hviezdicky: Has beautiful stars
+    pekne_hviezdicky_preco: out team worked hard to bring you <em>state-of-the-art</em> stars
+    aj_ty_hlasuj: EVEN YOUR VOTE CAN IMPROVE OUR ALMA MATER ;-)
 #  faq: TODO
 
 anonymizacia:
@@ -37,44 +37,44 @@ anonymizacia:
     anonymizacia: Anonymization
     ukoncenie: Finish voting
     vdaka: That's all. Thanks!
-    co.sa.stane: Your votes will be anonymized after you click on "Finish voting" button. You won't be able to review and/or modify your votes anymore.
+    co_sa_stane: Your votes will be anonymized after you click on "Finish voting" button. You won't be able to review and/or modify your votes anymore.
     skontrolujte: Make sure you filled in everything as you wanted.
-    nevratny.proces: This action is irreversible. You won't be able to change anything afterwards.
+    nevratny_proces: This action is irreversible. You won't be able to change anything afterwards.
     ukoncit: Finish voting
-    este.hlasovat: I'm not finished yet
+    este_hlasovat: I'm not finished yet
   controller:
-    uspesny.koniec: Your voting was successfully completed.
+    uspesny_koniec: Your voting was successfully completed.
 
 hlasovanie:
   dakujeme:
     dakujeme: Thank you
-    dakujeme.za.cas: Thank you for taking the time to complete the student survey.
-    potrebujeme.ucast: In order to have a meaningful results, a high number of students have to express their opinions.
-    povedzte.ostatnym: Please, let others know by any possible means, such as chat, email or Facebook.
+    dakujeme_za_cas: Thank you for taking the time to complete the student survey.
+    potrebujeme_ucast: In order to have a meaningful results, a high number of students have to express their opinions.
+    povedzte_ostatnym: Please, let others know by any possible means, such as chat, email or Facebook.
   globalProgressbar:
-    kto.hlasoval: So far, <strong>%voters%</strong> students have participated and %anon% of them have anonymized their votes.
+    kto_hlasoval: So far, <strong>%voters%</strong> students have participated and %anon% of them have anonymized their votes.
     ciel: Our goal is to reach at least 50% participation. So don't hesitate and take part!
-    zapojte.sa: Don't hesitate and take part!
-    kto.hlasoval.nakoniec: So far, <strong>%voters%</strong> students have participated.
+    zapojte_sa: Don't hesitate and take part!
+    kto_hlasoval_nakoniec: So far, <strong>%voters%</strong> students have participated.
 
 question:
   index:
-    ak.neucil: If you had no classes with this teacher you can skip these questions and choose
-    uloz.a.chod: Save and continue
-    preskocte.predmet: Please skip voting on this course if it is not subject to direct teaching, but the fulfillment of certain obligations (such as masters thesis, research activity, individual study of scientific literature, etc.) or you did not take it in this semester.
-    chyba.v.uciteloch: Is list of associated teachers wrong?
-    dajte.nam.vediet: Let us know and we will fix it
+    ak_neucil: If you had no classes with this teacher you can skip these questions and choose
+    uloz_a_chod: Save and continue
+    preskocte_predmet: Please skip voting on this course if it is not subject to direct teaching, but the fulfillment of certain obligations (such as masters thesis, research activity, individual study of scientific literature, etc.) or you did not take it in this semester.
+    chyba_v_uciteloch: Is list of associated teachers wrong?
+    dajte_nam_vediet: Let us know and we will fix it
     uloz: Save
-    ziadna.odpoved: no answer
+    ziadna_odpoved: no answer
     komentar: Comment
   controller:
-    chybny.slug.predmetu: Wrong subject slug: %slug%
-    nezapisany.predmet: You are not enrolled in course %slug%
-    ziadne.programy: You have no study programs.
-    program.neexistuje: You are not enrolled in study program %slug%.
-    ucitel.neuci: Teacher %teacher_code% is not associated with this course.
-    ziadne.podkategorie: General question categories are missing.
-    chybna.kategoria: Wrong category: %id%
+    chybny_slug_predmetu: Wrong subject slug: %slug%
+    nezapisany_predmet: You are not enrolled in course %slug%
+    ziadne_programy: You have no study programs.
+    program_neexistuje: You are not enrolled in study program %slug%.
+    ucitel_neuci: Teacher %teacher_code% is not associated with this course.
+    ziadne_podkategorie: General question categories are missing.
+    chybna_kategoria: Wrong category: %id%
 
 reports:
   report:

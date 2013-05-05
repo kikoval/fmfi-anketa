@@ -128,11 +128,11 @@ class QuestionController extends Controller {
             $subject = $em->getRepository('AnketaBundle\Entity\Subject')
                           ->findOneBy(array('slug' => $slug));
             if (empty($subject)) {
-                $msg = $this->get('translator')->trans('question.controller.chybny.slug.predmetu', array('%slug%' => $slug));
+                $msg = $this->get('translator')->trans('question.controller.chybny_slug_predmetu', array('%slug%' => $slug));
                 throw new \RuntimeException($msg);
             }
             if (!in_array($subject, $attendedSubjects)) {
-                $msg = $this->get('translator')->trans('question.controller.nezapisany.predmet', array('%slug%' => $slug));
+                $msg = $this->get('translator')->trans('question.controller.nezapisany_predmet', array('%slug%' => $slug));
                 throw new \RuntimeException($msg);
             }
         }
@@ -150,7 +150,7 @@ class QuestionController extends Controller {
                                       ->getStudyProgrammesForUser($user, $season);
 
         if (count($attendedStudyProgrammes) == 0) {
-            $msg = $this->get('translator')->trans('question.controller.ziadne.programy');
+            $msg = $this->get('translator')->trans('question.controller.ziadne_programy');
             throw new \RuntimeException($msg);
         }
 
@@ -164,7 +164,7 @@ class QuestionController extends Controller {
                 break;
             }
             if (empty($studyProgramme)) {
-                $msg = $this->get('translator')->trans('question.controller.program.neexistuje', array('%slug%' => $slug));
+                $msg = $this->get('translator')->trans('question.controller.program_neexistuje', array('%slug%' => $slug));
                 throw new \RuntimeException($msg);
             }
         }
@@ -191,7 +191,7 @@ class QuestionController extends Controller {
                                                'season' => $season->getId(),
                                                'teacher' => $teacher_code));
         if (!$teacherSubject) {
-            $msg = $this->get('translator')->trans('question.controller.ucitel.neuci', array('%teacher_code%' => $teacher_code));
+            $msg = $this->get('translator')->trans('question.controller.ucitel_neuci', array('%teacher_code%' => $teacher_code));
             throw new NotFoundHttpException($msg);
         }
         $teacher = $teacherSubject->getTeacher();
@@ -348,7 +348,7 @@ class QuestionController extends Controller {
         $subcategories = $em->getRepository('AnketaBundle\Entity\Category')
                        ->getOrderedGeneral();
         if (empty($subcategories)) {
-            $msg = $this->get('translator')->trans('question.controller.ziadne.podkategorie');
+            $msg = $this->get('translator')->trans('question.controller.ziadne_podkategorie');
             throw new NotFoundHttpException($msg);
         }
 
@@ -361,7 +361,7 @@ class QuestionController extends Controller {
 
             if (empty($category) ||
                 ($category->getType() !== CategoryType::GENERAL)) {
-                $msg = $this->get('translator')->trans('question.controller.chybna.kategoria', array('%id%' => $id));
+                $msg = $this->get('translator')->trans('question.controller.chybna_kategoria', array('%id%' => $id));
                 throw new NotFoundHttpException($msg);
             }
         }

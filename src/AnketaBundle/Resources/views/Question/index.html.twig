@@ -19,22 +19,22 @@
     <h2>{{ title }}</h2>
     <form action="#" method="post">
     {% if categoryType == 'teacher_subject' %}
-        <p>{% trans %}question.index.ak.neucil{% endtrans %} <em>{% trans %}question.index.uloz.a.chod{% endtrans %}</em>.</p>
+        <p>{% trans %}question.index.ak_neucil{% endtrans %} <em>{% trans %}question.index.uloz_a_chod{% endtrans %}</em>.</p>
     {% elseif categoryType == 'subject' %}
         <p style="color: #888;">
-            {% trans %}question.index.preskocte.predmet{% endtrans %}
+            {% trans %}question.index.preskocte_predmet{% endtrans %}
         </p>
     {% endif %}
     {% if categoryType == 'teacher_subject' or categoryType == 'subject' %}
-        <p>{% trans %}question.index.chyba.v.uciteloch{% endtrans %}
+        <p>{% trans %}question.index.chyba_v_uciteloch{% endtrans %}
         <a href="{{ path('assoc_teacher_with_subject', {'subject_slug': subject.slug}) }}"
-           >{% trans %}question.index.dajte.nam.vediet{% endtrans %}</a>.
+           >{% trans %}question.index.dajte_nam_vediet{% endtrans %}</a>.
         </p>
     {% endif %}
     {% block submit %}
     <div class="submit">
         <input class="save" type="submit" name="save" value="{% trans %}question.index.uloz{% endtrans %}" />
-        <input class="next" type="submit" name="next" value="{% trans %}question.index.uloz.a.chod{% endtrans %} &raquo;" />
+        <input class="next" type="submit" name="next" value="{% trans %}question.index.uloz_a_chod{% endtrans %} &raquo;" />
     </div>
     {% endblock %}
     {% for question in questions %}
@@ -60,7 +60,7 @@
                       {% else %}
                          checked="checked"
                       {% endif %} />
-              {% trans %}question.index.ziadna.odpoved{% endtrans %}
+              {% trans %}question.index.ziadna_odpoved{% endtrans %}
               </label>
               </div>
 
