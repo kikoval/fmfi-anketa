@@ -32,7 +32,7 @@ class ResponseController extends Controller {
         $em = $this->get('doctrine.orm.entity_manager');
         $response = $em->find('AnketaBundle:Response', $response_id);
         if ($response == null) {
-            $message = $this->get('translator')->trans('response.controller.neznama.odpoved', array('%id%' => $response_id));
+            $message = $this->get('translator')->trans('response.controller.neznama_odpoved', array('%id%' => $response_id));
             throw new NotFoundHttpException($message);
         }
 
@@ -58,7 +58,7 @@ class ResponseController extends Controller {
                     $em->persist($response);
                 }
                 $em->flush();
-                $message = $this->get('translator')->trans('response.controller.komentar.bol.ulozeny');
+                $message = $this->get('translator')->trans('response.controller.komentar_bol_ulozeny');
                 $this->get('session')->setFlash('success', $message);
                 return new RedirectResponse($section->getStatisticsPath());
             }
@@ -66,7 +66,7 @@ class ResponseController extends Controller {
                 // delete
                 $em->remove($response);
                 $em->flush();
-                $message = $this->get('translator')->trans('response.controller.komentar.bol.zmazany');
+                $message = $this->get('translator')->trans('response.controller.komentar_bol_zmazany');
                 $this->get('session')->setFlash('success', $message);
                 return new RedirectResponse($this->generateUrl('response', array('season_slug' => $response->getSeason()->getSlug())));
             }
@@ -95,7 +95,7 @@ class ResponseController extends Controller {
         $user = $access->getUser();
 
         if ($season == null) {
-            $message = $this->get('translator')->trans('response.controller.chybna.sezona', array('%slug%' => $season_slug));
+            $message = $this->get('translator')->trans('response.controller.chybna_sezona', array('%slug%' => $season_slug));
             throw new NotFoundHttpException($message);
         }
 

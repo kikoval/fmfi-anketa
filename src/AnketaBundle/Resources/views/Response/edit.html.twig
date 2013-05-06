@@ -5,19 +5,19 @@
 {% endblock %}
 
 {% block content %}
-<h1>{% if new %}{% trans %}response.edit.novy.komentar{% endtrans %}{% else %}{% trans %}response.edit.upravit.komentar{% endtrans %}{% endif %}</h1>
-<p>{% trans %}response.edit.komentar.ku{% endtrans %}: <a href="{{ section.statisticsPath }}">{{ section.title }}</a></p>
+<h1>{% if new %}{% trans %}response.edit.novy_komentar{% endtrans %}{% else %}{% trans %}response.edit.upravit_komentar{% endtrans %}{% endif %}</h1>
+<p>{% trans %}response.edit.komentar_ku{% endtrans %}: <a href="{{ section.statisticsPath }}">{{ section.title }}</a></p>
 <form action="{{ submitLink }}" method="POST">
 <p class="association-description">{% trans %}response.edit.vasa.funkcia{% endtrans %}:
 <input type="text" class="association" name="association" value="{{ association }}">
 <br><span>({% trans %}response.edit.napriklad{% endtrans %} {{ section.associationExamples }}.
-{% trans %}response.edit.zobrazene.pri.mene{% endtrans %})</span></p>
-<p>{% trans %}response.edit.text.komentaru{% endtrans %}:<br>
+{% trans %}response.edit.zobrazene_pri_mene{% endtrans %})</span></p>
+<p>{% trans %}response.edit.text_komentaru{% endtrans %}:<br>
 <textarea name="text" id="text" rows="10">{{ responseText }}</textarea>
 </p>
 {% if new %}
 {# TODO vygenerovat text podla toho ako to naozaj je #}
-<p>({% trans %}response.edit.kto.moze.citat{% endtrans %} {% trans %}response.edit.da.sa.upravovat{% endtrans %})</p>
+<p>({% trans %}response.edit.kto_moze_citat{% endtrans %} {% trans %}response.edit.da_sa_upravovat{% endtrans %})</p>
 {% endif %}
 <button type="submit">{% trans %}response.edit.odoslat{% endtrans %}</button>
 </form>

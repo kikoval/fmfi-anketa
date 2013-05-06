@@ -79,45 +79,45 @@ question:
 
 reports:
   report:
-    vysledky.programu: Výsledky študijného programu
-    hodnotenia.ucitelov: Hodnotenia učiteľov
-    pocet.hviezdiciek: %stars% z 5 hviezdičiek
-    pocet.hodnoteni: %votes% hodnotení
-    hodnotenia.predmetov: Hodnotenia predmetov
+    vysledky_programu: Výsledky študijného programu
+    hodnotenia_ucitelov: Hodnotenia učiteľov
+    pocet_hviezdiciek: %stars% z 5 hviezdičiek
+    pocet_hodnoteni: %votes% hodnotení
+    hodnotenia_predmetov: Hodnotenia predmetov
   controller:
     katedry: Katedry
-    studijne.programy: Študijné programy
-    moje.reporty: Moje reporty
+    studijne_programy: Študijné programy
+    moje_reporty: Moje reporty
 
 response:
   delete:
-    zmazat.komentar: Zmazať komentár
-    urcite.zmazat: Ste si istí, že chcete zmazať tento komentár?
-    komentar.ku: Komentár ku
-    vasa.funkcia: Vaša funkcia
-    text.komentaru: Text komentáru
+    zmazat_komentar: Zmazať komentár
+    urcite_zmazat: Ste si istí, že chcete zmazať tento komentár?
+    komentar_ku: Komentár ku
+    vasa_funkcia: Vaša funkcia
+    text_komentaru: Text komentáru
     zmazat: Zmazať
     nezmazat: Nič nemazať
   edit:
-    novy.komentar: Nový komentár
-    upravit.komentar: Upraviť komentár
-    komentar.ku: Komentár ku
-    vasa.funkcia: Vaša funkcia
+    novy_komentar: Nový komentár
+    upravit_komentar: Upraviť komentár
+    komentar_ku: Komentár ku
+    vasa_funkcia: Vaša funkcia
     napriklad: Napríklad:
-    zobrazene.pri.mene: Zobrazí sa pri vašom mene.
-    text.komentaru: Text komentáru
-    kto.moze.citat: Odoslaný komentár si môžu prečítať všetci študenti a učitelia.
-    da.sa.upravovat: Text komentáru budete môcť dodatočne upravovať.
+    zobrazene_pri_mene: Zobrazí sa pri vašom mene.
+    text_komentaru: Text komentáru
+    kto_moze_citat: Odoslaný komentár si môžu prečítať všetci študenti a učitelia.
+    da_sa_upravovat: Text komentáru budete môcť dodatočne upravovať.
     odoslat: Odoslať
   list:
-    moje.komentare: Moje komentáre
-    tu.su.komentare: Tu sa nachádza zoznam vašich komentárov.
-    pridavanie.z.vysledkov: Komentáre môžete pridávať z jednotlivých stránok s výsledkami.
-    upravit.komentar: Upraviť komentár
-    zmazat.komentar: Zmazať komentár
-    ziaden.komentar.pridany: Zatiaľ ste nepridali žiaden komentár.
+    moje_komentare: Moje komentáre
+    tu_su_komentare: Tu sa nachádza zoznam vašich komentárov.
+    pridavanie_z_vysledkov: Komentáre môžete pridávať z jednotlivých stránok s výsledkami.
+    upravit_komentar: Upraviť komentár
+    zmazat_komentar: Zmazať komentár
+    ziaden_komentar_pridany: Zatiaľ ste nepridali žiaden komentár.
   controller:
-    neznama.odpoved: Neznáma odpoveď: %id%
-    komentar.bol.ulozeny: Váš komentár bol uložený.
-    komentar.bol.zmazany: Váš komentár bol zmazaný.
-    chybna.sezona: Chybná sezóna: %slug%
+    neznama_odpoved: Neznáma odpoveď: %id%
+    komentar_bol_ulozeny: Váš komentár bol uložený.
+    komentar_bol_zmazany: Váš komentár bol zmazaný.
+    chybna_sezona: Chybná sezóna: %slug%

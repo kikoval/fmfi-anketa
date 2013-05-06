@@ -127,12 +127,12 @@ class ReportsController extends Controller {
                 $links[$studyProgram->getName() . ' (' . $studyProgram->getCode() . ')'] =
                     $this->generateUrl('report_study_programme', array('season_slug' => $season->getSlug(), 'study_programme_slug' => $studyProgram->getSlug()));
             }
-            $title = $this->get('translator')->trans('reports.controller.studijne.programy');
+            $title = $this->get('translator')->trans('reports.controller.studijne_programy');
             $items[$title] = $links;
         }
 
         $templateParams = array();
-        $templateParams['title'] = $this->get('translator')->trans('reports.controller.moje.reporty');
+        $templateParams['title'] = $this->get('translator')->trans('reports.controller.moje_reporty');
         $templateParams['activeMenuItems'] = array($season->getId(), 'my_reports');
         $templateParams['items'] = $items;
         return $this->render('AnketaBundle:Statistics:listing.html.twig', $templateParams);
