@@ -1,5 +1,5 @@
 base:
-  svt: Students Development Team
+  svt: Student Developer Team
 userbar:
   prihlaseny: Logged in
   odhlasit: logout
@@ -10,47 +10,48 @@ layout:
 
 welcome:
   index:
-    studentska_anketa: Student poll
-    vitaj: Welcome to the Student poll
-    zapoj_sa: Get involved and cast your vote!
-    hlasuj: Vote!
-    otvorene_do: Voting period ends on
-    hlasovanie_ukoncene: Voting period is over. Thanks to all participants :)
+    studentska_anketa: Student Questionnaire
+    vitaj: Welcome to the Student Questionnaire
+    zapoj_sa: Give us your opinion, your opinion counts!
+    hlasuj: Enter questionnaire
+    otvorene_do: The questionnaire will be open until
+    hlasovanie_ukoncene: The student questionnaire is now closed, we would like to thank to all participants.
     vysledky: Results
-    zverejnenie_vysledkov: Results will be available after the examination period.
-    aka_je_anketa: This poll is
+    zverejnenie_vysledkov: Results will be available after the examination period ends.
+    aka_je_anketa: This student questionnair is:
     k_veci: On topic
-    k_veci_preco: your courses and teachers are automatically loaded
+    k_veci_preco: your courses and teachers are automatically imported
     flexibilna: Flexible
-    flexibilna_preco: you don't have to fill everything in at once
+    flexibilna_preco: you don't have to answer all questions in a single session, you can return as many times as you want
     anonymna: Anonymous
-    anonymna_preco: noone can find out your answers after the voting period
+    anonymna_preco: it is not possible to identify you as the author of your answers or comments after you finish the questionnaire
     mobilna: Mobile
-    mobilna_preco: vote on whatever device you want, including smartphones
+    mobilna_preco: works on most internet enabled devices, including smartphones
     pekne_hviezdicky: Has beautiful stars
     pekne_hviezdicky_preco: out team worked hard to bring you <em>state-of-the-art</em> stars
-    aj_ty_hlasuj: EVEN YOUR VOTE CAN IMPROVE OUR ALMA MATER ;-)
+    aj_ty_hlasuj: YOUR ANSWERS CAN MAKE A DIFFERENCE
 #  faq: TODO
 
 anonymizacia:
   anonymizuj:
     anonymizacia: Anonymization
-    ukoncenie: Finish voting
-    vdaka: That's all. Thanks!
-    co_sa_stane: Your votes will be anonymized after you click on "Finish voting" button. You won't be able to review and/or modify your votes anymore.
+    ukoncenie: Finish questionnaire
+    vdaka: That is all. Thank you for your time.
+    co_sa_stane: After you use "Finish questionnaire" button, we will remove all identifiers that link you to your answers. Consequently, you won't be able to view or change your answers after that.
     skontrolujte: Make sure you filled in everything as you wanted.
     nevratny_proces: This action is irreversible. You won't be able to change anything afterwards.
-    ukoncit: Finish voting
+    ukoncit: Finish questionnaire
     este_hlasovat: I'm not finished yet
   controller:
-    uspesny_koniec: Your voting was successfully completed.
+    uspesny_koniec: You have succefully completed the questionnaire.
 
 hlasovanie:
   dakujeme:
     dakujeme: Thank you
-    dakujeme_za_cas: Thank you for taking the time to complete the student survey.
-    potrebujeme_ucast: In order to have a meaningful results, a high number of students have to express their opinions.
-    povedzte_ostatnym: Please, let others know by any possible means, such as chat, email or Facebook.
+    dakujeme_za_cas: Thank you for taking time to complete the student questionnaire.
+    potrebujeme_ucast: In order for questionnaire results to be meaningful, we need a high level of student participation.
+    povedzte_ostatnym: Please, tell you class mates about the student questionnaire and urge them to express their opinions as well.
+    vysledky_budu: The results will be available after the examination period ends.
   globalProgressbar:
     kto_hlasoval: So far, <strong>%voters%</strong> students have participated and %anon% of them have anonymized their votes.
     ciel: Our goal is to reach at least 50% participation. So don't hesitate and take part!
@@ -61,7 +62,7 @@ question:
   index:
     ak_neucil: If you had no classes with this teacher you can skip these questions and choose
     uloz_a_chod: Save and continue
-    preskocte_predmet: Please skip voting on this course if it is not subject to direct teaching, but the fulfillment of certain obligations (such as masters thesis, research activity, individual study of scientific literature, etc.) or you did not take it in this semester.
+    preskocte_predmet: Please, skip the questionnaire on this course if it does not involve in-class teaching (e.g., masters thesis, research activities, individual study) or if you did not participate in class this semester.
     chyba_v_uciteloch: Is list of associated teachers wrong?
     dajte_nam_vediet: Let us know and we will fix it
     uloz: Save
