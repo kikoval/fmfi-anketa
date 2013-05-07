@@ -2,6 +2,14 @@
 
 namespace AnketaBundle\Controller;
 
+use Symfony\Component\HttpFoundation\Response;
+
+use Symfony\Component\HttpFoundation\Request;
+
+use AnketaBundle\Integration\LDAPTeacherSearch;
+
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use AnketaBundle\Entity\TeachingAssociation;
@@ -12,6 +20,9 @@ class TeachingAssociationController extends Controller
 
     public function preExecute() {
         if (!$this->get('anketa.access.hlasovanie')->userCanVote()) throw new AccessDeniedException();
+        
+        $this->ldapSearch = new LDAPTeacherSearch($this->container->get('anketa.ldap_retriever'),
+        										  $this->container->getParameter('org_unit'));
     }
 
     public function formAction($subject_slug)
@@ -33,6 +44,7 @@ class TeachingAssociationController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $subjectRepository = $em->getRepository('AnketaBundle\Entity\Subject');
         $seasonRepository = $em->getRepository('AnketaBundle\Entity\Season');
+        $userRepository = $em->getRepository('AnketaBundle\Entity\User');
 
         $season = $seasonRepository->getActiveSeason();
         $subject = $subjectRepository->findOneBy(array('slug' => $subject_slug));
@@ -42,17 +54,21 @@ class TeachingAssociationController extends Controller
         $security = $this->get('security.context');
         $user = $security->getToken()->getUser();
         $note = $request->request->get('note', '');
+        $is_lecturer = $request->request->get('teacher', null);
+        $is_trainer = $request->request->get('teacher-assistant', null);
 
-        // TODO(anty): toto sa nastavi, az ked budeme mat UI na vybratie ucitela zo zoznamu
-        $teacher = null;
+        $teacher_login = $request->get('teacher-login', null);
+        $teacher = $userRepository->findOneBy(array('login' => $teacher_login));
 
-        $assoc = new TeachingAssociation($season, $subject, $teacher, $user, $note);
+        $assoc = new TeachingAssociation($season, $subject, $teacher, $user, $note, $is_lecturer, $is_trainer);
         $em->persist($assoc);
         $em->flush();
 
         $emailTpl = array(
                 'subject' => $subject,
                 'teacher' => $teacher,
+        		'is_lecturer' => $is_lecturer,
+        		'is_trainer' => $is_trainer,
                 'note' => $note,
                 'user' => $user);
         $sender = $this->container->getParameter('mail_sender');
