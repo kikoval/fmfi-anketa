@@ -20,9 +20,6 @@ class TeachingAssociationController extends Controller
 
     public function preExecute() {
         if (!$this->get('anketa.access.hlasovanie')->userCanVote()) throw new AccessDeniedException();
-        
-        $this->ldapSearch = new LDAPTeacherSearch($this->container->get('anketa.ldap_retriever'),
-        										  $this->container->getParameter('org_unit'));
     }
 
     public function formAction($subject_slug)
@@ -53,22 +50,31 @@ class TeachingAssociationController extends Controller
         }
         $security = $this->get('security.context');
         $user = $security->getToken()->getUser();
+        
         $note = $request->request->get('note', '');
-        $is_lecturer = $request->request->get('teacher', null);
-        $is_trainer = $request->request->get('teacher-assistant', null);
-
+        $is_lecturer = $request->request->get('teacher', false);
+        $is_trainer = $request->request->get('teacher-assistant', false);
         $teacher_login = $request->get('teacher-login', null);
-        $teacher = $userRepository->findOneBy(array('login' => $teacher_login));
+        $teacher_name = $request->get('teacher-name', null);
+        
+        // if the teacher login is provided, use it to find the teacher
+        $teacher = null;
+        if ($teacher_login !== null)
+        	$teacher = $userRepository->findOneBy(array('login' => $teacher_login));
+        
+        // if teacher is not found in database, store the entered name in note
+        if ($teacher == null)
+        	$note .= PHP_EOL.$teacher_name;
 
         $assoc = new TeachingAssociation($season, $subject, $teacher, $user, $note, $is_lecturer, $is_trainer);
         $em->persist($assoc);
         $em->flush();
-
+        
         $emailTpl = array(
                 'subject' => $subject,
-                'teacher' => $teacher,
-        		'is_lecturer' => $is_lecturer,
-        		'is_trainer' => $is_trainer,
+                'teacher' => $teacher_name,
+                'is_lecturer' => $is_lecturer,
+                'is_trainer' => $is_trainer,
                 'note' => $note,
                 'user' => $user);
         $sender = $this->container->getParameter('mail_sender');

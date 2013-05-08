@@ -52,13 +52,13 @@ class TeachingAssociation {
      * @var string $note
      */
     protected $note;
-    
+
     /**
      * @ORM\Column(type="boolean", nullable=true)
      * @var boolean ci prednasa(l) k danemu predmetu
      */
     protected $lecturer;
-    
+
     /**
      * @ORM\Column(type="boolean", nullable=true)
      * @var boolean ci cvici(l)
@@ -69,7 +69,7 @@ class TeachingAssociation {
      * @param String $name
      */
     public function __construct(Season $season, Subject $subject, User $teacher = null,
-    		User $requestedBy = null, $note = '', $lecturer = null, $trainer = null) {
+            User $requestedBy = null, $note = '', $lecturer = null, $trainer = null) {
         Preconditions::checkIsString($note, 'note must be string');
         $this->requestedBy = $requestedBy;
         $this->teacher = $teacher;
@@ -129,19 +129,19 @@ class TeachingAssociation {
         $this->note = $note;
     }
     public function getLecturer() {
-    	return $this->lecturer;
+        return $this->lecturer;
     }
-    
+
     public function setLecturer($lecturer) {
-    	$this->lecturer = $lecturer;
+        $this->lecturer = $lecturer;
     }
-    
+
     public function getTrainer() {
-    	return $this->trainer;
+        return $this->trainer;
     }
-    
+
     public function setTrainer($trainer) {
-    	$this->trainer = $trainer;
+        $this->trainer = $trainer;
     }
 
 }

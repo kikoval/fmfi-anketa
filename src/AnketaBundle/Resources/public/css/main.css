@@ -32,8 +32,6 @@ p {text-align: justify;}
   height: 0;
 }
 
-.hidden {display: none;}
-
 h1, h2, h3, h4, h5, h6 {
   text-align: left;
 }
@@ -310,6 +308,7 @@ div.faq {
 
 #content .submit {
   text-align: center;
+  margin-top: 1em;
 }
 
 #content .submit .save {

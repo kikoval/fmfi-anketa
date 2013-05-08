@@ -46,4 +46,4 @@ teacher_search:
     pattern: /ucitelia/vyhladavanie
     defaults: { _controller: AnketaBundle:Teacher:search }
     requirements:
-      _method: GET  
+      _method: GET
