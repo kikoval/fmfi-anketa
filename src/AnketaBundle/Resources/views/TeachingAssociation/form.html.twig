@@ -60,7 +60,7 @@ jQuery(document).ready(function($) {
     $('#section-teacher-add').before('<p>Vyberte prosím požadovanú akciu:</p>');
     $('#section-teacher-add').before('<div class="page-section"><a href="#" id="btn-teacher-add" class="btn btn-large">Chcem nahlásiť <strong>chýbajúceho učiteľa</strong></a></div>');
     $('#section-other-problem').before('<div><a href="#" id="btn-other-problem" class="btn btn-large">Chcem nahlásiť <strong>iný problém</strong></a></div>');
-    
+
     $('#section-teacher-add').hide();
     $('#btn-teacher-add').click(function(event) {
         $('#section-teacher-add').toggle(0, function() {
@@ -116,11 +116,11 @@ jQuery(document).ready(function($) {
                             $('#teacher-login').attr('value', '');
                             $(this).remove();
                             addSearchResults();
-                            
+
                             return false;
                             })).after('&nbsp;');
 
-                        	return false;
+                            return false;
                         });
                     var unit = ' (' + teacher.orgUnits + ')';
                     list.append($(document.createElement('li')).append(teacher_name).append(unit));

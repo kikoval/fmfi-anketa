@@ -2,24 +2,21 @@
 
 namespace AnketaBundle\Controller;
 
+use AnketaBundle\Entity\TeachingAssociation;
+
 use Symfony\Component\HttpFoundation\Response;
-
 use Symfony\Component\HttpFoundation\Request;
-
-use AnketaBundle\Integration\LDAPTeacherSearch;
-
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use AnketaBundle\Entity\TeachingAssociation;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class TeachingAssociationController extends Controller
 {
 
     public function preExecute() {
-        if (!$this->get('anketa.access.hlasovanie')->userCanVote()) throw new AccessDeniedException();
+        if (!$this->get('anketa.access.hlasovanie')->userCanVote())
+        	throw new AccessDeniedException();
     }
 
     public function formAction($subject_slug)
@@ -50,29 +47,28 @@ class TeachingAssociationController extends Controller
         }
         $security = $this->get('security.context');
         $user = $security->getToken()->getUser();
-        
+
         $note = $request->request->get('note', '');
         $is_lecturer = $request->request->get('teacher', false);
         $is_trainer = $request->request->get('teacher-assistant', false);
         $teacher_login = $request->get('teacher-login', null);
         $teacher_name = $request->get('teacher-name', null);
         
+        $teacher_info = sprintf('Meno: %s, login: %s', $teacher_name, $teacher_login);
+
         // if the teacher login is provided, use it to find the teacher
         $teacher = null;
         if ($teacher_login !== null)
-        	$teacher = $userRepository->findOneBy(array('login' => $teacher_login));
-        
-        // if teacher is not found in database, store the entered name in note
-        if ($teacher == null)
-        	$note .= PHP_EOL.$teacher_name;
+            $teacher = $userRepository->findOneBy(array('login' => $teacher_login));
 
-        $assoc = new TeachingAssociation($season, $subject, $teacher, $user, $note, $is_lecturer, $is_trainer);
+        $assoc = new TeachingAssociation($season, $subject, $teacher, $user,
+                $note.PHP_EOL.$teacher_info, $is_lecturer, $is_trainer);
         $em->persist($assoc);
         $em->flush();
-        
+
         $emailTpl = array(
                 'subject' => $subject,
-                'teacher' => $teacher_name,
+                'teacher' => $teacher_info,
                 'is_lecturer' => $is_lecturer,
                 'is_trainer' => $is_trainer,
                 'note' => $note,
@@ -86,10 +82,10 @@ class TeachingAssociationController extends Controller
        // it autoloads required things before Swift_Message can be used
 
         $message = \Swift_Message::newInstance()
-                        ->setSubject($skratkaFakulty . ' ANKETA -- requested teacher')
-                        ->setFrom($sender)
-                        ->setTo($to)
-                        ->setBody($body);
+                ->setSubject($skratkaFakulty . ' ANKETA -- requested teacher')
+                ->setFrom($sender)
+                ->setTo($to)
+                ->setBody($body);
         $this->get('mailer')->send($message);
 
         $session = $this->get('session');

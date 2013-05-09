@@ -2,8 +2,6 @@
 
 namespace AnketaBundle\Controller;
 
-use AnketaBundle\Integration\LDAPTeacherSearch;
-
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -15,7 +13,7 @@ class TeacherController extends Controller {
      *
      * @throws AccessDeniedException
      * @return \Symfony\Component\HttpFoundation\Response list of results in JSON format
-     * 
+     *
      * @todo limit numer of queries to protect abuse
      */
     public function searchAction()    {
@@ -23,13 +21,13 @@ class TeacherController extends Controller {
         if (!$this->get('security.context')->isGranted('ROLE_USER')) {
             throw new AccessDeniedException();
         }
-        
+
         $name = $this->get('request')->get('name');
         if ($name == null) return new Response('Required parameter "name" is missing.', 400);
 
-        $this->ldapSearch = $this->container->get('anketa.teacher_search');
+        $ldapSearch = $this->container->get('anketa.teacher_search');
 
-        $result = $this->ldapSearch->byFullName($name);
+        $result = $ldapSearch->byFullName($name);
 
         return new JsonResponse($result);
     }
