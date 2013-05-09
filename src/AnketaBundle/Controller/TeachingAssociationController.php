@@ -11,6 +11,7 @@
 
 namespace AnketaBundle\Controller;
 
+use AnketaBundle\Entity\User;
 use AnketaBundle\Entity\TeachingAssociation;
 
 use Symfony\Component\HttpFoundation\Response;
