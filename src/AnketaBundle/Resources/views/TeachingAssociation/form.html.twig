@@ -20,6 +20,8 @@
     <label for="teacher-name">Meno</label>
     <input type="text" name="teacher-name" id="teacher-name" size="40" value="" required="required" />
     <input type="hidden" name="teacher-login" id="teacher-login" value="" />
+    <input type="hidden" name="teacher-given-name" id="teacher-given-name" value="" />
+    <input type="hidden" name="teacher-family-name" id="teacher-family-name" value="" />
 </p>
 <p>
      <fieldset>
@@ -110,10 +112,15 @@ jQuery(document).ready(function($) {
                     var teacher_name = $(document.createElement('a')).append(teacher.name).attr('href', '#').click(function(event) {
                         $('#teacher-login').attr('value', login);
                         $('#teacher-name').attr('value', teacher.name).attr('readonly', 'readonly');
+                        $('#teacher-given-name').attr('value', teacher.givenName);
+                        $('#teacher-family-name').attr('value', teacher.familyName);
+                        
                         $('#teacher-search-result').remove();
                         $('#teacher-name').after($(document.createElement('a')).append('zrušiť').attr('href', '#').click(function(event) {
                             $('#teacher-name').attr('value', '').removeAttr('readonly').focus();
                             $('#teacher-login').attr('value', '');
+                            $('#teacher-given-name').attr('value', '');
+                            $('#teacher-family-name').attr('value', '');
                             $(this).remove();
                             addSearchResults();
 
