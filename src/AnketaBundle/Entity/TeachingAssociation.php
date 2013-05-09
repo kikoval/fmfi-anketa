@@ -64,6 +64,12 @@ class TeachingAssociation {
      * @var boolean ci cvici(l)
      */
     protected $trainer;
+    
+    /**
+     * @ORM\Column(type="boolean", nullable=false)
+     * @var boolean ci bola tato poziadavka vybavene
+     */
+    protected $completed;
 
     /**
      * @param String $name
@@ -128,10 +134,13 @@ class TeachingAssociation {
         Preconditions::checkIsString($note, 'note must be string');
         $this->note = $note;
     }
+
     public function getLecturer() {
         return $this->lecturer;
     }
-
+    /**
+     * @param bool $completed
+     */
     public function setLecturer($lecturer) {
         $this->lecturer = $lecturer;
     }
@@ -139,9 +148,20 @@ class TeachingAssociation {
     public function getTrainer() {
         return $this->trainer;
     }
-
+    /**
+     * @param bool $completed
+     */
     public function setTrainer($trainer) {
         $this->trainer = $trainer;
     }
 
+    public function getCompleted() {
+    	return $this->completed;
+    }
+    /**
+     * @param bool $completed
+     */
+    public function setCompleted($completed) {
+    	$this->completed = $completed;
+    }
 }

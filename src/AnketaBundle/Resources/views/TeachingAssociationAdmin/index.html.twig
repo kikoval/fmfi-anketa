@@ -1,0 +1,59 @@
+{% extends 'AnketaBundle::layout.html.twig' %}
+
+{# TODO make separate admin templated #}
+{% block head %}
+{{ parent() }}
+<style type="text/css">
+    #container {max-width: none;}
+    tr:hover, tr:focus {background-color: #EEE;}
+    th, td {padding: 0.4em 0.5em;}
+</style>
+{% endblock %}
+
+{% block content %}
+<h1>Administrácia požiadaviek na priradenie učiteľa k predmetu</h1>
+
+{% if tas|length > 0 %}
+<p>Sezóna: <strong>{{ tas[0].season.description }}</strong></p>
+
+<table>
+	<thead>
+		<tr>
+			<th>ID</th>
+			<th>Učiteľ na pridanie</th>
+			<th>Funkcia</th>
+			<th>Predmet</th>
+			<th>Poznámka</th>
+			<th>Akcia</th>
+		</tr>
+	</thead>
+	<tbody>
+{% for ta in tas %}
+	<tr>
+		<td>{{ ta.id }}</td>
+		<td>{% if ta.teacher %}{{ ta.teacher.name }} ({{ ta.teacher.login }}){% else %}&#8212;{% endif %}</td>
+ 		<td>{% if not (ta.lecturer or ta.trainer) %}&#8212;{% endif %}{% if ta.lecturer %}učitel{% endif %}{% if ta.lecturer and ta.trainer %}, {% endif %}{% if ta.trainer %}cvičiaci{% endif %}
+ 		<td>{{ ta.subject.name }} [id={{ ta.subject.id }}]</td>
+		<td>{{ ta.note }}</td>
+		<td>
+		    {% if ta.teacher %}
+		    <form action="{{ path('admin_teaching_associations_process') }}" method="post">
+		        <input type="hidden" name="ta_id" value="{{ ta.id }}" />
+		        <input type="submit" name="approve" value="Schváliť priradenie" class="btn btn-primary"/>
+		    </form><br/>
+		    {% endif %}
+		    <form action="{{ path('admin_teaching_associations_process') }}" method="post">
+		        <input type="hidden" name="ta_id" value="{{ ta.id }}" />
+		        <input type="submit" name="mark-as-completed" value="&#10004; Označiť za vybavené" class="btn" />
+		    </form>
+		</td>
+	</tr>
+{% endfor %}
+    </tbody>
+</table>
+
+{% else %}
+<p>Nebola nájdená žiadna požiadavka.</p>
+{% endif %}
+
+{% endblock %}
