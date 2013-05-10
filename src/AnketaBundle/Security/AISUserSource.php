@@ -113,7 +113,7 @@ class AISUserSource implements UserSourceInterface
 
         foreach ($aisPredmety as $aisPredmet) {
             $this->dbConn->beginTransaction();
-            
+
             $props = $this->subjectIdentification->identify($aisPredmet['skratka'], $aisPredmet['nazov']);
 
             // Ignorujme duplicitne predmety
@@ -125,6 +125,8 @@ class AISUserSource implements UserSourceInterface
             // vytvorime subject v DB ak neexistuje
             // pouzijeme INSERT ON DUPLICATE KEY UPDATE
             // aby sme nedostavali vynimky pri raceoch
+            // Pri tejto query sa id zaznamu pri update nemeni.
+            // (Aj ked to tak moze vyzerat.)
             $stmt = $this->dbConn->prepare("INSERT INTO Subject (code, name, slug)
                                             VALUES (:code, :name, :slug)
                                             ON DUPLICATE KEY UPDATE id=LAST_INSERT_ID(id), slug=slug");
@@ -154,7 +156,7 @@ class AISUserSource implements UserSourceInterface
             }
             $stmt = null;
             $studyProgramId = $this->dbConn->lastInsertId();
-            
+
 
             $stmt = $this->dbConn->prepare("INSERT INTO UsersSubjects (user_id, subject_id, season_id, studyProgram_id)
                                             VALUES (:user_id, :subject_id, :season_id, :studyProgram_id)
@@ -167,7 +169,7 @@ class AISUserSource implements UserSourceInterface
                 throw new \Exception("Nepodarilo sa pridať väzbu študent-predmet do DB");
             }
             $stmt = null;
-            
+
             $this->dbConn->commit();
         }
     }
