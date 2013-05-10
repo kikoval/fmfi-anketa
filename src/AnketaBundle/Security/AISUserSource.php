@@ -157,7 +157,7 @@ class AISUserSource implements UserSourceInterface
             
 
             $stmt = $this->dbConn->prepare("INSERT INTO UsersSubjects (user_id, subject_id, season_id, studyProgram_id)
-                                            VALUES (user_id, subject_id, season_id, studyProgram_id)
+                                            VALUES (:user_id, :subject_id, :season_id, :studyProgram_id)
                                             ON DUPLICATE KEY UPDATE subject_id=subject_id");
             $stmt->bindValue('user_id', $userSeason->getUser()->getId());
             $stmt->bindValue('subject_id', $subjectId);
