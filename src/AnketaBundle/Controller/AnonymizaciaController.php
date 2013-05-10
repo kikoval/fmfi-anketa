@@ -24,7 +24,7 @@ class AnonymizaciaController extends Controller {
                ->anonymizeAnswersByUser($user, $season);
             $em->flush();
 
-            $this->get('session')->setFlash('anonymizacia', 'Vaše hlasovanie v ankete bolo úspešne ukončené.');
+            $this->get('session')->setFlash('anonymizacia', $this->get('translator')->trans('anonymizacia.controller.uspesny_koniec'));
 
             return new RedirectResponse($this->generateUrl('anketa'));
         }
