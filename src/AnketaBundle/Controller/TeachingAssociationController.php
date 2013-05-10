@@ -26,7 +26,7 @@ class TeachingAssociationController extends Controller
 
     public function preExecute() {
         if (!$this->get('anketa.access.hlasovanie')->userCanVote())
-        	throw new AccessDeniedException();
+            throw new AccessDeniedException();
     }
 
     public function formAction($subject_slug) {
@@ -78,11 +78,11 @@ class TeachingAssociationController extends Controller
             $teacher->setDisplayName($teacher_name);
             $teacher->setGivenName($teacher_givenName);
             $teacher->setFamilyName($teacher_familyName);
-            
+
             $em->persist($teacher);
             $em->flush();
         }
-        
+
         $assoc = new TeachingAssociation($season, $subject, $teacher, $user,
                 $note.PHP_EOL.$teacher_info, $is_lecturer, $is_trainer);
         $em->persist($assoc);
