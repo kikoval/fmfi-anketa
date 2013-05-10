@@ -47,10 +47,14 @@ class LDAPTeacherSearch {
      *  array(5) {
      *    ["kralik1"]=> array(2) {
      *      ["name"]=> string(26) "RNDr. Eduard Králik, CSc."
+     *      ["givenName"]=> "Eduard",
+     *      ["familyName"]=> "Králik",
      *      ["orgUnits"]=> array(1) { [0]=> string(4) "PriF" }
      *    }
      *    ["kralik3"]=> array(2) {
      *      ["name"]=> string(14) "Martin Králik"
+     *      ["givenName"]=> "Martin",
+     *      ["familyName"]=> "Králik",
      *      ["orgUnits"]=> array(1) { [0]=> string(4) "FMFI" }
      *    }
      *    ...
@@ -64,11 +68,13 @@ class LDAPTeacherSearch {
         $safeName = $this->ldap->escape($name);
         $safeOrgUnit = $this->ldap->escape($this->orgUnit);
         $filter = '(&(cn=*'.$safeName.'*)(|(group=zamestnanci)(group=doktorandi_'.$safeOrgUnit.')))';
-        $result = $this->ldap->searchAll($filter, array('displayName', 'uid', 'group'));
+        $result = $this->ldap->searchAll($filter, array('displayName', 'uid', 'group', 'givenNameU8', 'snU8'));
 
         $teachers = array();
         foreach ($result as $record) {
             $teachers[$record['uid'][0]]['name'] = $record['displayName'][0];
+            $teachers[$record['uid'][0]]['givenName'] = $record['givenNameU8'][0];
+            $teachers[$record['uid'][0]]['familyName'] = $record['snU8'][0];
             $orgUnits = array();
             foreach ($record['group'] as $group) {
                 $match = array();
