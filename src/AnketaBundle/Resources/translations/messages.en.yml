@@ -12,13 +12,13 @@ welcome:
   index:
     studentska_anketa: Student Questionnaire
     vitaj: Welcome to the Student Questionnaire
-    zapoj_sa: Give us your opinion, your opinion counts!
+    zapoj_sa: Give us your opinion, it counts!
     hlasuj: Enter questionnaire
     otvorene_do: The questionnaire will be open until
     hlasovanie_ukoncene: The student questionnaire is now closed, we would like to thank to all participants.
     vysledky: Results
     zverejnenie_vysledkov: Results will be available after the examination period ends.
-    aka_je_anketa: This student questionnair is:
+    aka_je_anketa: This student questionnaire is:
     k_veci: On topic
     k_veci_preco: your courses and teachers are automatically imported
     flexibilna: Flexible
@@ -28,7 +28,7 @@ welcome:
     mobilna: Mobile
     mobilna_preco: works on most internet enabled devices, including smartphones
     pekne_hviezdicky: Has beautiful stars
-    pekne_hviezdicky_preco: out team worked hard to bring you <em>state-of-the-art</em> stars
+    pekne_hviezdicky_preco: our team worked hard to bring you <em>state-of-the-art</em> stars
     aj_ty_hlasuj: YOUR ANSWERS CAN MAKE A DIFFERENCE
 #  faq: TODO
 
