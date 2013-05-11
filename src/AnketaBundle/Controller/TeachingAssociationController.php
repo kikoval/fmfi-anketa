@@ -74,16 +74,16 @@ class TeachingAssociationController extends Controller
             // if $teacher_login is not null, it should have been set up by
             // quering LDAP with $teacher_name, but we want to make sure, that
             // it was the case and the login was not changed afterwards
-            
+
             // first validate login by looking up in DB
             $teacher = $userRepository->findOneBy(
                     array('login' => $teacher_login));
-            
+
             if ($teacher === null) {
                 // if not found in DB, try LDAP
                 $ldapSearch = $this->container->get('anketa.teacher_search');
                 $teacher_info = $ldapSearch->byLogin($teacher_login);
-                
+
                 if (!empty($teacher_info)
                         && array_key_exists($teacher_login, $teacher_info)) {
                     $teacher_givenName = $teacher_info[$teacher_login]['givenName'];

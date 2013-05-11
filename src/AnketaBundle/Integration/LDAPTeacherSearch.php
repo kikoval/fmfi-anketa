@@ -86,7 +86,7 @@ class LDAPTeacherSearch {
         }
         return $teachers;
     }
-    
+
     /**
      * @see byFullName for docs
      *
@@ -98,7 +98,7 @@ class LDAPTeacherSearch {
         $safeOrgUnit = $this->ldap->escape($this->orgUnit);
         $filter = '(&(uid='.$safeLogin.')(|(group=zamestnanci)(group=doktorandi_'.$safeOrgUnit.')))';
         $result = $this->ldap->searchAll($filter, array('displayName', 'uid', 'group', 'givenNameU8', 'snU8'));
-        
+
         $teachers = array();
         foreach ($result as $record) {
             $teachers[$record['uid'][0]]['name'] = $record['displayName'][0];
@@ -115,7 +115,7 @@ class LDAPTeacherSearch {
         }
         return $teachers;
     }
-    
+
 }
 
 ?>
