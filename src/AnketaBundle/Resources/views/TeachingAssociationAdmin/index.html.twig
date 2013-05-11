@@ -7,6 +7,21 @@
     #container {max-width: none;}
     tr:hover, tr:focus {background-color: #EEE;}
     th, td {padding: 0.4em 0.5em;}
+    
+    .btn-delete {
+        color: #222;
+        background-color: rgb(248, 203, 203);
+        background-image: linear-gradient(bottom, rgb(222, 150, 150) 33%, rgb(248, 203, 203) 84%);
+        background-image: -o-linear-gradient(bottom, rgb(222, 150, 150) 33%, rgb(248, 203, 203) 84%);
+        background-image: -moz-linear-gradient(bottom, rgb(222, 150, 150) 33%, rgb(248, 203, 203) 84%);
+        background-image: -webkit-linear-gradient(bottom, rgb(222, 150, 150) 33%, rgb(248, 203, 203) 84%);
+        background-image: -ms-linear-gradient(bottom, rgb(222, 150, 150) 33%, rgb(248, 203, 203) 84%);
+        padding: 0.3em 0.5em !important;
+    }
+    .btn-delete:hover, .btn-delete:active, .btn-delete.active {
+        color: #222;
+        background-color: rgb(222, 150, 150);
+    }
 </style>
 {% endblock %}
 
@@ -45,6 +60,10 @@
 		    <form action="{{ path('admin_teaching_associations_process') }}" method="post">
 		        <input type="hidden" name="ta_id" value="{{ ta.id }}" />
 		        <input type="submit" name="mark-as-completed" value="&#10004; Označiť za vybavené" class="btn" />
+		    </form><br/>
+		    <form action="{{ path('admin_teaching_associations_process') }}" method="post">
+		        <input type="hidden" name="ta_id" value="{{ ta.id }}" />
+		        <input type="submit" name="delete" value="&#10007; Zmazať" class="btn btn-delete" onclick="return window.confirm('Delete this record?');" />
 		    </form>
 		</td>
 	</tr>
