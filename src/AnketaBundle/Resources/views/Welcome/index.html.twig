@@ -1,32 +1,41 @@
 {% extends 'AnketaBundle::layout.html.twig' %}
 {% block content %}
 
-<h2>Študentská anketa {{ skratka_fakulty }} &mdash; {{ active_season.description }}</h2>
+<h2>{% trans %}welcome.index.studentska_anketa{% endtrans %} {{ skratka_fakulty }} &mdash; {{ active_season.description }}</h2>
 
 <p>
-    Vitajte v Študentskej ankete {{ skratka_fakulty }}!
-    Zapojte sa aj Vy a prezentujte svoj názor!
+    {% trans %}welcome.index.vitaj{% endtrans %} {{ skratka_fakulty }}!
+    {% trans %}welcome.index.zapoj_sa{% endtrans %}
 </p>
 
 {% if skratka_fakulty == 'FMFI' %}
-<p>Prečítajte si <a href="{{ asset('bundles/anketa/files/anketa-stanovisko-2012-leto.pdf') }}">stanovisko vedenia fakulty k výsledkom ankety za letný semester akademického roku 2011/2012</a>.</p>
-<p>Prečítajte si <a href="{{ asset('bundles/anketa/files/Anketa_stanovisko_ZS11_12.pdf') }}">stanovisko vedenia fakulty k výsledkom ankety za zimný semester akademického roku 2011/2012</a>.</p>
-<p>Prečítajte si <a href="{{ asset('bundles/anketa/files/anketa-stanovisko-2010.pdf') }}">stanovisko vedenia fakulty k výsledkom ankety za akademický rok 2010/2011</a>.</p>
+<p>Prečítajte si <a href="{{ asset('bundles/anketa/files/anketa-vyjadrenie-ZS1213.pdf') }}">stanovisko vedenia fakulty k výsledkom ankety za zimný semester akademického roku 2012/2013</a>.</p>
 {% endif %}
 
 {% if access.hlasovanie.isVotingOpen %}
     <p><a class="bigbtn" href="{{ path('anketa') }}">
-    <span class="bigbtn_middle"><span class="bigbtn_left"><span class="bigbtn_right bigbtn_in">Hlasuj!</span></span></span></a></p>
-    {% if skratka_fakulty in ['FMFI', 'FaF'] %}
-        <p style="text-align: center"> Otvorené do <strong>31.1.2013 23:59:59</strong></p>
+    <span class="bigbtn_middle"><span class="bigbtn_left"><span class="bigbtn_right bigbtn_in">{% trans %}welcome.index.hlasuj{% endtrans %}</span></span></span></a></p>
+    {% if active_season.endTime != null %}
+        <p style="text-align: center">{% trans %}welcome.index.otvorene_do{% endtrans %}: <strong>{{ active_season.endTime|date("d.m.Y") }}</strong>
+            {% if countdown != null %}
+                {% set dni = countdown|date("%a") %}
+                {% if dni == 1 %}
+                    (ostáva 1 deň)
+                {% elseif dni >= 2 and dni <= 4 %}
+                    (ostávajú {{ dni }} dni)
+                {% else %}
+                    (ostáva {{ dni }} dní)
+                {% endif %}
+            {% endif %}
+        </p>
     {% endif %}
 {% else %}
-    <p>Hlasovanie v ankete je ukončené. Ďakujeme všetkým zúčastneným za vyplnenie :)</p>
+    <p>{% trans %}welcome.index.hlasovanie_ukoncene{% endtrans %}</p>
     {% if access.statistics.activeSeasonHasVisibleResults %}
         <p><a class="bigbtn" href="{{ path('statistics') }}">
-        <span class="bigbtn_middle"><span class="bigbtn_left"><span class="bigbtn_right bigbtn_in">Výsledky</span></span></span></a></p>
+        <span class="bigbtn_middle"><span class="bigbtn_left"><span class="bigbtn_right bigbtn_in">{% trans %}welcome.index.vysledky{% endtrans %}</span></span></span></a></p>
     {% elseif skratka_fakulty == 'FMFI' %}
-        <p><strong>Výsledky budú k dispozícii po ukončení skúškového obdobia.</strong></p>
+        <p><strong>{% trans %}welcome.index.zverejnenie_vysledkov{% endtrans %}</strong></p>
     {% else %}
         {# TODO: kedy sa zverejnuju vysledky na inych fakultach? #}
     {% endif %}
@@ -34,28 +43,22 @@
 
 {% render "AnketaBundle:Hlasovanie:globalProgressbar" %}
 
+<p>{% trans %}welcome.index.aka_je_anketa{% endtrans %}</p>
+<ul>
+<li><b>{% trans %}welcome.index.k_veci{% endtrans %}</b> &mdash; {% trans %}welcome.index.k_veci_preco{% endtrans %}</li>
+<li><b>{% trans %}welcome.index.flexibilna{% endtrans %}</b> &mdash; {% trans %}welcome.index.flexibilna_preco{% endtrans %}</li>
+<li><b>{% trans %}welcome.index.anonymna{% endtrans %}</b> &mdash; {% trans %}welcome.index.anonymna_preco{% endtrans %}</li>
+<li><b>{% trans %}welcome.index.mobilna{% endtrans %}</b> &mdash; {% trans %}welcome.index.mobilna_preco{% endtrans %}</li>
+<li><b>{% trans %}welcome.index.pekne_hviezdicky{% endtrans %}</b> &mdash; {% trans %}welcome.index.pekne_hviezdicky_preco{% endtrans %}</li>
+</ul>
+
+<p><strong>{% trans %}welcome.index.aj_ty_hlasuj{% endtrans %}</strong><p>
+
 {% if skratka_fakulty == 'FMFI' %}
-<p>Aká je anketa?</p>
-<ul>
-<li><b>K veci</b> &mdash; automaticky načíta Váš zoznam predmetov a učiteľov</li>
-<li><b>Flexibilná</b> &mdash; môžete sa k nej vrátiť neskôr, nemusíte všetko vyplniť naraz</li>
-<li><b>Anonymná</b> &mdash; po ukončení hlasovania sa nedá zistiť, komu patria ktoré odpovede</li>
-<li><b>Mobilná</b> &mdash; hlasujte kdekoľvek a s čímkoľvek, vrátane mobilov a smartfónov</li>
-<li><b>Má prekrásne hviezdičky</b> &mdash; náš tím tvrdo pracoval, aby Vám poskytol <em>state-of-the-art</em> hviezdičkové hlasovanie</li>
-</ul>
-{% else %}
-<p>Aká je anketa?</p>
-<ul>
-<li><b>K veci</b> &mdash; automaticky načíta Váš zoznam predmetov s učiteľmi</li>
-<li><b>Flexibilná</b> &mdash; môžete sa k nej vrátiť neskôr, nemusíte všetko vyplniť naraz</li>
-<li><b>Anonymná</b> &mdash; po ukončení hlasovania sa nedá zistiť, komu patria ktoré odpovede</li>
-<li><b>Mobilná</b> &mdash; hlasujte kdekoľvek a s čímkoľvek, vrátane mobilov a smartfónov</li>
-<li><b>Má prekrásne hviezdičky</b> &mdash; náš tím tvrdo pracoval, aby Vám poskytol <em>state-of-the-art</em> hviezdičkové hlasovanie</li>
-</ul>
-
+<p>Prečítajte si <a href="{{ asset('bundles/anketa/files/anketa-stanovisko-2012-leto.pdf') }}">stanovisko vedenia fakulty k výsledkom ankety za letný semester akademického roku 2011/2012</a>.</p>
+<p>Prečítajte si <a href="{{ asset('bundles/anketa/files/Anketa_stanovisko_ZS11_12.pdf') }}">stanovisko vedenia fakulty k výsledkom ankety za zimný semester akademického roku 2011/2012</a>.</p>
+<p>Prečítajte si <a href="{{ asset('bundles/anketa/files/anketa-stanovisko-2010.pdf') }}">stanovisko vedenia fakulty k výsledkom ankety za akademický rok 2010/2011</a>.</p>
 {% endif %}
-
-<p><strong>AJ VÁŠ HLAS MÔŽE ZMENIŤ NAŠU ALMA MATER K LEPŠIEMU ;-)</strong><p>
 
 {% include 'AnketaBundle:Welcome:likebox.html.twig' %}
 

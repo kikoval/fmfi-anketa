@@ -22,8 +22,16 @@ class WelcomeController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $activeSeason = $em->getRepository('AnketaBundle:Season')->getActiveSeason();
+        $countdown = null;
+        if ($activeSeason->getEndTime() != null) {
+            $now = new \DateTime("now");
+            $diff = $now->diff($activeSeason->getEndTime());
+            if ($diff->format('%R') == '+') { //$endTime is later than $now
+                $countdown = $diff;
+            }
+        }
         return $this->render('AnketaBundle:Welcome:index.html.twig',
-            array('active_season' => $activeSeason));
+            array('active_season' => $activeSeason, 'countdown' => $countdown));
     }
 
     public function faqAction()

@@ -89,6 +89,8 @@ class AISUserSource implements UserSourceInterface
         $slugy = array();
 
         foreach ($aisPredmety as $aisPredmet) {
+            $this->dbConn->beginTransaction();
+
             $props = $this->subjectIdentification->identify($aisPredmet['skratka'], $aisPredmet['nazov']);
 
             // Ignorujme duplicitne predmety
@@ -100,39 +102,50 @@ class AISUserSource implements UserSourceInterface
             // vytvorime subject v DB ak neexistuje
             // pouzijeme INSERT ON DUPLICATE KEY UPDATE
             // aby sme nedostavali vynimky pri raceoch
-            $stmt = $this->dbConn->prepare("INSERT INTO Subject (code, name, slug) VALUES (:code, :name, :slug) ON DUPLICATE KEY UPDATE slug=slug");
+            // Pri tejto query sa id zaznamu pri update nemeni.
+            // (Aj ked to tak moze vyzerat.)
+            $stmt = $this->dbConn->prepare("INSERT INTO Subject (code, name, slug)
+                                            VALUES (:code, :name, :slug)
+                                            ON DUPLICATE KEY UPDATE id=LAST_INSERT_ID(id), slug=slug");
             $stmt->bindValue('code', $props['code']);
             $stmt->bindValue('name', $props['name']);
             $stmt->bindValue('slug', $props['slug']);
-            $stmt->execute();
-
-            $subject = $this->em->getRepository('AnketaBundle:Subject')->findOneBy(array('slug' => $props['slug']));
-            if ($subject == null) {
+            if (!$stmt->execute()) {
                 throw new \Exception("Nepodarilo sa pridať predmet do DB");
             }
             $stmt = null;
+            $subjectId = $this->dbConn->lastInsertId();
+
+
 
             // Vytvorime studijny program v DB ak neexistuje
             // podobne ako predmet vyssie
-            $stmt = $this->dbConn->prepare("INSERT INTO StudyProgram (code, name, slug) VALUES (:code, :name, :slug) ON DUPLICATE KEY UPDATE code=code");
+            $stmt = $this->dbConn->prepare("INSERT INTO StudyProgram (code, name, slug)
+                                            VALUES (:code, :name, :slug)
+                                            ON DUPLICATE KEY UPDATE id=LAST_INSERT_ID(id), code=code");
             $stmt->bindValue('code', $aisPredmet['studijnyProgram']['skratka']);
             $stmt->bindValue('name', $aisPredmet['studijnyProgram']['nazov']);
             $stmt->bindValue('slug', $this->generateSlug($aisPredmet['studijnyProgram']['skratka']));
-            $stmt->execute();
-
-            $studyProgram = $this->em->getRepository('AnketaBundle:StudyProgram')->findOneBy(array('code' => $aisPredmet['studijnyProgram']['skratka']));
-            if ($studyProgram == null) {
+            if (!$stmt->execute()) {
                 throw new \Exception("Nepodarilo sa pridať študijný program do DB");
             }
             $stmt = null;
+            $studyProgramId = $this->dbConn->lastInsertId();
 
-            $userSubject = new UsersSubjects();
-            $userSubject->setUser($userSeason->getUser());
-            $userSubject->setSeason($userSeason->getSeason());
-            $userSubject->setSubject($subject);
-            $userSubject->setStudyProgram($studyProgram);
 
-            $this->em->persist($userSubject);
+            $stmt = $this->dbConn->prepare("INSERT INTO UsersSubjects (user_id, subject_id, season_id, studyProgram_id)
+                                            VALUES (:user_id, :subject_id, :season_id, :studyProgram_id)
+                                            ON DUPLICATE KEY UPDATE subject_id=subject_id");
+            $stmt->bindValue('user_id', $userSeason->getUser()->getId());
+            $stmt->bindValue('subject_id', $subjectId);
+            $stmt->bindValue('season_id', $userSeason->getSeason()->getId());
+            $stmt->bindValue('studyProgram_id', $studyProgramId);
+            if (!$stmt->execute()) {
+                throw new \Exception("Nepodarilo sa pridať väzbu študent-predmet do DB");
+            }
+            $stmt = null;
+
+            $this->dbConn->commit();
         }
     }
 

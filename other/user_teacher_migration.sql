@@ -11,7 +11,7 @@ displayName varchar(255),
 department_id int,
 INDEX(tid),
 PRIMARY KEY (id),
-UNIQUE KEY (login) );
+UNIQUE KEY (login) ) ENGINE=InnoDB;
 
 INSERT INTO UserFinal
 SELECT u.id, t.id as tid, u.userName as login, t.givenName, t.familyName,u.displayName,t.department_id

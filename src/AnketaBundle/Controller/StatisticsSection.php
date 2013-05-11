@@ -74,6 +74,7 @@ class StatisticsSection extends ContainerAware {
         $result->season = $season;
         $result->generalQuestion = $generalQuestion;
         $result->title = $generalQuestion->getQuestion();
+        $result->questionsCategoryType = CategoryType::GENERAL;
         $result->headingVisible = false;
         $result->answersQuery = array();
         $result->responsesQuery = array('season' => $season->getId(), 'question' => $generalQuestion->getId());
@@ -322,14 +323,65 @@ class StatisticsSection extends ContainerAware {
 
     private $slug = null;
 
+    /**
+     * Get slug for the section.
+     * 
+     * @return string
+     */
     public function getSlug() {
         return $this->slug;
     }
 
+    /**
+     * Get path for the section based on the slug.
+     * 
+     * @param bool $absolute
+     * @param string $slug
+     * @return string
+     */
     public function getStatisticsPath($absolute = false) {
         return $this->container->get('router')->generate('statistics_results', array('section_slug' => $this->getSlug()), $absolute);
     }
+    
+    private $previousSection = null;
+    
+    /**
+     * Gets the previous section object.
+     */
+    public function getPreviousSection() {
+        if ($this->previousSection !== null) return $this->previousSection;
 
+        $em = $this->container->get('doctrine.orm.entity_manager');
+
+        $qb = $em->createQueryBuilder();
+        $qb->select('a')
+        ->from('AnketaBundle:Answer', 'a')->from('AnketaBundle:Question', 'q')
+        ->from('AnketaBundle:Category', 'c')->from('AnketaBundle:Season', 'sn')
+        ->where('a.question = q')
+        ->andWhere('q.category = c')
+        ->andWhere($qb->expr()->eq('c.type', '?1'))
+        ->andWhere('a.season = sn')
+        ->andWhere($qb->expr()->lt('sn.ordering', '?2'))
+        ->orderBy('sn.ordering', 'DESC');
+        foreach (array('teacher', 'subject', 'studyProgram') as $col) {
+            if (!empty($this->answersQuery[$col])) {
+                $qb->andWhere($qb->expr()->eq("a.$col", $this->answersQuery[$col]));
+            }
+        }
+
+        // Treba vylucit prazdne odpovede
+        // TODO: nedavat do DB prazdne odpovede
+        $qb->andWhere('NOT(a.evaluation IS NULL AND a.comment IS NULL AND a.option IS NULL)');
+        $qb->setParameters(array(1 => $this->questionsCategoryType, 2 => $this->season->getOrdering()));
+        $qb->setMaxResults(1);
+        $answer = $qb->getQuery()->getOneOrNullResult();
+
+        if ($answer == null) return null;
+
+        $this->previousSection = self::getSectionOfAnswer($this->container, $answer);
+        return $this->previousSection;
+    }
+    
     private $associationExamples = null;
 
     public function getAssociationExamples() {

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright Copyright (c) 2011,2012 The FMFI Anketa authors (see AUTHORS).
  * Use of this source code is governed by a license that can be
@@ -87,6 +88,13 @@ class Season {
      * @var int $ordering
      */
     protected $ordering;
+
+    /**
+     *
+     * @ORM\Column(type="datetime", nullable=true)
+     * @var string $endTime;
+     */
+    protected $endTime;
 
     public function __construct($description, $slug) {
         $this->setDescription($description);
@@ -178,6 +186,14 @@ class Season {
 
     public function setOrdering($ordering) {
         $this->ordering = $ordering;
+    }
+
+    public function getEndTime() {
+        return $this->endTime;
+    }
+
+    public function setEndTime($endTime) {
+        $this->endTime = $endTime;
     }
 
 }

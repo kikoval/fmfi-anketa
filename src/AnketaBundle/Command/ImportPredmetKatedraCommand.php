@@ -52,7 +52,7 @@ class ImportPredmetKatedraCommand extends AbstractImportCommand {
         $season = $this->getSeason($input);
 
         $subjectIdentification = $this->getContainer()->get('anketa.subject_identification');
-        $tableReader = new NativeCSVTableReader($file);
+        $tableReader = new NativeCSVTableReader($file, 5);
 
         $conn = $this->getContainer()->get('database_connection');
 
@@ -71,12 +71,14 @@ class ImportPredmetKatedraCommand extends AbstractImportCommand {
                     ON DUPLICATE KEY UPDATE subjectSeason_id = subjectSeason_id
             ");
 
+        $rows = 0;
         try {
-            while (($row = $tableReader->readRow()) !== false) {
-
-                $subjectCode = $row[0];
-                $stredisko = $row[1];
-                $subjectName = $row[2];
+            while (($row = $tableReader->readAssocRow()) !== false) {
+                $rows++;
+                
+                $subjectCode = $row['Skratka'];
+                $stredisko = $row['Stredisko'];
+                $subjectName = $row['Názov'];
 
                 $props = $subjectIdentification->identify($subjectCode, $subjectName);
                 $kod = $props['code'];
@@ -98,6 +100,7 @@ class ImportPredmetKatedraCommand extends AbstractImportCommand {
         }
 
         $conn->commit();
+        $output->writeln("Processed ".$rows." rows from ".$input->getArgument('file'));
         fclose($file);
     }
 
