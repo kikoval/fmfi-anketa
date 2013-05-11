@@ -61,17 +61,47 @@ class TeachingAssociationController extends Controller
         $is_trainer = $request->request->get('teacher-assistant', false);
         $teacher_login = $request->get('teacher-login', null);
         $teacher_name = $request->get('teacher-name', null);
-        $teacher_givenName = $request->get('teacher-given-name', null);
-        $teacher_familyName = $request->get('teacher-family-name', null);
+        $teacher_givenName = '';
+        $teacher_familyName = '';
 
-        // if the teacher login is provided, use it to find the teacher
+        if ($teacher_name === null)
+            return new Response('Required parameter "teacher-name" is missing.',
+                    400);
+
+        // validate teacher login and get given and family names
         $teacher = null;
         if ($teacher_login !== null) {
-            $teacher = $userRepository->findOneBy(array('login' => $teacher_login));
+            // if $teacher_login is not null, it should have been set up by
+            // quering LDAP with $teacher_name, but we want to make sure, that
+            // it was the case and the login was not changed afterwards
+            
+            // first validate login by looking up in DB
+            $teacher = $userRepository->findOneBy(
+                    array('login' => $teacher_login));
+            
+            if ($teacher === null) {
+                // if not found in DB, try LDAP
+                $ldapSearch = $this->container->get('anketa.teacher_search');
+                $teacher_info = $ldapSearch->byLogin($teacher_login);
+                
+                if (!empty($teacher_info)
+                        && array_key_exists($teacher_login, $teacher_info)) {
+                    $teacher_givenName = $teacher_info[$teacher_login]['givenName'];
+                    $teacher_familyName = $teacher_info[$teacher_login]['familyName'];
+                } else {
+                    // $teacher_login does not exists, we'll save the provided
+                    // teacher's name into note
+                    $note .= PHP_EOL.sprintf(
+                            'Učiteľ "%s" bol zadaný s loginom, ktorý nie je v '.
+                            'LDAP-e (potenciálny pokus o podvod).',
+                            $teacher_name);
+                }
+            }
         }
 
-        // add a user when he is not in DB, but he is in LDAP
-        if ($teacher === null && $teacher_login !== null) {
+        // add a user when he/she is not in DB, but found in LDAP
+        if ($teacher === null && $teacher_login !== null
+                && !empty($teacher_givenName)) {
             $teacher = new User($teacher_login);
             $teacher->setDisplayName($teacher_name);
             $teacher->setGivenName($teacher_givenName);

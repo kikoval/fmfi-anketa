@@ -86,6 +86,36 @@ class LDAPTeacherSearch {
         }
         return $teachers;
     }
+    
+    /**
+     * @see byFullName for docs
+     *
+     * @param string $login full login
+     * @return array
+     */
+    public function byLogin($login) {
+        $safeLogin = $this->ldap->escape($login);
+        $safeOrgUnit = $this->ldap->escape($this->orgUnit);
+        $filter = '(&(uid='.$safeLogin.')(|(group=zamestnanci)(group=doktorandi_'.$safeOrgUnit.')))';
+        $result = $this->ldap->searchAll($filter, array('displayName', 'uid', 'group', 'givenNameU8', 'snU8'));
+        
+        $teachers = array();
+        foreach ($result as $record) {
+            $teachers[$record['uid'][0]]['name'] = $record['displayName'][0];
+            $teachers[$record['uid'][0]]['givenName'] = $record['givenNameU8'][0];
+            $teachers[$record['uid'][0]]['familyName'] = $record['snU8'][0];
+            $orgUnits = array();
+            foreach ($record['group'] as $group) {
+                $match = array();
+                if (preg_match(self::GROUP_REGEXP, $group, $match)) {
+                    $orgUnits[] = $match['orgUnits'];
+                }
+            }
+            $teachers[$record['uid'][0]]['orgUnits'] = $orgUnits;
+        }
+        return $teachers;
+    }
+    
 }
 
 ?>
