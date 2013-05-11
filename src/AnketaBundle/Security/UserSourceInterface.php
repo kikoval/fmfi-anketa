@@ -20,8 +20,8 @@ interface UserSourceInterface
     /**
      * Load information about user
      * @param UserSeason $userSeason user-season to populate
-     * @return boolean true if user found, false otherwise
+     * @param array $want which user attributes are to be loaded
      */
-    public function load(UserSeason $userSeason);
+    public function load(UserSeason $userSeason, array $want);
 
 }
