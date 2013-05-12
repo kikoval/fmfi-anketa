@@ -84,13 +84,13 @@ class TeachingAssociationController extends Controller
                         && array_key_exists($teacher_login, $teacher_info)) {
                     $teacher_givenName = $teacher_info[$teacher_login]['givenName'];
                     $teacher_familyName = $teacher_info[$teacher_login]['familyName'];
-                    
+
                     // add a user to DB
                     $teacher = new User($teacher_login);
                     $teacher->setDisplayName($teacher_name);
                     $teacher->setGivenName($teacher_givenName);
                     $teacher->setFamilyName($teacher_familyName);
-                    
+
                     $em->persist($teacher);
                     $em->flush();
                 } else {
@@ -109,7 +109,7 @@ class TeachingAssociationController extends Controller
                 $note, $is_lecturer, $is_trainer);
         $em->persist($assoc);
         $em->flush();
-        
+
         if ($teacher === null) {
             $teacher = $teacher_name;
         }

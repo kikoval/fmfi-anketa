@@ -45,7 +45,7 @@ class LDAPTeacherSearch {
         $safeName = $this->ldap->escape($name);
         $safeOrgUnit = $this->ldap->escape($this->orgUnit);
         $filter = '(&(cn=*'.$safeName.'*)(|(group=zamestnanci)(group=doktorandi_'.$safeOrgUnit.')))';
-        
+
         return $this->executeSeachAndProcessData($filter);
     }
 
@@ -61,10 +61,10 @@ class LDAPTeacherSearch {
         $safeLogin = $this->ldap->escape($login);
         $safeOrgUnit = $this->ldap->escape($this->orgUnit);
         $filter = '(&(uid='.$safeLogin.')(|(group=zamestnanci)(group=doktorandi_'.$safeOrgUnit.')))';
-        
+
         return $this->executeSeachAndProcessData($filter);
     }
-    
+
     /**
      * Executes LDAP search and returns results as associated array.
      *
@@ -96,7 +96,7 @@ class LDAPTeacherSearch {
     private function executeSeachAndProcessData($filter) {
         $result = $this->ldap->searchAll($filter,
                 array('displayName', 'uid', 'group', 'givenNameU8', 'snU8'));
-        
+
         $teachers = array();
         foreach ($result as $record) {
             $teachers[$record['uid'][0]]['name'] = $record['displayName'][0];
