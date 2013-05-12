@@ -84,6 +84,15 @@ class TeachingAssociationController extends Controller
                         && array_key_exists($teacher_login, $teacher_info)) {
                     $teacher_givenName = $teacher_info[$teacher_login]['givenName'];
                     $teacher_familyName = $teacher_info[$teacher_login]['familyName'];
+                    
+                    // add a user to DB
+                    $teacher = new User($teacher_login);
+                    $teacher->setDisplayName($teacher_name);
+                    $teacher->setGivenName($teacher_givenName);
+                    $teacher->setFamilyName($teacher_familyName);
+                    
+                    $em->persist($teacher);
+                    $em->flush();
                 } else {
                     // $teacher_login does not exists, we'll save the provided
                     // teacher's name into note
@@ -95,23 +104,15 @@ class TeachingAssociationController extends Controller
             }
         }
 
-        // add a user when he/she is not in DB, but found in LDAP
-        if ($teacher === null && $teacher_login !== null
-                && !empty($teacher_givenName)) {
-            $teacher = new User($teacher_login);
-            $teacher->setDisplayName($teacher_name);
-            $teacher->setGivenName($teacher_givenName);
-            $teacher->setFamilyName($teacher_familyName);
-
-            $em->persist($teacher);
-            $em->flush();
-        }
-
         // create "ticket" for the association
         $assoc = new TeachingAssociation($season, $subject, $teacher, $user,
                 $note, $is_lecturer, $is_trainer);
         $em->persist($assoc);
         $em->flush();
+        
+        if ($teacher === null) {
+            $teacher = $teacher_name;
+        }
 
         // send email about the request
         $emailTpl = array(
