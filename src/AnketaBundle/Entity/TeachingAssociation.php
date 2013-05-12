@@ -54,15 +54,30 @@ class TeachingAssociation {
     protected $note;
 
     /**
+     * @ORM\Column(type="boolean", nullable=true)
+     * @var boolean ci prednasa(l) k danemu predmetu
+     */
+    protected $lecturer;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     * @var boolean ci cvici(l)
+     */
+    protected $trainer;
+
+    /**
      * @param String $name
      */
-    public function __construct(Season $season, Subject $subject, User $teacher = null, User $requestedBy = null, $note = '') {
+    public function __construct(Season $season, Subject $subject, User $teacher = null,
+            User $requestedBy = null, $note = '', $lecturer = null, $trainer = null) {
         Preconditions::checkIsString($note, 'note must be string');
         $this->requestedBy = $requestedBy;
         $this->teacher = $teacher;
         $this->subject = $subject;
         $this->season = $season;
         $this->note = $note;
+        $this->lecturer = $lecturer;
+        $this->trainer = $trainer;
     }
 
     public function getId() {
@@ -112,6 +127,21 @@ class TeachingAssociation {
     public function setNote($note) {
         Preconditions::checkIsString($note, 'note must be string');
         $this->note = $note;
+    }
+    public function getLecturer() {
+        return $this->lecturer;
+    }
+
+    public function setLecturer($lecturer) {
+        $this->lecturer = $lecturer;
+    }
+
+    public function getTrainer() {
+        return $this->trainer;
+    }
+
+    public function setTrainer($trainer) {
+        $this->trainer = $trainer;
     }
 
 }

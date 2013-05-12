@@ -41,3 +41,9 @@ dakujeme:
 api:
     pattern: /api/
     resource: "@AnketaBundle/Resources/config/api_routing.yml"
+
+teacher_search:
+    pattern: /ucitelia/vyhladavanie
+    defaults: { _controller: AnketaBundle:Teacher:search }
+    requirements:
+      _method: GET

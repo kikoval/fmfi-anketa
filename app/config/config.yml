@@ -120,8 +120,3 @@ services:
     anketa.subject_identification:
         class: AnketaBundle\Lib\SubjectIdentification
         # class: AnketaBundle\Lib\OldPriFSubjectIdentification # Pre PriF instanciu
-    anketa.ldap_teacher_search:
-        class: AnketaBundle\Integration\LDAPTeacherSearch
-        arguments:
-            - "@anketa.ldap_retriever"
-            - %org_unit%

@@ -19,5 +19,6 @@ services:
     anketa.access.statistics:
         class: AnketaBundle\Access\StatisticsAccess
         arguments: ["@security.context", "@doctrine.orm.entity_manager"]
-
-
+    anketa.teacher_search:
+        class: AnketaBundle\Integration\LDAPTeacherSearch
+        arguments: ["@anketa.ldap_retriever", "%org_unit%"]
