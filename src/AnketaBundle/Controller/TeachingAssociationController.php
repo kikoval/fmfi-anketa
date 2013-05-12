@@ -64,10 +64,6 @@ class TeachingAssociationController extends Controller
         $teacher_givenName = '';
         $teacher_familyName = '';
 
-        if ($teacher_name === null)
-            return new Response('Required parameter "teacher-name" is missing.',
-                    400);
-
         // validate teacher login and get given and family names
         $teacher = null;
         if ($teacher_login !== null) {
