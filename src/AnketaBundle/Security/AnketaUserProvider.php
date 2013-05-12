@@ -13,6 +13,7 @@
 
 namespace AnketaBundle\Security;
 
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
@@ -25,56 +26,30 @@ use AnketaBundle\Entity\UserSeason;
 class AnketaUserProvider implements UserProviderInterface
 {
 
-    /**
-     * Doctrine repository for User entity
-     * @var AnketaBundle\Entity\UserRepository
-     */
-    private $userRepository;
-
-    /**
-     * Doctrine repository for UserSeason entity
-     * @var AnketaBundle\Entity\UserSeasonRepository
-     */
-    private $userSeasonRepository;
-
-    /**
-     * Doctrine repository for Role entity
-     * @var AnketaBundle\Entity\RoleRepository
-     */
-    private $roleRepository;
-
-    /**
-     * Doctrine repository for Season entity
-     * @var AnketaBundle\Entity\SeasonRepository
-     */
-    private $seasonRepository;
+    /** @var ContainerInterface */
+    private $container;
 
     /** @var EntityManager */
-    private $entityManager;
+    private $em;
 
-    /** @var UserSourceInterface[] */
-    private $perSeasonUserSources;
-
-    /** @var UserSourceInterface[] */
-    private $perLoginUserSources;
+    /** @var array */
+    private $userSources;
 
     /** @var LoggerInterface */
     private $logger;
 
-    public function __construct(EntityManager $em, array $perSeasonUserSources, array $perLoginUserSources, LoggerInterface $logger = null)
+    public function __construct(ContainerInterface $container, array $userSources, LoggerInterface $logger = null)
     {
-        $this->entityManager = $em;
-        $this->userRepository = $em->getRepository('AnketaBundle:User');
-        $this->userSeasonRepository = $em->getRepository('AnketaBundle:UserSeason');
-        $this->roleRepository = $em->getRepository('AnketaBundle:Role');
-        $this->seasonRepository = $em->getRepository('AnketaBundle:Season');
-        $this->perSeasonUserSources = $perSeasonUserSources;
-        $this->perLoginUserSources = $perLoginUserSources;
+        $this->container = $container;
+        $this->em = $this->container->get('doctrine.orm.entity_manager');
+        $this->userSources = $userSources;
         $this->logger = $logger;
     }
 
     /**
-     * Reload a user given an existing UserInterface instance
+     * Reload a user given an existing UserInterface instance.
+     * (This happens on each request.)
+     *
      * @param UserInterface $user to reload
      * @return User the reloaded user
      * @throws UnsupportedUserException if the UserInstance given is not User
@@ -87,30 +62,20 @@ class AnketaUserProvider implements UserProviderInterface
             throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', get_class($oldUser)));
         }
 
-        if ($this->logger) {
-            $this->logger->debug('Searching in database');
-        }
-        $user = $this->userRepository->findOneWithRolesByLogin($oldUser->getLogin());
+        $user = $this->em->getRepository('AnketaBundle:User')->findOneWithRolesByLogin($oldUser->getLogin());
 
         if ($user === null) {
-            if ($this->logger) {
-                $this->logger->debug('not found in database');
-            }
-            throw new UsernameNotFoundException(sprintf("User %s not found in database!", $oldUser->getLogin()));
+            throw new UsernameNotFoundException(sprintf("User %s not found in database! Cannot refresh.", $oldUser->getLogin()));
         }
 
         $user->setOrgUnits($oldUser->getOrgUnits());
-        $this->loadUserInfo($user, false);
-
-        if ($this->logger) {
-              $this->logger->debug('Returning the user');
-        }
+        $this->loadUserInfo($user);
 
         return $user;
     }
 
     /**
-     * Load a user with given username.
+     * Load a user with given username. (This happens when the user logs in.)
      *
      * This function tries to load the user from database first.
      * If that is not successful, try to construct a user from
@@ -131,74 +96,61 @@ class AnketaUserProvider implements UserProviderInterface
         }
         $username = (string) $username;
 
+        if ($this->logger) {
+            $this->logger->debug(sprintf('AnketaUserProvider loading user %s', $username));
+        }
+
         // Try to load the user from database first
-        $user = $this->userRepository->findOneWithRolesByLogin($username);
+        $user = $this->em->getRepository('AnketaBundle:User')->findOneWithRolesByLogin($username);
 
         if ($user === null) {
             $user = new User($username);
-            $this->entityManager->persist($user);
+            $this->em->persist($user);
 
-            $user->addRole($this->roleRepository->findOrCreateRole('ROLE_USER'));
+            $user->addRole($this->em->getRepository('AnketaBundle:Role')->findOrCreateRole('ROLE_USER'));
         }
 
-        assert($user !== null);
-        $this->loadUserInfo($user, true);
+        $this->loadUserInfo($user);
+
+        if ($user->getDisplayName() === null || !$user->getOrgUnits()) {
+            throw new UsernameNotFoundException(sprintf('User "%s" not found.', $user->getLogin()));
+        }
+
         return $user;
     }
 
-    private function loadUserInfo(User $user, $firstTime) {
-        $activeSeason = $this->seasonRepository->getActiveSeason();
-        $userSeason = $this->userSeasonRepository->
+    private function loadUserInfo(User $user) {
+        $activeSeason = $this->em->getRepository('AnketaBundle:Season')->getActiveSeason();
+        $userSeason = $this->em->getRepository('AnketaBundle:UserSeason')->
                 findOneBy(array('user' => $user->getId(), 'season' => $activeSeason->getId()));
-//nacitaval som uz z aisu pre dany seoson?
+
         if ($userSeason === null) {
             $userSeason = new UserSeason();
             $userSeason->setUser($user);
             $userSeason->setSeason($activeSeason);
-            $this->entityManager->persist($userSeason);
+            $this->em->persist($userSeason);
         }
 
-        $foundUser = !$firstTime;
-        //kvoli doktorantom, kedze su aj ucitelia, aby sme im prvykrat nacitali predmety
-        //su aj isStudent aj isTeacher
+        // "$load[X][Y]" == "service X should load user attribute Y"
+        $load = array();
+
         if (!$userSeason->getLoadedFromAis()) {
-            foreach ($this->perSeasonUserSources as $userSource) {
-                $found = $userSource->load($userSeason);
-
-                if ($this->logger) {
-                    $this->logger->debug(sprintf('Per season user source %s returned %s',
-                        get_class($userSource), $found));
-                }
-
-                $foundUser |= $found;
-            }
-
-            if ($foundUser) {
-                $userSeason->setLoadedFromAis(true);
-            }
+            $load[$this->userSources['isStudent']]['isStudent'] = true;
+            $load[$this->userSources['subjects']]['subjects'] = true;
+            $userSeason->setLoadedFromAis(true);
+        }
+        if ($user->getDisplayName() === null) {
+            $load[$this->userSources['displayName']]['displayName'] = true;
+        }
+        if (!$user->getOrgUnits()) {
+            $load[$this->userSources['orgUnits']]['orgUnits'] = true;
         }
 
-        if ($firstTime) {
-            foreach ($this->perLoginUserSources as $userSource) {
-                $found = $userSource->load($userSeason);
-
-                if ($this->logger) {
-                    $this->logger->debug(sprintf('Per login user source %s returned %s',
-                        get_class($userSource), $found));
-                }
-
-                $foundUser |= $found;
-            }
+        foreach ($load as $service => $attributes) {
+            $this->container->get($service)->load($userSeason, $attributes);
         }
 
-        if (!$foundUser) {
-            if ($this->logger) {
-                $this->logger->debug('User info not found in loadUserInfo');
-            }
-            throw new UsernameNotFoundException(sprintf('User "%s" not found.', $user->getLogin()));
-        }
-
-        $this->entityManager->flush();
+        $this->em->flush();
     }
 
     /**

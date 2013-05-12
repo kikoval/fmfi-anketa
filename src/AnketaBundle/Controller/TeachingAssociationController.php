@@ -56,46 +56,77 @@ class TeachingAssociationController extends Controller
         $security = $this->get('security.context');
         $user = $security->getToken()->getUser();
 
-        $note = $request->request->get('note', '');
-        $is_lecturer = $request->request->get('teacher', false);
-        $is_trainer = $request->request->get('teacher-assistant', false);
+        $note = $request->get('note', '');
+        $is_lecturer = $request->get('teacher-role-lecturer', false);
+        $is_trainer = $request->get('teacher-role-assistant', false);
         $teacher_login = $request->get('teacher-login', null);
         $teacher_name = $request->get('teacher-name', null);
-        $teacher_givenName = $request->get('teacher-given-name', null);
-        $teacher_familyName = $request->get('teacher-family-name', null);
+        $teacher_givenName = '';
+        $teacher_familyName = '';
 
-        $teacher_info = sprintf('Meno: %s, login: %s', $teacher_name, $teacher_login);
-
-        // if the teacher login is provided, use it to find the teacher
+        // validate teacher login and get given and family names
         $teacher = null;
-        if ($teacher_login !== null) {
-            $teacher = $userRepository->findOneBy(array('login' => $teacher_login));
+        if (!empty($teacher_login)) {
+            // if $teacher_login is not null, it should have been set up by
+            // quering LDAP with $teacher_name, but we want to make sure, that
+            // it was the case and the login was not changed afterwards
+
+            // first validate login by looking up in DB
+            $teacher = $userRepository->findOneBy(
+                    array('login' => $teacher_login));
+
+            if ($teacher === null) {
+                // if not found in DB, try LDAP
+                $ldapSearch = $this->container->get('anketa.teacher_search');
+                $teacher_info = $ldapSearch->byLogin($teacher_login);
+
+                if (!empty($teacher_info)
+                        && array_key_exists($teacher_login, $teacher_info)) {
+                    $teacher_givenName = $teacher_info[$teacher_login]['givenName'];
+                    $teacher_familyName = $teacher_info[$teacher_login]['familyName'];
+
+                    // add a user to DB
+                    $teacher = new User($teacher_login);
+                    $teacher->setDisplayName($teacher_name);
+                    $teacher->setGivenName($teacher_givenName);
+                    $teacher->setFamilyName($teacher_familyName);
+
+                    $em->persist($teacher);
+                    $em->flush();
+                } else {
+                    // $teacher_login does not exists, we'll save the provided
+                    // teacher's name into note
+                    $note .= PHP_EOL.sprintf(
+                            'Učiteľ "%s" bol zadaný s loginom, ktorý nie je v '.
+                            'LDAP-e (potenciálny pokus o podvod).',
+                            $teacher_name);
+                }
+            }
         }
 
-        // add a user when he is not in DB, but he is in LDAP
-        if ($teacher == null && $teacher_login !== null) {
-            $teacher = new User($teacher_login);
-            $teacher->setDisplayName($teacher_name);
-            $teacher->setGivenName($teacher_givenName);
-            $teacher->setFamilyName($teacher_familyName);
-
-            $em->persist($teacher);
-            $em->flush();
-        }
-
+        // create "ticket" for the association
         $assoc = new TeachingAssociation($season, $subject, $teacher, $user,
-                $note.PHP_EOL.$teacher_info, $is_lecturer, $is_trainer);
+                $note, $is_lecturer, $is_trainer);
         $em->persist($assoc);
         $em->flush();
 
+        if ($teacher === null) {
+            // if $teacher_login was not submitted, user was not found in LDAP,
+            // add this info to the note
+            $note .= PHP_EOL.sprintf(
+                    'Učiteľ "%s" nebol nájdený v LDAP-e (možno je externista).',
+                    $teacher_name);
+        }
+
         // send email about the request
         $emailTpl = array(
-                'subject' => $subject,
-                'teacher' => $teacher_info,
-                'is_lecturer' => $is_lecturer,
-                'is_trainer' => $is_trainer,
-                'note' => $note,
-                'user' => $user);
+                'subject'      => $subject,
+                'teacher'      => $teacher,
+                'teacher_name' => $teacher_name,
+                'is_lecturer'  => $is_lecturer,
+                'is_trainer'   => $is_trainer,
+                'note'         => $note,
+                'user'         => $user);
         $sender = $this->container->getParameter('mail_sender');
         $to = $this->container->getParameter('mail_dest_new_teaching_association');
         $body = $this->renderView('AnketaBundle:TeachingAssociation:email.txt.twig', $emailTpl);
@@ -112,6 +143,7 @@ class TeachingAssociationController extends Controller
         $this->get('mailer')->send($message);
 
         // display message
+        // email will be send after completing the request in admin section
         $uni_email = $user->getLogin().'@uniba.sk';
         $this->get('session')->getFlashBag()->add('success',
                 'Ďakujeme za informáciu. ' .

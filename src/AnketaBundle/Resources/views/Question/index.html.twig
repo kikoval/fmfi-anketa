@@ -19,23 +19,22 @@
     <h2>{{ title }}</h2>
     <form action="#" method="post">
     {% if categoryType == 'teacher_subject' %}
-        <p>Ak vás tento učiteľ neučil, môžete otázky preskočiť a zvoliť <em>Ulož a choď ďalej</em>.</p>
+        <p>{% trans %}question.index.ak_neucil{% endtrans %} <em>{% trans %}question.index.uloz_a_chod{% endtrans %}</em>.</p>
     {% elseif categoryType == 'subject' %}
         <p style="color: #888;">
-            Ak tento predmet nepodlieha priamej vyučbe, ale splneniu určitých povinností (ako napr. diplomová práca,
-vedecká činnosť, samostatné štúdium odbornej literatúry a pod.), prípadne ste tento predmet v aktuálnom semestri neobsolvovali lebo Vám bol uznaný, hodnotenie predmetu prosím preskočte.
+            {% trans %}question.index.preskocte_predmet{% endtrans %}
         </p>
     {% endif %}
     {% if categoryType == 'teacher_subject' or categoryType == 'subject' %}
-        <p>Je v zozname učiteľov k tomuto predmetu chyba?
+        <p>{% trans %}question.index.chyba_v_uciteloch{% endtrans %}
         <a href="{{ path('assoc_teacher_with_subject', {'subject_slug': subject.slug}) }}"
-           >Dajte nám vedieť a my to napravíme</a>.
+           >{% trans %}question.index.dajte_nam_vediet{% endtrans %}</a>.
         </p>
     {% endif %}
     {% block submit %}
     <div class="submit">
-        <input class="save" type="submit" name="save" value="Ulož" />
-        <input class="next" type="submit" name="next" value="Ulož a choď ďalej &raquo;" />
+        <input class="save" type="submit" name="save" value="{% trans %}question.index.uloz{% endtrans %}" />
+        <input class="next" type="submit" name="next" value="{% trans %}question.index.uloz_a_chod{% endtrans %} &raquo;" />
     </div>
     {% endblock %}
     {% for question in questions %}
@@ -61,7 +60,7 @@ vedecká činnosť, samostatné štúdium odbornej literatúry a pod.), prípadn
                       {% else %}
                          checked="checked"
                       {% endif %} />
-              žiadna odpoveď
+              {% trans %}question.index.ziadna_odpoved{% endtrans %}
               </label>
               </div>
 
@@ -83,7 +82,7 @@ vedecká činnosť, samostatné štúdium odbornej literatúry a pod.), prípadn
 
             {% if question.hasComment %}
             <div class="comment">
-                <div><label for="comment_{{ question.id }}">Komentár:</label></div>
+                <div><label for="comment_{{ question.id }}">{% trans %}question.index.komentar{% endtrans %}:</label></div>
                 <textarea id="comment_{{ question.id }}" class="expanding"
                           name="question[{{ question.id }}][comment]"
                     >{{ answers[question.id] is not none ? answers[question.id].comment : "" }}</textarea>

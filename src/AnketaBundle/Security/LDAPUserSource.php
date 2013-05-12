@@ -32,7 +32,7 @@ class LDAPUserSource implements UserSourceInterface
         $this->logger = $logger;
     }
 
-    public function load(UserSeason $userSeason)
+    public function load(UserSeason $userSeason, array $want)
     {
         $user = $userSeason->getUser();
         $uidFilter = '(uid=' . $this->ldapRetriever->escape($user->getLogin()) . ')';
@@ -55,11 +55,11 @@ class LDAPUserSource implements UserSourceInterface
             if ($this->logger !== null) {
                 $this->logger->info(sprintf('User %s not found in LDAP'));
             }
-            return false;
+            return;
+            // AnketaUserProvider will throw UsernameNotFoundException if there's no displayName or orgUnits
         }
         
-        if ($user->getDisplayName() === null && isset($userInfo['displayName']) &&
-          count($userInfo['displayName']) > 0) {
+        if (isset($want['displayName']) && !empty($userInfo['displayName'])) {
             $user->setDisplayName($userInfo['displayName'][0]);
         }
 
@@ -71,8 +71,9 @@ class LDAPUserSource implements UserSourceInterface
             }
         }
 
-        $user->setOrgUnits($orgUnits);
-        return true;
+        if (isset($want['orgUnits'])) {
+            $user->setOrgUnits($orgUnits);
+        }
     }
 
 }
