@@ -56,9 +56,9 @@ class TeachingAssociationController extends Controller
         $security = $this->get('security.context');
         $user = $security->getToken()->getUser();
 
-        $note = $request->request->get('note', '');
-        $is_lecturer = $request->request->get('teacher', false);
-        $is_trainer = $request->request->get('teacher-assistant', false);
+        $note = $request->get('note', '');
+        $is_lecturer = $request->get('teacher-role-lecturer', false);
+        $is_trainer = $request->get('teacher-role-assistant', false);
         $teacher_login = $request->get('teacher-login', null);
         $teacher_name = $request->get('teacher-name', null);
         $teacher_givenName = '';
@@ -66,7 +66,7 @@ class TeachingAssociationController extends Controller
 
         // validate teacher login and get given and family names
         $teacher = null;
-        if ($teacher_login !== null) {
+        if (!empty($teacher_login)) {
             // if $teacher_login is not null, it should have been set up by
             // quering LDAP with $teacher_name, but we want to make sure, that
             // it was the case and the login was not changed afterwards
@@ -111,17 +111,22 @@ class TeachingAssociationController extends Controller
         $em->flush();
 
         if ($teacher === null) {
-            $teacher = $teacher_name;
+            // if $teacher_login was not submitted, user was not found in LDAP,
+            // add this info to the note
+            $note .= PHP_EOL.sprintf(
+                    'Učiteľ "%s" nebol nájdený v LDAP-e (možno je externista).',
+                    $teacher_name);
         }
 
         // send email about the request
         $emailTpl = array(
-                'subject' => $subject,
-                'teacher' => $teacher,
-                'is_lecturer' => $is_lecturer,
-                'is_trainer' => $is_trainer,
-                'note' => $note,
-                'user' => $user);
+                'subject'      => $subject,
+                'teacher'      => $teacher,
+                'teacher_name' => $teacher_name,
+                'is_lecturer'  => $is_lecturer,
+                'is_trainer'   => $is_trainer,
+                'note'         => $note,
+                'user'         => $user);
         $sender = $this->container->getParameter('mail_sender');
         $to = $this->container->getParameter('mail_dest_new_teaching_association');
         $body = $this->renderView('AnketaBundle:TeachingAssociation:email.txt.twig', $emailTpl);
