@@ -16,10 +16,16 @@ kategorie:
 
 # vseobecne kategorie
     - id:         fakulta
-      popis:      Otázky ku fakulte
+      popis:      Fakulta
       kategoria:  vseobecne
-    - id:         ostatne
-      popis:      Ostatné
+    - id:         kniznica
+      popis:      Knižnica
+      kategoria:  vseobecne
+    - id:         erasmus
+      popis:      Program ERASMUS
+      kategoria:  vseobecne
+    - id:         stravovanie
+      popis:      Bufety
       kategoria:  vseobecne
 
 otazky:
@@ -229,6 +235,7 @@ otazky:
 
 
 # vseobecne otazky - fakulta
+
     - nazov:  Hodnotenie fakulty
       text:   Váš celkový dojem z fakulty na základe doterajších skúseností.
       popis:  
@@ -237,77 +244,142 @@ otazky:
       hviezdicky: Yes
       position:   1
 
-    - nazov:  Prístup študijných referentiek
-      text:   Prístup študijných referentiek ku študentom.
+    - nazov:  Hodnotenie ŠKAS
+      text:   Činnosť Študentskej komory akademického senátu (ŠKAS).
       popis:
       kategoria:  fakulta
       komentar:   Yes
       hviezdicky: Yes
       position:   2
 
-    - nazov:  Podmienky na výučbu
-      text:   Vybavenosť učební a celkové podmienky na výučbu.
-      popis:
+    - nazov:  Hodnotenie ankety
+      text:   Ako sa vám páči anketa v súčasnej podobe?
+      popis:  Páči sa vám? Čo by ste navrhovali zmeniť?
       kategoria:  fakulta
       komentar:   Yes
       hviezdicky: Yes
       position:   3
 
-    - nazov:  Knižnica
-      text:   Vybavenosť knižnice a prístup pracovníkov knižnice ku študentom.
-      popis:
-      kategoria:  fakulta
-      komentar:   Yes
+# vseobecne otazky - kniznica
+
+    - nazov:  Hodnotenie knižnice
+      text:   Váš celkový dojem z fakultnej knižnice.
+      popis:  
+      kategoria:  kniznica
+      komentar:   No 
+      hviezdicky: Yes
+      position:   1
+
+    - nazov:  Využitie knižnice 1
+      text:   Fakultnú knižnicu využívam: 
+      popis:  
+      kategoria:  kniznica
+      komentar:   No
       hviezdicky: No
       moznosti:
-          - text: Super
-          - text: OK
-          - text: Nič moc
-          - text: Aká knižnica?
+          - text: Pravidelne.
+            hodnota: 2
+          - text: Občas.
+            hodnota: 1
+          - text: Výnimočne.
+            hodnota: -1
+          - text: Nikdy.
+            hodnota: -2
+      position:   2
+
+    - nazov:  Využitie knižnice 2
+      text:   Najčastejšie knižnicu využívam:
+      popis:  
+      kategoria:  kniznica
+      komentar:   No
+      hviezdicky: No
+      moznosti:
+          - text: Na požičiavanie kníh.
+          - text: Na štúdium prezenčnej študijnej literatúry.
+          - text: Ako študijný priestor pre skupinové štúdium.
+          - text: Ako tichý študijný priestor pre individuálne štúdium (napr. medzi hodinami).
+          - text: Ako miesto, kde sa môžem pripojiť na wifi.
+      position:   3
+
+    - nazov:  Otváracia doba študovne
+      text:   Dĺžka otváracej doby študovne do 17:30:
+      popis:  
+      kategoria:  kniznica
+      komentar:   No
+      hviezdicky: No
+      moznosti:
+          - text: Je zbytočne dlhá, stačilo by do 15:00.
+          - text: Je akurát.
+          - text: Lepšie by bolo do 18:00
+          - text: Lepšie by bolo do 19:00.
+          - text: Lepšie by bolo do 20:00.
       position:   4
 
-    - nazov:  Činnosť ŠKAS
-      text:   Činnosť Študentskej komory Akademického senátu (ŠKAS).
-      popis:
-      kategoria:  fakulta
+    - nazov:  Pripomienky ku knižnici
+      text:   Ďalšie pripomienky ku práci knižnice.
+      popis:  
+      kategoria:  kniznica
       komentar:   Yes
       hviezdicky: No
-      moznosti:
-          - text: Super
-          - text: OK
-          - text: Nič moc
-          - text: Aká komora?
       position:   5
 
-    - nazov:  Študentská anketa.
-      text:   Študentská anketa.
-      popis:  >
-        Môžete sa tiež vyjadriť k tomu, čo by mali zodpovední podľa vás urobiť s výsledkami ankety
-      kategoria:  fakulta
+# vseobecne otazky - ERASMUS
+
+    - nazov:  Hodnotenie programu ERASMUS
+      text:   Celkové hodnotenie programu ERASMUS na fakulte.
+      popis:  
+      kategoria:  erasmus
+      komentar:   No
+      hviezdicky: Yes
+      position:   1
+
+    - nazov:  Organizácia a administratívna podpora programu na fakulte
+      text:   Organizácia a administratívna podpora programu na fakulte.
+      popis:  
+      kategoria:  erasmus
+      komentar:   No
+      hviezdicky: Yes
+      position:   2
+
+    - nazov:  Výber spolupracujúcich univerzít
+      text:   Výber spolupracujúcich univerzít.
+      popis:  
+      kategoria:  erasmus
+      komentar:   No
+      hviezdicky: Yes
+      position:   3
+
+    - nazov:  Pripomienky k programu ERASMUS.
+      text:   Ďalšie pripomienky k fungovaniu programu ERASMUS.
+      popis:  
+      kategoria:  erasmus
+      komentar:   Yes
+      hviezdicky: No
+      position:   4
+
+# vseobecne otazky - moznosti stravovania
+
+    - nazov:  Bufet FreeFood
+      text:   Bufet FreeFood (v pavilóne matematiky)
+      popis:  
+      kategoria:  stravovanie
       komentar:   Yes
       hviezdicky: Yes
-      position:   6
+      position:   1
 
-    - nazov:  Hodnotenie ankety
-      text:   Čo by sme mali urobiť pre to, aby študenti venovali viac času prednáškam a tvorivým aktivitám na fakulte?
-      popis:
-      kategoria:  fakulta
+    - nazov:  Bufet Gastroline
+      text:   Bufet Gastroline (vo vestibule fyziky pod schodami)
+      popis:  
+      kategoria:  stravovanie
       komentar:   Yes
-      hviezdicky: No
-      position:   7
+      hviezdicky: Yes
+      position:   2
 
-# vseobecne otazky - ostatne
-    - nazov:  Všeobecná otázka
-      text:   Chcete sa ešte k niečomu vyjadriť?
-      popis:  >
-        Privítame napr. návrhy na zmeny v skladbe ponúkaných študijných programov, názory na rozšírenie ponuky študijných programov o programy v cudzom jazyku, príp. akékoľvek ďalšie návrhy a pripomienky k činnosti fakulty. 
-      kategoria:  ostatne
-      moznosti:
-          - text: Áno.
-            hodnota: 1
-          - text: Nie.
-            hodnota: -1
+    - nazov:  Jedáleň Gastroline
+      text:   Jedáleň Gastroline (v zadnej časti vestibulu fyziky)
+      popis:  
+      kategoria:  stravovanie
       komentar:   Yes
-      hviezdicky: No
-      position:   7
+      hviezdicky: Yes
+      position:   3
 ...
