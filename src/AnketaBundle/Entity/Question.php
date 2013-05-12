@@ -32,7 +32,12 @@ class Question {
      * @ORM\Column(type="string", nullable=false)
      */
     protected $question;
-
+    
+    /**
+    * @ORM\Column(type="string", nullable=false)
+    */
+    protected $question_en;
+    
     /**
      * @ORM\ManyToOne(targetEntity="Season")
      * @ORM\JoinColumn(nullable=false)
@@ -46,6 +51,11 @@ class Question {
      */
     protected $description;
 
+    /**
+     * @ORM\Column(type="string", length=1024, nullable=true)
+     */
+    protected $description_en;
+    
     /**
      * @ORM\Column(type="boolean", nullable=false)
      */
@@ -116,12 +126,19 @@ class Question {
         return $this->title;
     }
 
-    public function setQuestion($value) {
-        $this->question = $value;
+    public function setQuestion($value, $jazyk = 'sk') {
+        if ($jazyk == 'en') {
+            $this->question_en = $value;
+        } else {
+            $this->question = $value;
+        }
     }
 
-    public function getQuestion() {
-        return $this->question;
+    public function getQuestion($jazyk = 'sk') {
+        if ($jazyk == 'en') {
+          return $this->question_en;
+        } 
+          return $this->question;
     }
 
     /**
@@ -138,16 +155,28 @@ class Question {
         return $this->season;
     }
 
-    public function setDescription($value) {
-        $this->description = $value;
+    public function setDescription($value, $jazyk = 'sk') {
+        if ($jazyk == 'en') {
+            $this->description_en = $value;
+        } else {        
+            $this->description = $value;
+        }
     }
-
-    public function getDescription() {
-        return $this->description;
+    
+    public function getDescription($jazyk = 'sk') {
+        if ($jazyk == 'en') {
+            return $this->description_en;
+        } else {
+            return $this->description;
+        }
     }
-
-    public function hasDescription() {
-        return !empty($this->description);
+    
+    public function hasDescription($jazyk = 'sk') {
+        if ($jazyk == 'en') {
+            return !empty($this->description_en);
+        } else {
+            return !empty($this->description);
+        }
     }
 
     /**
@@ -254,4 +283,5 @@ class Question {
                                         $i, $i));
         }
     }
+    
 }

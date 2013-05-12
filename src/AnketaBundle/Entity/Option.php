@@ -30,6 +30,10 @@ class Option {
      * @ORM\Column(type="string", name="choice", nullable=false)
      */
     protected $option;
+    /**
+     * @ORM\Column(type="string", name="choice_en", nullable=false)
+     */
+    protected $option_en;
 
     /**
      * @ORM\Column(type="integer", nullable=false)
@@ -57,12 +61,19 @@ class Option {
         return $this->id;
     }
 
-    public function setOption($option) {
+    public function setOption($option, $jazyk = 'sk') {
         Preconditions::checkIsString($option);
-        $this->option = $option;
+        if ($jazyk == 'en') {
+          $this->option_en = $option;
+        } else {
+          $this->option = $option;
+        }
     }
 
-    public function getOption() {
+    public function getOption($jazyk = 'sk') {
+        if ($jazyk == 'en') {
+          return $this->option_en;
+        } 
         return $this->option;
     }
 

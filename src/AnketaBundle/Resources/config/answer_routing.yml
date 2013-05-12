@@ -1,37 +1,49 @@
 answer:
-    pattern: /hlasuj/
-    defaults: { _controller: AnketaBundle:Question:answerSubject, subject_slug: -1 }
-
+    pattern: /{_locale}/hlasuj/
+    defaults: { _controller: AnketaBundle:Question:answerSubject, subject_slug: -1, _locale: sk  }
+    requirements:
+        _locale: en|sk
 answer_incomplete:
-    pattern: /hlasuj/nevyplnene/
-    defaults: { _controller: AnketaBundle:Question:answerIncomplete}
+    pattern: /{_locale}/hlasuj/nevyplnene/
+    defaults: { _controller: AnketaBundle:Question:answerIncomplete, _locale: sk}
+    requirements:
+        _locale: en|sk
 
 answer_general:
-    pattern: /hlasuj/vseobecne/{id}
-    defaults: { _controller: AnketaBundle:Question:answerGeneral, id: -1 }
+    pattern: /{_locale}/hlasuj/vseobecne/{id}
+    defaults: { _controller: AnketaBundle:Question:answerGeneral, id: -1, _locale: sk }
     requirements:
       id:  \d+
+      _locale: en|sk
 
 answer_subject:
-    pattern: /hlasuj/predmet/{subject_slug}
-    defaults: { _controller: AnketaBundle:Question:answerSubject, subject_slug: -1 }
-
+    pattern: /{_locale}/hlasuj/predmet/{subject_slug}
+    defaults: { _controller: AnketaBundle:Question:answerSubject, subject_slug: -1, _locale: sk }
+    requirements:
+        _locale: en|sk
+        
 answer_subject_teacher:
-    pattern: /hlasuj/predmet/{subject_slug}/ucitel/{teacher_code}
-    defaults: { _controller: AnketaBundle:Question:answerSubjectTeacher }
-
+    pattern: /{_locale}/hlasuj/predmet/{subject_slug}/ucitel/{teacher_code}
+    defaults: { _controller: AnketaBundle:Question:answerSubjectTeacher, _locale: sk }
+    requirements:
+        _locale: en|sk
+        
 answer_study_program:
-    pattern: /hlasuj/program/{slug}
-    defaults: { _controller: AnketaBundle:Question:answerStudyProgram, slug: -1 }
-
+    pattern: /{_locale}/hlasuj/program/{slug}
+    defaults: { _controller: AnketaBundle:Question:answerStudyProgram, slug: -1, _locale: sk }
+    requirements:
+        _locale: en|sk
+        
 assoc_teacher_with_subject:
-    pattern: /hlasuj/predmet/{subject_slug}/zmena-ucitela
-    defaults: { _controller: AnketaBundle:TeachingAssociation:form }
+    pattern: /{_locale}/hlasuj/predmet/{subject_slug}/zmena-ucitela
+    defaults: { _controller: AnketaBundle:TeachingAssociation:form, _locale: sk }
     requirements:
       _method: GET
-
+      _locale: en|sk
+        
 assoc_teacher_with_subject_process:
-    pattern: /hlasuj/predmet/{subject_slug}/zmena-ucitela
+    pattern: /{_locale}/hlasuj/predmet/{subject_slug}/zmena-ucitela/
     defaults: { _controller: AnketaBundle:TeachingAssociation:processForm }
     requirements:
       _method: POST
+      _locale: en|sk

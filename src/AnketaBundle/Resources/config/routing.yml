@@ -31,9 +31,10 @@ statistics:
     resource: "@AnketaBundle/Resources/config/statistics_routing.yml"
 
 anonymizuj:
-    pattern: /anonymizuj/
-    defaults: { _controller: AnketaBundle:Anonymizacia:anonymizuj }
-
+    pattern: /{_locale}/anonymizuj/
+    defaults: { _controller: AnketaBundle:Anonymizacia:anonymizuj, _locale: sk }
+    requirements:
+        _locale: en|sk
 dakujeme:
     pattern: /dakujeme/
     defaults: { _controller: AnketaBundle:Anonymizacia:dakujeme }
@@ -41,3 +42,7 @@ dakujeme:
 api:
     pattern: /api/
     resource: "@AnketaBundle/Resources/config/api_routing.yml"
+
+blog:
+    pattern:   /language/{language}
+    defaults:  { _controller: AnketaBundle:Language:index }

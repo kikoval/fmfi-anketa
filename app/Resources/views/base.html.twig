@@ -42,7 +42,9 @@
             </div>
             <div id="section-bar">
                 {% block section_bar %}
-                    <a href="{{ path('faq') }}" class="section">FAQ</a>
+                    <a class="section" href="{{ path(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': 'sk'})) }}">Slovensky</a>
+                    <a class="section" href="{{ path(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': 'en'})) }}">English</a>
+                    <a href="{{ path('faq') }}" class="section">FAQ</a>              
                 {% endblock %}
             </div>
 
