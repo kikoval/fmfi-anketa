@@ -334,14 +334,11 @@ div.faq {
 
 /*** FLASHES ***/
 
-.big-success-flash {
+.flash-message {
     padding: 1.0em;
-    border: 1px solid;
-}
-
-.big-success-flash-in {
-    min-height: 40px;
+    min-height: 50px;
     padding-left: 50px;
+    border: thin solid;
 }
 
 /*** BIGBTN ***/

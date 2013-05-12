@@ -47,13 +47,13 @@ teacher_search:
     defaults: { _controller: AnketaBundle:Teacher:search }
     requirements:
       _method: GET
-      
+
 admin_teaching_associations:
     pattern: /admin/ucitelia-priradenia
     defaults: { _controller: AnketaBundle:TeachingAssociationAdmin:index }
     requirements:
       _method: GET
-    
+
 admin_teaching_associations_process:
     pattern: /admin/ucitelia-priradenia
     defaults: { _controller: AnketaBundle:TeachingAssociationAdmin:processRequest }

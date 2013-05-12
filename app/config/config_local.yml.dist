@@ -18,8 +18,9 @@ parameters:
     allow_db_reset: true
 
     # ak len testujes tak zmen destinaciu nech nespamujes mailinglist
-    mail_sender:    anketa@anketa.fmph.uniba.sk
+    mail_sender: {"anketa@anketa.fmph.uniba.sk": "%skratka_fakulty% anketa"}
     mail_dest_new_teaching_association: fmfi-anketa-devel@googlegroups.com
+    mail_replyto_new_teaching_association: fmfi-svt@googlegroups.com
 
     locale:            en
     secret:            ThisTokenIsNotSoSecretChangeIt
