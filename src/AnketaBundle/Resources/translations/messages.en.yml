@@ -30,7 +30,7 @@ welcome:
     pekne_hviezdicky: Has beautiful stars
     pekne_hviezdicky_preco: our team worked hard to bring you <em>state-of-the-art</em> stars
     aj_ty_hlasuj: YOUR ANSWERS CAN MAKE A DIFFERENCE
-    ostava_dni: "{0} (just today!)|{1} (one day remaining)|]1,Inf] (%dni% days remaining)"
+    ostava_dni: "{0} (last day!)|{1} (one day remaining)|]1,Inf] (%dni% days remaining)"
 #  faq: TODO
 
 anonymizacia:
