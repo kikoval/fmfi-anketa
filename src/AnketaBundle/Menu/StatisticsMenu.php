@@ -31,6 +31,7 @@ class StatisticsMenu
         // (vid HlasovanieController#buildMenu ze ako to ma vyzerat)
         $em = $this->container->get('doctrine.orm.entity_manager');
         $access = $this->container->get('anketa.access.statistics');
+        $trans = $this->container->get('translator');
         // TODO: slugifier ako service
         $slugifier = new \AnketaBundle\Lib\Slugifier();
 
@@ -49,7 +50,7 @@ class StatisticsMenu
 
                 // Add "General questions" under this season.
                 $seasonItem->children['general'] = new MenuItem(
-                    'Všeobecné otázky',
+                    $trans->trans('statistics.menu.vseobecne'),
                     $this->generateUrl('statistics_list_general',
                         array('season_slug' => $season->getSlug())));
 
@@ -57,7 +58,7 @@ class StatisticsMenu
                 $studyProgramRepository = $em->getRepository('AnketaBundle:StudyProgram');
                 if ($studyProgramRepository->countForSeason($season) > 0) {
                     $seasonItem->children['study_programs'] = $studyProgramsItem = new MenuItem(
-                        'Študijné programy',
+                        $trans->trans('statistics.menu.studijne_programy'),
                         $this->generateUrl('statistics_list_programs',
                             array('season_slug' => $season->getSlug())));
                     if (isset($activeItems[1]) && $activeItems[1] == 'study_programs') {
@@ -74,7 +75,7 @@ class StatisticsMenu
 
                 // Add "Subjects" under this season.
                 $seasonItem->children['subjects'] = $subjectsItem = new MenuItem(
-                    'Predmety',
+                    $trans->trans('statistics.menu.predmety'),
                     $this->generateUrl('statistics_list_subjects',
                         array('season_slug' => $season->getSlug())));
                 if (isset($activeItems[1]) && $activeItems[1] == 'subjects') {
@@ -114,7 +115,7 @@ class StatisticsMenu
                 // Add "My subjects" under this season.
                 if ($access->hasOwnSubjects($season)) {
                     $seasonItem->children['my_subjects'] = new MenuItem(
-                        'Moje predmety',
+                        $trans->trans('statistics.menu.moje_predmety'),
                         $this->generateUrl('statistics_list_my_subjects',
                             array('season_slug' => $season->getSlug())));
                 }
@@ -122,7 +123,7 @@ class StatisticsMenu
                 // Add "My comments" under this section.
                 if ($access->hasOwnResponses($season)) {
                     $seasonItem->children['my_comments'] = new MenuItem(
-                        'Moje komentáre',
+                        $trans->trans('statistics.menu.moje_komentare'),
                         $this->generateUrl('response',
                             array('season_slug' => $season->getSlug())));
                 }
@@ -130,7 +131,7 @@ class StatisticsMenu
                 // Add "My reports" under this season.
                 if ($access->hasReports()) {
                     $seasonItem->children['my_reports'] = new MenuItem(
-                        'Reporty',
+                        $trans->trans('statistics.menu.moje_reporty'),
                         $this->generateUrl('reports_my_reports',
                             array('season_slug' => $season->getSlug())));
                 }

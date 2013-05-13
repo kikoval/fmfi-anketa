@@ -32,24 +32,25 @@ class HlasovanieMenu
     private function buildMenu() {
         $user = $this->container->get('security.context')->getToken()->getUser();
         $em = $this->container->get('doctrine.orm.entity_manager');
+        $trans = $this->container->get('translator');
 
         $season = $em->getRepository('AnketaBundle:Season')->getActiveSeason();
 
         $menu = array(
             'subject' => new MenuItem(
-                'Predmety',
+                $trans->trans('hlasovanie.menu.predmety'),
                 $this->generateUrl('answer_subject')
             ),
             'study_program' => new MenuItem(
-                'Študijné programy',
+                $trans->trans('hlasovanie.menu.studijne_programy'),
                 $this->generateUrl('answer_study_program')
             ),
             'general' => new MenuItem(
-                'Všeobecné otázky',
+                $trans->trans('hlasovanie.menu.vseobecne'),
                 $this->generateUrl('answer_general')
             ),
             'anonymizuj' => new MenuItem(
-                    'Ukončenie hlasovania',
+                    $trans->trans('hlasovanie.menu.ukoncenie'),
                     $this->generateUrl('anonymizuj')
             )
         );

@@ -57,6 +57,11 @@ hlasovanie:
     ciel: Our goal is to reach at least 50% participation. So don't hesitate and take part!
     zapojte_sa: Don't hesitate and take part!
     kto_hlasoval_nakoniec: So far, <strong>%voters%</strong> students have participated.
+  menu:
+    predmety: Subjects
+    studijne_programy: Study programmes
+    vseobecne: General questions
+    ukoncenie: Finish questionnaire
 
 question:
   index:
@@ -76,6 +81,16 @@ question:
     ucitel_neuci: Teacher %teacher_code% is not associated with this course.
     ziadne_podkategorie: General question categories are missing.
     chybna_kategoria: Wrong category: %id%
+
+statistics:
+  menu:
+    predmety: Subjects
+    vseobecne: General questions
+    studijne_programy: Study programmes
+    moje_predmety: My subjects
+    moje_komentare: My comments
+    moje_reporty: Reports
+    
 
 reports:
   report:

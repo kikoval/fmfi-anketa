@@ -57,6 +57,11 @@ hlasovanie:
     ciel: Naším cieľom je dosiahnuť aspoň 50% účasť. Preto neváhajte a zapojte sa tiež!
     zapojte_sa: Neváhajte a zapojte sa tiež!
     kto_hlasoval_nakoniec: V ankete hlasovalo <strong>%voters%</strong> študentov.
+  menu:
+    predmety: Predmety
+    studijne_programy: Študijné programy
+    vseobecne: Všeobecné otázky
+    ukoncenie: Ukončenie hlasovania
 
 question:
   index:
@@ -76,6 +81,16 @@ question:
     ucitel_neuci: Učiteľ %teacher_code% daný predmet neučí.
     ziadne_podkategorie: Neexistujú žiadne všeobecné kategórie otázok.
     chybna_kategoria: Chybná kategória: %id%
+
+statistics:
+  menu:
+    predmety: Predmety
+    vseobecne: Všeobecné otázky
+    studijne_programy: Študijné programy
+    moje_predmety: Moje predmety
+    moje_komentare: Moje komentáre
+    moje_reporty: Reporty
+    
 
 reports:
   report:
