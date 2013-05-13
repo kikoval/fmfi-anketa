@@ -27,13 +27,14 @@ class TeachingAssociationAdminController extends Controller {
 
     // TODO protect /admin at one place
     public function preExecute() {
-        if (!$this->get('security.context')->isGranted('ROLE_USER')) { // ROLE_ADMIN
+        if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
             throw new AccessDeniedException();
         }
     }
 
     // TODO pagination
-    // TODO group by teacher id, zobrazit pocet rovnakych cez COUNT()
+    // TODO group by (subjec,t teacher, season), zobrazit pocet rovnakych
+    //      cez COUNT() a spojit notes do jedneho, aby to vyzeralo ako 1 ticket
     // TODO CSFR
     public function indexAction() {
         $em = $this->getDoctrine()->getManager();
@@ -155,9 +156,12 @@ class TeachingAssociationAdminController extends Controller {
     }
 
     /**
-     * Marks an request from TeachingAssociation as completed and sends email
+     * Marks a request from TeachingAssociation as completed and sends email
      * to the user who requested it.
+     * If there are more requests with equal season, teacher and subjects, it
+     * marks them as completed as well.
      *
+     * @param TeachingAssociation $ta
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     private function markAsCompleted(TeachingAssociation $ta) {
@@ -199,7 +203,7 @@ class TeachingAssociationAdminController extends Controller {
      * Sends an email to the user about the successful completion of his/her
      * request.
      *
-     * @param User $user
+     * @param TeachingAssociation $ta
      */
     private function sendEmailAfterApproval(TeachingAssociation $ta) {
         $skratkaFakulty = $this->container->getParameter('skratka_fakulty');
