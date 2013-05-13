@@ -1,0 +1,25 @@
+@CHARSET "UTF-8";
+
+#container {max-width: none;}
+
+#header h1 {font-size: 2em;}
+
+table {border-bottom: thin solid gray;}
+tr:hover, tr:focus {background-color: #EEE;}
+th, td {padding: 0.4em 0.5em;}
+
+.btn-delete {
+    color: #222;
+    background-color: rgb(248, 203, 203);
+    background-image: linear-gradient(bottom, rgb(222, 150, 150) 33%, rgb(248, 203, 203) 84%);
+    background-image: -o-linear-gradient(bottom, rgb(222, 150, 150) 33%, rgb(248, 203, 203) 84%);
+    background-image: -moz-linear-gradient(bottom, rgb(222, 150, 150) 33%, rgb(248, 203, 203) 84%);
+    background-image: -webkit-linear-gradient(bottom, rgb(222, 150, 150) 33%, rgb(248, 203, 203) 84%);
+    background-image: -ms-linear-gradient(bottom, rgb(222, 150, 150) 33%, rgb(248, 203, 203) 84%);
+    padding: 0.3em 0.5em !important;
+}
+.btn-delete:hover, .btn-delete:active, .btn-delete.active {
+    color: #222;
+    background-color: rgb(222, 150, 150);
+}
+

@@ -128,11 +128,13 @@ a:link, a:visited, a:active {
   color: #777;
 }
 
-.big-success-flash {
-  border-color: green;
-  background: #ebfdec;
+.flash-success {
+    border-color: green;
+    background-color: #ebfdec;
+    background: #ebfdec url("../images/success.png") left center no-repeat;
 }
 
-.big-success-flash-in {
-  background: transparent url("../images/success.png") left center no-repeat;
+.flash-error {
+    background-color: rgb(255, 210, 210);
+    border-color: red;
 }
