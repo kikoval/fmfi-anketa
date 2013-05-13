@@ -1,3 +1,4 @@
 api_results:
     pattern: /api/v1/results/
     defaults: { _controller: AnketaBundle:Api:results,  _format: json }
+    options: { i18n: false }

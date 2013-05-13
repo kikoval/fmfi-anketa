@@ -5,6 +5,7 @@ homepage:
 login:
     pattern:  /login
     defaults: { _controller: AnketaBundle:Login:login }
+    options: { i18n: false }
 
 faq:
     pattern:  /faq/

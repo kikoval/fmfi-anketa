@@ -75,6 +75,11 @@ svt_libfajr:
             directory: %libfajr_cookie_path%
     trace: "null"
 
+jms_i18n_routing:
+    default_locale: sk
+    locales: [en, sk]
+    strategy: prefix_except_default
+
 # TODO: co najviac z tohto niekam presunut (services.yml v AnketaBundle?)
 services:
     anketa.user_provider:
