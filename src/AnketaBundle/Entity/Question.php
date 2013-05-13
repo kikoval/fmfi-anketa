@@ -32,12 +32,12 @@ class Question {
      * @ORM\Column(type="string", nullable=false)
      */
     protected $question;
-    
+
     /**
     * @ORM\Column(type="string", nullable=false)
     */
     protected $question_en;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="Season")
      * @ORM\JoinColumn(nullable=false)
@@ -55,7 +55,7 @@ class Question {
      * @ORM\Column(type="string", length=1024, nullable=true)
      */
     protected $description_en;
-    
+
     /**
      * @ORM\Column(type="boolean", nullable=false)
      */
@@ -137,7 +137,7 @@ class Question {
     public function getQuestion($jazyk = 'sk') {
         if ($jazyk == 'en') {
           return $this->question_en;
-        } 
+        }
           return $this->question;
     }
 
@@ -158,11 +158,11 @@ class Question {
     public function setDescription($value, $jazyk = 'sk') {
         if ($jazyk == 'en') {
             $this->description_en = $value;
-        } else {        
+        } else {
             $this->description = $value;
         }
     }
-    
+
     public function getDescription($jazyk = 'sk') {
         if ($jazyk == 'en') {
             return $this->description_en;
@@ -170,7 +170,7 @@ class Question {
             return $this->description;
         }
     }
-    
+
     public function hasDescription($jazyk = 'sk') {
         if ($jazyk == 'en') {
             return !empty($this->description_en);
@@ -283,5 +283,5 @@ class Question {
                                         $i, $i));
         }
     }
-    
+
 }

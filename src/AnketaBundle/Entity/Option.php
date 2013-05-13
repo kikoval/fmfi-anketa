@@ -30,6 +30,7 @@ class Option {
      * @ORM\Column(type="string", name="choice", nullable=false)
      */
     protected $option;
+    
     /**
      * @ORM\Column(type="string", name="choice_en", nullable=false)
      */
@@ -73,7 +74,7 @@ class Option {
     public function getOption($jazyk = 'sk') {
         if ($jazyk == 'en') {
           return $this->option_en;
-        } 
+        }
         return $this->option;
     }
 

@@ -62,7 +62,7 @@ class QuestionController extends Controller {
                 $answer = $answers[$id];
             } else {
                 $answer = new Answer();
-               
+
                 $answer->setQuestion($question);
                 $answer->setAuthor($user);
                 $answer->setSeason($season);

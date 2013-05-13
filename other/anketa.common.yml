@@ -248,7 +248,7 @@ otazky:
       nazov_en: Text commentary on the class
       text:   Napíšte Váš názor na tento predmet. Zdôvodnite, prečo by ste ho odporúčali/neodporúčali.
       text_en: Write your opinion on this class. Please justify why you do or do not recommend it.
-      popis: > 
+      popis: >
         Popíšte, čo by ste navrhli zmeniť v organizácii a obsahu tohto predmetu. Ktorá časť výučby nebola dostatočne pokrytá vhodným študijným materiálom. Môžete uviesť, prečo by ste ho odporúčali/neodporúčali ďalším študentom.
       popis_en: What would you change in the organisation and content of this class? Which parts of the class were not properly covered by study materials? Please justify why you do or do not recommend the class.
       kategoria:  predmety
