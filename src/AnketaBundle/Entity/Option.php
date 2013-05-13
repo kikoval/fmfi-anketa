@@ -73,7 +73,7 @@ class Option {
 
     public function getOption($jazyk = 'sk') {
         if ($jazyk == 'en') {
-          return $this->option_en;
+          if ($this->option_en != ""){return $this->option_en;}
         }
         return $this->option;
     }

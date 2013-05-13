@@ -136,7 +136,7 @@ class Question {
 
     public function getQuestion($jazyk = 'sk') {
         if ($jazyk == 'en') {
-          return $this->question_en;
+          if ($this->question_en != ""){return $this->question_en;}
         }
           return $this->question;
     }
@@ -165,10 +165,9 @@ class Question {
 
     public function getDescription($jazyk = 'sk') {
         if ($jazyk == 'en') {
-            return $this->description_en;
-        } else {
-            return $this->description;
-        }
+            if ($this->description_en != ""){return $this->description_en;}
+        } 
+        return $this->description;
     }
 
     public function hasDescription($jazyk = 'sk') {
