@@ -3,7 +3,7 @@ kategorie:
 # kategorie predmetov
     - id:         predmety
       popis:      Predmety
-      popis_en:   Classes
+      popis_en:   Courses
       kategoria:  predmety
 
     - id:         predmety_ucitel
@@ -19,20 +19,12 @@ kategorie:
 
 # vseobecne kategorie
     - id:         fakulta
-      popis:      Fakulta
+      popis:      Otázky ku fakulte
       popis_en:   Questions about the faculty
       kategoria:  vseobecne
-    - id:         kniznica
-      popis:      Knižnica
-      popis_en:   Library
-      kategoria:  vseobecne
-    - id:         erasmus
-      popis:      Program ERASMUS
-      popis_en:   Erasmus Programme
-      kategoria:  vseobecne
-    - id:         stravovanie
-      popis:      Bufety
-      popis_en:   Cafeteria
+    - id:         ostatne
+      popis:      Ostatné
+      popis_en:   Other
       kategoria:  vseobecne
 
 otazky:
@@ -319,7 +311,6 @@ otazky:
 
 
 # vseobecne otazky - fakulta
-
     - nazov:  Hodnotenie fakulty
       nazov_en: Evaluation of the faculty
       text:   Váš celkový dojem z fakulty na základe doterajších skúseností.
@@ -331,10 +322,10 @@ otazky:
       hviezdicky: Yes
       position:   1
 
-    - nazov:  Hodnotenie ŠKAS
-      nazov_en: Evaluation of ŠKAS
-      text:   Činnosť Študentskej komory akademického senátu (ŠKAS).
-      text_en: Activities of the Student Chamber of the Academic Senate (ŠKAS).
+    - nazov:  Prístup študijných referentiek
+      nazov_en: Attitude of registrar's office staff
+      text:   Prístup študijných referentiek ku študentom.
+      text_en: Attitude of registrar's office staff towards students.
       popis:
       popis_en:
       kategoria:  fakulta
@@ -342,188 +333,97 @@ otazky:
       hviezdicky: Yes
       position:   2
 
-    - nazov:  Hodnotenie ankety
-      nazov_en: Evaluation of the student questionnaire
-      text: Ako sa vám páči anketa v súčasnej podobe?
-      text_en: How do you like the student questionnaire in its current form?
-      popis:  Páči sa vám? Čo by ste navrhovali zmeniť?
-      popis_en: Do you like it? What would you suggest to change?
+    - nazov:  Podmienky na výučbu
+      nazov_en: Overall teaching conditions
+      text:   Vybavenosť učební a celkové podmienky na výučbu.
+      text_en: Quality of teaching facilities and overall teaching conditions.
+      popis:
+      popis_en:
       kategoria:  fakulta
       komentar:   Yes
       hviezdicky: Yes
       position:   3
 
-# vseobecne otazky - kniznica
-
-    - nazov:  Hodnotenie knižnice
-      nazov_en: Evaluation of the library
-      text:   Váš celkový dojem z fakultnej knižnice.
-      text_en: Your overall impression of the faculty library.
-      popis:  
+    - nazov:  Knižnica
+      nazov_en: Library
+      text:   Vybavenosť knižnice a prístup pracovníkov knižnice ku študentom.
+      text_en: Quality of the library and attitude of library staff towards students.
+      popis:
       popis_en:
-      kategoria:  kniznica
-      komentar:   No 
-      hviezdicky: Yes
-      position:   1
-
-    - nazov:  Využitie knižnice 1
-      nazov_en: Use of the library 1
-      text:   Fakultnú knižnicu využívam: 
-      text_en: I use the library:
-      popis:  
-      popis_en:
-      kategoria:  kniznica
-      komentar:   No
-      hviezdicky: No
-      moznosti:
-          - text: Pravidelne.
-            text_en: Regularly.
-            hodnota: 2
-          - text: Občas.
-            text_en: Sometimes.
-            hodnota: 1
-          - text: Výnimočne.
-            text_en: Rarely.
-            hodnota: -1
-          - text: Nikdy.
-            text_en: Never.
-            hodnota: -2
-      position:   2
-
-    - nazov:  Využitie knižnice 2
-      nazov_en: Use of the library 2
-      text:   Najčastejšie knižnicu využívam:
-      text_en: Most often I use the library:
-      popis:  
-      popis_en:
-      kategoria:  kniznica
-      komentar:   No
-      hviezdicky: No
-      moznosti:
-          - text: Na požičiavanie kníh.
-            text_en: To borrow books.
-          - text: Na štúdium prezenčnej študijnej literatúry.
-            text_en: To study the present academic literature.
-          - text: Ako študijný priestor pre skupinové štúdium.
-            text_en: As a study room for group study.
-          - text: Ako tichý študijný priestor pre individuálne štúdium (napr. medzi hodinami).
-            text_en: As a quiet study room for individual study (eg between the classes).
-          - text: Ako miesto, kde sa môžem pripojiť na wifi.
-            text_en: As a place where I can connect to wifi.
-      position:   3
-
-    - nazov:  Otváracia doba študovne
-      nazov_en: Study room opening hours
-      text:   Dĺžka otváracej doby študovne do 17:30:
-      text_en: Length of the opening hours until 17:30:
-      popis:  
-      popis_en:
-      kategoria:  kniznica
-      komentar:   No
-      hviezdicky: No
-      moznosti:
-          - text: Je zbytočne dlhá, stačilo by do 15:00.
-            text_en: It is unnecessarily long, it would be sufficient until 15:00.
-          - text: Je akurát.
-            text_en: It is well set.
-          - text: Lepšie by bolo do 18:00
-            text_en: It would be better until 18:00
-          - text: Lepšie by bolo do 19:00.
-            text_en: It would be better until 19:00
-          - text: Lepšie by bolo do 20:00.
-            text_en: It would be better until 20:00
-      position:   4
-
-    - nazov:  Pripomienky ku knižnici
-      nazov_en: Comments on library
-      text:   Ďalšie pripomienky ku práci knižnice.
-      text_en: Other comments on library.
-      popis:  
-      popis_en:
-      kategoria:  kniznica
+      kategoria:  fakulta
       komentar:   Yes
       hviezdicky: No
+      moznosti:
+          - text: Super
+            text_en: Super
+          - text: OK
+            text_en: OK
+          - text: Nič moc
+            text_en: Meh
+          - text: Aká knižnica?
+            text_en: What library?
+      position:   4
+
+    - nazov:  Činnosť ŠKAS
+      nazov_en: Activities of ŠKAS
+      text:   Činnosť Študentskej komory Akademického senátu (ŠKAS).
+      text_en: Activities of Student Chamber of the Academic Senate (ŠKAS).
+      popis:
+      popis_en:
+      kategoria:  fakulta
+      komentar:   Yes
+      hviezdicky: No
+      moznosti:
+          - text: Super
+            text_en: Super
+          - text: OK
+            text_en: OK
+          - text: Nič moc
+            text_en: Meh
+          - text: Aká komora?
+            text_en: What chamber?
       position:   5
 
-# vseobecne otazky - ERASMUS
-
-    - nazov:  Hodnotenie programu ERASMUS
-      nazov_en: Evaluation of the ERASMUS programme
-      text:   Celkové hodnotenie programu ERASMUS na fakulte.
-      text_en: Overall evaluation of the ERASMUS programme at the faculty.
-      popis:  
-      popis_en:
-      kategoria:  erasmus
-      komentar:   No
+    - nazov:  Študentská anketa.
+      nazov_en: Student questionnaire.
+      text:   Študentská anketa.
+      text_en:  Student questionnaire.
+      popis:  >
+        Môžete sa tiež vyjadriť k tomu, čo by mali zodpovední podľa vás urobiť s výsledkami ankety
+      popis_en: What should the responsible do with the results of this questionnaire?
+      kategoria:  fakulta
+      komentar:   Yes
       hviezdicky: Yes
-      position:   1
+      position:   6
 
-    - nazov:  Organizácia a administratívna podpora programu na fakulte
-      nazov_en: Organization and administrative support for the programme at the faculty
-      text:   Organizácia a administratívna podpora programu na fakulte.
-      text_en: Organization and administrative support for the programme at the faculty.
-      popis:  
+    - nazov:  Hodnotenie ankety
+      nazov_en: Evaluation of the questionnaire
+      text:   Čo by sme mali urobiť pre to, aby študenti venovali viac času prednáškam a tvorivým aktivitám na fakulte?
+      text_en: What should we do to ensure that the students devote more time to lectures and creative activities at the faculty?
+      popis:
       popis_en:
-      kategoria:  erasmus
-      komentar:   No
-      hviezdicky: Yes
-      position:   2
-
-    - nazov:  Výber spolupracujúcich univerzít
-      nazov_en: Selection of cooperating universities
-      text:   Výber spolupracujúcich univerzít.
-      text_en: Selection of cooperating universities.
-      popis:  
-      popis_en:
-      kategoria:  erasmus
-      komentar:   No
-      hviezdicky: Yes
-      position:   3
-
-    - nazov:  Pripomienky k programu ERASMUS.
-      nazov_en: Comments on ERASMUS programme
-      text:   Ďalšie pripomienky k fungovaniu programu ERASMUS.
-      text_en: Other comments on ERASMUS programme.
-      popis:  
-      popis_en:
-      kategoria:  erasmus
+      kategoria:  fakulta
       komentar:   Yes
       hviezdicky: No
-      position:   4
+      position:   7
 
-# vseobecne otazky - moznosti stravovania
-
-    - nazov:  Bufet FreeFood
-      nazov_en: FreeFood cafeteria
-      text:   Bufet FreeFood (v pavilóne matematiky)
-      text_en: FreeFood cafeteria (in the mathematics pavilion)
-      popis:  
-      popis_en:
-      kategoria:  stravovanie
+# vseobecne otazky - ostatne
+    - nazov:  Všeobecná otázka
+      nazov_en: General question
+      text:   Chcete sa ešte k niečomu vyjadriť?
+      text_en: Do you want to address anything else?
+      popis:  >
+        Privítame napr. návrhy na zmeny v skladbe ponúkaných študijných programov, názory na rozšírenie ponuky študijných programov o programy v cudzom jazyku, príp. akékoľvek ďalšie návrhy a pripomienky k činnosti fakulty. 
+      popis_en: We welcome, for example, proposals for changes in the composition of the courses offered, comments on widening of choice of study programs by programs in foreign languages​​, or any other suggestions and comments on the activities at the faculty.
+      kategoria:  ostatne
+      moznosti:
+          - text: Áno.
+            text_en: Yes.
+            hodnota: 1
+          - text: Nie.
+            text_en: No.
+            hodnota: -1
       komentar:   Yes
-      hviezdicky: Yes
-      position:   1
-
-    - nazov:  Bufet Gastroline
-      nazov_en: Gastroline cafeteria
-      text:   Bufet Gastroline (vo vestibule fyziky pod schodami)
-      text_en: Gastroline cafeteria (in the physics lobby under the stairs)
-      popis:  
-      popis_en:
-      kategoria:  stravovanie
-      komentar:   Yes
-      hviezdicky: Yes
-      position:   2
-
-    - nazov:  Jedáleň Gastroline
-      nazov_en: Gastroline canteen
-      text:   Jedáleň Gastroline (v zadnej časti vestibulu fyziky)
-      text_en: Gastroline canteen (at the rear of the physics lobby)
-      popis:  
-      popis_en:
-      kategoria:  stravovanie
-      komentar:   Yes
-      hviezdicky: Yes
-      position:   3
+      hviezdicky: No
+      position:   7
 ...
-
