@@ -3,6 +3,7 @@ kategorie:
 # kategorie predmetov
     - id:         predmety
       popis:      Predmety
+      popis_en:   Classes
       kategoria:  predmety
 
     - id:         predmety_ucitel
@@ -23,12 +24,15 @@ kategorie:
       kategoria:  vseobecne
     - id:         kniznica
       popis:      Knižnica
+      popis_en:   Library
       kategoria:  vseobecne
     - id:         erasmus
       popis:      Program ERASMUS
+      popis_en:   Erasmus Programme
       kategoria:  vseobecne
     - id:         stravovanie
       popis:      Bufety
+      popis_en:   Cafeteria
       kategoria:  vseobecne
 
 otazky:
@@ -327,17 +331,23 @@ otazky:
       hviezdicky: Yes
       position:   1
 
-  - nazov:  Hodnotenie ŠKAS
+    - nazov:  Hodnotenie ŠKAS
+      nazov_en: Evaluation of ŠKAS
       text:   Činnosť Študentskej komory akademického senátu (ŠKAS).
-      popis:
+      text_en: Activities of the Student Chamber of the Academic Senate (ŠKAS).
+      popis:  
+      popis_en:
       kategoria:  fakulta
       komentar:   Yes
       hviezdicky: Yes
       position:   2
 
     - nazov:  Hodnotenie ankety
-      text:   Ako sa vám páči anketa v súčasnej podobe?
+      nazov_en: Evaluation of the student questionnaire
+      text: Ako sa vám páči anketa v súčasnej podobe?
+      text_en: How do you like the student questionnaire in its current form?
       popis:  Páči sa vám? Čo by ste navrhovali zmeniť?
+      popis_en: Do you like it? What would you suggest to change?
       kategoria:  fakulta
       komentar:   Yes
       hviezdicky: Yes
@@ -346,61 +356,90 @@ otazky:
 # vseobecne otazky - kniznica
 
     - nazov:  Hodnotenie knižnice
+      nazov_en: Evaluation of the library
       text:   Váš celkový dojem z fakultnej knižnice.
+      text_en: Your overall impression of the faculty library.
       popis:  
+      popis_en: 
       kategoria:  kniznica
       komentar:   No 
       hviezdicky: Yes
       position:   1
 
     - nazov:  Využitie knižnice 1
+      nazov_en: Use of the library 1
       text:   Fakultnú knižnicu využívam: 
+      text_en: I use the library:
       popis:  
+      popis_en: 
       kategoria:  kniznica
       komentar:   No
       hviezdicky: No
       moznosti:
           - text: Pravidelne.
+            text_en: Regularly.
             hodnota: 2
           - text: Občas.
+            text_en: Sometimes.
             hodnota: 1
           - text: Výnimočne.
+            text_en: Rarely.
             hodnota: -1
           - text: Nikdy.
+            text_en: Never.
             hodnota: -2
       position:   2
 
     - nazov:  Využitie knižnice 2
+      nazov_en: Use of the library 2
       text:   Najčastejšie knižnicu využívam:
+      text_en: Most often I use the library:
       popis:  
+      popis_en: 
       kategoria:  kniznica
       komentar:   No
       hviezdicky: No
       moznosti:
           - text: Na požičiavanie kníh.
+            text_en: To borrow books.
           - text: Na štúdium prezenčnej študijnej literatúry.
+            text_en: To study the present academic literature.
           - text: Ako študijný priestor pre skupinové štúdium.
+            text_en: As a study room for group study.
           - text: Ako tichý študijný priestor pre individuálne štúdium (napr. medzi hodinami).
+            text_en: As a quiet study room for individual study (eg between the classes).
           - text: Ako miesto, kde sa môžem pripojiť na wifi.
+            text_en: As a place where I can connect to wifi.
       position:   3
 
     - nazov:  Otváracia doba študovne
+      nazov_en: Study room opening hours
       text:   Dĺžka otváracej doby študovne do 17:30:
+      text_en: Length of the opening hours until 17:30:
       popis:  
+      popis_en: 
       kategoria:  kniznica
       komentar:   No
       hviezdicky: No
       moznosti:
           - text: Je zbytočne dlhá, stačilo by do 15:00.
+            text_en: It is unnecessarily long, it would be sufficient until 15:00.
           - text: Je akurát.
+            text_en: It is well set.
           - text: Lepšie by bolo do 18:00
+            text_en: It would be better until 18:00
           - text: Lepšie by bolo do 19:00.
+            text_en: It would be better until 19:00
           - text: Lepšie by bolo do 20:00.
+            text_en: It would be better until 20:00
       position:   4
 
     - nazov:  Pripomienky ku knižnici
+      nazov_en: Comments on library
       text:   Ďalšie pripomienky ku práci knižnice.
+      text_en: Other comments on library.
       popis:  
+      popis_en: 
       kategoria:  kniznica
       komentar:   Yes
       hviezdicky: No
@@ -409,32 +448,44 @@ otazky:
 # vseobecne otazky - ERASMUS
 
     - nazov:  Hodnotenie programu ERASMUS
+      nazov_en: Evaluation of the ERASMUS programme
       text:   Celkové hodnotenie programu ERASMUS na fakulte.
+      text_en: Overall evaluation of the ERASMUS programme at the faculty.
       popis:  
+      popis_en: 
       kategoria:  erasmus
       komentar:   No
       hviezdicky: Yes
       position:   1
 
     - nazov:  Organizácia a administratívna podpora programu na fakulte
+      nazov_en: Organization and administrative support for the programme at the faculty
       text:   Organizácia a administratívna podpora programu na fakulte.
+      text_en: Organization and administrative support for the programme at the faculty.
       popis:  
+      popis_en: 
       kategoria:  erasmus
       komentar:   No
       hviezdicky: Yes
       position:   2
 
     - nazov:  Výber spolupracujúcich univerzít
+      nazov_en: Selection of cooperating universities
       text:   Výber spolupracujúcich univerzít.
+      text_en: Selection of cooperating universities.
       popis:  
+      popis_en: 
       kategoria:  erasmus
       komentar:   No
       hviezdicky: Yes
       position:   3
 
     - nazov:  Pripomienky k programu ERASMUS.
+      nazov_en: Comments on ERASMUS programme
       text:   Ďalšie pripomienky k fungovaniu programu ERASMUS.
+      text_en: Other comments on ERASMUS programme.
       popis:  
+      popis_en: 
       kategoria:  erasmus
       komentar:   Yes
       hviezdicky: No
@@ -443,24 +494,33 @@ otazky:
 # vseobecne otazky - moznosti stravovania
 
     - nazov:  Bufet FreeFood
+      nazov_en: FreeFood cafeteria
       text:   Bufet FreeFood (v pavilóne matematiky)
+      text_en: FreeFood cafeteria (in the mathematics pavilion)
       popis:  
+      popis_en: 
       kategoria:  stravovanie
       komentar:   Yes
       hviezdicky: Yes
       position:   1
 
     - nazov:  Bufet Gastroline
+      nazov_en: Gastroline cafeteria
       text:   Bufet Gastroline (vo vestibule fyziky pod schodami)
+      text_en: Gastroline cafeteria (in the physics lobby under the stairs)
       popis:  
+      popis_en: 
       kategoria:  stravovanie
       komentar:   Yes
       hviezdicky: Yes
       position:   2
 
     - nazov:  Jedáleň Gastroline
+      nazov_en: Gastroline canteen
       text:   Jedáleň Gastroline (v zadnej časti vestibulu fyziky)
+      text_en: Gastroline canteen (at the rear of the physics lobby)
       popis:  
+      popis_en: 
       kategoria:  stravovanie
       komentar:   Yes
       hviezdicky: Yes
