@@ -13,6 +13,7 @@ namespace AnketaBundle\DataFixtures\ORM;
 
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Persistence\ObjectManager;
 use AnketaBundle\Entity\Question;
 use AnketaBundle\Entity\Option;
 use AnketaBundle\Entity\Category;
@@ -43,7 +44,7 @@ class FixtureLoader implements FixtureInterface {
      *
      * @param object $manager
      */
-    public function load($manager) {
+    public function load(ObjectManager $manager) {
         // create categories
         /*$cat1 = new Category('general', 'Vyzor skoly');
         $cat2 = new Category('general', 'Moznosti stravovania');
