@@ -1,0 +1,92 @@
+# Desc: /admin/ucitelia-priradenia
+admin_teaching_associations: /admin/ucitelia-priradenia
+
+# Desc: /admin/ucitelia-priradenia
+admin_teaching_associations_process: /admin/ucitelia-priradenia
+
+# Desc: /anketa/
+anketa: /anketa/
+
+# Desc: /anonymizuj/
+anonymizuj: /anonymizuj/
+
+# Desc: /hlasuj/
+answer: /hlasuj/
+
+# Desc: /hlasuj/vseobecne/{id}
+answer_general: '/hlasuj/vseobecne/{id}'
+
+# Desc: /hlasuj/nevyplnene/
+answer_incomplete: /hlasuj/nevyplnene/
+
+# Desc: /hlasuj/program/{slug}
+answer_study_program: '/hlasuj/program/{slug}'
+
+# Desc: /hlasuj/predmet/{subject_slug}
+answer_subject: '/hlasuj/predmet/{subject_slug}'
+
+# Desc: /hlasuj/predmet/{subject_slug}/ucitel/{teacher_code}
+answer_subject_teacher: '/hlasuj/predmet/{subject_slug}/ucitel/{teacher_code}'
+
+# Desc: /hlasuj/predmet/{subject_slug}/zmena-ucitela
+assoc_teacher_with_subject: '/hlasuj/predmet/{subject_slug}/zmena-ucitela'
+
+# Desc: /hlasuj/predmet/{subject_slug}/zmena-ucitela
+assoc_teacher_with_subject_process: '/hlasuj/predmet/{subject_slug}/zmena-ucitela'
+
+# Desc: /dakujeme/
+dakujeme: /dakujeme/
+
+# Desc: /faq/
+faq: /faq/
+
+# Desc: /
+homepage: /
+
+# Desc: /reporty/{season_slug}/katedra/{department_slug}
+report_department: '/reporty/{season_slug}/katedra/{department_slug}'
+
+# Desc: /reporty/{season_slug}/studijny-program/{study_programme_slug}
+report_study_programme: '/reporty/{season_slug}/studijny-program/{study_programme_slug}'
+
+# Desc: /reporty/{season_slug}/moje-reporty
+reports_my_reports: '/reporty/{season_slug}/moje-reporty'
+
+# Desc: /vysledky/{season_slug}/moje-komentare
+response: '/vysledky/{season_slug}/moje-komentare'
+
+# Desc: /odpovede/{response_id}/zmaz
+response_delete: '/odpovede/{response_id}/zmaz'
+
+# Desc: /odpovede/{response_id}/uprav
+response_edit: '/odpovede/{response_id}/uprav'
+
+# Desc: /odpovede/nova-odpoved/{section_slug}
+response_new: '/odpovede/nova-odpoved/{section_slug}'
+
+# Desc: /vysledky
+statistics: /vysledky
+
+# Desc: /flag/{answer_id}
+statistics_flag: '/flag/{answer_id}'
+
+# Desc: /vysledky/{season_slug}/vseobecne
+statistics_list_general: '/vysledky/{season_slug}/vseobecne'
+
+# Desc: /vysledky/{season_slug}/moje-predmety
+statistics_list_my_subjects: '/vysledky/{season_slug}/moje-predmety'
+
+# Desc: /vysledky/{season_slug}/programy
+statistics_list_programs: '/vysledky/{season_slug}/programy'
+
+# Desc: /vysledky/{season_slug}/predmety/
+statistics_list_subjects: '/vysledky/{season_slug}/predmety/'
+
+# Desc: /vysledky/{section_slug}
+statistics_results: '/vysledky/{section_slug}'
+
+# Desc: /vysledky/{season_slug}
+statistics_season: '/vysledky/{season_slug}'
+
+# Desc: /ucitelia/vyhladavanie
+teacher_search: /ucitelia/vyhladavanie
