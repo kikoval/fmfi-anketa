@@ -30,6 +30,7 @@ welcome:
     pekne_hviezdicky: Má prekrásne hviezdičky
     pekne_hviezdicky_preco: náš tím tvrdo pracoval, aby Vám poskytol <em>state-of-the-art</em> hviezdičkové hlasovanie
     aj_ty_hlasuj: AJ VÁŠ HLAS MÔŽE ZMENIŤ NAŠU ALMA MATER K LEPŠIEMU ;-)
+    ostava_dni: "{0} (už len dnes!)|{1} (ostáva 1 deň)|[2,4] (ostávajú %dni% dni)|]4,Inf] (ostáva %dni% dní)"
 #  faq: TODO
 
 anonymizacia:

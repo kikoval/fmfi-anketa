@@ -19,13 +19,7 @@
         <p style="text-align: center">{% trans %}welcome.index.otvorene_do{% endtrans %}: <strong>{{ active_season.endTime|date("d.m.Y") }}</strong>
             {% if countdown != null %}
                 {% set dni = countdown|date("%a") %}
-                {% if dni == 1 %}
-                    (ostáva 1 deň)
-                {% elseif dni >= 2 and dni <= 4 %}
-                    (ostávajú {{ dni }} dni)
-                {% else %}
-                    (ostáva {{ dni }} dní)
-                {% endif %}
+                {% transchoice dni with {'%dni%': dni} %}welcome.index.ostava_dni{% endtranschoice %}
             {% endif %}
         </p>
     {% endif %}
