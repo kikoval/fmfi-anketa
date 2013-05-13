@@ -56,7 +56,7 @@ class HlasovanieMenu
 
         // pridame menu pre vseobecne otazky
         $subcategories = $em->getRepository('AnketaBundle\Entity\Category')
-                       ->getOrderedGeneral();
+                       ->getOrderedGeneral($season);
         foreach ($subcategories as $subcategory) {
             $menu['general']->children[$subcategory->getId()] =
                 new MenuItem(

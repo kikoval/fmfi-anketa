@@ -342,11 +342,12 @@ class QuestionController extends Controller {
         $request = $this->get('request');
         $user = $this->get('security.context')->getToken()->getUser();
         $em = $this->get('doctrine.orm.entity_manager');
+        $season = $em->getRepository('AnketaBundle:Season')->getActiveSeason();
 
         // chceme vceobecne subkategorie - pre menu do templatu
         // TODO toto je code duplication s buildMenu, tuto informaciu aj tak dostaneme v templateParams
         $subcategories = $em->getRepository('AnketaBundle\Entity\Category')
-                       ->getOrderedGeneral();
+                       ->getOrderedGeneral($season);
         if (empty($subcategories)) {
             $msg = $this->get('translator')->trans('question.controller.ziadne_podkategorie');
             throw new NotFoundHttpException($msg);
@@ -366,7 +367,6 @@ class QuestionController extends Controller {
             }
         }
 
-        $season = $em->getRepository('AnketaBundle:Season')->getActiveSeason();
         $questions = $em->getRepository('AnketaBundle\Entity\Question')
                         ->getOrderedQuestions($category, $season);
         $answers = $em->getRepository('AnketaBundle\Entity\Answer')

@@ -20,13 +20,25 @@ class CategoryRepository extends EntityRepository {
      *
      * @return ArrayCollection general categories ordered by position
      */
-    public function getOrderedGeneral() {
+    public function getOrderedGeneral(Season $season = null) {
         $em = $this->getEntityManager();
-        $query = $em->createQuery("SELECT c
-                                   FROM AnketaBundle\Entity\Category c
-                                   WHERE c.type = :type
-                                   ORDER BY c.position ASC");
+        $qb = $em->createQueryBuilder();
+        $qb->select('c')
+           ->from('AnketaBundle:Category', 'c')
+           ->where($qb->expr()->eq('c.type', ':type'));
+        if ($season !== null) {
+            $qb->andWhere($qb->expr()->exists(
+                    'SELECT q
+                     FROM AnketaBundle:Question q
+                     WHERE q.season = :season
+                     AND q.category = c'));
+        }
+        $qb->orderBy('c.position', 'ASC');
+        $query = $qb->getQuery();
         $query->setParameter('type', CategoryType::GENERAL);
+        if ($season !== null) {
+            $query->setParameter('season', $season);
+        }
         return $query->getResult();
     }
 }
