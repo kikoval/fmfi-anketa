@@ -107,20 +107,21 @@ class TeachingAssociationAdminController extends Controller {
                 && $ta->getSeason() !== null && $is_function_set) {
 
             // check for duplication
-            $us = $em->getRepository('AnketaBundle:UserSeason')->findBy(
+            $userSeason = $em->getRepository('AnketaBundle:UserSeason')->findBy(
                     array('season' => $ta->getSeason(),
                           'user' => $ta->getTeacher()
                             ));
-            if ($us === null) {
+            if ($userSeason === null) {
                 $userSeason = new UserSeason();
                 $userSeason->setIsStudent(false);
                 $userSeason->setIsTeacher(true);
                 $userSeason->setSeason($ta->getSeason());
                 $userSeason->setUser($ta->getTeacher());
-
-                $em->persist($userSeason);
-                $em->flush();
+            } else {
+                $userSeason->setIsTeacher(true);
             }
+            $em->persist($userSeason);
+            $em->flush();
 
             // link the teacher with the subject
             $teachersSubjects = new TeachersSubjects($ta->getTeacher(),
@@ -169,21 +170,22 @@ class TeachingAssociationAdminController extends Controller {
         if ($ta->getRequestedBy() !== null)
             $this->sendEmailAfterApproval($ta);
 
-        // mark as completed all other requests with the same subject and teacher
-        // send email to all theses users
+        // mark as completed all other uncompleted requests with the same
+        // subject and teacher and send email to all requestedBy users
         $tas = $em->getRepository('AnketaBundle:TeachingAssociation')->findBy(
                 array('subject' => $ta->getSubject(),
                       'teacher' => $ta->getTeacher(),
-                      'season' => $ta->getSeason()
+                      'season' => $ta->getSeason(),
+                      'completed' => false
                         ));
 
-        foreach($tas as $ta) {
-            $ta->setCompleted(true);
-            $em->persist($ta);
+        foreach($tas as $ta_item) {
+            $ta_item->setCompleted(true);
+            $em->persist($ta_item);
             $em->flush();
 
             if ($ta->getRequestedBy() !== null)
-                $this->sendEmailAfterApproval($ta);
+                $this->sendEmailAfterApproval($ta_item);
         }
 
         $session->getFlashBag()
@@ -208,11 +210,7 @@ class TeachingAssociationAdminController extends Controller {
         $replyTo = $this->container->getParameter('mail_replyto_new_teaching_association');
 
         $body = $this->renderView('AnketaBundle:TeachingAssociationAdmin:email.txt.twig',
-                array('subject' => $ta->getSubject()->getName(),
-                      'url' => $this->generateUrl('answer_subject',
-                              array('subject_slug' => $ta->getSubject()->getSlug()),
-                              true))
-                );
+                array('teachingAssociation' => $ta));
 
         $this->get('mailer'); // DO NOT DELETE THIS LINE
         // it autoloads required things before Swift_Message can be used
@@ -224,9 +222,5 @@ class TeachingAssociationAdminController extends Controller {
         ->setReplyTo($replyTo)
         ->setBody($body);
         $this->get('mailer')->send($message);
-
-        $this->get('session')->getFlashBag()->add('success',
-                'Bol poslaný email o úspešnom vyriešení požiadavky používateľovi
-                , ktorý ju nahlásil.');
     }
 }
