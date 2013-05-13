@@ -408,7 +408,7 @@ class StatisticsController extends Controller {
         // TODO: by season
         $items = array();
         $categories = $em->getRepository('AnketaBundle\Entity\Category')
-                         ->findBy(array('type' => 'general'));
+                         ->getOrderedGeneral($season);
         foreach ($categories AS $category) {
             // TODO: by season
             $items[$category->getDescription()] = array();
