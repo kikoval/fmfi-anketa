@@ -28,7 +28,7 @@ class CategoryRepository extends EntityRepository {
            ->where($qb->expr()->eq('c.type', ':type'));
         if ($season !== null) {
             $qb->andWhere($qb->expr()->exists(
-                    'SELECT q 
+                    'SELECT q
                      FROM AnketaBundle:Question q
                      WHERE q.season = :season
                      AND q.category = c'));
