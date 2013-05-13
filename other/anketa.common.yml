@@ -335,7 +335,7 @@ otazky:
       nazov_en: Evaluation of ŠKAS
       text:   Činnosť Študentskej komory akademického senátu (ŠKAS).
       text_en: Activities of the Student Chamber of the Academic Senate (ŠKAS).
-      popis:  
+      popis:
       popis_en:
       kategoria:  fakulta
       komentar:   Yes
@@ -360,7 +360,7 @@ otazky:
       text:   Váš celkový dojem z fakultnej knižnice.
       text_en: Your overall impression of the faculty library.
       popis:  
-      popis_en: 
+      popis_en:
       kategoria:  kniznica
       komentar:   No 
       hviezdicky: Yes
@@ -371,7 +371,7 @@ otazky:
       text:   Fakultnú knižnicu využívam: 
       text_en: I use the library:
       popis:  
-      popis_en: 
+      popis_en:
       kategoria:  kniznica
       komentar:   No
       hviezdicky: No
@@ -395,7 +395,7 @@ otazky:
       text:   Najčastejšie knižnicu využívam:
       text_en: Most often I use the library:
       popis:  
-      popis_en: 
+      popis_en:
       kategoria:  kniznica
       komentar:   No
       hviezdicky: No
@@ -417,7 +417,7 @@ otazky:
       text:   Dĺžka otváracej doby študovne do 17:30:
       text_en: Length of the opening hours until 17:30:
       popis:  
-      popis_en: 
+      popis_en:
       kategoria:  kniznica
       komentar:   No
       hviezdicky: No
@@ -439,7 +439,7 @@ otazky:
       text:   Ďalšie pripomienky ku práci knižnice.
       text_en: Other comments on library.
       popis:  
-      popis_en: 
+      popis_en:
       kategoria:  kniznica
       komentar:   Yes
       hviezdicky: No
@@ -452,7 +452,7 @@ otazky:
       text:   Celkové hodnotenie programu ERASMUS na fakulte.
       text_en: Overall evaluation of the ERASMUS programme at the faculty.
       popis:  
-      popis_en: 
+      popis_en:
       kategoria:  erasmus
       komentar:   No
       hviezdicky: Yes
@@ -463,7 +463,7 @@ otazky:
       text:   Organizácia a administratívna podpora programu na fakulte.
       text_en: Organization and administrative support for the programme at the faculty.
       popis:  
-      popis_en: 
+      popis_en:
       kategoria:  erasmus
       komentar:   No
       hviezdicky: Yes
@@ -474,7 +474,7 @@ otazky:
       text:   Výber spolupracujúcich univerzít.
       text_en: Selection of cooperating universities.
       popis:  
-      popis_en: 
+      popis_en:
       kategoria:  erasmus
       komentar:   No
       hviezdicky: Yes
@@ -485,7 +485,7 @@ otazky:
       text:   Ďalšie pripomienky k fungovaniu programu ERASMUS.
       text_en: Other comments on ERASMUS programme.
       popis:  
-      popis_en: 
+      popis_en:
       kategoria:  erasmus
       komentar:   Yes
       hviezdicky: No
@@ -498,7 +498,7 @@ otazky:
       text:   Bufet FreeFood (v pavilóne matematiky)
       text_en: FreeFood cafeteria (in the mathematics pavilion)
       popis:  
-      popis_en: 
+      popis_en:
       kategoria:  stravovanie
       komentar:   Yes
       hviezdicky: Yes
@@ -509,7 +509,7 @@ otazky:
       text:   Bufet Gastroline (vo vestibule fyziky pod schodami)
       text_en: Gastroline cafeteria (in the physics lobby under the stairs)
       popis:  
-      popis_en: 
+      popis_en:
       kategoria:  stravovanie
       komentar:   Yes
       hviezdicky: Yes
@@ -520,7 +520,7 @@ otazky:
       text:   Jedáleň Gastroline (v zadnej časti vestibulu fyziky)
       text_en: Gastroline canteen (at the rear of the physics lobby)
       popis:  
-      popis_en: 
+      popis_en:
       kategoria:  stravovanie
       komentar:   Yes
       hviezdicky: Yes
