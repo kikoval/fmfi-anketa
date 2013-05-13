@@ -1,0 +1,123 @@
+base:
+  svt: Student Developer Team
+userbar:
+  prihlaseny: Logged in
+  odhlasit: logout
+  prihlasit: log in
+layout:
+   hlasuj: Vote
+   vysledky: Results
+
+welcome:
+  index:
+    studentska_anketa: Student Questionnaire
+    vitaj: Welcome to the Student Questionnaire
+    zapoj_sa: Give us your opinion, it counts!
+    hlasuj: Enter questionnaire
+    otvorene_do: The questionnaire will be open until
+    hlasovanie_ukoncene: The student questionnaire is now closed, we would like to thank to all participants.
+    vysledky: Results
+    zverejnenie_vysledkov: Results will be available after the examination period ends.
+    aka_je_anketa: This student questionnaire is:
+    k_veci: On topic
+    k_veci_preco: your courses and teachers are automatically imported
+    flexibilna: Flexible
+    flexibilna_preco: you don't have to answer all questions in a single session, you can return as many times as you want
+    anonymna: Anonymous
+    anonymna_preco: it is not possible to identify you as the author of your answers or comments after you finish the questionnaire
+    mobilna: Mobile
+    mobilna_preco: works on most internet enabled devices, including smartphones
+    pekne_hviezdicky: Has beautiful stars
+    pekne_hviezdicky_preco: our team worked hard to bring you <em>state-of-the-art</em> stars
+    aj_ty_hlasuj: YOUR ANSWERS CAN MAKE A DIFFERENCE
+#  faq: TODO
+
+anonymizacia:
+  anonymizuj:
+    anonymizacia: Anonymization
+    ukoncenie: Finish questionnaire
+    vdaka: That is all. Thank you for your time.
+    co_sa_stane: After you use "Finish questionnaire" button, we will remove all identifiers that link you to your answers. Consequently, you won't be able to view or change your answers after that.
+    skontrolujte: Make sure you filled in everything as you wanted.
+    nevratny_proces: This action is irreversible. You won't be able to change anything afterwards.
+    ukoncit: Finish questionnaire
+    este_hlasovat: I'm not finished yet
+  controller:
+    uspesny_koniec: You have succefully completed the questionnaire.
+
+hlasovanie:
+  dakujeme:
+    dakujeme: Thank you
+    dakujeme_za_cas: Thank you for taking time to complete the student questionnaire.
+    potrebujeme_ucast: In order for questionnaire results to be meaningful, we need a high level of student participation.
+    povedzte_ostatnym: Please, tell you class mates about the student questionnaire and urge them to express their opinions as well.
+    vysledky_budu: The results will be available after the examination period ends.
+  globalProgressbar:
+    kto_hlasoval: So far, <strong>%voters%</strong> students have participated and %anon% of them have anonymized their votes.
+    ciel: Our goal is to reach at least 50% participation. So don't hesitate and take part!
+    zapojte_sa: Don't hesitate and take part!
+    kto_hlasoval_nakoniec: So far, <strong>%voters%</strong> students have participated.
+
+question:
+  index:
+    ak_neucil: If you had no classes with this teacher you can skip these questions and choose
+    uloz_a_chod: Save and continue
+    preskocte_predmet: Please, skip the questionnaire on this course if it does not involve in-class teaching (e.g., masters thesis, research activities, individual study) or if you did not participate in class this semester.
+    chyba_v_uciteloch: Is list of associated teachers wrong?
+    dajte_nam_vediet: Let us know and we will fix it
+    uloz: Save
+    ziadna_odpoved: no answer
+    komentar: Comment
+  controller:
+    chybny_slug_predmetu: Wrong subject slug: %slug%
+    nezapisany_predmet: You are not enrolled in course %slug%
+    ziadne_programy: You have no study programs.
+    program_neexistuje: You are not enrolled in study program %slug%.
+    ucitel_neuci: Teacher %teacher_code% is not associated with this course.
+    ziadne_podkategorie: General question categories are missing.
+    chybna_kategoria: Wrong category: %id%
+
+reports:
+  report:
+    vysledky_programu: Results for study program
+    hodnotenia_ucitelov: Evaluation of teachers
+    pocet_hviezdiciek: %stars% out of 5 stars
+    pocet_hodnoteni: %votes% votes
+    hodnotenia_predmetov: Evaluation of courses
+  controller:
+    katedry: Departments
+    studijne_programy: Study programs
+    moje_reporty: My reports
+
+response:
+  delete:
+    zmazat_komentar: Delete response
+    urcite_zmazat: Do you really want to delete this response?
+    komentar_ku: Response on
+    vasa_funkcia: Your association
+    text_komentaru: Response body
+    zmazat: Delete
+    nezmazat: No action
+  edit:
+    novy_komentar: New response
+    upravit_komentar: Edit response
+    komentar_ku: Response on
+    vasa_funkcia: Your association
+    napriklad: E.g.
+    zobrazene_pri_mene: Will be displayed next to your name.
+    text_komentaru: Response body
+    kto_moze_citat: Your response will be visible to all students and teachers.
+    da_sa_upravovat: You will be able to edit your response after submit.
+    odoslat: Submit
+  list:
+    moje_komentare: My responses
+    tu_su_komentare: This page contains all your responses.
+    pridavanie_z_vysledkov: You can create new responses on result pages.
+    upravit_komentar: Edit response
+    zmazat_komentar: Delete response
+    ziaden_komentar_pridany: You did not add any response so far.
+  controller:
+    neznama_odpoved: Unknown reponse: %id%
+    komentar_bol_ulozeny: Your response was saved.
+    komentar_bol_zmazany: Your response was removed.
+    chybna_sezona: Wrong season: %slug%

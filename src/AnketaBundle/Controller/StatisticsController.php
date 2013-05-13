@@ -405,12 +405,10 @@ class StatisticsController extends Controller {
             return $this->accessDeniedForSeason($season);
         }
 
-        // TODO: by season
         $items = array();
         $categories = $em->getRepository('AnketaBundle\Entity\Category')
-                         ->findBy(array('type' => 'general'));
+                         ->getOrderedGeneral($season);
         foreach ($categories AS $category) {
-            // TODO: by season
             $items[$category->getDescription()] = array();
             $questions = $em->getRepository('AnketaBundle:Question')->getOrderedQuestions($category, $season);
             foreach ($questions as $question) {

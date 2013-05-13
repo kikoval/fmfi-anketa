@@ -17,7 +17,7 @@ parameters:
 
 framework:
     #esi:             ~
-    #translator:      { fallback: %locale% }
+    translator:      { fallback: en }
     secret:          %secret%
     router:
         resource: "%kernel.root_dir%/config/routing.yml"
@@ -75,17 +75,18 @@ svt_libfajr:
             directory: %libfajr_cookie_path%
     trace: "null"
 
+jms_i18n_routing:
+    default_locale: sk
+    locales: [en, sk]
+    strategy: prefix_except_default
+
 # TODO: co najviac z tohto niekam presunut (services.yml v AnketaBundle?)
 services:
     anketa.user_provider:
         class: AnketaBundle\Security\AnketaUserProvider
         arguments:
-            - "@doctrine.orm.entity_manager"
-            - ["@anketa.ais_user_source"]
-            #- ["@anketa.demo_user_source"]
-            - ["@anketa.ldap_user_source"]
-            #- ["@anketa.orgunit_demo_user_source"]
-            # TODO nech je above zmenitelne
+            - "@service_container"
+            - %user_info_zdroje%
             - "@logger"
     anketa.ais_retriever:
         class: AnketaBundle\Integration\AISRetriever
@@ -102,7 +103,6 @@ services:
             - "@doctrine.orm.entity_manager"
             - "@anketa.ais_retriever"
             - %ais_semestre%
-            - %ais_brat_opravnenia%
             - "@anketa.subject_identification"
             - "@logger"
     anketa.ldap_retriever:
@@ -119,15 +119,9 @@ services:
         class: AnketaBundle\Security\DemoUserSource
         arguments:
             - "@doctrine.orm.entity_manager"
-    anketa.orgunit_demo_user_source:
-        class: AnketaBundle\Security\OrgUnitDemoUserSource
-        arguments:
             - [%org_unit%]
+    anketa.none_user_source:
+        class: AnketaBundle\Security\NoneUserSource
     anketa.subject_identification:
         class: AnketaBundle\Lib\SubjectIdentification
         # class: AnketaBundle\Lib\OldPriFSubjectIdentification # Pre PriF instanciu
-    anketa.ldap_teacher_search:
-        class: AnketaBundle\Integration\LDAPTeacherSearch
-        arguments:
-            - "@anketa.ldap_retriever"
-            - %org_unit%

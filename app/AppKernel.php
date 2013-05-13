@@ -23,6 +23,8 @@ class AppKernel extends Kernel
             new SVT\LibfajrBundle\SVTLibfajrBundle(),
             new AnketaBundle\AnketaBundle(),
             new Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle(),
+            new JMS\I18nRoutingBundle\JMSI18nRoutingBundle(),
+            new JMS\TranslationBundle\JMSTranslationBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

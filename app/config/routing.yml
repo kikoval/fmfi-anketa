@@ -4,6 +4,7 @@ _anketa:
 
 logout:
     pattern: /logout
+    options: { i18n: false }
 
 # Internal routing configuration to handle ESI
 #_internal:

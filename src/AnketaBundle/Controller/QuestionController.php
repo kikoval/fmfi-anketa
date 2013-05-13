@@ -128,10 +128,12 @@ class QuestionController extends Controller {
             $subject = $em->getRepository('AnketaBundle\Entity\Subject')
                           ->findOneBy(array('slug' => $slug));
             if (empty($subject)) {
-                throw new \RuntimeException('Chybny slug predmetu: ' . $slug);
+                $msg = $this->get('translator')->trans('question.controller.chybny_slug_predmetu', array('%slug%' => $slug));
+                throw new \RuntimeException($msg);
             }
             if (!in_array($subject, $attendedSubjects)) {
-                throw new \RuntimeException('Predmet ' . $slug . ' nemas zapisany');
+                $msg = $this->get('translator')->trans('question.controller.nezapisany_predmet', array('%slug%' => $slug));
+                throw new \RuntimeException($msg);
             }
         }
 
@@ -148,7 +150,8 @@ class QuestionController extends Controller {
                                       ->getStudyProgrammesForUser($user, $season);
 
         if (count($attendedStudyProgrammes) == 0) {
-            throw new \RuntimeException ('Nemas ziadne studijne programy.');
+            $msg = $this->get('translator')->trans('question.controller.ziadne_programy');
+            throw new \RuntimeException($msg);
         }
 
         // defaultne vraciame abecedne prvy predmet
@@ -161,7 +164,8 @@ class QuestionController extends Controller {
                 break;
             }
             if (empty($studyProgramme)) {
-                throw new \RuntimeException('Studijny program ' . $slug . ' nestudujes.');
+                $msg = $this->get('translator')->trans('question.controller.program_neexistuje', array('%slug%' => $slug));
+                throw new \RuntimeException($msg);
             }
         }
 
@@ -187,7 +191,8 @@ class QuestionController extends Controller {
                                                'season' => $season->getId(),
                                                'teacher' => $teacher_code));
         if (!$teacherSubject) {
-            throw new NotFoundHttpException("Ucitel " . $teacher_code . " neuci dany predmet");
+            $msg = $this->get('translator')->trans('question.controller.ucitel_neuci', array('%teacher_code%' => $teacher_code));
+            throw new NotFoundHttpException($msg);
         }
         $teacher = $teacherSubject->getTeacher();
         $studyProgram = $em->getRepository('AnketaBundle:StudyProgram')
@@ -337,13 +342,16 @@ class QuestionController extends Controller {
         $request = $this->get('request');
         $user = $this->get('security.context')->getToken()->getUser();
         $em = $this->get('doctrine.orm.entity_manager');
+        $season = $em->getRepository('AnketaBundle:Season')->getActiveSeason();
 
         // chceme vceobecne subkategorie - pre menu do templatu
         // TODO toto je code duplication s buildMenu, tuto informaciu aj tak dostaneme v templateParams
         $subcategories = $em->getRepository('AnketaBundle\Entity\Category')
-                       ->getOrderedGeneral();
-        if (empty($subcategories))
-            throw new NotFoundHttpException ('Ziadne vseobecne kategorie.');
+                       ->getOrderedGeneral($season);
+        if (empty($subcategories)) {
+            $msg = $this->get('translator')->trans('question.controller.ziadne_podkategorie');
+            throw new NotFoundHttpException($msg);
+        }
 
         // default prva kategoria (najnizsie position)
         if ($id == -1) {
@@ -354,11 +362,11 @@ class QuestionController extends Controller {
 
             if (empty($category) ||
                 ($category->getType() !== CategoryType::GENERAL)) {
-                throw new NotFoundHttpException ('Chybna kategoria: ' . $id);
+                $msg = $this->get('translator')->trans('question.controller.chybna_kategoria', array('%id%' => $id));
+                throw new NotFoundHttpException($msg);
             }
         }
 
-        $season = $em->getRepository('AnketaBundle:Season')->getActiveSeason();
         $questions = $em->getRepository('AnketaBundle\Entity\Question')
                         ->getOrderedQuestions($category, $season);
         $answers = $em->getRepository('AnketaBundle\Entity\Answer')

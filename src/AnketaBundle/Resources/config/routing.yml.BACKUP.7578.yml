@@ -41,6 +41,9 @@ dakujeme:
 api:
     pattern: /api/
     resource: "@AnketaBundle/Resources/config/api_routing.yml"
+<<<<<<< HEAD
+    
+=======
 
 teacher_search:
     pattern: /ucitelia/vyhladavanie
@@ -59,3 +62,4 @@ admin_teaching_associations_process:
     defaults: { _controller: AnketaBundle:TeachingAssociationAdmin:processRequest }
     requirements:
       _method: POST
+>>>>>>> 90ab7cc342ed5f81f92ec0a7f36945f67f874c6a

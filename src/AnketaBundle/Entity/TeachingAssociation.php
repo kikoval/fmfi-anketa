@@ -54,15 +54,38 @@ class TeachingAssociation {
     protected $note;
 
     /**
+     * @ORM\Column(type="boolean", nullable=true)
+     * @var boolean ci prednasa(l) k danemu predmetu
+     */
+    protected $lecturer;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     * @var boolean ci cvici(l)
+     */
+    protected $trainer;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=false)
+     * @var boolean ci bola tato poziadavka vybavena
+     */
+    protected $completed;
+
+    /**
      * @param String $name
      */
-    public function __construct(Season $season, Subject $subject, User $teacher = null, User $requestedBy = null, $note = '') {
+    public function __construct(Season $season, Subject $subject,
+            User $teacher = null, User $requestedBy = null, $note = '',
+            $lecturer = null, $trainer = null, $completed = false) {
         Preconditions::checkIsString($note, 'note must be string');
         $this->requestedBy = $requestedBy;
         $this->teacher = $teacher;
         $this->subject = $subject;
         $this->season = $season;
         $this->note = $note;
+        $this->lecturer = $lecturer;
+        $this->trainer = $trainer;
+        $this->completed = $completed;
     }
 
     public function getId() {
@@ -114,4 +137,33 @@ class TeachingAssociation {
         $this->note = $note;
     }
 
+    public function getLecturer() {
+        return $this->lecturer;
+    }
+    /**
+     * @param bool $lecturer
+     */
+    public function setLecturer($lecturer) {
+        $this->lecturer = $lecturer;
+    }
+
+    public function getTrainer() {
+        return $this->trainer;
+    }
+    /**
+     * @param bool $trainer
+     */
+    public function setTrainer($trainer) {
+        $this->trainer = $trainer;
+    }
+
+    public function getCompleted() {
+        return $this->completed;
+    }
+    /**
+     * @param bool $completed
+     */
+    public function setCompleted($completed) {
+        $this->completed = $completed;
+    }
 }

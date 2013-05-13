@@ -1,0 +1,89 @@
+# Desc: /admin/ucitelia-priradenia
+admin_teaching_associations: /admin/teaching-associations
+
+# Desc: /admin/ucitelia-priradenia
+admin_teaching_associations_process: /admin/teaching-associations
+
+# Desc: /anketa/
+anketa: /questionnaire/
+
+# Desc: /anonymizuj/
+anonymizuj: /anonymize
+
+# Desc: /hlasuj/
+answer: /vote/
+
+# Desc: /hlasuj/vseobecne/{id}
+answer_general: '/vote/general/{id}'
+
+# Desc: /hlasuj/nevyplnene/
+answer_incomplete: /hlasuj/nevyplnene/   # FIXME
+
+# Desc: /hlasuj/program/{slug}
+answer_study_program: '/vote/programme/{slug}'
+
+# Desc: /hlasuj/predmet/{subject_slug}
+answer_subject: '/vote/subject/{subject_slug}'
+
+# Desc: /hlasuj/predmet/{subject_slug}/ucitel/{teacher_code}
+answer_subject_teacher: '/vote/subject/{subject_slug}/teacher/{teacher_code}'
+
+# Desc: /hlasuj/predmet/{subject_slug}/zmena-ucitela
+assoc_teacher_with_subject: '/vote/subject/{subject_slug}/teacher-change-request'
+
+# Desc: /hlasuj/predmet/{subject_slug}/zmena-ucitela
+assoc_teacher_with_subject_process: '/vote/subject/{subject_slug}/teacher-change-request'
+
+# Desc: /dakujeme/
+dakujeme: /thank-you/
+
+# Desc: /faq/
+faq: /faq/
+
+# Desc: /reporty/{season_slug}/katedra/{department_slug}
+report_department: '/reports/{season_slug}/department/{department_slug}'
+
+# Desc: /reporty/{season_slug}/studijny-program/{study_programme_slug}
+report_study_programme: '/reports/{season_slug}/study-programme/{study_programme_slug}'
+
+# Desc: /reporty/{season_slug}/moje-reporty
+reports_my_reports: '/reports/{season_slug}/my-reports'
+
+# Desc: /vysledky/{season_slug}/moje-komentare
+response: '/results/{season_slug}/my-comments'
+
+# Desc: /odpovede/{response_id}/zmaz
+response_delete: '/responses/{response_id}/delete'
+
+# Desc: /odpovede/{response_id}/uprav
+response_edit: '/responses/{response_id}/change'
+
+# Desc: /odpovede/nova-odpoved/{section_slug}
+response_new: '/responses/new-response/{section_slug}'
+
+# Desc: /vysledky
+statistics: /results
+
+# Desc: /flag/{answer_id}
+statistics_flag: '/flag/{answer_id}'
+
+# Desc: /vysledky/{season_slug}/vseobecne
+statistics_list_general: '/results/{season_slug}/general'
+
+# Desc: /vysledky/{season_slug}/moje-predmety
+statistics_list_my_subjects: '/results/{season_slug}/my-subjects'
+
+# Desc: /vysledky/{season_slug}/programy
+statistics_list_programs: '/results/{season_slug}/programmes'
+
+# Desc: /vysledky/{season_slug}/predmety/
+statistics_list_subjects: '/results/{season_slug}/subjects/'
+
+# Desc: /vysledky/{section_slug}
+statistics_results: '/results/{section_slug}'
+
+# Desc: /vysledky/{season_slug}
+statistics_season: '/results/{season_slug}'
+
+# Desc: /ucitelia/vyhladavanie
+teacher_search: /ucitelia/vyhladavanie   # FIXME

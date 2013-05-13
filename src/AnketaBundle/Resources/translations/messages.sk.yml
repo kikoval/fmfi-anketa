@@ -1,0 +1,123 @@
+base:
+  svt: Študentský Vývojový Tím
+userbar:
+  prihlaseny: Prihlásený
+  odhlasit: Odhlásiť
+  prihlasit: Prihlásiť
+layout:
+   hlasuj: Hlasuj
+   vysledky: Výsledky
+
+welcome:
+  index:
+    studentska_anketa: Študentská anketa
+    vitaj: Vitajte v Študentskej ankete
+    zapoj_sa: Zapojte sa aj Vy a prezentujte svoj názor!
+    hlasuj: Hlasuj!
+    otvorene_do: Otvorené do
+    hlasovanie_ukoncene: Hlasovanie v ankete je ukončené. Ďakujeme všetkým zúčastneným za vyplnenie :)
+    vysledky: Výsledky
+    zverejnenie_vysledkov: Výsledky budú k dispozícii po ukončení skúškového obdobia.
+    aka_je_anketa: Aká je nová anketa?
+    k_veci: K veci
+    k_veci_preco: automaticky načíta Váš zoznam predmetov s učiteľmi
+    flexibilna: Flexibilná
+    flexibilna_preco: môžete sa k nej vrátiť neskôr, nemusíte všetko vyplniť naraz
+    anonymna: Anonymná
+    anonymna_preco: po ukončení hlasovania sa nedá zistiť, komu patria ktoré odpovede
+    mobilna: Mobilná
+    mobilna_preco: hlasujte kdekoľvek a s čímkoľvek, vrátane mobilov a smartfónov
+    pekne_hviezdicky: Má prekrásne hviezdičky
+    pekne_hviezdicky_preco: náš tím tvrdo pracoval, aby Vám poskytol <em>state-of-the-art</em> hviezdičkové hlasovanie
+    aj_ty_hlasuj: AJ VÁŠ HLAS MÔŽE ZMENIŤ NAŠU ALMA MATER K LEPŠIEMU ;-)
+#  faq: TODO
+
+anonymizacia:
+  anonymizuj:
+    anonymizacia: Anonymizácia
+    ukoncenie: Ukončenie hlasovania
+    vdaka: To je všetko. Ďakujeme!
+    co_sa_stane: Po kliknutí na tlačidlo "Ukončiť hlasovanie" anonymizujeme vaše odpovede &mdash; vymažeme z nich informáciu, že ste ich autorom. Preto si ich už nebudete môcť prezrieť alebo zmeniť.
+    skontrolujte: Skontrolujte, či ste vyplnili všetko tak, ako ste chceli.
+    nevratny_proces: Tento proces je nevratný. Nebudete môcť už nič zmeniť.
+    ukoncit: Ukončiť hlasovanie
+    este_hlasovat: Nie, ešte chcem hlasovať
+  controller:
+    uspesny_koniec: Vaše hlasovanie v ankete bolo úspešne ukončené.
+
+hlasovanie:
+  dakujeme:
+    dakujeme: Ďakujeme
+    dakujeme_za_cas: Ďakujeme Vám, že ste si našli čas vyplniť študentskú anketu.
+    potrebujeme_ucast: Aby mala anketa nejakú výpovednú hodnotu, treba, aby sa zúčastnil dostatočne vysoký počet študentov.
+    povedzte_ostatnym: Prosíme Vás preto, aby ste dali vedieť aj svojim spolužiakom, napríklad prostredníctvom rozhovoru, emailu či Facebooku.
+    vysledky_budu: Výsledky ankety budú k dispozícii po ukončení skúškového obdobia.
+  globalProgressbar:
+    kto_hlasoval: Doteraz sa zúčastnilo <strong>%voters% študentov</strong>, %anon% z nich už hlasovanie ukončilo.
+    ciel: Naším cieľom je dosiahnuť aspoň 50% účasť. Preto neváhajte a zapojte sa tiež!
+    zapojte_sa: Neváhajte a zapojte sa tiež!
+    kto_hlasoval_nakoniec: V ankete hlasovalo <strong>%voters%</strong> študentov.
+
+question:
+  index:
+    ak_neucil: Ak vás tento učiteľ neučil, môžete otázky preskočiť a zvoliť
+    uloz_a_chod: Ulož a choď ďalej
+    preskocte_predmet: Ak tento predmet nepodlieha priamej vyučbe, ale splneniu určitých povinností (ako napr. diplomová práca, vedecká činnosť, samostatné štúdium odbornej literatúry a pod.), prípadne ste tento predmet v aktuálnom semestri neobsolvovali lebo Vám bol uznaný, hodnotenie predmetu prosím preskočte.
+    chyba_v_uciteloch: Je v zozname učiteľov k tomuto predmetu chyba?
+    dajte_nam_vediet: Dajte nám vedieť a my to napravíme
+    uloz: Ulož
+    ziadna_odpoved: žiadna odpoveď
+    komentar: Komentár
+  controller:
+    chybny_slug_predmetu: Chybný slug predmetu: %slug%
+    nezapisany_predmet: Predmet %slug% nemáš zapísaný
+    ziadne_programy: Nemáš žiadne študijné programy.
+    program_neexistuje: Študijný program %slug% neštuduješ.
+    ucitel_neuci: Učiteľ %teacher_code% daný predmet neučí.
+    ziadne_podkategorie: Neexistujú žiadne všeobecné kategórie otázok.
+    chybna_kategoria: Chybná kategória: %id%
+
+reports:
+  report:
+    vysledky_programu: Výsledky študijného programu
+    hodnotenia_ucitelov: Hodnotenia učiteľov
+    pocet_hviezdiciek: %stars% z 5 hviezdičiek
+    pocet_hodnoteni: %votes% hodnotení
+    hodnotenia_predmetov: Hodnotenia predmetov
+  controller:
+    katedry: Katedry
+    studijne_programy: Študijné programy
+    moje_reporty: Moje reporty
+
+response:
+  delete:
+    zmazat_komentar: Zmazať komentár
+    urcite_zmazat: Ste si istí, že chcete zmazať tento komentár?
+    komentar_ku: Komentár ku
+    vasa_funkcia: Vaša funkcia
+    text_komentaru: Text komentáru
+    zmazat: Zmazať
+    nezmazat: Nič nemazať
+  edit:
+    novy_komentar: Nový komentár
+    upravit_komentar: Upraviť komentár
+    komentar_ku: Komentár ku
+    vasa_funkcia: Vaša funkcia
+    napriklad: Napríklad:
+    zobrazene_pri_mene: Zobrazí sa pri vašom mene.
+    text_komentaru: Text komentáru
+    kto_moze_citat: Odoslaný komentár si môžu prečítať všetci študenti a učitelia.
+    da_sa_upravovat: Text komentáru budete môcť dodatočne upravovať.
+    odoslat: Odoslať
+  list:
+    moje_komentare: Moje komentáre
+    tu_su_komentare: Tu sa nachádza zoznam vašich komentárov.
+    pridavanie_z_vysledkov: Komentáre môžete pridávať z jednotlivých stránok s výsledkami.
+    upravit_komentar: Upraviť komentár
+    zmazat_komentar: Zmazať komentár
+    ziaden_komentar_pridany: Zatiaľ ste nepridali žiaden komentár.
+  controller:
+    neznama_odpoved: Neznáma odpoveď: %id%
+    komentar_bol_ulozeny: Váš komentár bol uložený.
+    komentar_bol_zmazany: Váš komentár bol zmazaný.
+    chybna_sezona: Chybná sezóna: %slug%

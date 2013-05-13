@@ -5,7 +5,6 @@ homepage:
 login:
     pattern:  /login
     defaults: { _controller: AnketaBundle:Login:login }
-    options: { i18n: false }
 
 faq:
     pattern:  /faq/
@@ -41,21 +40,4 @@ dakujeme:
 api:
     pattern: /api/
     resource: "@AnketaBundle/Resources/config/api_routing.yml"
-
-teacher_search:
-    pattern: /ucitelia/vyhladavanie
-    defaults: { _controller: AnketaBundle:Teacher:search }
-    requirements:
-      _method: GET
-
-admin_teaching_associations:
-    pattern: /admin/ucitelia-priradenia
-    defaults: { _controller: AnketaBundle:TeachingAssociationAdmin:index }
-    requirements:
-      _method: GET
-
-admin_teaching_associations_process:
-    pattern: /admin/ucitelia-priradenia
-    defaults: { _controller: AnketaBundle:TeachingAssociationAdmin:processRequest }
-    requirements:
-      _method: POST
+    

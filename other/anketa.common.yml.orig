@@ -3,6 +3,7 @@ kategorie:
 # kategorie predmetov
     - id:         predmety
       popis:      Predmety
+      popis_en:   Courses
       kategoria:  predmety
 
     - id:         predmety_ucitel
@@ -18,8 +19,15 @@ kategorie:
 
 # vseobecne kategorie
     - id:         fakulta
-      popis:      Fakulta
+<<<<<<< HEAD:other/anketa.common.yml
+      popis:      Otázky ku fakulte
       popis_en:   Questions about the faculty
+      kategoria:  vseobecne
+    - id:         ostatne
+      popis:      Ostatné
+      popis_en:   Other
+=======
+      popis:      Fakulta
       kategoria:  vseobecne
     - id:         kniznica
       popis:      Knižnica
@@ -29,6 +37,7 @@ kategorie:
       kategoria:  vseobecne
     - id:         stravovanie
       popis:      Bufety
+>>>>>>> 90ab7cc342ed5f81f92ec0a7f36945f67f874c6a:other/anketa.yml
       kategoria:  vseobecne
 
 otazky:
@@ -327,22 +336,90 @@ otazky:
       hviezdicky: Yes
       position:   1
 
-  - nazov:  Hodnotenie ŠKAS
+<<<<<<< HEAD:other/anketa.common.yml
+    - nazov:  Prístup študijných referentiek
+      nazov_en: Attitude of registrar's office staff
+      text:   Prístup študijných referentiek ku študentom.
+      text_en: Attitude of registrar's office staff towards students.
+=======
+    - nazov:  Hodnotenie ŠKAS
       text:   Činnosť Študentskej komory akademického senátu (ŠKAS).
+>>>>>>> 90ab7cc342ed5f81f92ec0a7f36945f67f874c6a:other/anketa.yml
       popis:
+      popis_en:
       kategoria:  fakulta
       komentar:   Yes
       hviezdicky: Yes
       position:   2
 
+<<<<<<< HEAD:other/anketa.common.yml
+    - nazov:  Podmienky na výučbu
+      nazov_en: Overall teaching conditions
+      text:   Vybavenosť učební a celkové podmienky na výučbu.
+      text_en: Quality of teaching facilities and overall teaching conditions.
+      popis:
+      popis_en:
+=======
     - nazov:  Hodnotenie ankety
       text:   Ako sa vám páči anketa v súčasnej podobe?
       popis:  Páči sa vám? Čo by ste navrhovali zmeniť?
+>>>>>>> 90ab7cc342ed5f81f92ec0a7f36945f67f874c6a:other/anketa.yml
       kategoria:  fakulta
       komentar:   Yes
       hviezdicky: Yes
       position:   3
 
+<<<<<<< HEAD:other/anketa.common.yml
+    - nazov:  Knižnica
+      nazov_en: Library
+      text:   Vybavenosť knižnice a prístup pracovníkov knižnice ku študentom.
+      text_en: Quality of the library and attitude of library staff towards students.
+      popis:
+      popis_en:
+      kategoria:  fakulta
+      komentar:   Yes
+      hviezdicky: No
+      moznosti:
+          - text: Super
+            text_en: Super
+          - text: OK
+            text_en: OK
+          - text: Nič moc
+            text_en: Meh
+          - text: Aká knižnica?
+            text_en: What library?
+      position:   4
+
+    - nazov:  Činnosť ŠKAS
+      nazov_en: Activities of ŠKAS
+      text:   Činnosť Študentskej komory Akademického senátu (ŠKAS).
+      text_en: Activities of Student Chamber of the Academic Senate (ŠKAS).
+      popis:
+      popis_en:
+      kategoria:  fakulta
+      komentar:   Yes
+      hviezdicky: No
+      moznosti:
+          - text: Super
+            text_en: Super
+          - text: OK
+            text_en: OK
+          - text: Nič moc
+            text_en: Meh
+          - text: Aká komora?
+            text_en: What chamber?
+      position:   5
+
+    - nazov:  Študentská anketa.
+      nazov_en: Student questionnaire.
+      text:   Študentská anketa.
+      text_en:  Student questionnaire.
+      popis:  >
+        Môžete sa tiež vyjadriť k tomu, čo by mali zodpovední podľa vás urobiť s výsledkami ankety
+      popis_en: What should the responsible do with the results of this questionnaire?
+      kategoria:  fakulta
+      komentar:   Yes
+=======
 # vseobecne otazky - kniznica
 
     - nazov:  Hodnotenie knižnice
@@ -413,9 +490,19 @@ otazky:
       popis:  
       kategoria:  erasmus
       komentar:   No
+>>>>>>> 90ab7cc342ed5f81f92ec0a7f36945f67f874c6a:other/anketa.yml
       hviezdicky: Yes
       position:   1
 
+<<<<<<< HEAD:other/anketa.common.yml
+    - nazov:  Hodnotenie ankety
+      nazov_en: Evaluation of the questionnaire
+      text:   Čo by sme mali urobiť pre to, aby študenti venovali viac času prednáškam a tvorivým aktivitám na fakulte?
+      text_en: What should we do to ensure that the students devote more time to lectures and creative activities at the faculty?
+      popis:
+      popis_en:
+      kategoria:  fakulta
+=======
     - nazov:  Organizácia a administratívna podpora programu na fakulte
       text:   Organizácia a administratívna podpora programu na fakulte.
       popis:  
@@ -436,16 +523,36 @@ otazky:
       text:   Ďalšie pripomienky k fungovaniu programu ERASMUS.
       popis:  
       kategoria:  erasmus
+>>>>>>> 90ab7cc342ed5f81f92ec0a7f36945f67f874c6a:other/anketa.yml
       komentar:   Yes
       hviezdicky: No
       position:   4
 
+<<<<<<< HEAD:other/anketa.common.yml
+# vseobecne otazky - ostatne
+    - nazov:  Všeobecná otázka
+      nazov_en: General question
+      text:   Chcete sa ešte k niečomu vyjadriť?
+      text_en: Do you want to address anything else?
+      popis:  >
+        Privítame napr. návrhy na zmeny v skladbe ponúkaných študijných programov, názory na rozšírenie ponuky študijných programov o programy v cudzom jazyku, príp. akékoľvek ďalšie návrhy a pripomienky k činnosti fakulty. 
+      popis_en: We welcome, for example, proposals for changes in the composition of the courses offered, comments on widening of choice of study programs by programs in foreign languages​​, or any other suggestions and comments on the activities at the faculty.
+      kategoria:  ostatne
+      moznosti:
+          - text: Áno.
+            text_en: Yes.
+            hodnota: 1
+          - text: Nie.
+            text_en: No.
+            hodnota: -1
+=======
 # vseobecne otazky - moznosti stravovania
 
     - nazov:  Bufet FreeFood
       text:   Bufet FreeFood (v pavilóne matematiky)
       popis:  
       kategoria:  stravovanie
+>>>>>>> 90ab7cc342ed5f81f92ec0a7f36945f67f874c6a:other/anketa.yml
       komentar:   Yes
       hviezdicky: Yes
       position:   1
@@ -466,4 +573,3 @@ otazky:
       hviezdicky: Yes
       position:   3
 ...
-

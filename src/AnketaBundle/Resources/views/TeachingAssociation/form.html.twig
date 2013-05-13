@@ -8,27 +8,129 @@
 
 <a href="{{ path('answer_subject', {'subject_slug': subject.slug}) }}">&laquo; Späť na predmet</a>
 
-<h2>{{ subject.name }} - Chyba v zozname učiteľov?</h2>
+<h2>{{ subject.name }} &ndash; Chyba v zozname učiteľov?</h2>
 
-<form method="POST" action="{{ path('assoc_teacher_with_subject_process', {'subject_slug': subject.slug}) }}">
+<div id="section-teacher-add" class="page-section">
+<h3>Nahlásenie chýbajúceho učiteľa</h3>
+<p>Ak v zozname učiteľov a cvičiacich k tomuto predmetu niekto chýba, dajte nám prosím o tom vedieť vo formulári nižšie.</p>
 
-<p>Ak v zozname učiteľov predmetu niekto chýba, napíšte sem jeho celé <strong>meno</strong>
-(aj s diakritikou) a <strong>funkciu</strong> (či bol prednášajúci, cvičiaci alebo oboje).</p>
+<form method="post" action="{{ path('assoc_teacher_with_subject_process', {'subject_slug': subject.slug}) }}" id="teaching-association">
 
-<p>My potom učiteľa ručne pridáme k predmetu <em>{{ subject.name }}</em>. (Môžete pripísať aj
-ľubovoľnú inú informáciu, ktorá nám pri tom pomôže.)</p>
-
-<p>Ak niektorý z učiteľov nikoho neučil, dajte nám vedieť a môžeme ho zo zoznamu odstrániť.
+<p>
+    <label for="teacher-name">Meno</label>
+    <input type="text" name="teacher-name" id="teacher-name" size="40" value="" required="required" />
+    <input type="hidden" name="teacher-login" id="teacher-login" value="" />
 </p>
-
+<p>
+     <fieldset>
+        <legend>Funkcia</legend>
+        <input type="checkbox" name="teacher-role-lecturer" id="teacher" value="1" /> <label for="teacher">Prednášajúci</label><br/>
+        <input type="checkbox" name="teacher-role-assistant" id="teacher-assistant" value="1" /> <label for="teacher-assistant">Cvičiaci</label>
+    </fieldset>
+</p>
 <div>
-<textarea id="note" name="note" cols="40" rows="6"></textarea>
+<label for="note">Poznámka:</label>
+<textarea id="note" name="note" cols="40" rows="3"></textarea>
 </div>
-<div>
 <div class="submit">
-    <input type="submit" value="Odošli" />
-</div>
+    <input type="submit" name="report" value="Nahlásiť" class="btn btn-primary" />
 </div>
 </form>
+</div>
 
+<div id="section-other-problem" class="page-section">
+<h3>Nahlásenie ostatných chýb</h3>
+<p>Ak niektorý z učiteľov neučil/necvičil tento predmet alebo sa vyskytla iná chyba, dajte nám prosím vedieť.</p>
+<form method="post" action="{{ path('assoc_teacher_with_subject_process', {'subject_slug': subject.slug}) }}">
+    <label for="note">Popis chyby:</label>
+    <textarea id="problem-desc" name="note" cols="40" rows="6" required="required"></textarea>
+
+    <div class="submit">
+        <input type="submit" name="report" value="Nahlásiť" class="btn btn-primary" />
+    </div>
+</form>
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+jQuery(document).ready(function($) {
+    "use strict";
+
+    // creating elements for JS version
+    $('#section-teacher-add').before('<p>Vyberte prosím požadovanú akciu:</p>');
+    $('#section-teacher-add').before('<div class="page-section"><a href="#" id="btn-teacher-add" class="btn btn-large">Chcem nahlásiť <strong>chýbajúceho učiteľa</strong></a></div>');
+    $('#section-other-problem').before('<div><a href="#" id="btn-other-problem" class="btn btn-large">Chcem nahlásiť <strong>iný problém</strong></a></div>');
+
+    $('#section-teacher-add').hide();
+    $('#btn-teacher-add').click(function(event) {
+        $('#section-teacher-add').toggle(0, function() {
+            $('#teacher-name').focus();
+            $('#btn-other-problem').toggle();
+        });
+        return false;
+
+    });
+    $('#section-other-problem').hide();
+    $('#btn-other-problem').click(function(event) {
+        $('#section-other-problem').toggle(0, function() {
+            $('#problem-desc').focus();
+        });
+        return false;
+    });
+
+    var delay = (function() {
+          var timer = 0;
+          return function(callback, ms) {
+            clearTimeout(timer);
+            timer = setTimeout(callback, ms);
+          };
+    })();
+
+    function addSearchResults() {
+        $('#teacher-name').parent().after($(document.createElement('div')).attr('id', 'teacher-search-result'));
+    }
+
+    addSearchResults();
+
+    $('#teacher-name').keyup(function() {
+        if ($(this).val().length < 3) return;
+
+        delay(function() {
+            $.ajax({
+                type: 'GET',
+                url: '{{ path('teacher_search') }}',
+                data: {'name': $('#teacher-name').val()},
+            }).done(function(data) {
+                if (data.length == 0) {
+                    $('#teacher-search-result').html('Hľadané meno sa nenašlo.');
+                    return;
+                }
+                var list = $(document.createElement('ul'));
+                $.each(data, function(login, teacher) {
+                    var teacher_name = $(document.createElement('a')).append(teacher.name).attr('href', '#').click(function(event) {
+                        $('#teacher-login').attr('value', login);
+                        $('#teacher-name').attr('value', teacher.name).attr('readonly', 'readonly');
+
+                        $('#teacher-search-result').remove();
+                        $('#teacher-name').after($(document.createElement('a')).append('zrušiť').attr('href', '#').click(function(event) {
+                            $('#teacher-name').attr('value', '').removeAttr('readonly').focus();
+                            $('#teacher-login').attr('value', '');
+                            $(this).remove();
+                            addSearchResults();
+
+                            return false;
+                            })).after('&nbsp;');
+
+                            return false;
+                        });
+                    var unit = ' (' + teacher.orgUnits + ')';
+                    list.append($(document.createElement('li')).append(teacher_name).append(unit));
+                });
+                $('#teacher-search-result').html(list);
+            });
+        }, 300); // end of delay()
+    });
+});
+//]]>
+</script>
 {% endblock %}

@@ -22,41 +22,48 @@ use AnketaBundle\Entity\UsersSubjects;
 class DemoUserSource implements UserSourceInterface
 {
 
-    /**
-     * Doctrine repository for Subject entity
-     * @var AnketaBundle\Entity\SubjectRepository
-     */
-    private $subjectRepository;
-
-    /**
-     * Doctrine repository for Role entity
-     * @var AnketaBundle\Entity\RoleRepository
-     */
-    private $roleRepository;
-
-    /**
-     * Doctrine repository for StudyProgram entity
-     * @var AnketaBundle\Entity\StudyProgramRepository
-     */
-    private $studyProgramRepository;
-
     /** @var EntityManager */
-    private $entityManager;
+    private $em;
 
-    public function __construct(EntityManager $em)
+    /** @var array */
+    private $orgUnits;
+
+    public function __construct(EntityManager $em, array $orgUnits = null)
     {
-        $this->entityManager = $em;
-        $this->subjectRepository = $em->getRepository('AnketaBundle:Subject');
-        $this->studyProgramRepository = $em->getRepository('AnketaBundle:StudyProgram');
-        $this->roleRepository = $em->getRepository('AnketaBundle:Role');
+        $this->em = $em;
+        $this->orgUnits = $orgUnits;
     }
 
-    public function load(UserSeason $userSeason)
+    public function load(UserSeason $userSeason, array $want)
     {
         $user = $userSeason->getUser();
-        // prvych 10 predmetov a prvy najdeny studijny program
-        $subjects = $this->subjectRepository->findBy(array(), null, 20);
-        $studyPrograms = $this->studyProgramRepository->findBy(array(), null, 2);
+
+        if (isset($want['displayName'])) {
+            $name = $user->getUserName();
+            $name = preg_replace('/[0-9]/', '', $name);
+            $name = ucfirst($name) . ' Sapiens';
+            $user->setDisplayName($name);
+        }
+
+        if (isset($want['isStudent'])) {
+            $userSeason->setIsStudent(true);
+        }
+
+        if (isset($want['orgUnits']) && $this->orgUnits !== null) {
+            $user->setOrgUnits($this->orgUnits);
+        }
+
+        if (isset($want['subjects'])) {
+            $this->loadSubjects($userSeason);
+        }
+    }
+
+    private function loadSubjects(UserSeason $userSeason)
+    {
+        $user = $userSeason->getUser();
+        // prvych par predmetov a studijnych programov
+        $subjects = $this->em->getRepository('AnketaBundle:Subject')->findBy(array(), null, 20);
+        $studyPrograms = $this->em->getRepository('AnketaBundle:StudyProgram')->findBy(array(), null, 2);
         if (count($studyPrograms) == 0) {
             throw new \Exception('Chyba studijny program');
         }
@@ -69,12 +76,7 @@ class DemoUserSource implements UserSourceInterface
             $studyProgram = $studyPrograms[$index % count($studyPrograms)];
             $userSubject->setStudyProgram($studyProgram);
 
-            $this->entityManager->persist($userSubject);
+            $this->em->persist($userSubject);
         }
-
-        $userSeason->setIsStudent(true);
-        $userSeason->setFinished(false);
-
-        return true;
     }
 }

@@ -66,16 +66,23 @@
             </div>
 
             <div id="content" class="clearfix">
-                {% if app.session.hasFlash('success') %}
-                    <div class="big-success-flash"><div class="big-success-flash-in">
-                        {{ app.session.flash('success') }}
-                    </div></div>
+                {% if app.session.started %}
+                    {% for flashMessage in app.session.flashbag.get('error') %}
+                        <div class="flash-message flash-error">
+                            {{ flashMessage }}
+                        </div>
+                    {% endfor %}
+                    {% for flashMessage in app.session.flashbag.get('success') %}
+                        <div class="flash-message flash-success">
+                            {{ flashMessage }}
+                        </div>
+                    {% endfor %}
                 {% endif %}
                 {% block content %}{% endblock %}
             </div>
 
             <div id="footer">
-                &copy; <a href="http://svt.fmph.uniba.sk/">Študentský Vývojový Tím</a> 2011,2012
+                &copy; <a href="http://svt.fmph.uniba.sk/">{% trans %}base.svt{% endtrans %}</a> 2011,2012
             </div>
         </div>
         {% endblock %}

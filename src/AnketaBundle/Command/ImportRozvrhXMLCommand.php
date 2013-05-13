@@ -94,7 +94,7 @@ class ImportRozvrhXMLCommand extends AbstractImportCommand {
             $parser->parse('', true);
             fclose($file);
 
-            $sql = 'INSERT INTO Subject(code, name, slug) ';
+            $sql = 'INSERT IGNORE INTO Subject(code, name, slug) ';
             $sql .= ' SELECT code, name, slug ';
             $sql .= ' FROM tmp_insert_subject s ';
             $sql .= ' WHERE NOT EXISTS (SELECT s2.id FROM Subject s2 WHERE s2.slug = s.slug)';

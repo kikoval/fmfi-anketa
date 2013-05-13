@@ -33,7 +33,6 @@ class ImportUcitelPredmetCommand extends AbstractImportCommand {
                 ->setName('anketa:import:ucitel-predmet')
                 ->setDescription('Importuj ucitelov predmety z textaku')
                 ->addSeasonOption()
-                ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Format of imported data', null)
         ;
     }
 
@@ -50,21 +49,10 @@ class ImportUcitelPredmetCommand extends AbstractImportCommand {
     protected function execute(InputInterface $input, OutputInterface $output) {
         $subjectIdentification = $this->getContainer()->get('anketa.subject_identification');
 
-        $fileFormat = $input->getOption('format');
-
         $season = $this->getSeason($input);
         $file = $this->openFile($input);
 
-        if ($fileFormat == 'csv') {
-            // nacitaj prve riadky, ktore nas nezaujimaju
-            for ($i = 0;$i < 9; $i++) {
-                fgets($file);
-            }
-            $tableReader = new NativeCSVTableReader($file);
-        }
-        else {
-            $tableReader = new FixedWidthTableReader($file);
-        }
+        $tableReader = new NativeCSVTableReader($file, 9);
 
         $conn = $this->getContainer()->get('database_connection');
 
@@ -101,34 +89,23 @@ class ImportUcitelPredmetCommand extends AbstractImportCommand {
                     WHERE a.login = :login and b.slug = :slug
                     ON DUPLICATE KEY UPDATE trainer=1");
 
+        $rows = 0;
         try {
-            while (($row = $tableReader->readRow()) !== false) {
-                if ($fileFormat == 'csv') {
-                    $id = $row[0];
-                    $aisDlhyKod = $row[1];
-                    $aisStredisko = $row[2];
-                    $aisKratkyKod = $row[3];
-                    $aisPopisRokVzniku = $row[4];
-                    $aisNazov = $row[5];
-                    $semester = $row[6];
-                    $hodnost = $row[7];
-                    $plneMeno = $row[8];
-                    $priezvisko = $row[9];
-                    $meno = $row[10];
-                    $login = $row[11];
-                }
-                else {
-                    $id = $row[0];
-                    $aisKratkyKod = $row[1];
-                    $aisStredisko = $row[2];
-                    $aisPopisRokVzniku = $row[3];
-                    $aisNazov = $row[4];
-                    $login = $row[5];
-                    $plneMeno = $row[6];
-                    $hodnost = $row[7];
-                    $priezvisko = '';
-                    $meno = '';
-                }
+            while (($row = $tableReader->readAssocRow()) !== false) {
+                $rows++;
+
+                $id = $row['Predmet id'];
+                $aisDlhyKod = $row['Plná skratka'];
+                $aisStredisko = $row['Stredisko'];
+                $aisKratkyKod = $row['Skratka'];
+                $aisPopisRokVzniku = $row['Rok vzniku'];
+                $aisNazov = $row['Názov'];
+                $semester = $row['Semester'];
+                $hodnost = $row['Typ vyučujúceho'];
+                $plneMeno = $row['Plné meno'];
+                $priezvisko = $row['Priezvisko'];
+                $meno = $row['Meno'];
+                $login = $row['Login'];
 
                 if (strlen($aisNazov) == 0 || strlen($login) == 0 || strlen($plneMeno) == 0) {
                     continue;
@@ -182,6 +159,7 @@ class ImportUcitelPredmetCommand extends AbstractImportCommand {
         }
 
         $conn->commit();
+        $output->writeln("Processed ".$rows." rows from ".$input->getArgument('file'));
         fclose($file);
     }
 
