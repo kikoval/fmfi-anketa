@@ -92,8 +92,9 @@ jQuery(document).ready(function($) {
 
     addSearchResults();
 
-    $('#teacher-name').keyup(function() {
-        if ($(this).val().length < 3) return;
+    $('#teacher-name').keyup(function(e) {
+        var is_an_arrow_pressed = e.keyCode == 37 || e.keyCode == 39;
+        if (is_an_arrow_pressed || $(this).val().length <= 3) return false;
 
         delay(function() {
             $.ajax({
