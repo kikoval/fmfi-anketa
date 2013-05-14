@@ -34,7 +34,6 @@ statistics:
 anonymizuj:
     pattern: /anonymizuj/
     defaults: { _controller: AnketaBundle:Anonymizacia:anonymizuj }
-
 dakujeme:
     pattern: /dakujeme/
     defaults: { _controller: AnketaBundle:Anonymizacia:dakujeme }

@@ -13,7 +13,9 @@
 
 {% block navigation %}
     {{ menu.hlasovanie.render(activeItems)|raw }}
+
 {% endblock %}
+
 
 {% block content %}
     <h2>{{ title }}</h2>
@@ -39,9 +41,9 @@
     {% endblock %}
     {% for question in questions %}
         <div class="question{{ question.stars ? ' stars' : '' }}">
-            <h3>{{ question.question }}</h3>
+            <h3>{{ question.question(app.request.locale) }}</h3>
             {% if question.hasDescription %}
-                <div class="description">{{ question.description }}</div>
+                <div class="description">{{ question.description(app.request.locale) }}</div>
             {% endif %}
 
             {% if question.options | length %}
@@ -74,7 +76,7 @@
                         {% if answers[question.id] is not none and answers[question.id].hasOption and answers[question.id].option.id == option.id %}
                             checked="checked"
                         {% endif %} />
-                    {{ option.option }}
+                    {{ option.option(app.request.locale) }}
                   </label>
                 </div>
             {% endfor %}

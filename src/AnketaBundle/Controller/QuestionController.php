@@ -41,7 +41,6 @@ class QuestionController extends Controller {
      * @return array array of updated or created answers
      */
     private function processForm($request, $user, $questions, $answers, $season) {
-
         $em = $this->get('doctrine.orm.entity_manager');
 
         $questionArray = $request->request->get('question');
@@ -63,6 +62,7 @@ class QuestionController extends Controller {
                 $answer = $answers[$id];
             } else {
                 $answer = new Answer();
+
                 $answer->setQuestion($question);
                 $answer->setAuthor($user);
                 $answer->setSeason($season);
