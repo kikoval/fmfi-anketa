@@ -3,6 +3,7 @@
 namespace AnketaBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -23,7 +24,9 @@ class TeacherController extends Controller {
         }
 
         $name = $this->get('request')->get('name');
-        if ($name == null) return new Response('Required parameter "name" is missing.', 400);
+        if ($name == null) {
+            return new Response('Required parameter "name" is missing.', 400);
+        }
 
         $ldapSearch = $this->container->get('anketa.teacher_search');
 

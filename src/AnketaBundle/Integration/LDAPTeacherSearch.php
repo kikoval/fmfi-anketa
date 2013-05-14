@@ -32,7 +32,21 @@ class LDAPTeacherSearch {
     public function __destruct() {
         $this->ldap->logoutIfNotAlready();
     }
-    
+
+    /**
+     * Trims and transliterate string with accents into ASCII.
+     *
+     * @param string $string
+     * @return string
+     */
+    private function removeAccents($string) {
+
+        if (function_exists('iconv')) {
+            $string = iconv('utf-8', 'us-ascii//TRANSLIT', trim($string));
+        }
+        return $string;
+    }
+
     /**
      * Searches LDAP for users by substring of their full name (without accents).
      * In addition, users must be either teachers on any faculty or PhD students
@@ -42,7 +56,7 @@ class LDAPTeacherSearch {
      * @return array @see executeSeachAndProcessData for docs
      */
     public function byFullName($name) {
-        $safeName = $this->ldap->escape($name);
+        $safeName = $this->removeAccents($this->ldap->escape($name));
         $safeOrgUnit = $this->ldap->escape($this->orgUnit);
         $filter = '(&(cn=*'.$safeName.'*)(|(group=zamestnanci)(group=doktorandi_'.$safeOrgUnit.')))';
 
