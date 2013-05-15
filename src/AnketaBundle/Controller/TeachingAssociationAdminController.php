@@ -192,7 +192,7 @@ class TeachingAssociationAdminController extends Controller {
                 $this->sendEmailAfterApproval($ta_item);
         }
 
-        $session->getFlashBag()
+        $this->get('session')->getFlashBag()
                 ->add('success', 'Žiadosť bola označená za vybavenú a email bol odoslaný nahlasovateľom.');
 
         return $this->redirect($this->generateUrl(
