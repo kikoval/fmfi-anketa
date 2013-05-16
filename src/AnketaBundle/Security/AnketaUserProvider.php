@@ -106,6 +106,7 @@ class AnketaUserProvider implements UserProviderInterface
         if ($user === null) {
             $user = new User($username);
             $this->em->persist($user);
+            $this->em->flush($user);
 
             $user->addRole($this->em->getRepository('AnketaBundle:Role')->findOrCreateRole('ROLE_USER'));
         }
