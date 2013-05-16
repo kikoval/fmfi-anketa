@@ -137,6 +137,7 @@ otazky:
       text:   Myslím si, že sa mi predmet zíde v budúcnosti (bol užitočný).
       text_en: I will find this course useful in the future.
       popis:
+      popis_en:
       kategoria:  predmety
       komentar:   No
       hviezdicky: No
@@ -210,7 +211,9 @@ otazky:
 
     - nazov:  Testy
       text:   Boli dostatočne vysvetlené chyby a nedostatky v teste
+      text_en:   Errors in the evaluation test were explained sufficiently.
       popis:
+      popis_en:
       kategoria:  predmety
       komentar:   No
       hviezdicky: No
