@@ -61,7 +61,7 @@ class Category {
         $this->questions = new ArrayCollection();
         $this->setType($type);
         $this->setDescription($description, 'sk');
-        $this->setDescription($description, 'en');
+        $this->setDescription($description_en, 'en');
         $this->setSpecification($specification);
         // viac ako 100 otazok dufam nikdy nebudeme zobrazovat na 1 stranke
         $this->position = 100;
