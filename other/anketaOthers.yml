@@ -30,9 +30,9 @@ kategorie:
 otazky:
 # otazky k studijnemu programu
     - nazov:  Hodnotenie študijného programu
-      nazov_en:   Evaluation of quality of the study program
+      nazov_en:   Evaluation of the study program
       text:   Celkové hodnotenie kvality študijného programu.
-      text_en:  Overall evaluation of quality of the study program.
+      text_en:  Overall evaluation of the quality of the study program.
       popis:
       popis_en:
       kategoria:  studijnyprogram
@@ -54,13 +54,13 @@ otazky:
             text_en: Absolute killer
             hodnota: 2
           - text: Nadsadený
-            text_en: Exaggerated
+            text_en: Too difficult
             hodnota: 1
           - text: Akurát
-            text_en: Well set
+            text_en: Just right
             hodnota: 0
           - text: Nenáročný
-            text_en: Undemanding
+            text_en: Not difficult enough
             hodnota: -1
           - text: Triviálny
             text_en: Trivial
@@ -83,7 +83,7 @@ otazky:
       text:   Napíšte váš názor na študijný program.
       text_en: Write your opinion on the study program.
       popis:  Môžete sa vyjadriť napríklad ku skladbe predmetov, ku celkovej kvalite kľúčových učiteľov, ku prístupu garanta alebo tútora ku študentom a pod. Uveďte, prípadne, prečo by ste tento program odporúčali/neodporúčali záujemcom o štúdium.
-      popis_en:
+      popis_en: For example, you may evaluate overall composition of the courses, quality of the key teachers, etc. Why would you recomment / not recommend this study program to other students?
       kategoria:  studijnyprogram
       komentar:   Yes
       hviezdicky: No
@@ -93,7 +93,7 @@ otazky:
     - nazov:  Hodnotenie predmetu
       nazov_en: Evaluation of the class
       text:   Celkové hodnotenie kvality predmetu.
-      text_en: Overall rating of quality of the subject.
+      text_en: Overall rating of the quality of the subject.
       popis:  
       popis_en:
       kategoria:  predmety
@@ -116,13 +116,13 @@ otazky:
             text_en: Incomprehensible.
             hodnota: 2
           - text: Nadsadená.
-            text_en: Exaggerated.
+            text_en: Too difficult.
             hodnota: 1
           - text: Akurát.
-            text_en: Well set.
+            text_en: Just right.
             hodnota: 0
           - text: Nenáročná.
-            text_en: Undemanding.
+            text_en: Too easy.
             hodnota: -1
           - text: Triviálna.
             text_en: Trivial.
@@ -156,13 +156,13 @@ otazky:
             text_en: Absolute killer.
             hodnota: 2
           - text: Pomerne veľké.
-            text_en: Relatively large.
+            text_en: Too much.
             hodnota: 1
           - text: Akurát.
-            text_en: Well set.
+            text_en: Just right.
             hodnota: 0
           - text: Pomerne malé.
-            text_en: Relatively small.
+            text_en: Too little.
             hodnota: -1
           - text: Aká práca?
             text_en: What work?
@@ -247,7 +247,7 @@ otazky:
     - nazov:  Textový komentár ku predmetu
       nazov_en: Text commentary on the class
       text:   Napíšte Váš názor na tento predmet. Zdôvodnite, prečo by ste ho odporúčali/neodporúčali.
-      text_en: Write your opinion on this class. Please justify why you do or do not recommend it.
+      text_en: Write your opinion on this class. Please justify why you would or would not recomment the class to other students.
       popis: >
         Popíšte, čo by ste navrhli zmeniť v organizácii a obsahu tohto predmetu. Ktorá časť výučby nebola dostatočne pokrytá vhodným študijným materiálom. Môžete uviesť, prečo by ste ho odporúčali/neodporúčali ďalším študentom.
       popis_en: What would you change in the organisation and content of this class? Which parts of the class were not properly covered by study materials? Please justify why you do or do not recommend the class.
@@ -261,7 +261,7 @@ otazky:
     - nazov:  Hodnotenie učiteľa
       nazov_en: Rating of the teacher
       text:   Celkové hodnotenie vyučujúceho v tomto predmete.
-      text_en: Overall rating of the teacher of this subject.
+      text_en: Overall rating of the teacher performance in this class.
       popis:
       popis_en:
       kategoria:  predmety_ucitel
@@ -284,7 +284,7 @@ otazky:
       position:   2
 
     - nazov:  Prezentácia
-      nazov_en: Presentation
+      nazov_en: Teaching style
       text:   Ústny prejav a prezentačné zručnosti vyučujúceho.
       text_en: Oral and presentation skills of the teacher.
       popis:
@@ -314,7 +314,7 @@ otazky:
     - nazov:  Hodnotenie fakulty
       nazov_en: Evaluation of the faculty
       text:   Váš celkový dojem z fakulty na základe doterajších skúseností.
-      text_en:  Your overall impression of the faculty on the basis of past experience.
+      text_en:  Your overall impression of the faculty based on your past experience.
       popis:  
       popis_en:
       kategoria:  fakulta
@@ -355,7 +355,7 @@ otazky:
       hviezdicky: No
       moznosti:
           - text: Super
-            text_en: Super
+            text_en: Perfect
           - text: OK
             text_en: OK
           - text: Nič moc
@@ -367,7 +367,7 @@ otazky:
     - nazov:  Činnosť ŠKAS
       nazov_en: Activities of ŠKAS
       text:   Činnosť Študentskej komory Akademického senátu (ŠKAS).
-      text_en: Activities of Student Chamber of the Academic Senate (ŠKAS).
+      text_en: Activities of the Faculty Council (ŠKAS).
       popis:
       popis_en:
       kategoria:  fakulta
