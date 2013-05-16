@@ -38,10 +38,16 @@ class Category {
 
     /**
      * Describes the subcategory, i.e. School properties/Food for students
-     * If no subcategories are needed, it's the same as main category
+     * If no subcategories are needed, it's the same as main category.
      * @ORM\Column(type="string")
      */
     protected $description;
+
+    /**
+     * Description in English.
+     * @ORM\Column(type="string")
+     */
+    protected $description_en;
 
     /**
      * @ORM\OneToMany(targetEntity="Question", mappedBy="category")
@@ -51,10 +57,11 @@ class Category {
      */
     protected $questions;
 
-    public function __construct($type, $specification, $description = null) {
+    public function __construct($type, $specification, $description = null, $description_en = null) {
         $this->questions = new ArrayCollection();
         $this->setType($type);
-        $this->setDescription($description);
+        $this->setDescription($description, 'sk');
+        $this->setDescription($description_en, 'en');
         $this->setSpecification($specification);
         // viac ako 100 otazok dufam nikdy nebudeme zobrazovat na 1 stranke
         $this->position = 100;
@@ -81,12 +88,21 @@ class Category {
         return $this->type;
     }
 
-    public function setDescription($value) {
+    public function setDescription($value, $lang = 'sk') {
         Preconditions::check($value == null || is_string($value));
-        $this->description = $value;
+        if ($lang == 'en') {
+            $this->description_en = $value;
+        } else {
+            $this->description = $value;
+        }
     }
 
-    public function getDescription() {
+    public function getDescription($lang = 'sk') {
+        if ($lang == 'en') {
+          if ($this->description_en != "") {
+              return $this->description_en;
+          }
+        }
         return $this->description;
     }
 
