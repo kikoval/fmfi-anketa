@@ -405,15 +405,16 @@ class StatisticsController extends Controller {
             return $this->accessDeniedForSeason($season);
         }
 
+        $locale = $this->getRequest()->getLocale();
         $items = array();
         $categories = $em->getRepository('AnketaBundle\Entity\Category')
                          ->getOrderedGeneral($season);
-        foreach ($categories AS $category) {
-            $items[$category->getDescription()] = array();
+        foreach ($categories as $category) {
+            $items[$category->getDescription($locale)] = array();
             $questions = $em->getRepository('AnketaBundle:Question')->getOrderedQuestions($category, $season);
             foreach ($questions as $question) {
                 $section = StatisticsSection::makeGeneralSection($this->container, $season, $question);
-                $items[$category->getDescription()][$question->getQuestion()] = $section->getStatisticsPath();
+                $items[$category->getDescription($locale)][$question->getQuestion()] = $section->getStatisticsPath();
             }
         }
 

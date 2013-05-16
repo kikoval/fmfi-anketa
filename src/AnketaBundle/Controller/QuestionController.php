@@ -101,7 +101,8 @@ class QuestionController extends Controller {
     private function redirectAfterProcessing($activeItems = array()) {
         $request = $this->get('request');
         if ($request->request->get('next')) {
-            return new RedirectResponse($this->get('anketa.menu.hlasovanie')->getNextSection($activeItems) ?: $request->getRequestUri());
+            $locale = $this->getRequest()->getLocale();
+            return new RedirectResponse($this->get('anketa.menu.hlasovanie')->getNextSection($activeItems, $locale) ?: $request->getRequestUri());
         }
         else {
             return new RedirectResponse($request->getRequestUri());
@@ -391,7 +392,7 @@ class QuestionController extends Controller {
         }
 
         $templateParams = array();
-        $templateParams['title'] = $category->getDescription();
+        $templateParams['title'] = $category->getDescription($this->getRequest()->getLocale());
         $templateParams['activeItems'] = array('general', $category->getId());
         $templateParams['questions'] = $questions;
         $templateParams['answers'] = $answers;

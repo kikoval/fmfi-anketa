@@ -61,7 +61,7 @@ class HlasovanieMenu
         foreach ($subcategories as $subcategory) {
             $menu['general']->children[$subcategory->getId()] =
                 new MenuItem(
-                    $subcategory->getDescription(),
+                    $subcategory->getDescription($this->container->get('request')->getLocale()),
                     $this->generateUrl('answer_general', array('id' => $subcategory->getId()))
                     );
         }
