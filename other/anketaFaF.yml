@@ -49,7 +49,7 @@ otazky:
             text_en: Just right
             hodnota: 0
           - text: Nenáročný
-            text_en: Not difficult enough
+            text_en: Not so difficult
             hodnota: -1
           - text: Triviálny
             text_en: Trivial
@@ -72,7 +72,7 @@ otazky:
       text:   Napíšte váš názor na študijný program.
       text_en: Write your opinion on the study program.
       popis:  Môžete sa vyjadriť napríklad ku skladbe predmetov, ku celkovej kvalite kľúčových učiteľov, ku prístupu garanta alebo tútora ku študentom a pod. Uveďte, prípadne, prečo by ste tento program odporúčali/neodporúčali záujemcom o štúdium.
-      popis_en: For example, you may evaluate overall composition of the courses, quality of the key teachers, etc. Why would you recomment / not recommend this study program to other students?
+      popis_en: For example, you may evaluate overall composition of the courses, quality of the key teachers, etc. Why would you recommend / not recommend this study program to other students?
       kategoria:  studijnyprogram
       komentar:   Yes
       hviezdicky: No
@@ -135,7 +135,7 @@ otazky:
     - nazov:  Využiteľnosť predmetu
       nazov_en: Usefulness of the course
       text:   Myslím si, že sa mi predmet zíde v budúcnosti (bol užitočný).
-      text_en: I will find this course usefull in the future.
+      text_en: I will find this course useful in the future.
       popis:
       kategoria:  predmety
       komentar:   No
@@ -270,7 +270,7 @@ otazky:
             text_en: It was mandatory.
             hodnota: 0        
           - text: odporúčania ostatných študentov
-            text_en: My colleagues recommends it.
+            text_en: My colleagues recommend it.
             hodnota: 2
           - text: informačného listu (AIS)
             text_en: Its information sheet convinced me.
@@ -279,14 +279,14 @@ otazky:
             text_en: Its website convinced me.
             hodnota: -1
           - text: nepremýšľal som o predmete, potreboval som kredity
-            text_en: I didn't think about it, I just need credits.
+            text_en: I didn't think about it, I just needed credits.
             hodnota: -2
       position:   9
       
     - nazov:  Textový komentár ku predmetu
       nazov_en: Text commentary on the course
       text:   Napíšte Váš názor na tento predmet. Zdôvodnite, prečo by ste ho odporúčali/neodporúčali.
-      text_en: Write your opinion on this course. Please justify why you would or would not recomment the class to other students.
+      text_en: Write your opinion on this course. Please justify why you would or would not recommend the course to other students.
       popis: >
         Popíšte, čo by ste navrhli zmeniť v organizácii a obsahu tohto predmetu. Ktorá časť výučby nebola dostatočne pokrytá vhodným študijným materiálom. Môžete uviesť, prečo by ste ho odporúčali/neodporúčali ďalším študentom.
       popis_en: What would you change in the organisation and content of this course? Which parts of the course were not properly covered by study materials? Please justify why you do or do not recommend the course.
@@ -300,7 +300,7 @@ otazky:
     - nazov:  Hodnotenie učiteľa
       nazov_en: Rating of the teacher
       text:   Celkové hodnotenie vyučujúceho v tomto predmete.
-      text_en: Overall rating of the teacher performance in this class.
+      text_en: Overall rating of the teacher's performance in this course.
       popis:
       popis_en:
       kategoria:  predmety_ucitel
@@ -325,7 +325,7 @@ otazky:
     - nazov:  Prezentácia
       nazov_en: Teaching style
       text:   Vyučujúci podporoval študentov k diskusii počas vyučovania, ich záujem o predmet, bol ochotný odpovedať na ich otázky.
-      text_en: Teacher was encouraging discussions, interest in the topic and was able to answer questions.
+      text_en: Teacher was encouraging discussions, interest in the topic and had no problem answering questions.
       popis:
       popis_en:
       kategoria:  predmety_ucitel
@@ -337,7 +337,7 @@ otazky:
     - nazov:  Akceptovanie
       nazov_en: Nikde sa nepouziva, tak neprekladam.
       text:   Vyučujúci akceptoval iné názory, správal sa k študentom ako ku kolegom.
-      text_en: Teacher was able to acknowledge other options and treated students as colleagues.
+      text_en: Teacher acknowledged other options and treated students as colleagues.
       popis:
       popis_en:
       kategoria:  predmety_ucitel
@@ -365,7 +365,7 @@ otazky:
     - nazov:  Hodnotenie fakulty
       nazov_en: Evaluation of the faculty
       text:   Váš celkový dojem z fakulty na základe doterajších skúseností.
-      text_en:  Your overall impression of the faculty based on your past experience.
+      text_en:  Your overall impression of the faculty based on your experience.
       popis:  
       popis_en:
       kategoria:  fakulta
@@ -418,7 +418,7 @@ otazky:
     - nazov:  Činnosť ŠKAS
       nazov_en: Activities of ŠKAS
       text:   Činnosť Študentskej komory Akademického senátu (ŠKAS).
-      text_en: Activities of the Faculty Council (ŠKAS).
+      text_en: Activities of the Student section of the Faculty Council (ŠKAS).
       popis:
       popis_en:
       kategoria:  fakulta
@@ -432,7 +432,7 @@ otazky:
           - text: Nič moc
             text_en: Meh
           - text: Aká komora?
-            text_en: What chamber?
+            text_en: What council?
       position:   5
 
     - nazov:  Študentská anketa.
@@ -465,9 +465,8 @@ otazky:
         študijných programov, názory na rozšírenie ponuky študijných programov o programy v cudzom
         jazyku, príp. akékoľvek ďalšie návrhy a pripomienky k činnosti fakulty.
       text_en: >
-        Please provide suggestions for change in set of available courses,
-        thoughts on adding new study progams tought in foreign language,
-        or any other suggestions regarding our faculty.
+        You are welcome to submit your suggestions or opinions concerning the available courses,
+        new courses (in foreign language), study programmes, or any other activity on the faculty.
       popis:
       popis_en:
       kategoria:  fakulta
