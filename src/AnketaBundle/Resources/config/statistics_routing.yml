@@ -1,7 +1,7 @@
 statistics:
     pattern: /vysledky
     defaults: { _controller: AnketaBundle:Statistics:seasonReport}
-    
+
 statistics_slash:
     pattern: /vysledky/
     defaults: { _controller: AnketaBundle:Statistics:seasonReport}
