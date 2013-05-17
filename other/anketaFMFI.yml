@@ -37,9 +37,7 @@ kategorie:
 
 otazky:
 # otazky k studijnemu programu
-    - nazov:  Hodnotenie študijného programu
-      nazov_en:   Evaluation of the study program
-      text:   Celkové hodnotenie kvality študijného programu.
+    - text:   Celkové hodnotenie kvality študijného programu.
       text_en:  Overall evaluation of the quality of the study program.
       popis:
       popis_en:
@@ -48,9 +46,7 @@ otazky:
       hviezdicky: Yes
       position:   1
 
-    - nazov:  Náročnosť štúdia
-      nazov_en: Study program difficulty
-      text:   Aký náročný je pre vás študijný program?
+    - text:   Aký náročný je pre vás študijný program?
       text_en: How difficult is the study program?
       popis:
       popis_en:
@@ -75,9 +71,7 @@ otazky:
             hodnota: -2
       position:   2
 
-    - nazov:  Zaujímavosť študijného programu
-      nazov_en: Attractivness of the study program
-      text:   Ako zaujímavá je pre vás náplň študijného programu?
+    - text:   Ako zaujímavá je pre vás náplň študijného programu?
       text_en: How interesting are the topics of the study program?
       popis:
       popis_en:
@@ -86,9 +80,7 @@ otazky:
       hviezdicky: Yes
       position:   3
 
-    - nazov:  Hodnotenie študijného programu
-      nazov_en: Evaluation of the study program
-      text:   Napíšte váš názor na študijný program.
+    - text:   Napíšte váš názor na študijný program.
       text_en: Write your opinion on the study program.
       popis:  Môžete sa vyjadriť napríklad ku skladbe predmetov, ku celkovej kvalite kľúčových učiteľov, ku prístupu garanta alebo tútora ku študentom a pod. Uveďte, prípadne, prečo by ste tento program odporúčali/neodporúčali záujemcom o štúdium.
       popis_en: For example, you may evaluate overall composition of the courses, quality of the key teachers, etc. Why would you recommend / not recommend this study program to other students?
@@ -98,9 +90,7 @@ otazky:
       position:   4
 
 # otazky ku predmetom
-    - nazov:  Hodnotenie predmetu
-      nazov_en: Evaluation of the course
-      text:   Celkové hodnotenie kvality predmetu.
+    - text:   Celkové hodnotenie kvality predmetu.
       text_en: Overall rating of the quality of the subject.
       popis:  
       popis_en:
@@ -110,9 +100,7 @@ otazky:
       position:   1
       hlavne_hodnotenie_predmetu: Yes
 
-    - nazov:  Zložitosť predmetu
-      nazov_en: Class difficulty
-      text:   Ako náročná bola podľa vás preberaná látka?
+    - text:   Ako náročná bola podľa vás preberaná látka?
       text_en: How difficult was the course?
       popis:  
       popis_en:
@@ -137,9 +125,7 @@ otazky:
             hodnota: -2
       position:   2
 
-    - nazov:  Zaujímavosť predmetu
-      nazov_en: Attractivness of the course
-      text:   Bol obsah predmetu pre Vás zaujímavý?
+    - text:   Bol obsah predmetu pre Vás zaujímavý?
       text_en: Was the course interesting to you?
       popis:
       popis_en:
@@ -148,9 +134,7 @@ otazky:
       hviezdicky: Yes
       position:   3
 
-    - nazov:  Množstvo práce
-      nazov_en: Amount of work
-      text:   Aké bolo množstvo práce vzhľadom na počet kreditov?
+    - text:   Aké bolo množstvo práce vzhľadom na počet kreditov?
       text_en: Was the amount of work appropriate considering the number of credits?
       popis:  >
         Zhodnoťte množstvo domácich úloh, projektov, priebežné písomky,
@@ -177,9 +161,7 @@ otazky:
             hodnota: -2
       position:   4
 
-    - nazov:  Jasné stanovenie požiadavok a hodnotenia
-      nazov_en: Clear definition of requirements and evaluation criteria
-      text:   Boli jasne stanovené požiadavky a spôsob hodnotenia predmetu?
+    - text:   Boli jasne stanovené požiadavky a spôsob hodnotenia predmetu?
       text_en: Were the requirements and the evaluation criteria of the course clearly defined?
       popis:
       popis_en:
@@ -201,9 +183,7 @@ otazky:
             hodnota: -2
       position:   5
 
-    - nazov:  Absolvovanie predmetu
-      nazov_en: Class attendance
-      text:   Zhruba akú časť kontaktnej výučby (prednášky, cvičenia a pod.) ste absolvovali?
+    - text:   Zhruba akú časť kontaktnej výučby (prednášky, cvičenia a pod.) ste absolvovali?
       text_en: Approximately what proportion of the in-class teaching (lectures, tutorials, etc..) have you attended?
       popis:
       popis_en:
@@ -228,9 +208,7 @@ otazky:
             hodnota:  0
       position:   6
 
-    - nazov:  Odporúčanie predmetu
-      nazov_en: Recommendation of the course
-      text:   Odporučili by ste tento predmet ostatným študentom?
+    - text:   Odporučili by ste tento predmet ostatným študentom?
       text_en: Would you recommend this course to other students?
       popis:
       popis_en:
@@ -252,9 +230,7 @@ otazky:
             hodnota: -2
       position:   7
 
-    - nazov:  Textový komentár ku predmetu
-      nazov_en: Text commentary on the course
-      text:   Napíšte Váš názor na tento predmet. Zdôvodnite, prečo by ste ho odporúčali/neodporúčali.
+    - text:   Napíšte Váš názor na tento predmet. Zdôvodnite, prečo by ste ho odporúčali/neodporúčali.
       text_en: Write your opinion on this course. Please justify why you would or would not recommend the course to other students.
       popis: >
         Popíšte, čo by ste navrhli zmeniť v organizácii a obsahu tohto predmetu. Ktorá časť výučby nebola dostatočne pokrytá vhodným študijným materiálom. Môžete uviesť, prečo by ste ho odporúčali/neodporúčali ďalším študentom.
@@ -265,10 +241,7 @@ otazky:
       position:   8
 
 # otazky ku kombinacii predmet-ucitel
-
-    - nazov:  Hodnotenie učiteľa
-      nazov_en: Rating of the teacher
-      text:   Celkové hodnotenie vyučujúceho v tomto predmete.
+    - text:   Celkové hodnotenie vyučujúceho v tomto predmete.
       text_en: Overall rating of the teacher's performance in this course.
       popis:
       popis_en:
@@ -279,9 +252,7 @@ otazky:
       position:   1
       hlavne_hodnotenie_ucitela: Yes
 
-    - nazov:  Diskusia
-      nazov_en: Discussion
-      text:   Schopnosť a ochota vyučujúceho komunikovať so študentmi a odpovedať na ich otázky.
+    - text:   Schopnosť a ochota vyučujúceho komunikovať so študentmi a odpovedať na ich otázky.
       text_en: Ability and willingness of the teacher to communicate with students and answer their questions.
       popis:
       popis_en:
@@ -291,9 +262,7 @@ otazky:
       ucitel:     Yes
       position:   2
 
-    - nazov:  Prezentácia
-      nazov_en: Teaching style
-      text:   Ústny prejav a prezentačné zručnosti vyučujúceho.
+    - text:   Ústny prejav a prezentačné zručnosti vyučujúceho.
       text_en: Oral and presentation skills of the teacher.
       popis:
       popis_en:
@@ -303,9 +272,7 @@ otazky:
       ucitel:     Yes
       position:   3
 
-    - nazov:  Pripomienky k vyučujúcemu
-      nazov_en: Comments about the teacher
-      text:   Napíšte Váš názor alebo pripomienky k učiteľovi a jeho pôsobeniu v tomto predmete.
+    - text:   Napíšte Váš názor alebo pripomienky k učiteľovi a jeho pôsobeniu v tomto predmete.
       text_en: Write your comments about the teacher and his work regarding this course.
       popis:  >
         Zdôvodnite, prečo by ste ho odporúčali/neodporúčali.
@@ -319,10 +286,7 @@ otazky:
 
 
 # vseobecne otazky - fakulta
-
-    - nazov:  Hodnotenie fakulty
-      nazov_en: Evaluation of the faculty
-      text:   Váš celkový dojem z fakulty na základe doterajších skúseností.
+    - text:   Váš celkový dojem z fakulty na základe doterajších skúseností.
       text_en:  Your overall impression of the faculty based on your experience.
       popis:  
       popis_en:
@@ -331,9 +295,7 @@ otazky:
       hviezdicky: Yes
       position:   1
 
-    - nazov:  Hodnotenie ŠKAS
-      nazov_en: Evaluation of ŠKAS
-      text:   Činnosť Študentskej komory akademického senátu (ŠKAS).
+    - text:   Činnosť Študentskej komory akademického senátu (ŠKAS).
       text_en: Activities of the Student section of the Faculty Council (ŠKAS).
       popis:
       popis_en:
@@ -342,9 +304,7 @@ otazky:
       hviezdicky: Yes
       position:   2
 
-    - nazov:  Hodnotenie ankety
-      nazov_en: Evaluation of the student questionnaire
-      text: Ako sa vám páči anketa v súčasnej podobe?
+    - text: Ako sa vám páči anketa v súčasnej podobe?
       text_en: How do you like the student questionnaire in its current form?
       popis:  Páči sa vám? Čo by ste navrhovali zmeniť?
       popis_en: Do you like it? What would you suggest to change?
@@ -354,10 +314,7 @@ otazky:
       position:   3
 
 # vseobecne otazky - kniznica
-
-    - nazov:  Hodnotenie knižnice
-      nazov_en: Evaluation of the library
-      text:   Váš celkový dojem z fakultnej knižnice.
+    - text:   Váš celkový dojem z fakultnej knižnice.
       text_en: Your overall impression of the faculty library.
       popis:  
       popis_en:
@@ -366,9 +323,7 @@ otazky:
       hviezdicky: Yes
       position:   1
 
-    - nazov:  Využitie knižnice 1
-      nazov_en: Use of the library 1
-      text:   Fakultnú knižnicu využívam: 
+    - text:   Fakultnú knižnicu využívam:
       text_en: I use the library:
       popis:  
       popis_en:
@@ -390,9 +345,7 @@ otazky:
             hodnota: -2
       position:   2
 
-    - nazov:  Využitie knižnice 2
-      nazov_en: Use of the library 2
-      text:   Najčastejšie knižnicu využívam:
+    - text:   Najčastejšie knižnicu využívam:
       text_en: Most often I use the library:
       popis:  
       popis_en:
@@ -412,9 +365,7 @@ otazky:
             text_en: As a place where I can connect to wifi.
       position:   3
 
-    - nazov:  Otváracia doba študovne
-      nazov_en: Study room opening hours
-      text:   Dĺžka otváracej doby študovne do 17:30:
+    - text:   Dĺžka otváracej doby študovne do 17:30:
       text_en: Opening hours of Study room until 5:30pm:
       popis:  
       popis_en:
@@ -434,9 +385,7 @@ otazky:
             text_en: Are too short, it would be better if the library was open until 20:00.
       position:   4
 
-    - nazov:  Pripomienky ku knižnici
-      nazov_en: Comments on library
-      text:   Ďalšie pripomienky ku práci knižnice.
+    - text:   Ďalšie pripomienky ku práci knižnice.
       text_en: Other comment on the library.
       popis:  
       popis_en:
@@ -446,10 +395,7 @@ otazky:
       position:   5
 
 # vseobecne otazky - ERASMUS
-
-    - nazov:  Hodnotenie programu ERASMUS
-      nazov_en: Evaluation of the ERASMUS program
-      text:   Celkové hodnotenie programu ERASMUS na fakulte.
+    - text:   Celkové hodnotenie programu ERASMUS na fakulte.
       text_en: Overall evaluation of the ERASMUS program at the faculty.
       popis:  
       popis_en:
@@ -458,9 +404,7 @@ otazky:
       hviezdicky: Yes
       position:   1
 
-    - nazov:  Organizácia a administratívna podpora programu na fakulte
-      nazov_en: Organization and administrative support for the program at the faculty
-      text:   Organizácia a administratívna podpora programu na fakulte.
+    - text:   Organizácia a administratívna podpora programu na fakulte.
       text_en: Organization and administrative support for the program at the faculty.
       popis:  
       popis_en:
@@ -469,9 +413,7 @@ otazky:
       hviezdicky: Yes
       position:   2
 
-    - nazov:  Výber spolupracujúcich univerzít
-      nazov_en: Selection of cooperating universities
-      text:   Výber spolupracujúcich univerzít.
+    - text:   Výber spolupracujúcich univerzít.
       text_en: Selection of cooperating universities.
       popis:  
       popis_en:
@@ -480,9 +422,7 @@ otazky:
       hviezdicky: Yes
       position:   3
 
-    - nazov:  Pripomienky k programu ERASMUS.
-      nazov_en: Comments on ERASMUS program
-      text:   Ďalšie pripomienky k fungovaniu programu ERASMUS.
+    - text:   Ďalšie pripomienky k fungovaniu programu ERASMUS.
       text_en: Other suggestions on the ERASMUS program.
       popis:  
       popis_en:
@@ -492,10 +432,7 @@ otazky:
       position:   4
 
 # vseobecne otazky - moznosti stravovania
-
-    - nazov:  Bufet FreeFood
-      nazov_en: FreeFood cafeteria
-      text:   Bufet FreeFood (v pavilóne matematiky)
+    - text:   Bufet FreeFood (v pavilóne matematiky)
       text_en: FreeFood cafeteria (in the math building)
       popis:  
       popis_en:
@@ -504,9 +441,7 @@ otazky:
       hviezdicky: Yes
       position:   1
 
-    - nazov:  Bufet Gastroline
-      nazov_en: Gastroline cafeteria
-      text:   Bufet Gastroline (vo vestibule fyziky pod schodami)
+    - text:   Bufet Gastroline (vo vestibule fyziky pod schodami)
       text_en: Gastroline cafeteria (in the physics building lobby under the stairs)
       popis:  
       popis_en:
@@ -515,9 +450,7 @@ otazky:
       hviezdicky: Yes
       position:   2
 
-    - nazov:  Jedáleň Gastroline
-      nazov_en: Gastroline canteen
-      text:   Jedáleň Gastroline (v zadnej časti vestibulu fyziky)
+    - text:   Jedáleň Gastroline (v zadnej časti vestibulu fyziky)
       text_en: Gastroline canteen (in the back of the physics building lobby)
       popis:  
       popis_en:
