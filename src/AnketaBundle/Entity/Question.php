@@ -24,11 +24,6 @@ class Question {
     protected $position;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $title;
-
-    /**
      * @ORM\Column(type="string", nullable=false)
      */
     protected $question;
@@ -116,14 +111,6 @@ class Question {
 
     public function getPosition() {
         return $this->position;
-    }
-
-    public function setTitle($value) {
-        $this->title = $value;
-    }
-
-    public function getTitle() {
-        return $this->title;
     }
 
     public function setQuestion($value, $jazyk = 'sk') {
