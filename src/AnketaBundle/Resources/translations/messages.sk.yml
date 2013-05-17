@@ -63,6 +63,28 @@ hlasovanie:
     studijne_programy: Študijné programy
     vseobecne: Všeobecné otázky
     ukoncenie: Ukončenie hlasovania
+  teacher_report:
+    back_to_course: Späť na predmet
+    title: Chyba v zozname učiteľov?
+    select_action: Vyberte prosím požadovanú akciu
+    missing_teacher:
+      button: Chcem nahlásiť <strong>chýbajúceho učiteľa</strong>
+      title: Nahlásenie chýbajúceho učiteľa
+      desc: Ak v zozname učiteľov a cvičiacich k tomuto predmetu niekto chýba, dajte nám prosím o tom vedieť vo formulári nižšie.
+      name: Meno
+      function: Funkcia
+      lecturer: Prednášajúci
+      teaching_assistant: Cvičiaci
+      note: Poznámka
+      report: Nahlásiť
+      name_not_found: Hľadané meno sa nenašlo
+      cancel: Zrušiť
+    other_problem:
+      button: Chcem nahlásiť <strong>iný problém</strong>
+      title: Nahlásenie ostatných chýb
+      desc: Ak niektorý z učiteľov neučil/necvičil tento predmet alebo sa vyskytla iná chyba, dajte nám prosím vedieť.
+      problem_desc: Popis chyby
+      report: Nahlásiť
 
 question:
   index:

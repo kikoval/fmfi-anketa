@@ -518,7 +518,7 @@ a.btn:link, a.btn:visited {color: #222;}
 
 #teaching-association fieldset input[type=checkbox] {margin-left: 4.5em;}
 #teacher-search-result ul, #teaching-association input[type=text] {width: 20em;}
-#teaching-association label {display: inline-block; width: 4em;}
+#teaching-association label {display: inline-block; min-width: 4em;}
 #teacher-search-result ul {
     margin: 0;
     margin-left: 4.3em;
