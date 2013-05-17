@@ -278,8 +278,9 @@ class Question {
         $this->setStars(true);
         $starCnt = 5;
         for ($i = 1; $i <= $starCnt; $i++) {
-            $this->addOption(new Option($i . ' z ' . $starCnt . ' hviezdičiek',
-                                        $i, $i));
+            $option = new Option($i . ' z ' . $starCnt . ' hviezdičiek', $i, $i);
+            $option->setOption($i . ' out of ' . $starCnt . ' stars', 'en');
+            $this->addOption($option);
         }
     }
 

@@ -102,6 +102,7 @@ class ImportOtazkyCommand extends AbstractImportCommand {
         );
 
         $category = new Category($sectionIdMap[$import['kategoria']], $import['id'], $import["popis"]);
+        $category->setDescription($import["popis_en"], 'en');
 
         $categoryRepository = $manager->getRepository('AnketaBundle\Entity\Category');
         $objekt = $categoryRepository->findOneBy(
@@ -124,10 +125,12 @@ class ImportOtazkyCommand extends AbstractImportCommand {
             throw new Exception('chyba polozka text vo vstupnom yml subore');
         }
 
+        $question->setQuestion($import['text_en'], 'en');
         $question->setPosition($questionPos);
 
         if (array_key_exists("popis", $import)) {
             $question->setDescription($import["popis"]);
+            $question->setDescription($import["popis_en"], 'en');
         }
 
         $categoryRepository = $manager->getRepository('AnketaBundle\Entity\Category');
@@ -160,6 +163,7 @@ class ImportOtazkyCommand extends AbstractImportCommand {
                                 $option["text"],
                                 $hodnota,
                                 $pos++);
+                $op->setOption($option["text_en"], 'en');
                 $question->addOption($op);
             }
         }
