@@ -1,6 +1,10 @@
 statistics:
     pattern: /vysledky
-    defaults: { _controller: AnketaBundle:Statistics:seasonReport, season_slug: null}
+    defaults: { _controller: AnketaBundle:Statistics:seasonReport}
+
+statistics_slash:
+    pattern: /vysledky/
+    defaults: { _controller: AnketaBundle:Statistics:seasonReport}
 
 statistics_season:
     pattern: /vysledky/{season_slug}
