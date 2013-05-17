@@ -67,6 +67,9 @@ response_new: '/odpovede/nova-odpoved/{section_slug}'
 # Desc: /vysledky
 statistics: /vysledky
 
+# Desc: /vysledky/
+statistics_slash: /vysledky/
+
 # Desc: /flag/{answer_id}
 statistics_flag: '/flag/{answer_id}'
 
