@@ -237,10 +237,11 @@ class StatisticsController extends Controller {
         if (!$hasAnsweredOption) {
             $histogram = array();
         }
+        $locale = $this->getRequest()->getLocale();
         $data = array(
                 'id' => $question->getId(),
-                'title' => $question->getQuestion(),
-                'description' => $question->getDescription(),
+                'title' => $question->getQuestion($locale),
+                'description' => $question->getDescription($locale),
                 'commentsAllowed' => $question->getHasComment(),
                 'hasAnswer' => $hasAnsweredOption || $hasComments,
                 'hasDifferentOptions' => $hasDifferentOptions,
@@ -341,7 +342,7 @@ class StatisticsController extends Controller {
         }
 
         $templateParams = array();
-        $templateParams['title'] = 'Študijné programy';
+        $templateParams['title'] = $this->get('translator')->trans('statistics.controller.studijne_programy');
         $templateParams['activeMenuItems'] = array($season->getId(), 'study_programs');
         $templateParams['items'] = array('' => $items);
         return $this->render('AnketaBundle:Statistics:listing.html.twig', $templateParams);
@@ -414,12 +415,12 @@ class StatisticsController extends Controller {
             $questions = $em->getRepository('AnketaBundle:Question')->getOrderedQuestions($category, $season);
             foreach ($questions as $question) {
                 $section = StatisticsSection::makeGeneralSection($this->container, $season, $question);
-                $items[$category->getDescription($locale)][$question->getQuestion()] = $section->getStatisticsPath();
+                $items[$category->getDescription($locale)][$question->getQuestion($locale)] = $section->getStatisticsPath();
             }
         }
 
         $templateParams = array();
-        $templateParams['title'] = 'Všeobecné otázky';
+        $templateParams['title'] = $this->get('translator')->trans('statistics.controller.vseobecne');
         $templateParams['activeMenuItems'] = array($season->getId(), 'general');
         $templateParams['items'] = $items;
         return $this->render('AnketaBundle:Statistics:listing.html.twig', $templateParams);

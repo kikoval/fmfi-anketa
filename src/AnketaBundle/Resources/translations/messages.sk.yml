@@ -91,6 +91,15 @@ statistics:
     moje_predmety: Moje predmety
     moje_komentare: Moje komentáre
     moje_reporty: Reporty
+  seasonReport:
+    vysledky: Výsledky
+    pocet_hlasujucich: V ankete <em>%season%</em> hlasovalo %voters% študentov z celkového počtu %total%.
+    celkova_ucast: Celková účasť v ankete dosiahla
+    k_vysledkom_cez_menu: K jednotlivým častiam výsledkov sa dostanete cez menu.
+  controller:
+    vseobecne: Všeobecné otázky
+    studijne_programy: Študijné programy
+
 
 
 reports:

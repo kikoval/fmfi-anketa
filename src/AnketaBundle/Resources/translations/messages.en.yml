@@ -91,6 +91,14 @@ statistics:
     moje_predmety: My subjects
     moje_komentare: My comments
     moje_reporty: Reports
+  seasonReport:
+    vysledky: Results for
+    pocet_hlasujucich: %voters% out of %total% students participated in the Student Questionnaire <em>%season%</em>.
+    celkova_ucast: Overall participation in the questionnaire was
+    k_vysledkom_cez_menu: Detailed results can be reached through menu on the left.
+  controller:
+    vseobecne: General questions
+    studijne_programy: Study programmes
 
 
 reports:
