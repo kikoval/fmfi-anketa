@@ -96,6 +96,28 @@ statistics:
     pocet_hlasujucich: %voters% out of %total% students participated in the Student Questionnaire <em>%season%</em>.
     celkova_ucast: Overall participation in the questionnaire was
     k_vysledkom_cez_menu: Detailed results can be reached through menu on the left.
+  results:
+    predchadzajuce_hodnotenie: Previous results
+    pozrite_si: Take a look at
+    hodnotenie_pre_obdobie: results for questionnaire %season%
+  displayQuestionMacro:
+    nik_neodpovedal: There was no response for this question.
+    moznost: Option
+    hlasov: votes
+    podiel: ratio
+    vaha_pre_statistiku: Weight used for statistics
+    v: W
+    pocet_hlasov: Total number of votes
+    priemer: Average
+    median: Median
+    odchylka: Standard deviation
+    komentare: Comments
+    nahlasit_komentar: Report abusive comment
+    ziaden_komentar: There were no comments for this question.
+    skryte_komentare: >
+      {1} One abusive comment is hidden. Nevertheless, its content will be examined.|
+      [2,Inf] There are %count% hidden abusive comments. Nevertheless, theirs content will be examined.|
+    komentare_po_prihlaseni: <a href="%url%">Log in</a> in order to view comments.
   controller:
     vseobecne: General questions
     studijne_programy: Study programmes

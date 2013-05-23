@@ -96,11 +96,32 @@ statistics:
     pocet_hlasujucich: V ankete <em>%season%</em> hlasovalo %voters% študentov z celkového počtu %total%.
     celkova_ucast: Celková účasť v ankete dosiahla
     k_vysledkom_cez_menu: K jednotlivým častiam výsledkov sa dostanete cez menu.
+  results:
+    predchadzajuce_hodnotenie: Predchádzajúce hodnotenie
+    pozrite_si: Pozrite si
+    hodnotenie_pre_obdobie: hodnotenie pre obdobie %season%
+  displayQuestionMacro:
+    nik_neodpovedal: Na túto otázku nikto neodpovedal.
+    moznost: Možnosť
+    hlasov: hlasov
+    podiel: podiel
+    vaha_pre_statistiku: Váha použitá pri počítaní štatistiky
+    v: V
+    pocet_hlasov: Počet hlasov
+    priemer: Priemer
+    median: Medián
+    odchylka: Smerodajná odchýlka
+    komentare: Komentáre
+    nahlasit_komentar: Nahlásiť nevhodný komentár
+    ziaden_komentar: K tejto otázke nikto nepridal žiaden komentár.
+    skryte_komentare: >
+      {1} Bol skrytý 1 nevhodný komentár. Jeho obsah bude napriek tomu preskúmaný.|
+      [2,4] Boli skryté %count% nevhodné komentáre. Ich obsah bude napriek tomu preskúmaný.|
+      ]4,Inf] Bolo skrytých %count% nevhodných komentárov. Ich obsah bude napriek tomu preskúmaný.
+    komentare_po_prihlaseni: Komentáre si môžete pozrieť po <a href="%url%">prihlásení</a>.
   controller:
     vseobecne: Všeobecné otázky
     studijne_programy: Študijné programy
-
-
 
 reports:
   report:
