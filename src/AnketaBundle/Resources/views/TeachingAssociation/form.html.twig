@@ -6,47 +6,47 @@
 
 {% block content %}
 
-<a href="{{ path('answer_subject', {'subject_slug': subject.slug}) }}">&laquo; {% trans %}hlasovanie.teacher_report.back_to_course{% endtrans %}</a>
+<a href="{{ path('answer_subject', {'subject_slug': subject.slug}) }}">&laquo; {% trans %}hlasovanie.nahlasenie_ucitela.spat_na_predmet{% endtrans %}</a>
 
-<h2>{{ subject.name }} &ndash; {% trans %}hlasovanie.teacher_report.title{% endtrans %}</h2>
+<h2>{{ subject.name }} &ndash; {% trans %}hlasovanie.nahlasenie_ucitela.nadpis{% endtrans %}</h2>
 
 <div id="section-teacher-add" class="page-section">
-<h3>{% trans %}hlasovanie.teacher_report.missing_teacher.title{% endtrans %}</h3>
-<p>{% trans %}hlasovanie.teacher_report.missing_teacher.desc{% endtrans %}</p>
+<h3>{% trans %}hlasovanie.nahlasenie_ucitela.chybajuci_ucitel.nadpis{% endtrans %}</h3>
+<p>{% trans %}hlasovanie.nahlasenie_ucitela.chybajuci_ucitel.popis{% endtrans %}</p>
 
 <form method="post" action="{{ path('assoc_teacher_with_subject_process', {'subject_slug': subject.slug}) }}" id="teaching-association">
 
 <p>
-    <label for="teacher-name">{% trans %}hlasovanie.teacher_report.missing_teacher.name{% endtrans %}</label>
+    <label for="teacher-name">{% trans %}hlasovanie.nahlasenie_ucitela.chybajuci_ucitel.meno{% endtrans %}</label>
     <input type="text" name="teacher-name" id="teacher-name" size="40" value="" required="required" />
     <input type="hidden" name="teacher-login" id="teacher-login" value="" />
 </p>
 <p>
      <fieldset>
-        <legend>{% trans %}hlasovanie.teacher_report.missing_teacher.function{% endtrans %}</legend>
-        <input type="checkbox" name="teacher-role-lecturer" id="teacher" value="1" /> <label for="teacher">{% trans %}hlasovanie.teacher_report.missing_teacher.lecturer{% endtrans %}</label><br/>
-        <input type="checkbox" name="teacher-role-assistant" id="teacher-assistant" value="1" /> <label for="teacher-assistant">{% trans %}hlasovanie.teacher_report.missing_teacher.teaching_assistant{% endtrans %}</label>
+        <legend>{% trans %}hlasovanie.nahlasenie_ucitela.chybajuci_ucitel.funkcia{% endtrans %}</legend>
+        <input type="checkbox" name="teacher-role-lecturer" id="teacher" value="1" /> <label for="teacher">{% trans %}hlasovanie.nahlasenie_ucitela.chybajuci_ucitel.vyucujuci{% endtrans %}</label><br/>
+        <input type="checkbox" name="teacher-role-assistant" id="teacher-assistant" value="1" /> <label for="teacher-assistant">{% trans %}hlasovanie.nahlasenie_ucitela.chybajuci_ucitel.cviciaci{% endtrans %}</label>
     </fieldset>
 </p>
 <div>
-<label for="note">{% trans %}hlasovanie.teacher_report.missing_teacher.note{% endtrans %}:</label>
+<label for="note">{% trans %}hlasovanie.nahlasenie_ucitela.chybajuci_ucitel.poznamka{% endtrans %}:</label>
 <textarea id="note" name="note" cols="40" rows="3"></textarea>
 </div>
 <div class="submit">
-    <input type="submit" name="report" value="{% trans %}hlasovanie.teacher_report.missing_teacher.report{% endtrans %}" class="btn btn-primary" />
+    <input type="submit" name="report" value="{% trans %}hlasovanie.nahlasenie_ucitela.chybajuci_ucitel.nahlasit{% endtrans %}" class="btn btn-primary" />
 </div>
 </form>
 </div>
 
 <div id="section-other-problem" class="page-section">
-<h3>{% trans %}hlasovanie.teacher_report.other_problem.title{% endtrans %}</h3>
-<p>{% trans %}hlasovanie.teacher_report.other_problem.desc{% endtrans %}</p>
+<h3>{% trans %}hlasovanie.nahlasenie_ucitela.iny_problem.nadpis{% endtrans %}</h3>
+<p>{% trans %}hlasovanie.nahlasenie_ucitela.iny_problem.popis{% endtrans %}</p>
 <form method="post" action="{{ path('assoc_teacher_with_subject_process', {'subject_slug': subject.slug}) }}">
-    <label for="note">{% trans %}hlasovanie.teacher_report.other_problem.problem_desc{% endtrans %}:</label>
+    <label for="note">{% trans %}hlasovanie.nahlasenie_ucitela.iny_problem.popis_chyby{% endtrans %}:</label>
     <textarea id="problem-desc" name="note" cols="40" rows="6" required="required"></textarea>
 
     <div class="submit">
-        <input type="submit" name="report" value="{% trans %}hlasovanie.teacher_report.other_problem.report{% endtrans %}" class="btn btn-primary" />
+        <input type="submit" name="report" value="{% trans %}hlasovanie.nahlasenie_ucitela.iny_problem.nahlasit{% endtrans %}" class="btn btn-primary" />
     </div>
 </form>
 </div>
@@ -57,9 +57,9 @@ jQuery(document).ready(function($) {
     "use strict";
 
     // creating elements for JS version
-    $('#section-teacher-add').before('<p>{% trans %}hlasovanie.teacher_report.select_action{% endtrans %}:</p>');
-    $('#section-teacher-add').before('<div class="page-section"><a href="#" id="btn-teacher-add" class="btn btn-large">{% trans %}hlasovanie.teacher_report.missing_teacher.button{% endtrans %}</a></div>');
-    $('#section-other-problem').before('<div><a href="#" id="btn-other-problem" class="btn btn-large">{% trans %}hlasovanie.teacher_report.other_problem.button{% endtrans %}</a></div>');
+    $('#section-teacher-add').before('<p>{% trans %}hlasovanie.nahlasenie_ucitela.vyberte_akciu{% endtrans %}:</p>');
+    $('#section-teacher-add').before('<div class="page-section"><a href="#" id="btn-teacher-add" class="btn btn-large">{% trans %}hlasovanie.nahlasenie_ucitela.chybajuci_ucitel.chcem_nahlasit{% endtrans %}</a></div>');
+    $('#section-other-problem').before('<div><a href="#" id="btn-other-problem" class="btn btn-large">{% trans %}hlasovanie.nahlasenie_ucitela.iny_problem.chcem_nahlasit{% endtrans %}</a></div>');
 
     $('#section-teacher-add').hide();
     $('#btn-teacher-add').click(function(event) {
@@ -103,7 +103,7 @@ jQuery(document).ready(function($) {
                 data: {'name': $('#teacher-name').val()},
             }).done(function(data) {
                 if (Object.keys(data).length == 0) {
-                    $('#teacher-search-result').html('{% trans %}hlasovanie.teacher_report.missing_teacher.name_not_found{% endtrans %}');
+                    $('#teacher-search-result').html('{% trans %}hlasovanie.nahlasenie_ucitela.chybajuci_ucitel.meno_sa_nenaslo{% endtrans %}');
                     return;
                 }
                 var list = $(document.createElement('ul'));
@@ -113,7 +113,7 @@ jQuery(document).ready(function($) {
                         $('#teacher-name').attr('value', teacher.name).attr('readonly', 'readonly');
 
                         $('#teacher-search-result').remove();
-                        $('#teacher-name').after($(document.createElement('a')).append('{% trans %}hlasovanie.teacher_report.missing_teacher.cancel{% endtrans %}').attr('href', '#').click(function(event) {
+                        $('#teacher-name').after($(document.createElement('a')).append('{% trans %}hlasovanie.nahlasenie_ucitela.chybajuci_ucitel.zrusit{% endtrans %}').attr('href', '#').click(function(event) {
                             $('#teacher-name').attr('value', '').removeAttr('readonly').focus();
                             $('#teacher-login').attr('value', '');
                             $(this).remove();

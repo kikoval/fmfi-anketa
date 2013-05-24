@@ -63,28 +63,28 @@ hlasovanie:
     studijne_programy: Study programmes
     vseobecne: General questions
     ukoncenie: Finish questionnaire
-  teacher_report:
-    back_to_course: Back to the course
-    title: Is there a problem in the list of teachers?
-    select_action: Please select what do you want to report
-    missing_teacher:
-      button: I want to report <strong>a missing teacher</strong>
-      title: Report a missing teacher
-      desc: If there is a lecturer or teaching assistant missing for this subject, please let us know. We will try to fix that as soon as possible.
-      name: Name
-      function: Role
-      lecturer: Lecturer
-      teaching_assistant: Teaching assistant
-      note: Note
-      report: Report
-      name_not_found: The name was not found.
-      cancel: Cancel
-    other_problem:
-      button: I want to report <strong>other problem</strong>
-      title: Report other problem
-      desc: If one or more teachers didn't teach this subject or there is other problem, please let us know. We will try to fix that as soon as possible.
-      problem_desc: Problem description
-      report: Report
+  nahlasenie_ucitela:
+    spat_na_predmet: Back to the course
+    nadpis: Is there a problem in the list of teachers?
+    vyberte_akciu: Please select what do you want to report
+    chybajuci_ucitel:
+      chcem_nahlasit: I want to report <strong>a missing teacher</strong>
+      nadpis: Report a missing teacher
+      popis: If there is a lecturer or teaching assistant missing for this subject, please let us know. We will try to fix that as soon as possible.
+      meno: Name
+      funkcia: Role
+      vyucujuci: Lecturer
+      cviciaci: Teaching assistant
+      poznamka: Note
+      nahlasit: Report
+      meno_sa_nenaslo: The name was not found.
+      zrusit: Cancel
+    iny_problem:
+      chcem_nahlasit: I want to report <strong>other problem</strong>
+      nadpis: Report other problem
+      popis: If one or more teachers didn't teach this subject or there is other problem, please let us know. We will try to fix that as soon as possible.
+      popis_chyhy: Problem description
+      nahlasit: Report
 
 question:
   index:
