@@ -121,7 +121,14 @@ statistics:
   controller:
     vseobecne: General questions
     studijne_programy: Study programmes
-
+    ziadna_sezona_s_vysledkami: There is no season with available results
+    chybna_sezona: Wrong season: %slug%
+    nenajdeny_ucitel: Teacher was not found
+    nenajdeny_studijny_program: No study programms found in this season
+    odpoved_neexistuje: Comment with ID=%id% does not exist
+    odpoved_je_skryta: Comment with ID=%id% is already hidden
+    odpoved_nema_komentar: Comment with ID=%id% does not exist
+    report_spracujeme: Thank you. We will process your report in the following days.
 
 reports:
   report:
