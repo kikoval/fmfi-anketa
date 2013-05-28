@@ -33,6 +33,9 @@ class TeachingAssociationAdminController extends Controller {
     }
 
     // TODO pagination
+    // TODO kontrola ci ziadane priradenia v reportoch uz neexistuju, to plati
+    //      aj pre pripad, ze uz sa priradenie vytvori pomocou funkcie
+    //      addTeacherToSubject();ak uz pripojenie exisuje nezobrazovat tlacidlo
     // TODO group by (subjec,t teacher, season), zobrazit pocet rovnakych
     //      cez COUNT() a spojit notes do jedneho, aby to vyzeralo ako 1 ticket
     // TODO CSFR
@@ -108,10 +111,9 @@ class TeachingAssociationAdminController extends Controller {
                 && $ta->getSeason() !== null && $is_function_set) {
 
             // check for duplication
-            $userSeason = $em->getRepository('AnketaBundle:UserSeason')->findBy(
-                    array('season' => $ta->getSeason(),
-                          'user' => $ta->getTeacher()
-                            ));
+            $userSeason = $em->getRepository('AnketaBundle:UserSeason')
+                    ->findOneBy(array('season' => $ta->getSeason(),
+                                      'user'   => $ta->getTeacher()));
             if ($userSeason === null) {
                 $userSeason = new UserSeason();
                 $userSeason->setIsStudent(false);
@@ -138,17 +140,14 @@ class TeachingAssociationAdminController extends Controller {
                 $em->flush();
             } catch (DBALException $e) {
                 // TODO check if $e really says the insert is duplicated (SQL 23000)
-                $session->getFlashBag()->add('error', 'Učiteľ už je priradený k predmetu.');
+                $session->getFlashBag()
+                        ->add('error', 'Učiteľ už je priradený k predmetu.');
                 return $this->redirect($this->generateUrl(
                         'admin_teaching_associations'));
             }
 
-            // TODO kontrola na uspesnosti vykonania predchadzajucej query?
-            $ta->setCompleted(true);
-            $em->persist($ta);
-            $em->flush();
-
-            $session->getFlashBag()->add('success', 'Učiteľ bol úspešne priradený k predmetu.');
+            $session->getFlashBag()
+                    ->add('success', 'Učiteľ bol úspešne priradený k predmetu.');
 
             return $this->redirect($this->generateUrl(
                     'admin_teaching_associations'));
