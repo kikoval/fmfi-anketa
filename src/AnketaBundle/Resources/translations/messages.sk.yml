@@ -63,7 +63,9 @@ hlasovanie:
     studijne_programy: Študijné programy
     vseobecne: Všeobecné otázky
     ukoncenie: Ukončenie hlasovania
-  nahlasenie_ucitela:
+ 
+teachingassociation:
+  form:
     spat_na_predmet: Späť na predmet
     nadpis: Chyba v zozname učiteľov?
     vyberte_akciu: Vyberte prosím požadovanú akciu

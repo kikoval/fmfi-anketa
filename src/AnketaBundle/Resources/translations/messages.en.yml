@@ -63,7 +63,9 @@ hlasovanie:
     studijne_programy: Study programmes
     vseobecne: General questions
     ukoncenie: Finish questionnaire
-  nahlasenie_ucitela:
+    
+teachingassociation:
+  form:
     spat_na_predmet: Back to the course
     nadpis: Is there a problem in the list of teachers?
     vyberte_akciu: Please select what do you want to report
@@ -83,7 +85,7 @@ hlasovanie:
       chcem_nahlasit: I want to report <strong>other problem</strong>
       nadpis: Report other problem
       popis: If one or more teachers didn't teach this subject or there is other problem, please let us know. We will try to fix that as soon as possible.
-      popis_chyhy: Problem description
+      popis_chyby: Problem description
       nahlasit: Report
 
 question:
