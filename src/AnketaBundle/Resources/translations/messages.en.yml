@@ -64,6 +64,30 @@ hlasovanie:
     vseobecne: General questions
     ukoncenie: Finish questionnaire
 
+teachingassociation:
+  form:
+    spat_na_predmet: Back to the course
+    nadpis: Is there a problem in the list of teachers?
+    vyberte_akciu: Please select what do you want to report
+    chybajuci_ucitel:
+      chcem_nahlasit: I want to report <strong>a missing teacher</strong>
+      nadpis: Report a missing teacher
+      popis: If there is a lecturer or teaching assistant missing for this subject, please let us know. We will try to fix that as soon as possible.
+      meno: Name
+      funkcia: Role
+      vyucujuci: Lecturer
+      cviciaci: Teaching assistant
+      poznamka: Note
+      nahlasit: Report
+      meno_sa_nenaslo: The name was not found.
+      zrusit: Cancel
+    iny_problem:
+      chcem_nahlasit: I want to report <strong>other problem</strong>
+      nadpis: Report other problem
+      popis: If one or more teachers didn't teach this subject or there is other problem, please let us know. We will try to fix that as soon as possible.
+      popis_chyby: Problem description
+      nahlasit: Report
+
 question:
   index:
     ak_neucil: If you had no classes with this teacher you can skip these questions and choose

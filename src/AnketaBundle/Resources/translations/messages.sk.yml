@@ -64,6 +64,30 @@ hlasovanie:
     vseobecne: Všeobecné otázky
     ukoncenie: Ukončenie hlasovania
 
+teachingassociation:
+  form:
+    spat_na_predmet: Späť na predmet
+    nadpis: Chyba v zozname učiteľov?
+    vyberte_akciu: Vyberte prosím požadovanú akciu
+    chybajuci_ucitel:
+      chcem_nahlasit: Chcem nahlásiť <strong>chýbajúceho učiteľa</strong>
+      nadpis: Nahlásenie chýbajúceho učiteľa
+      popis: Ak v zozname učiteľov a cvičiacich k tomuto predmetu niekto chýba, dajte nám prosím o tom vedieť vo formulári nižšie.
+      meno: Meno
+      funkcia: Funkcia
+      vyucujuci: Prednášajúci
+      cviciaci: Cvičiaci
+      poznamka: Poznámka
+      nahlasit: Nahlásiť
+      meno_sa_nenaslo: Hľadané meno sa nenašlo
+      zrusit: Zrušiť
+    iny_problem:
+      chcem_nahlasit: Chcem nahlásiť <strong>iný problém</strong>
+      nadpis: Nahlásenie ostatných chýb
+      popis: Ak niektorý z učiteľov neučil/necvičil tento predmet alebo sa vyskytla iná chyba, dajte nám prosím vedieť.
+      popis_chyby: Popis chyby
+      nahlasit: Nahlásiť
+
 question:
   index:
     ak_neucil: Ak vás tento učiteľ neučil, môžete otázky preskočiť a zvoliť
