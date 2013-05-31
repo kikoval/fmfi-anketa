@@ -9,7 +9,7 @@
     {% endif %}
     </div>
     {% if not data.hasAnswer and data.numberOfInappropriateComments == 0 %}
-        Na túto otázku nikto neodpovedal.
+        {% trans %}statistics.displayQueestionMacro.nik_neodpovedal{% endtrans %}
     {% else %}
         {% if data.chart is not null %}
             <img src="{{ data.chart.url }}" width="{{ data.chart.width }}" height="{{ data.chart.height }}" alt="">
@@ -19,11 +19,13 @@
                 <table>
                     <thead>
                         <tr>
-                            <th> Možnosť </th>
-                            <th> hlasov </th>
-                            <th> podiel </th>
+                            <th> {% trans %}statistics.displayQuestionMacro.moznost{% endtrans %} </th>
+                            <th> {% trans %}statistics.displayQuestionMacro.hlasov{% endtrans %} </th>
+                            <th> {% trans %}statistics.displayQuestionMacro.podiel{% endtrans %} </th>
                             {% if data.hasDifferentOptions %}
-                            <th> <span title="Váha použitá pri počítaní štatistiky" class="help-tooltip">V</span> </th>
+                            <th> <span title="{% trans %}statistics.displayQuestionMacro.vaha_pre_statistiku{% endtrans %}" class="help-tooltip">
+                                {%- trans %}statistics.displayQuestionMacro.v{% endtrans -%}
+                            </span> </th>
                             {% endif %}
                         </tr>
                     </thead>
@@ -39,15 +41,17 @@
                     {% endfor %}
                 </table>
                 <ul>
-                    <li data-cnt="{{ data.stats.cnt }}">Počet hlasov: {{ data.stats.cnt }} </li>
+                    <li data-cnt="{{ data.stats.cnt }}">{% trans %}statistics.displayQuestionMacro.pocet_hlasov{% endtrans %}: {{ data.stats.cnt }} </li>
                     {% if data.stats.avg is defined %} 
-                        <li data-avg="{{ "%.2f" | format(data.stats.avg) }}">Priemer: {{ "%.2f" | format(data.stats.avg) }} </li>
+                        <li data-avg="{{ "%.2f" | format(data.stats.avg) }}">
+                            {% trans %}statistics.displayQuestionMacro.priemer{% endtrans %}: {{ "%.2f" | format(data.stats.avg) }}
+                        </li>
                     {% endif %}
                     {% if data.stats.median is defined %}
-                        <li>Medián: {{ "%.2f" | format(data.stats.median) }} </li>
+                        <li>{% trans %}statistics.displayQuestionMacro.median{% endtrans %}: {{ "%.2f" | format(data.stats.median) }} </li>
                     {% endif %}
                     {% if data.stats.sigma is defined %} 
-                        <li>Smerodajná odchýlka: {{ "%.2f" | format(data.stats.sigma) }} </li>
+                        <li>{% trans %}statistics.displayQuestionMacro.odchylka{% endtrans %}: {{ "%.2f" | format(data.stats.sigma) }} </li>
                     {% endif %}
                 </ul>
             </div>
@@ -55,34 +59,29 @@
         {% if data.commentsAllowed %}
             {% if not access.statistics.commentsBlocked(season) %}
                 {% if data.comments is not empty %}
-                    Komentáre:
+                    {% trans %}statistics.displayQuestionMacro.komentare{% endtrans %}:
                     <div class="results-comments">
                     {% for comment in data.comments %}
                         <div class='comment' id="komentar{{ comment.answer_id }}">
                         <div class="comment-top"><a class="comment-link" href="#komentar{{ comment.answer_id }}">#{{ comment.answer_id }}</a>:
-                            <a href="{{ path('statistics_flag', {'answer_id': comment.answer_id}) }}" class="flag-link"
-                                >Nahlásiť nevhodný komentár</a>
+                            <a href="{{ path('statistics_flag', {'answer_id': comment.answer_id}) }}" class="flag-link">
+                                {%- trans %}statistics.displayQuestionMacro.nahlasit_komentar{% endtrans -%}
+                            </a>
                         </div>
                         <p class="comment-comment">{{ comment.comment|escape|replace({"\n":"<br>"})|raw }}</p>
                         </div>
                     {% endfor %}
                     </div>
                 {% elseif data.numberOfInappropriateComments == 0 %}
-                    K tejto otázke nikto nepridal žiaden komentár.
+                    {% trans %}statistics.displayQuestionMacro.ziaden_komentar{% endtrans %}
                 {% endif %}
                 {% if data.numberOfInappropriateComments > 0 %}
                     <p class="inappropriate-comments-info">
-                    {% if data.numberOfInappropriateComments == 1 %}
-                        Bol skrytý 1 nevhodný komentár. Jeho obsah bude napriek tomu preskúmaný.
-                    {% elseif data.numberOfInappropriateComments in [2, 3, 4] %}
-                        Boli skryté {{ data.numberOfInappropriateComments }} nevhodné komentáre. Ich obsah bude napriek tomu preskúmaný.
-                    {% elseif data.numberOfInappropriateComments > 4 %}
-                        Bolo skrytých {{ data.numberOfInappropriateComments }} nevhodných komentárov. Ich obsah bude napriek tomu preskúmaný.
-                    {% endif %}
+                    {%- transchoice data.numberOfInappropriateComments with {'%count%': data.numberOfInappropriateComments} %}statistics.displayQuestionMacro.skryte_komentare{% endtranschoice -%}
                     </p>
                 {% endif %}
             {% else %}
-                Komentáre si môžete pozrieť po <a href="{{ path('login', {'to': app.request.uri}) }}">prihlásení</a>.
+                {% trans with {'%url%': path('login', {'to': app.request.uri}) }%}statistics.displayQuestionMacro.komentare_po_prihlaseni{% endtrans %}
             {% endif %}
         {% endif %}
     {% endif %}

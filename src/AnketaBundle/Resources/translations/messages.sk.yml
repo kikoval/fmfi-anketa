@@ -115,7 +115,46 @@ statistics:
     moje_predmety: Moje predmety
     moje_komentare: Moje komentáre
     moje_reporty: Reporty
-
+  seasonReport:
+    vysledky: Výsledky
+    pocet_hlasujucich: V ankete <em>%season%</em> hlasovalo %voters% študentov z celkového počtu %total%.
+    celkova_ucast: Celková účasť v ankete dosiahla
+    k_vysledkom_cez_menu: K jednotlivým častiam výsledkov sa dostanete cez menu.
+  results:
+    predchadzajuce_hodnotenie: Predchádzajúce hodnotenie
+    pozrite_si: Pozrite si
+    hodnotenie_pre_obdobie: hodnotenie pre obdobie %season%
+  displayQuestionMacro:
+    nik_neodpovedal: Na túto otázku nikto neodpovedal.
+    moznost: Možnosť
+    hlasov: hlasov
+    podiel: podiel
+    vaha_pre_statistiku: Váha použitá pri počítaní štatistiky
+    v: V
+    pocet_hlasov: Počet hlasov
+    priemer: Priemer
+    median: Medián
+    odchylka: Smerodajná odchýlka
+    komentare: Komentáre
+    nahlasit_komentar: Nahlásiť nevhodný komentár
+    ziaden_komentar: K tejto otázke nikto nepridal žiaden komentár.
+    skryte_komentare: >
+      {1} Bol skrytý 1 nevhodný komentár. Jeho obsah bude napriek tomu preskúmaný.|
+      [2,4] Boli skryté %count% nevhodné komentáre. Ich obsah bude napriek tomu preskúmaný.|
+      ]4,Inf] Bolo skrytých %count% nevhodných komentárov. Ich obsah bude napriek tomu preskúmaný.
+    komentare_po_prihlaseni: Komentáre si môžete pozrieť po <a href="%url%">prihlásení</a>.
+  controller:
+    vseobecne: Všeobecné otázky
+    studijne_programy: Študijné programy
+    moje_predmety: Moje predmety
+    ziadna_sezona_s_vysledkami: Neexistuje žiadna sezóna s výsledkami
+    chybna_sezona: Chybná sezóna: %slug%
+    nenajdeny_ucitel: Učiteľ sa nenašiel
+    nenajdeny_studijny_program: Žiadne študijné programy v tejto sezóne nenájdené
+    odpoved_neexistuje: Komentár s ID=%id% neexistuje
+    odpoved_je_skryta: Komentár s ID=%id% je už skrytý
+    odpoved_nema_komentar: Komentár s ID=%id% neexistuje
+    report_spracujeme: Ďakujeme. Vaše hlásenie spracujeme v priebehu niekoľkých dní.
 
 reports:
   report:

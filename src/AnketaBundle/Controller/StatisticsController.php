@@ -32,13 +32,15 @@ class StatisticsController extends Controller {
                 }
             }
             if ($season == null) {
-                throw new NotFoundHttpException('Ziadna sezona s vysledkami');
+                $msg = $this->get('translator')->trans('statistics.controller.ziadna_sezona_s_vysledkami');
+                throw new NotFoundHttpException($msg);
             }
         } else {
             $season = $repository->findOneBy(array('slug' => $season_slug));
         }
         if ($season == null) {
-            throw new NotFoundHttpException('Chybna sezona: ' . $season_slug);
+            $msg = $this->get('translator')->trans('statistics.controller.chybna_sezona', array('%slug%' => $season_slug));
+            throw new NotFoundHttpException($msg);
         }
         return $season;
     }
@@ -86,7 +88,7 @@ class StatisticsController extends Controller {
             $map[$option->getId()]=$i;
             $histogram[$i] =
                 array('cnt' => 0,
-                      'title' => $option->getOption(),
+                      'title' => $option->getOption($this->getRequest()->getLocale()),
                       'value' => $option->getEvaluation()
                       );
             $i++;
@@ -237,10 +239,11 @@ class StatisticsController extends Controller {
         if (!$hasAnsweredOption) {
             $histogram = array();
         }
+        $locale = $this->getRequest()->getLocale();
         $data = array(
                 'id' => $question->getId(),
-                'title' => $question->getQuestion(),
-                'description' => $question->getDescription(),
+                'title' => $question->getQuestion($locale),
+                'description' => $question->getDescription($locale),
                 'commentsAllowed' => $question->getHasComment(),
                 'hasAnswer' => $hasAnsweredOption || $hasComments,
                 'hasDifferentOptions' => $hasDifferentOptions,
@@ -301,7 +304,8 @@ class StatisticsController extends Controller {
         $teacher = $access->getUser();
 
         if ($teacher === null) {
-            throw new NotFoundHttpException('Ucitel sa nenasiel');
+            $msg = $this->get('translator')->trans('statistics.controller.nenajdeny_ucitel');
+            throw new NotFoundHttpException($msg);
         }
 
         $em = $this->get('doctrine.orm.entity_manager');
@@ -314,6 +318,7 @@ class StatisticsController extends Controller {
         }
 
         $templateParams = array();
+        $msg = $this->get('translator')->trans('statistics.controller.moje_predmety');
         $templateParams['title'] = 'Moje predmety';
         $templateParams['activeMenuItems'] = array($season->getId(), 'my_subjects');
         $templateParams['items'] = array('' => $items);
@@ -337,11 +342,12 @@ class StatisticsController extends Controller {
         }
         
         if (count($items) == 0) {
-            throw new NotFoundHttpException("Žiadne študijné programy v tejto sezóne nenájdené");
+            $msg = $this->get('translator')->trans('statistics.controller.nenajdeny_studijny_program');
+            throw new NotFoundHttpException($msg);
         }
 
         $templateParams = array();
-        $templateParams['title'] = 'Študijné programy';
+        $templateParams['title'] = $this->get('translator')->trans('statistics.controller.studijne_programy');
         $templateParams['activeMenuItems'] = array($season->getId(), 'study_programs');
         $templateParams['items'] = array('' => $items);
         return $this->render('AnketaBundle:Statistics:listing.html.twig', $templateParams);
@@ -414,12 +420,12 @@ class StatisticsController extends Controller {
             $questions = $em->getRepository('AnketaBundle:Question')->getOrderedQuestions($category, $season);
             foreach ($questions as $question) {
                 $section = StatisticsSection::makeGeneralSection($this->container, $season, $question);
-                $items[$category->getDescription($locale)][$question->getQuestion()] = $section->getStatisticsPath();
+                $items[$category->getDescription($locale)][$question->getQuestion($locale)] = $section->getStatisticsPath();
             }
         }
 
         $templateParams = array();
-        $templateParams['title'] = 'Všeobecné otázky';
+        $templateParams['title'] = $this->get('translator')->trans('statistics.controller.vseobecne');
         $templateParams['activeMenuItems'] = array($season->getId(), 'general');
         $templateParams['items'] = $items;
         return $this->render('AnketaBundle:Statistics:listing.html.twig', $templateParams);
@@ -431,14 +437,17 @@ class StatisticsController extends Controller {
 
         $answer = $em->getRepository('AnketaBundle\Entity\Answer')->find($answer_id);
         if ($answer === null) {
-            throw new NotFoundHttpException("Odpoveď s daným ID neexistuje");
+            $msg = $this->get('translator')->trans('statistics.controller.odpoved_neexistuje', array('%id%' => $answer_id));
+            throw new NotFoundHttpException($msg);
         }
         if ($answer->getInappropriate()) {
-            throw new NotFoundHttpException("Odpoveď s daným ID je už skrytá");
+            $msg = $this->get('translator')->trans('statistics.controller.odpoved_je_skryta', array('%id%' => $answer_id));
+            throw new NotFoundHttpException($msg);
         }
         $comment = $answer->getComment();
         if (empty($comment)) {
-            throw new NotFoundHttpException("Odpoveď s daným ID nemá komentár");
+            $msg = $this->get('translator')->trans('statistics.controller.odpoved_nema_komentar', array('%id%' => $answer_id));
+            throw new NotFoundHttpException($msg);
         }
 
         $section = StatisticsSection::getSectionOfAnswer($this->container, $answer);
@@ -468,9 +477,9 @@ class StatisticsController extends Controller {
                             ->setBody($body);
             $this->get('mailer')->send($message);
 
+            $msg = $this->get('translator')->trans('statistics.controller.report_spracujeme');
             $session = $this->get('session');
-            $session->setFlash('success',
-                    'Ďakujeme. Vaše hlásenie spracujeme v priebehu niekoľkých dní.');
+            $session->getFlashBag()->add('success', $msg);
 
             return new RedirectResponse($section->getStatisticsPath());
         }

@@ -115,7 +115,45 @@ statistics:
     moje_predmety: My subjects
     moje_komentare: My comments
     moje_reporty: Reports
-
+  seasonReport:
+    vysledky: Results for
+    pocet_hlasujucich: %voters% out of %total% students participated in the Student Questionnaire <em>%season%</em>.
+    celkova_ucast: Overall participation in the questionnaire was
+    k_vysledkom_cez_menu: Detailed results can be reached through menu on the left.
+  results:
+    predchadzajuce_hodnotenie: Previous results
+    pozrite_si: Take a look at
+    hodnotenie_pre_obdobie: results for questionnaire %season%
+  displayQuestionMacro:
+    nik_neodpovedal: There was no response for this question.
+    moznost: Option
+    hlasov: votes
+    podiel: ratio
+    vaha_pre_statistiku: Weight used for statistics
+    v: W
+    pocet_hlasov: Total number of votes
+    priemer: Average
+    median: Median
+    odchylka: Standard deviation
+    komentare: Comments
+    nahlasit_komentar: Report abusive comment
+    ziaden_komentar: There were no comments for this question.
+    skryte_komentare: >
+      {1} One abusive comment is hidden. Nevertheless, its content will be examined.|
+      [2,Inf] There are %count% hidden abusive comments. Nevertheless, theirs content will be examined.|
+    komentare_po_prihlaseni: <a href="%url%">Log in</a> in order to view comments.
+  controller:
+    vseobecne: General questions
+    studijne_programy: Study programmes
+    moje_predmety: My subjects
+    ziadna_sezona_s_vysledkami: There is no season with available results
+    chybna_sezona: Wrong season: %slug%
+    nenajdeny_ucitel: Teacher was not found
+    nenajdeny_studijny_program: No study programms found in this season
+    odpoved_neexistuje: Comment with ID=%id% does not exist
+    odpoved_je_skryta: Comment with ID=%id% is already hidden
+    odpoved_nema_komentar: Comment with ID=%id% does not exist
+    report_spracujeme: Thank you. We will process your report in the following days.
 
 reports:
   report:

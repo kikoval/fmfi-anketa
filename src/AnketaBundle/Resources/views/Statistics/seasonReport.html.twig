@@ -6,10 +6,11 @@
     {{ menu.statistics.render(activeMenuItems)|raw }}
 {% endblock %}
 {% block content %}
-    <h1>Výsledky {{ season.description }}</h1>
-    <p>V ankete <em>{{ season.description }}</em> hlasovalo {{ voters }} študentov z
-       celkového počtu {{ season.studentCount }}. Celková účasť v ankete
-       dosiahla <strong>{{ "%.0f%%" | format(voteProgress.percentDone) }}</strong>.
+    <h1>{% trans %}statistics.seasonReport.vysledky{% endtrans %} {{ season.description }}</h1>
+    <p>
+       {% trans with {'%season%': season.description, '%voters%': voters, '%total%': season.studentCount } %}statistics.seasonReport.pocet_hlasujucich{% endtrans %}
+       {% trans %}statistics.seasonReport.celkova_ucast{% endtrans %}
+       <strong>{{ "%.0f%%" | format(voteProgress.percentDone) }}</strong>.
     </p>
-    <p>K jednotlivým častiam výsledkov sa dostanete cez menu.</p>
+    <p>{% trans %}statistics.seasonReport.k_vysledkom_cez_menu{% endtrans %}</p>
 {% endblock %}
