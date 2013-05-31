@@ -122,6 +122,7 @@ statistics:
   controller:
     vseobecne: Všeobecné otázky
     studijne_programy: Študijné programy
+    moje_predmety: Moje predmety
     ziadna_sezona_s_vysledkami: Neexistuje žiadna sezóna s výsledkami
     chybna_sezona: Chybná sezóna: %slug%
     nenajdeny_ucitel: Učiteľ sa nenašiel

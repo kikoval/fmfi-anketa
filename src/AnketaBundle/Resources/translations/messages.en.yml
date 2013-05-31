@@ -121,6 +121,7 @@ statistics:
   controller:
     vseobecne: General questions
     studijne_programy: Study programmes
+    moje_predmety: My subjects
     ziadna_sezona_s_vysledkami: There is no season with available results
     chybna_sezona: Wrong season: %slug%
     nenajdeny_ucitel: Teacher was not found

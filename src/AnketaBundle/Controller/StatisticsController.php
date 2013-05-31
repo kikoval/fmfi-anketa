@@ -318,6 +318,7 @@ class StatisticsController extends Controller {
         }
 
         $templateParams = array();
+        $msg = $this->get('translator')->trans('statistics.controller.moje_predmety');
         $templateParams['title'] = 'Moje predmety';
         $templateParams['activeMenuItems'] = array($season->getId(), 'my_subjects');
         $templateParams['items'] = array('' => $items);
