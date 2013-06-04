@@ -18,6 +18,7 @@ security:
             anonymous:           true
             logout:
                 success_handler: security.logout.success_handler.cosign
+            switch_user: { parameter: _user }
 
     access_control:
         #- { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
