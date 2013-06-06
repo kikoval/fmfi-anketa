@@ -42,10 +42,12 @@
             </div>
             <div id="section-bar">
                 {% block section_bar %}
-                    {% if app.request.locale != 'sk' %}
-                        <a class="section" href="{{ path(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': 'sk'})) }}">Slovensky</a>
-                    {% else %}
-                        <a class="section" href="{{ path(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': 'en'})) }}">English</a>
+                    {% if app.request.get('_route_params') is not null %}
+                        {% if app.request.locale != 'sk' %}
+                            <a class="section" href="{{ path(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': 'sk'})) }}">Slovensky</a>
+                        {% else %}
+                            <a class="section" href="{{ path(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': 'en'})) }}">English</a>
+                        {% endif %}
                     {% endif %}
                     <a href="{{ path('faq') }}" class="section">FAQ</a>
                 {% endblock %}
