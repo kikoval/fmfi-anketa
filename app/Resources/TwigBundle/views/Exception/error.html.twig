@@ -4,6 +4,10 @@
     Chyba!
 {% endblock %}
 
+{# Prazdny section bar, lebo pouziva veci, ktore pri vynimke nie su dostupne #}
+{% block section_bar %}
+{% endblock %}
+
 {% block content %}
         <h1>Chyba {{ exception.statuscode }}</h1>
         <p>Pri spracovávaní požiadavky sme narazili na chybu: {{ exception.message }}</p>
