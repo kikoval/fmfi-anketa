@@ -113,7 +113,7 @@ class AnketaUserProvider implements UserProviderInterface
 
         $this->loadUserInfo($user);
 
-        if ($user->getDisplayName() === null || !$user->getOrgUnits()) {
+        if ($user->getDisplayName() === null) {
             throw new UsernameNotFoundException(sprintf('User "%s" not found.', $user->getLogin()));
         }
 
