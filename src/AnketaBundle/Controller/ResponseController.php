@@ -59,7 +59,7 @@ class ResponseController extends Controller {
                 }
                 $em->flush();
                 $message = $this->get('translator')->trans('response.controller.komentar_bol_ulozeny');
-                $this->get('session')->setFlash('success', $message);
+                $this->get('session')->getFlashBag()->add('success', $message);
                 return new RedirectResponse($section->getStatisticsPath());
             }
             else {
@@ -67,7 +67,7 @@ class ResponseController extends Controller {
                 $em->remove($response);
                 $em->flush();
                 $message = $this->get('translator')->trans('response.controller.komentar_bol_zmazany');
-                $this->get('session')->setFlash('success', $message);
+                $this->get('session')->getFlashBag()->add('success', $message);
                 return new RedirectResponse($this->generateUrl('response', array('season_slug' => $response->getSeason()->getSlug())));
             }
         }
