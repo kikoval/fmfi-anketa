@@ -74,6 +74,7 @@ teachingassociation:
       nadpis: Nahlásenie chýbajúceho učiteľa
       popis: Ak v zozname učiteľov a cvičiacich k tomuto predmetu niekto chýba, dajte nám prosím o tom vedieť vo formulári nižšie.
       meno: Meno
+      meno_placeholder: Začnite písať, meno sa doplní
       funkcia: Funkcia
       vyucujuci: Prednášajúci
       cviciaci: Cvičiaci

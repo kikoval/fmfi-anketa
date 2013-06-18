@@ -74,6 +74,7 @@ teachingassociation:
       nadpis: Report a missing teacher
       popis: If there is a lecturer or teaching assistant missing for this subject, please let us know. We will try to fix that as soon as possible.
       meno: Name
+      meno_placeholder: Start typing for autocomplete
       funkcia: Role
       vyucujuci: Lecturer
       cviciaci: Teaching assistant
