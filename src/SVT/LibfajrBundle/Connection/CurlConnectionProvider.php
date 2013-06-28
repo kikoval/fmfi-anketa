@@ -58,8 +58,6 @@ class CurlConnectionProvider implements HttpConnectionProviderInterface
             CURLOPT_FORBID_REUSE => false, // Keepalive konekcie
             CURLOPT_FOLLOWLOCATION => true, // Redirecty pri prihlasovani/odhlasovani
             CURLOPT_VERBOSE => false,
-            CURLOPT_SSL_VERIFYPEER => true,
-            CURLOPT_SSL_VERIFYHOST => true,
             CURLOPT_USERAGENT => $this->userAgent,
             CURLOPT_ENCODING => 'gzip',
         );
