@@ -9,6 +9,15 @@
  * 3. stop doing "SetEnv REMOTE_USER some_specific_username"
  */
 
+if (php_sapi_name() == 'cli-server') {
+  // from vendor/symfony/symfony/src/Symfony/Bundle/FrameworkBundle/Resources/config/router.php
+  if (is_file($_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . $_SERVER['SCRIPT_NAME'])) {
+    return false;
+  }
+  $_SERVER['SCRIPT_FILENAME'] = $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . 'app_dev.php';
+  $_SERVER['ALLOW_APP_LOGINDEV'] = 1;
+}
+
 if (!isset($_SERVER['ALLOW_APP_LOGINDEV'])) die('app_logindev not allowed');
 
 require __DIR__.'/../vendor/autoload.php';
