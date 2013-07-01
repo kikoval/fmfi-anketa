@@ -9,6 +9,10 @@ Ked sa zmeni schema, controllery, templaty, configy, apod.:
 
 - ./scripts/reset.sh
 
+Spustenie PHP embedded servera (ak sa da, radsej pouzite Apache):
+
+- ./scripts/devserver.sh
+
 Stare skripty:
 
 - update_cscope.sh (potrebuje cscope) - sluzi na vyhladavanie definicii tried,
