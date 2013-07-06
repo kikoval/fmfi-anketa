@@ -9,7 +9,7 @@
     {% endif %}
     </div>
     {% if not data.hasAnswer and data.numberOfInappropriateComments == 0 %}
-        {% trans %}statistics.displayQueestionMacro.nik_neodpovedal{% endtrans %}
+        {% trans %}statistics.displayQuestionMacro.nik_neodpovedal{% endtrans %}
     {% else %}
         {% if data.chart is not null %}
             <img src="{{ data.chart.url }}" width="{{ data.chart.width }}" height="{{ data.chart.height }}" alt="">

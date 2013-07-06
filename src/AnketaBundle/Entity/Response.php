@@ -62,7 +62,7 @@ class Response {
 
     /**
      * @ORM\ManyToOne(targetEntity="Question")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      *
      * @var Question $question
      */
