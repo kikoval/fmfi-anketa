@@ -8,7 +8,7 @@
 <h1>{% if new %}{% trans %}response.edit.novy_komentar{% endtrans %}{% else %}{% trans %}response.edit.upravit_komentar{% endtrans %}{% endif %}</h1>
 <p>{% trans %}response.edit.komentar_ku{% endtrans %}: <a href="{{ section.statisticsPath }}">{{ section.title }}</a></p>
 <form action="{{ submitLink }}" method="POST">
-<p class="association-description">{% trans %}response.edit.vasa.funkcia{% endtrans %}:
+<p class="association-description">{% trans %}response.edit.vasa_funkcia{% endtrans %}:
 <input type="text" class="association" name="association" value="{{ association }}">
 <br><span>({% trans %}response.edit.napriklad{% endtrans %} {{ section.associationExamples }}.
 {% trans %}response.edit.zobrazene_pri_mene{% endtrans %})</span></p>
