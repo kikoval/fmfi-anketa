@@ -183,6 +183,7 @@ class UserRepository extends EntityRepository {
         $query = $em->createQuery("SELECT COUNT(us.id) as anon
                                    FROM AnketaBundle\Entity\UserSeason us
                                    WHERE us.isStudent = true
+                                   AND us.participated = true
                                    AND us.finished = true
                                    AND us.season = :season");
         $query->setParameter('season', $season);

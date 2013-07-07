@@ -18,7 +18,6 @@ class AnonymizaciaController extends Controller {
             $user = $this->get('security.context')->getToken()->getUser();
             $season = $em->getRepository('AnketaBundle:Season')->getActiveSeason();
             $userSeason = $em->getRepository('AnketaBundle:UserSeason')->findOneBy(array('user' => $user->getId(), 'season' => $season->getId()));
-            $userSeason->setParticipated(true);   // technicky vzate nie nutne vzdy pravda ale v global progressbari to tak trochu predpokladame
             $userSeason->setFinished(true);
             $em->persist($user);
             $em->getRepository('AnketaBundle\Entity\User')
