@@ -38,7 +38,6 @@ statistics_flag:
     pattern: /flag/{answer_id}
     defaults: { _controller: AnketaBundle:Statistics:flagInappropriate}
     requirements:
-      season_slug:   "[a-z0-9-]+"
       answer_id: \d+
 
 statistics_results:
