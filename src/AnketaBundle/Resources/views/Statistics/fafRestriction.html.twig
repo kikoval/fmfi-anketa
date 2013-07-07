@@ -1,0 +1,15 @@
+{% extends 'AnketaBundle::layout.html.twig' %}
+{% block title %}{{ section.title }}{% endblock %}
+{% block navigation %}
+    {{ menu.statistics.render(section.activeMenuItems)|raw }}
+{% endblock %}
+{% block content %}
+    <h1>{{ section.title }}</h1>
+    {% if isteacher %}
+        Prístup ku výsledkom je obmedzený.
+        Učitelia môžu vidieť iba výsledky <a href="{{ path('statistics_list_my_subjects', {'season_slug': section.season.slug}) }}">svojich predmetov</a>.
+    {% else %}
+        Prístup ku výsledkom je obmedzený.
+        Výsledky môžu vidieť iba učitelia, a to iba pre predmety, ktoré učia.
+    {% endif %}
+{% endblock %}

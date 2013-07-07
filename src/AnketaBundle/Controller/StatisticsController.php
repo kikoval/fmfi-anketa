@@ -358,6 +358,24 @@ class StatisticsController extends Controller {
             return $this->accessDeniedForSeason($section->getSeason());
         }
 
+        if ($section->getSeason()->getFafRestricted() && !$this->get('security.context')->isGranted('ROLE_ADMIN')) {
+            $em = $this->get('doctrine.orm.entity_manager');
+            $access = $this->get('anketa.access.statistics');
+            $season = $section->getSeason();
+            $teacher = $access->getUser();
+            $subjects = $em->getRepository('AnketaBundle:Subject')->getSubjectsForTeacherWithAnyAnswers($teacher, $season);
+            $good = false;
+            if ($section->getSubject() !== null) {
+                foreach ($subjects as $subject) {
+                    if ($section->getSubject() == $subject) $good = true;
+                }
+            }
+            if (!$good) {
+                return $this->render('AnketaBundle:Statistics:fafRestriction.html.twig',
+                    array('section' => $section, 'isteacher' => $access->isATeacher($season)));
+            }
+        }
+
         $maxCnt = 0;
         $results = array();
 
@@ -403,7 +421,7 @@ class StatisticsController extends Controller {
         return $this->render('AnketaBundle:Statistics:seasonReport.html.twig', $templateParams);
     }
 
-    public function listGeneralAction($season_slug = null) {
+    public function listGeneralAction($season_slug) {
         $em = $this->get('doctrine.orm.entity_manager');
         $season = $this->getSeason($season_slug);
         if (!$this->get('anketa.access.statistics')->canSeeResults($season)) {

@@ -120,6 +120,7 @@ class StatisticsAccess
      */
     public function canSeeResults(Season $season) {
         if ($this->security->isGranted('ROLE_ADMIN')) return true;
+        if ($season->getFafRestricted() && $this->hasOwnSubjects($season)) return true;
         return $season->getResultsVisible() && ($season->getResultsPublic() || ($this->getUser() !== null));
     }
 
