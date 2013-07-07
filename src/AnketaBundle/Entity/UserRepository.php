@@ -176,8 +176,7 @@ class UserRepository extends EntityRepository {
 
     /**
      * Pocet ludi co anonymizovali.
-     * Warning: toto je nasty hack
-     * TODO: potrebujeme specialny field k user-season ci anonymizoval
+     * (Toto je korektne iba kym anketa bezi a neanonymizovali sme zvysnych.)
      */
     public function getNumberOfAnonymizations($season) {
         $em = $this->getEntityManager();
