@@ -176,14 +176,14 @@ class UserRepository extends EntityRepository {
 
     /**
      * Pocet ludi co anonymizovali.
-     * Warning: toto je nasty hack
-     * TODO: potrebujeme specialny field k user-season ci anonymizoval
+     * (Toto je korektne iba kym anketa bezi a neanonymizovali sme zvysnych.)
      */
     public function getNumberOfAnonymizations($season) {
         $em = $this->getEntityManager();
         $query = $em->createQuery("SELECT COUNT(us.id) as anon
                                    FROM AnketaBundle\Entity\UserSeason us
                                    WHERE us.isStudent = true
+                                   AND us.participated = true
                                    AND us.finished = true
                                    AND us.season = :season");
         $query->setParameter('season', $season);
