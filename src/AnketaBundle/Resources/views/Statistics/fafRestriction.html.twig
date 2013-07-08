@@ -6,10 +6,8 @@
 {% block content %}
     <h1>{{ section.title }}</h1>
     {% if isteacher %}
-        Prístup ku výsledkom je obmedzený.
-        Učitelia môžu vidieť iba výsledky <a href="{{ path('statistics_list_my_subjects', {'season_slug': section.season.slug}) }}">svojich predmetov</a>.
+        {% trans with {'%url%': path('statistics_list_my_subjects', {'season_slug': section.season.slug}) } %}statistics.fafRestriction.teacher{% endtrans %}
     {% else %}
-        Prístup ku výsledkom je obmedzený.
-        Výsledky môžu vidieť iba učitelia, a to iba pre predmety, ktoré učia.
+        {% trans %}statistics.fafRestriction.noteacher{% endtrans %}
     {% endif %}
 {% endblock %}
