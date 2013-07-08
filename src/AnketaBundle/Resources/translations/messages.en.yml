@@ -12,6 +12,7 @@ welcome:
   index:
     studentska_anketa: Student Questionnaire
     vitaj: Welcome to the Student Questionnaire
+    stanovisko: Read the <a href="%url%">official statement about the results for %descr%</a>.
     zapoj_sa: Give us your opinion, it counts!
     hlasuj: Enter questionnaire
     otvorene_do: The questionnaire will be open until

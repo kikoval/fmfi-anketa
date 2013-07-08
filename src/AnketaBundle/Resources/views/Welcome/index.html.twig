@@ -21,6 +21,9 @@
     {% endif %}
 {% else %}
     <p>{% trans %}welcome.index.hlasovanie_ukoncene{% endtrans %}</p>
+    {% if active_season.officialStatement %}
+    <p>{% trans with { '%url%': path('statistics_statement', {'season_slug': active_season.slug}), '%descr%': active_season.description } %}welcome.index.stanovisko{% endtrans %}</p>
+    {% endif %}
     {% if access.statistics.activeSeasonHasVisibleResults %}
         <p><a class="bigbtn" href="{{ path('statistics') }}">
         <span class="bigbtn_middle"><span class="bigbtn_left"><span class="bigbtn_right bigbtn_in">{% trans %}welcome.index.vysledky{% endtrans %}</span></span></span></a></p>
