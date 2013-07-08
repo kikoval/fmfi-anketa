@@ -448,6 +448,16 @@ class StatisticsController extends Controller {
         return $this->render('AnketaBundle:Statistics:listing.html.twig', $templateParams);
     }
 
+    public function officialStatementAction($season_slug) {
+        $season = $this->getSeason($season_slug);
+        $url = $season->getOfficialStatement();
+        if (!$url) throw new NotFoundHttpException('Not found');
+        if (strpos($url, '/') === false) {
+            $url = $this->get('templating.helper.assets')->getUrl('bundles/anketa/files/' . $url);
+        }
+        return new RedirectResponse($url);
+    }
+
     public function flagInappropriateAction($answer_id) {
         $em = $this->get('doctrine.orm.entity_manager');
         $request = $this->get('request');

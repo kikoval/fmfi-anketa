@@ -91,5 +91,8 @@ statistics_results: '/vysledky/{section_slug}'
 # Desc: /vysledky/{season_slug}
 statistics_season: '/vysledky/{season_slug}'
 
+# Desc: /vysledky/{season_slug}/stanovisko
+statistics_statement: '/vysledky/{season_slug}/stanovisko'
+
 # Desc: /ucitelia/vyhladavanie
 teacher_search: /ucitelia/vyhladavanie

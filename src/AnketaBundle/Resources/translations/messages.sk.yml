@@ -13,6 +13,7 @@ welcome:
     studentska_anketa: Študentská anketa
     vitaj: Vitajte v Študentskej ankete
     zapoj_sa: Zapojte sa aj Vy a prezentujte svoj názor!
+    stanovisko: Prečítajte si <a href="%url%">stanovisko vedenia fakulty k výsledkom ankety %descr%</a>.
     hlasuj: Hlasuj!
     otvorene_do: Otvorené do
     hlasovanie_ukoncene: Hlasovanie v ankete je ukončené. Ďakujeme všetkým zúčastneným za vyplnenie :)
@@ -116,6 +117,7 @@ statistics:
     moje_predmety: Moje predmety
     moje_komentare: Moje komentáre
     moje_reporty: Reporty
+    stanovisko_vedenia: Stanovisko vedenia
   seasonReport:
     vysledky: Výsledky
     pocet_hlasujucich: V ankete <em>%season%</em> hlasovalo %voters% študentov z celkového počtu %total%.

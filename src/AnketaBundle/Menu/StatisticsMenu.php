@@ -135,6 +135,14 @@ class StatisticsMenu
                         $this->generateUrl('reports_my_reports',
                             array('season_slug' => $season->getSlug())));
                 }
+
+                // Add "Official statement" under this season.
+                if ($season->getOfficialStatement()) {
+                    $seasonItem->children['official_statement'] = new MenuItem(
+                        $trans->trans('statistics.menu.stanovisko_vedenia'),
+                        $this->generateUrl('statistics_statement',
+                            array('season_slug' => $season->getSlug())));
+                }
             }
         }
 

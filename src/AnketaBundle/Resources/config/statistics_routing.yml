@@ -34,6 +34,12 @@ statistics_list_general:
     requirements:
       season_slug:   "[a-z0-9-]+"
 
+statistics_statement:
+    pattern: /vysledky/{season_slug}/stanovisko
+    defaults: { _controller: AnketaBundle:Statistics:officialStatement}
+    requirements:
+      season_slug:   "[a-z0-9-]+"
+
 statistics_flag:
     pattern: /flag/{answer_id}
     defaults: { _controller: AnketaBundle:Statistics:flagInappropriate}

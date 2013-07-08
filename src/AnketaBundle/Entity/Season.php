@@ -104,6 +104,12 @@ class Season {
      */
     protected $endTime;
 
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     * @var string $officialStatement;
+     */
+    protected $officialStatement;
+
     public function __construct($description, $slug) {
         $this->setDescription($description);
         $this->setSlug($slug);
@@ -210,6 +216,14 @@ class Season {
 
     public function setEndTime($endTime) {
         $this->endTime = $endTime;
+    }
+
+    public function getOfficialStatement() {
+        return $this->officialStatement;
+    }
+
+    public function setOfficialStatement($officialStatement) {
+        $this->officialStatement = $officialStatement;
     }
 
 }
