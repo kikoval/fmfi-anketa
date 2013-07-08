@@ -144,7 +144,7 @@ class StatisticsMenu
                             getUrl('bundles/anketa/files/' . $url);
                     }
                     $seasonItem->children['official_statement'] = new MenuItem(
-                        $trans->trans('statistics.menu.official_statement'),
+                        $trans->trans('statistics.menu.stanovisko_vedenia'),
                         $url);
                 }
             }

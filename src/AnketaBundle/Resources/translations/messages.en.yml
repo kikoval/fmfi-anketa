@@ -116,7 +116,7 @@ statistics:
     moje_predmety: My subjects
     moje_komentare: My comments
     moje_reporty: Reports
-    official_statement: Official statement
+    stanovisko_vedenia: Official statement
   seasonReport:
     vysledky: Results for
     pocet_hlasujucich: %voters% out of %total% students participated in the Student Questionnaire <em>%season%</em>.
