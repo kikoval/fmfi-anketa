@@ -127,6 +127,7 @@ class AnswerRepository extends EntityRepository {
                     'FROM Season s, SubjectSeason ss, Answer a, Question q '.
                     'WHERE s.id = ss.season_id '.
                     'AND ss.subject_id = su.id '.
+                    'AND a.subject_id = su.id '.
                     'AND s.resultsPublic = 1 '.
                     'AND a.season_id = s.id '.
                     'AND a.question_id = q.id '.
