@@ -81,6 +81,14 @@ class Season {
     protected $responsesVisible;
 
     /**
+     * TODO: This is a huge hack and needs to be removed as soon as it's not
+     * needed.
+     *
+     * @ORM\Column(type="boolean", nullable=false)
+     */
+    protected $fafRestricted;
+
+    /**
      * Order seasons by this column in descending order in results.
      * The larger the number, the later in history the season will appear.
      * 
@@ -178,6 +186,14 @@ class Season {
 
     public function setResponsesVisible($value) {
         $this->responsesVisible = $value;
+    }
+
+    public function getFafRestricted() {
+        return $this->fafRestricted;
+    }
+
+    public function setFafRestricted($value) {
+        $this->fafRestricted = $value;
     }
 
     public function getOrdering() {

@@ -144,6 +144,9 @@ statistics:
       [2,4] Boli skryté %count% nevhodné komentáre. Ich obsah bude napriek tomu preskúmaný.|
       ]4,Inf] Bolo skrytých %count% nevhodných komentárov. Ich obsah bude napriek tomu preskúmaný.
     komentare_po_prihlaseni: Komentáre si môžete pozrieť po <a href="%url%">prihlásení</a>.
+  fafRestriction:
+    teacher: Prístup ku výsledkom je obmedzený. Učitelia môžu vidieť iba výsledky <a href="%url%">svojich predmetov</a>.
+    noteacher: Prístup ku výsledkom je obmedzený. Výsledky môžu vidieť iba učitelia, a to iba pre predmety, ktoré učia.
   controller:
     vseobecne: Všeobecné otázky
     studijne_programy: Študijné programy

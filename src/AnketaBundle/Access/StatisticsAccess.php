@@ -99,6 +99,9 @@ class StatisticsAccess
      * @return boolean
      */
     public function canSeeTopLevelResults() {
+        $activeSeason = $this->em->getRepository('AnketaBundle:Season')->getActiveSeason();
+        if ($activeSeason->getFafRestricted() && $this->hasOwnSubjects($activeSeason)) return true;
+
         return $this->em->getRepository('AnketaBundle:Season')->getTopLevelResultsVisible();
     }
 
@@ -120,6 +123,7 @@ class StatisticsAccess
      */
     public function canSeeResults(Season $season) {
         if ($this->security->isGranted('ROLE_ADMIN')) return true;
+        if ($season->getFafRestricted() && $this->hasOwnSubjects($season)) return true;
         return $season->getResultsVisible() && ($season->getResultsPublic() || ($this->getUser() !== null));
     }
 

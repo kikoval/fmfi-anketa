@@ -1,0 +1,13 @@
+{% extends 'AnketaBundle::layout.html.twig' %}
+{% block title %}{{ section.title }}{% endblock %}
+{% block navigation %}
+    {{ menu.statistics.render(section.activeMenuItems)|raw }}
+{% endblock %}
+{% block content %}
+    <h1>{{ section.title }}</h1>
+    {% if isteacher %}
+        {% trans with {'%url%': path('statistics_list_my_subjects', {'season_slug': section.season.slug}) } %}statistics.fafRestriction.teacher{% endtrans %}
+    {% else %}
+        {% trans %}statistics.fafRestriction.noteacher{% endtrans %}
+    {% endif %}
+{% endblock %}
