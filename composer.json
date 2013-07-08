@@ -18,10 +18,11 @@
         "sensio/generator-bundle": "2.1.*",
         "jms/security-extra-bundle": "1.2.*",
         "jms/di-extra-bundle": "1.1.*",
-        "jms/i18n-routing-bundle": "dev-master",
+        "jms/i18n-routing-bundle": "1.1.*",
         "doctrine/doctrine-fixtures-bundle": "2.1.*",
         "svt/libfajr": "@dev",
-        "svt/rozvrhxml": "@dev"
+        "svt/rozvrhxml": "@dev",
+        "svt/cosign-bundle": "@dev"
     },
     "require-dev": {
         "svt/linters": "@dev"
@@ -38,6 +39,10 @@
         {
             "type": "git",
             "url": "https://github.com/fmfi-svt/linters.git"
+        },
+        {
+            "type": "git",
+            "url": "https://github.com/fmfi-svt/cosign-bundle.git"
         }
     ],
     "scripts": {

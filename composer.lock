@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "261fbff1b43d46a1930e03b9de30d3c9",
+    "hash": "2c50da1758736a9d3800c60e19e3cf6c",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -261,7 +261,7 @@
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "name": "Johannes M. Schmitt",
+                    "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
                     "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
@@ -829,7 +829,7 @@
         },
         {
             "name": "jms/i18n-routing-bundle",
-            "version": "dev-master",
+            "version": "1.1.0",
             "target-dir": "JMS/I18nRoutingBundle",
             "source": {
                 "type": "git",
@@ -1157,7 +1157,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/1.2.1",
+                "url": "https://github.com/Seldaek/monolog/zipball/1.2.1",
                 "reference": "1.2.1",
                 "shasum": ""
             },
@@ -1183,7 +1183,6 @@
                     "Monolog": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -1201,7 +1200,7 @@
                 "log",
                 "logging"
             ],
-            "time": "2012-08-29 11:53:20"
+            "time": "2012-08-29 04:53:20"
         },
         {
             "name": "nikic/php-parser",
@@ -1384,12 +1383,35 @@
             "time": "2013-04-01 18:11:18"
         },
         {
+            "name": "svt/cosign-bundle",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fmfi-svt/cosign-bundle.git",
+                "reference": "c6b1ff35ec67bec9a3771e09c80f030af3314308"
+            },
+            "require": {
+                "symfony/symfony": ">=2.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "SVT\\CosignBundle": "src/"
+                }
+            },
+            "license": [
+                "BSD"
+            ],
+            "description": "Support for login via CoSign",
+            "time": "2013-07-08 18:44:54"
+        },
+        {
             "name": "svt/libfajr",
             "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://code.google.com/p/libfajr/",
-                "reference": "3be60da1e11202358e585c1b948f8f14dd75414a"
+                "reference": "2cbb5ded3fc408da8b6dcfd1e8775ebb9f3d9641"
             },
             "type": "library",
             "autoload": {
@@ -1401,7 +1423,7 @@
                 "MIT"
             ],
             "description": "Functions for connecting to AIS2",
-            "time": "2013-05-09 21:34:59"
+            "time": "2013-03-20 21:52:06"
         },
         {
             "name": "svt/rozvrhxml",
@@ -1448,7 +1470,6 @@
                     "lib/swift_required.php"
                 ]
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "LGPL"
             ],
@@ -1838,7 +1859,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fmfi-svt/linters.git",
-                "reference": "eaa2b21fc170f13c9ffc81bdef00d36af1f113b5"
+                "reference": "7f464e15d755f07d81eeff87d84f963e595596ec"
             },
             "require": {
                 "php": ">=5.2"
@@ -1848,7 +1869,7 @@
                 "MIT"
             ],
             "description": "Collection of useful linters.",
-            "time": "2013-05-04 12:42:09"
+            "time": "2013-04-05 12:04:41"
         }
     ],
     "aliases": [
@@ -1856,9 +1877,9 @@
     ],
     "minimum-stability": "alpha",
     "stability-flags": {
-        "jms/i18n-routing-bundle": 20,
         "svt/libfajr": 20,
         "svt/rozvrhxml": 20,
+        "svt/cosign-bundle": 20,
         "svt/linters": 20
     },
     "platform": {
