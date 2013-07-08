@@ -371,7 +371,7 @@ class StatisticsSection extends ContainerAware {
 
         // Treba vylucit prazdne odpovede
         // TODO: nedavat do DB prazdne odpovede
-        $qb->andWhere('NOT(a.evaluation IS NULL AND a.comment IS NULL AND a.option IS NULL)');
+        $qb->andWhere('NOT(a.comment IS NULL AND a.option IS NULL)');
         $qb->setParameters(array(1 => $this->questionsCategoryType, 2 => $this->season->getOrdering()));
         $qb->setMaxResults(1);
         $answer = $qb->getQuery()->getOneOrNullResult();
