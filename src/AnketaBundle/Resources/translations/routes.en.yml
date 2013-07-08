@@ -88,5 +88,8 @@ statistics_results: '/results/{section_slug}'
 # Desc: /vysledky/{season_slug}
 statistics_season: '/results/{season_slug}'
 
+# Desc: /vysledky/{season_slug}/stanovisko
+statistics_statement: '/results/{season_slug}/statement'
+
 # Desc: /ucitelia/vyhladavanie
 teacher_search: /ucitelia/vyhladavanie   # FIXME

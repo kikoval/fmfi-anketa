@@ -138,14 +138,10 @@ class StatisticsMenu
 
                 // Add "Official statement" under this season.
                 if ($season->getOfficialStatement()) {
-                    $url = $season->getOfficialStatement();
-                    if (strpos($url, '/') === false) {
-                        $url = $this->container->get('templating.helper.assets')->
-                            getUrl('bundles/anketa/files/' . $url);
-                    }
                     $seasonItem->children['official_statement'] = new MenuItem(
                         $trans->trans('statistics.menu.stanovisko_vedenia'),
-                        $url);
+                        $this->generateUrl('statistics_statement',
+                            array('season_slug' => $season->getSlug())));
                 }
             }
         }
