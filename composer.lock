@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "261fbff1b43d46a1930e03b9de30d3c9",
+    "hash": "1c7d6321419b19d057090385fa099351",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -261,7 +261,7 @@
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "name": "Johannes M. Schmitt",
+                    "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
                     "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
@@ -834,34 +834,31 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/schmittjoh/JMSI18nRoutingBundle.git",
-                "reference": "1.1.0"
+                "reference": "5e8b7199ee109c266eb353d137195eb56ba86521"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/schmittjoh/JMSI18nRoutingBundle/zipball/1.1.0",
-                "reference": "1.1.0",
+                "url": "https://api.github.com/repos/schmittjoh/JMSI18nRoutingBundle/zipball/5e8b7199ee109c266eb353d137195eb56ba86521",
+                "reference": "5e8b7199ee109c266eb353d137195eb56ba86521",
                 "shasum": ""
             },
             "require": {
-                "jms/translation-bundle": ">=1.0,<2.0",
-                "symfony/framework-bundle": ">=2.1,<3.0"
+                "jms/translation-bundle": ">=1.0,<2.0-dev",
+                "symfony/framework-bundle": ">=2.1,<2.3-dev"
             },
             "require-dev": {
                 "jms/di-extra-bundle": "*",
-                "sensio/framework-extra-bundle": "<2.1.5",
-                "symfony/browser-kit": "<2.1.5",
-                "symfony/class-loader": "<2.1.5",
-                "symfony/css-selector": "<2.1.5",
-                "symfony/finder": "<2.1.5",
-                "symfony/form": "<2.1.5",
-                "symfony/framework-bundle": "<2.1.5",
-                "symfony/http-foundation": "<2.1.5",
-                "symfony/http-kernel": "<2.1.5",
-                "symfony/process": "<2.1.5",
-                "symfony/routing": "<2.1.5",
-                "symfony/twig-bundle": "<2.1.5",
-                "symfony/validator": "<2.1.5",
-                "symfony/yaml": "<2.1.5"
+                "sensio/framework-extra-bundle": "*",
+                "symfony/browser-kit": "*",
+                "symfony/class-loader": "*",
+                "symfony/css-selector": "*",
+                "symfony/finder": "*",
+                "symfony/form": "*",
+                "symfony/http-kernel": "*",
+                "symfony/process": "*",
+                "symfony/twig-bundle": "*",
+                "symfony/validator": "*",
+                "symfony/yaml": "*"
             },
             "type": "symfony-bundle",
             "extra": {
@@ -882,7 +879,7 @@
                 {
                     "name": "Johannes M. Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "http://jmsyst.com",
+                    "homepage": "https://github.com/schmittjoh",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -893,7 +890,7 @@
                 "routing",
                 "translation"
             ],
-            "time": "2013-06-08 14:01:20"
+            "time": "2013-02-11 21:00:49"
         },
         {
             "name": "jms/metadata",
@@ -1157,7 +1154,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/1.2.1",
+                "url": "https://github.com/Seldaek/monolog/zipball/1.2.1",
                 "reference": "1.2.1",
                 "shasum": ""
             },
@@ -1183,7 +1180,6 @@
                     "Monolog": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -1201,7 +1197,7 @@
                 "log",
                 "logging"
             ],
-            "time": "2012-08-29 11:53:20"
+            "time": "2012-08-29 04:53:20"
         },
         {
             "name": "nikic/php-parser",
@@ -1384,12 +1380,35 @@
             "time": "2013-04-01 18:11:18"
         },
         {
+            "name": "svt/cosign-bundle",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fmfi-svt/cosign-bundle.git",
+                "reference": "c6b1ff35ec67bec9a3771e09c80f030af3314308"
+            },
+            "require": {
+                "symfony/symfony": ">=2.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "SVT\\CosignBundle": "src/"
+                }
+            },
+            "license": [
+                "BSD"
+            ],
+            "description": "Support for login via CoSign",
+            "time": "2013-07-08 18:44:54"
+        },
+        {
             "name": "svt/libfajr",
             "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://code.google.com/p/libfajr/",
-                "reference": "3be60da1e11202358e585c1b948f8f14dd75414a"
+                "reference": "2cbb5ded3fc408da8b6dcfd1e8775ebb9f3d9641"
             },
             "type": "library",
             "autoload": {
@@ -1401,7 +1420,7 @@
                 "MIT"
             ],
             "description": "Functions for connecting to AIS2",
-            "time": "2013-05-09 21:34:59"
+            "time": "2013-03-20 21:52:06"
         },
         {
             "name": "svt/rozvrhxml",
@@ -1448,7 +1467,6 @@
                     "lib/swift_required.php"
                 ]
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "LGPL"
             ],
@@ -1838,7 +1856,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fmfi-svt/linters.git",
-                "reference": "eaa2b21fc170f13c9ffc81bdef00d36af1f113b5"
+                "reference": "7f464e15d755f07d81eeff87d84f963e595596ec"
             },
             "require": {
                 "php": ">=5.2"
@@ -1848,7 +1866,7 @@
                 "MIT"
             ],
             "description": "Collection of useful linters.",
-            "time": "2013-05-04 12:42:09"
+            "time": "2013-04-05 12:04:41"
         }
     ],
     "aliases": [
@@ -1859,6 +1877,7 @@
         "jms/i18n-routing-bundle": 20,
         "svt/libfajr": 20,
         "svt/rozvrhxml": 20,
+        "svt/cosign-bundle": 20,
         "svt/linters": 20
     },
     "platform": {

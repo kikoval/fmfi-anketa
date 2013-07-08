@@ -21,7 +21,8 @@
         "jms/i18n-routing-bundle": "dev-master",
         "doctrine/doctrine-fixtures-bundle": "2.1.*",
         "svt/libfajr": "@dev",
-        "svt/rozvrhxml": "@dev"
+        "svt/rozvrhxml": "@dev",
+        "svt/cosign-bundle": "@dev"
     },
     "require-dev": {
         "svt/linters": "@dev"
@@ -38,6 +39,10 @@
         {
             "type": "git",
             "url": "https://github.com/fmfi-svt/linters.git"
+        },
+        {
+            "type": "git",
+            "url": "https://github.com/fmfi-svt/cosign-bundle.git"
         }
     ],
     "scripts": {
