@@ -99,6 +99,9 @@ class StatisticsAccess
      * @return boolean
      */
     public function canSeeTopLevelResults() {
+        $activeSeason = $this->em->getRepository('AnketaBundle:Season')->getActiveSeason();
+        if ($activeSeason->getFafRestricted() && $this->hasOwnSubjects($activeSeason)) return true;
+
         return $this->em->getRepository('AnketaBundle:Season')->getTopLevelResultsVisible();
     }
 
