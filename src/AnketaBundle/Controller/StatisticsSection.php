@@ -116,7 +116,6 @@ class StatisticsSection extends ContainerAware {
         throw new \Exception('Unknown type of response');
     }
 
-    // TODO: mozno nie vracat null ale hadzat rozne exceptiony, nech sa da zistit co sa stalo
     public static function getSectionFromSlug(ContainerInterface $container, $slug) {
         $em = $container->get('doctrine.orm.entity_manager');
         if (!preg_match('@^([a-z0-9-]+)/(.*[^/])/*$@', $slug, $matches)) {
@@ -369,9 +368,6 @@ class StatisticsSection extends ContainerAware {
             }
         }
 
-        // Treba vylucit prazdne odpovede
-        // TODO: nedavat do DB prazdne odpovede
-        $qb->andWhere('NOT(a.evaluation IS NULL AND a.comment IS NULL AND a.option IS NULL)');
         $qb->setParameters(array(1 => $this->questionsCategoryType, 2 => $this->season->getOrdering()));
         $qb->setMaxResults(1);
         $answer = $qb->getQuery()->getOneOrNullResult();

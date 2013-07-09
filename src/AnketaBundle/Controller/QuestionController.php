@@ -94,7 +94,7 @@ class QuestionController extends Controller {
                 $answer->setComment(null);
             }
 
-            if (empty($answer->getOption()) && empty($answer->getComment())) {
+            if ($answer->getOption() === null && $answer->getComment() === null) {
                 $em->remove($answer);
             } else {
                 $em->persist($answer);
@@ -363,7 +363,7 @@ class QuestionController extends Controller {
                       ->getAnswersByCriteria($questions, $user, $season);
 
         if ('POST' == $request->getMethod()) {
-            // k odpovediam pridame prvy studijny odbor, co user ma
+            // k odpovediam na vseobecne otazky dame prvy studijny program, co user ma
             $studyProgram = $em->getRepository('AnketaBundle\Entity\StudyProgram')->
                 getFirstStudyProgrammeForUser($user, $season);
 
