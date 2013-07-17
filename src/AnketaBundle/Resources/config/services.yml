@@ -22,3 +22,8 @@ services:
     anketa.teacher_search:
         class: AnketaBundle\Integration\LDAPTeacherSearch
         arguments: ["@anketa.ldap_retriever", "%org_unit%"]
+    anketa.subjects.action_listener:
+        class: AnketaBundle\EventListener\SubjectImportListener
+        arguments: ["@service_container", "%user_info_zdroje%"]
+        tags:
+            - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
