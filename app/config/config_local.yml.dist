@@ -51,7 +51,7 @@ parameters:
 
     user_info_zdroje:
         subjects:     anketa.ais_user_source      # ais / demo / none
-        displayName:  anketa.ais_user_source      # ais / ldap / demo / none
+        displayName:  anketa.ldap_user_source     # ais / ldap / demo / none
         isStudent:    anketa.ais_user_source      # ais / demo / none
         orgUnits:     anketa.ldap_user_source     # ldap / demo
     ais_semestre: 

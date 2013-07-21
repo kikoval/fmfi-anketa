@@ -64,7 +64,7 @@ class AnketaUserProvider implements UserProviderInterface
         }
 
         $user = $this->em->getRepository('AnketaBundle:User')
-        		->findOneWithRolesByLogin($oldUser->getLogin());
+                ->findOneWithRolesByLogin($oldUser->getLogin());
 
         if ($user === null) {
             throw new UsernameNotFoundException(sprintf("User %s not found in database! Cannot refresh.", $oldUser->getLogin()));
@@ -105,7 +105,7 @@ class AnketaUserProvider implements UserProviderInterface
 
         // Try to load the user from database first
         $user = $this->em->getRepository('AnketaBundle:User')
-        		->findOneWithRolesByLogin($username);
+                ->findOneWithRolesByLogin($username);
 
         if ($user === null) {
             $user = new User($username);
@@ -113,7 +113,7 @@ class AnketaUserProvider implements UserProviderInterface
             $this->em->flush($user);
 
             $user->addRole($this->em->getRepository('AnketaBundle:Role')
-            		->findOrCreateRole('ROLE_USER'));
+                    ->findOrCreateRole('ROLE_USER'));
         }
 
         $this->loadUserInfo($user);
@@ -132,34 +132,34 @@ class AnketaUserProvider implements UserProviderInterface
      */
     private function loadUserInfo(User $user)
     {
-    	$activeSeason = $this->em->getRepository('AnketaBundle:Season')
-    			->getActiveSeason();
-    	$userSeason = $this->em->getRepository('AnketaBundle:UserSeason')
-    			->findOneBy(array('user' => $user,
-    					          'season' => $activeSeason));
+        $activeSeason = $this->em->getRepository('AnketaBundle:Season')
+                ->getActiveSeason();
+        $userSeason = $this->em->getRepository('AnketaBundle:UserSeason')
+                ->findOneBy(array('user' => $user,
+                                  'season' => $activeSeason));
 
-		if ($userSeason === null) {
-    		$userSeason = new UserSeason();
-    		$userSeason->setUser($user);
-    		$userSeason->setSeason($activeSeason);
-    		$this->em->persist($userSeason);
-    	}
+        if ($userSeason === null) {
+            $userSeason = new UserSeason();
+            $userSeason->setUser($user);
+            $userSeason->setSeason($activeSeason);
+            $this->em->persist($userSeason);
+        }
 
-    	// "$load[X][Y]" == "service X should load user attribute Y"
-    	$load = array();
+        // "$load[X][Y]" == "service X should load user attribute Y"
+        $load = array();
 
-    	if ($user->getDisplayName() === null) {
-    		$load[$this->userSources['displayName']]['displayName'] = true;
-    	}
-    	if (!$user->getOrgUnits()) {
-    		$load[$this->userSources['orgUnits']]['orgUnits'] = true;
-    	}
+        if ($user->getDisplayName() === null) {
+            $load[$this->userSources['displayName']]['displayName'] = true;
+        }
+        if (!$user->getOrgUnits()) {
+            $load[$this->userSources['orgUnits']]['orgUnits'] = true;
+        }
 
-    	foreach ($load as $service => $attributes) {
-    		$this->container->get($service)->load($userSeason, $attributes);
-    	}
+        foreach ($load as $service => $attributes) {
+            $this->container->get($service)->load($userSeason, $attributes);
+        }
 
-    	$this->em->flush();
+        $this->em->flush();
     }
 
     /**
