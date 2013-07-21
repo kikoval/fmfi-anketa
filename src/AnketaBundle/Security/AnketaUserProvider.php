@@ -54,7 +54,8 @@ class AnketaUserProvider implements UserProviderInterface
      * @return User the reloaded user
      * @throws UnsupportedUserException if the UserInstance given is not User
      */
-    public function refreshUser(UserInterface $oldUser) {
+    public function refreshUser(UserInterface $oldUser)
+    {
         if ($this->logger) {
             $this->logger->debug(sprintf('refreshing user %s object %s', $oldUser->getUsername(), get_class($oldUser)));
         }
@@ -62,7 +63,8 @@ class AnketaUserProvider implements UserProviderInterface
             throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', get_class($oldUser)));
         }
 
-        $user = $this->em->getRepository('AnketaBundle:User')->findOneWithRolesByLogin($oldUser->getLogin());
+        $user = $this->em->getRepository('AnketaBundle:User')
+                ->findOneWithRolesByLogin($oldUser->getLogin());
 
         if ($user === null) {
             throw new UsernameNotFoundException(sprintf("User %s not found in database! Cannot refresh.", $oldUser->getLogin()));
@@ -86,7 +88,8 @@ class AnketaUserProvider implements UserProviderInterface
      * @throws UsernameNotFoundException if the given user cannot be found
      *                                   nor constructed
      */
-    public function loadUserByUsername($username) {
+    public function loadUserByUsername($username)
+    {
         // It seems that the username argument may also be a UserInterface instance
         // ... may be a bug in Symfony security component
         // (the user(name) is extracted from PreAuthenticatedToken at
@@ -101,14 +104,16 @@ class AnketaUserProvider implements UserProviderInterface
         }
 
         // Try to load the user from database first
-        $user = $this->em->getRepository('AnketaBundle:User')->findOneWithRolesByLogin($username);
+        $user = $this->em->getRepository('AnketaBundle:User')
+                ->findOneWithRolesByLogin($username);
 
         if ($user === null) {
             $user = new User($username);
             $this->em->persist($user);
             $this->em->flush($user);
 
-            $user->addRole($this->em->getRepository('AnketaBundle:Role')->findOrCreateRole('ROLE_USER'));
+            $user->addRole($this->em->getRepository('AnketaBundle:Role')
+                    ->findOrCreateRole('ROLE_USER'));
         }
 
         $this->loadUserInfo($user);
@@ -120,10 +125,18 @@ class AnketaUserProvider implements UserProviderInterface
         return $user;
     }
 
-    private function loadUserInfo(User $user) {
-        $activeSeason = $this->em->getRepository('AnketaBundle:Season')->getActiveSeason();
-        $userSeason = $this->em->getRepository('AnketaBundle:UserSeason')->
-                findOneBy(array('user' => $user->getId(), 'season' => $activeSeason->getId()));
+    /**
+     * Load user info and user's subjects in necessary.
+     *
+     * @param User $user
+     */
+    private function loadUserInfo(User $user)
+    {
+        $activeSeason = $this->em->getRepository('AnketaBundle:Season')
+                ->getActiveSeason();
+        $userSeason = $this->em->getRepository('AnketaBundle:UserSeason')
+                ->findOneBy(array('user' => $user,
+                                  'season' => $activeSeason));
 
         if ($userSeason === null) {
             $userSeason = new UserSeason();
@@ -135,11 +148,6 @@ class AnketaUserProvider implements UserProviderInterface
         // "$load[X][Y]" == "service X should load user attribute Y"
         $load = array();
 
-        if (!$userSeason->getLoadedFromAis()) {
-            $load[$this->userSources['isStudent']]['isStudent'] = true;
-            $load[$this->userSources['subjects']]['subjects'] = true;
-            $userSeason->setLoadedFromAis(true);
-        }
         if ($user->getDisplayName() === null) {
             $load[$this->userSources['displayName']]['displayName'] = true;
         }
@@ -159,7 +167,8 @@ class AnketaUserProvider implements UserProviderInterface
      * @param string $class classname
      * @return boolean true iff the class is AnketaBundle\Entity\User
      */
-    public function supportsClass($class) {
+    public function supportsClass($class)
+    {
         return $class === 'AnketaBundle\Entity\User';
     }
 

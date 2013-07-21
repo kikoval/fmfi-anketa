@@ -25,7 +25,7 @@ use AnketaBundle\Entity\Answer;
 use AnketaBundle\Entity\User;
 use AnketaBundle\Entity\CategoryType;
 
-class QuestionController extends Controller {
+class QuestionController extends Controller implements SubjectImportController {
 
     public function preExecute() {
         if (!$this->get('anketa.access.hlasovanie')->userCanVote()) throw new AccessDeniedException();
