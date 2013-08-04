@@ -34,7 +34,7 @@
     {% endif %}
 {% endif %}
 
-{% render "AnketaBundle:Hlasovanie:globalProgressbar" %}
+{% render(controller("AnketaBundle:Hlasovanie:globalProgressbar")) %}
 
 <p>{% trans %}welcome.index.aka_je_anketa{% endtrans %}</p>
 <ul>

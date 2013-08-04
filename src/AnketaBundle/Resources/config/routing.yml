@@ -16,19 +16,19 @@ anketa:
     defaults: { _controller: AnketaBundle:Hlasovanie:index }
 
 answer:
-    pattern: /hlasuj/
+    prefix: /hlasuj/
     resource: "@AnketaBundle/Resources/config/answer_routing.yml"
 
 reports:
-    pattern: /reporty/
+    prefix: /reporty/
     resource: "@AnketaBundle/Resources/config/reports_routing.yml"
 
 response:
-    pattern: /odpovede/
+    prefix: /odpovede/
     resource: "@AnketaBundle/Resources/config/response_routing.yml"
 
 statistics:
-    pattern: /vysledky/
+    prefix: /vysledky/
     resource: "@AnketaBundle/Resources/config/statistics_routing.yml"
 
 anonymizuj:
@@ -39,7 +39,7 @@ dakujeme:
     defaults: { _controller: AnketaBundle:Anonymizacia:dakujeme }
 
 api:
-    pattern: /api/
+    prefix: /api/
     resource: "@AnketaBundle/Resources/config/api_routing.yml"
 
 teacher_search:
