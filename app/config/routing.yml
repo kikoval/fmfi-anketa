@@ -1,5 +1,5 @@
 _anketa:
-    pattern:  /
+    prefix:  /
     resource: "@AnketaBundle/Resources/config/routing.yml"
 
 logout:
