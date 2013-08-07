@@ -34,9 +34,6 @@ assoc_teacher_with_subject: '/vote/subject/{subject_slug}/teacher-change-request
 # Desc: /hlasuj/predmet/{subject_slug}/zmena-ucitela
 assoc_teacher_with_subject_process: '/vote/subject/{subject_slug}/teacher-change-request'
 
-# Desc: /dakujeme/
-dakujeme: /thank-you/
-
 # Desc: /faq/
 faq: /faq/
 
