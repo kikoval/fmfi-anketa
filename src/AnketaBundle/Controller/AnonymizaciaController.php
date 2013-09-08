@@ -5,11 +5,7 @@ namespace AnketaBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
-class AnonymizaciaController extends Controller {
-
-    public function preExecute() {
-        if (!$this->get('anketa.access.hlasovanie')->userCanVote()) throw new AccessDeniedException();
-    }
+class AnonymizaciaController extends AbstractVotingController {
 
     public function anonymizujAction() {
         $request = $this->get('request');

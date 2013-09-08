@@ -7,43 +7,8 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use AnketaBundle\Menu\MenuItemProgressbar;
 
-class HlasovanieController extends Controller
+class HlasovanieController extends AbstractVotingController
 {
-    public function indexAction()
-    {
-        $access = $this->get('anketa.access.hlasovanie');
-        if (!$access->isVotingOpen()) throw new AccessDeniedException();
-
-        if ($access->getUser() === null) throw new AccessDeniedException();
-
-        if (!$access->userIsStudent()) {
-            return $this->render('AnketaBundle:Hlasovanie:novote.html.twig');
-        }
-
-        if (!$access->userHasAllowedOrgUnit()) {
-            $user = $access->getUser();
-            $allowedOrgUnit = $this->container->getParameter('org_unit');
-            $params = array();
-            $params['org_unit'] = $allowedOrgUnit;
-            $otherInstances = $this->container->getParameter('other_instances');
-            $recommendedInstances = array();
-            foreach ($otherInstances as $key => $definition) {
-                if (in_array($key, $user->getOrgUnits())) {
-                    $recommendedInstances[] = $definition;
-                }
-            }
-            $params['recommended_instances'] = $recommendedInstances;
-            return $this->render('AnketaBundle:Hlasovanie:orgunit.html.twig',
-                    $params);
-        }
-
-        if ($access->userCanVote()) {
-            // TODO: toto chceme aby rovno redirectovalo na prvu ne-100% sekciu
-            return new RedirectResponse($this->generateUrl('answer_incomplete'));
-        }
-
-        return $this->render('AnketaBundle:Hlasovanie:dakujeme.html.twig');
-    }
 
     public function globalProgressbarAction() {
         $em = $this->get('doctrine.orm.entity_manager');

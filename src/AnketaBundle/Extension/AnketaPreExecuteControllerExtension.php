@@ -2,6 +2,7 @@
 
 namespace AnketaBundle\Extension;
 
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
@@ -14,12 +15,16 @@ class AnketaPreExecuteControllerExtension {
                 $controller = $controllers[0];
 
                 if (is_object($controller) && method_exists($controller, 'preExecute')) {
-                    $controller->preExecute();
+                    // I hate Symfony...
+                    $result = $controller->preExecute();
+                    if ($result instanceof Response) {
+                        $event->setController(function () use ($result) {
+                            return $result;
+                        });
+                    }
                 }
             }
         }
     }
 
 }
-
-?>

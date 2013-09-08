@@ -46,6 +46,11 @@ class AnketaUserProvider implements UserProviderInterface
         $this->logger = $logger;
     }
 
+    public function getUserSources()
+    {
+        return $this->userSources;
+    }
+
     /**
      * Reload a user given an existing UserInterface instance.
      * (This happens on each request.)

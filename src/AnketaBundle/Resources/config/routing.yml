@@ -13,7 +13,7 @@ faq:
 
 anketa:
     pattern: /anketa/
-    defaults: { _controller: AnketaBundle:Hlasovanie:index }
+    defaults: { _controller: AnketaBundle:Question:answerIncomplete }
 
 answer:
     prefix: /hlasuj/
