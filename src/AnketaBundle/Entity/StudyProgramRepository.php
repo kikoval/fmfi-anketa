@@ -51,17 +51,15 @@ class StudyProgramRepository extends EntityRepository {
         return $query->getSingleResult();
     }
 
-    public function findByReportsUser(User $user, Season $season) {
+    public function findByReportsUser(User $user) {
         $em = $this->getEntityManager();
         $query = $em->createQuery("SELECT sp
                            FROM AnketaBundle\\Entity\\UserStudyProgram usp,
                            AnketaBundle\\Entity\\StudyProgram sp
                            WHERE usp.user = :user
                            AND usp.studyProgram = sp
-                           AND usp.season = :season
                            ORDER BY sp.name, sp.code ASC");
         $query->setParameter('user', $user);
-        $query->setParameter('season', $season);
 
         return $query->getResult();
     }
