@@ -28,6 +28,8 @@ parameters:
     # LDAP sucast, vid https://cit.uniba.sk/wiki/public/jas/ldap/groups
     org_unit:          FMFI
 
+    check_voters_org_unit: true
+
     # moznosti: dev, prod, beta, demo
     anketa_instance:   dev
 
