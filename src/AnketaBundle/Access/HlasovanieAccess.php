@@ -30,10 +30,10 @@ class HlasovanieAccess
     /** @var \AnketaBundle\Entity\UserSeason */
     private $userSeason;
 
-    public function __construct(SecurityContextInterface $security, EntityManager $em, $allowedOrgUnit) {
+    public function __construct(SecurityContextInterface $security, EntityManager $em, $allowedOrgUnit, $checkOrgUnit) {
         $this->security = $security;
         $this->em = $em;
-        $this->allowedOrgUnit = $allowedOrgUnit;
+        $this->allowedOrgUnit = ($checkOrgUnit ? $allowedOrgUnit : null);
         $this->user = null;
         $this->userSeason = null;
     }
