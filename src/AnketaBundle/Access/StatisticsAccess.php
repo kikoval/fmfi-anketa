@@ -193,16 +193,20 @@ class StatisticsAccess
      * @return array(\AnketaBundle\Entity\Department)
      */
     public function getDepartmentReports(Season $season) {
-        $repository = $this->em->getRepository('AnketaBundle:Department');
         if ($this->security->isGranted('ROLE_ALL_REPORTS')) {
+            $repository = $this->em->getRepository('AnketaBundle:Department');
             return $repository->findBy(array(), array('name' => 'ASC'));
         }
         else if ($this->security->isGranted('ROLE_DEPARTMENT_REPORT')) {
-            $userSeasonRepo = $this->em->getRepository('AnketaBundle:UserSeason');
             $user = $this->getUser();
-            $userSeason = $userSeasonRepo->findOneBy(array('user'=> $user, 'season'=>$season));
-            $department = $userSeason->getDepartment();
-            return $department ? array($department) : array();
+            $userSeasons = $this->em->getRepository('AnketaBundle:UserSeason')->findBy(array('user' => $user));
+            $departments = array();
+            foreach ($userSeasons as $userSeason) {
+                if ($userSeason->getDepartment()) {
+                    $departments[] = $userSeason->getDepartment();
+                }
+            }
+            return $departments;
         }
         else {
             return array();
@@ -221,7 +225,14 @@ class StatisticsAccess
             return $repository->getAllWithAnswers($season, true);
         }
         else if ($this->security->isGranted('ROLE_STUDY_PROGRAMME_REPORT')) {
-            return $repository->findByReportsUser($this->getUser(), $season);
+            $all = $repository->getAllWithAnswers($season, true);
+            foreach ($all as $program) $ids[$program->getId()] = true;
+            $allowed = $repository->findByReportsUser($this->getUser());
+            $intersection = array();
+            foreach ($allowed as $program) {
+                if (isset($ids[$program->getId()])) $intersection[] = $program;
+            }
+            return $intersection;
         }
         else {
             return array();
