@@ -17,11 +17,6 @@ class Answer {
     protected $id;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    protected $evaluation;
-
-    /**
      * @ORM\Column(type="text", nullable=true)
      */
     protected $comment;
@@ -91,15 +86,6 @@ class Answer {
         return $this->id;
     }
 
-    // zrusene, evaluacia sa nastavuje ked sa nastavi Option
-//    public function setEvaluation($value) {
-//        $this->evaluation = $value;
-//    }
-
-    public function getEvaluation() {
-        return $this->evaluation;
-    }
-
     public function setComment($value) {
         $this->comment = $value;
     }
@@ -148,7 +134,6 @@ class Answer {
      */
     public function setOption($value) {
         $this->option = $value;
-        $this->evaluation = $value === null ? 0 : $value->getEvaluation();
     }
 
     /**

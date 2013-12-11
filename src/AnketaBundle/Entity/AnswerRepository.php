@@ -81,12 +81,12 @@ class AnswerRepository extends EntityRepository {
 
 
     public function getAverageEvaluationForTeacher($teacher, $season) {
-        $dql = 'SELECT AVG(a.evaluation), COUNT(a.evaluation)  FROM ' .
-                'AnketaBundle\Entity\Answer a, AnketaBundle\Entity\Question q ' .
+        $dql = 'SELECT AVG(o.evaluation), COUNT(a.option) FROM ' .
+                'AnketaBundle\Entity\Answer a, AnketaBundle\Entity\Question q, AnketaBundle\Entity\Option o ' .
                 'WHERE ' .
                 'a.teacher = :teacher ' .
                 'AND a.question = q.id AND q.isTeacherEvaluation = 1 ' .
-                'AND a.option is not null ' .
+                'AND a.option = o.id ' .
                 'AND a.season = :season ';
         $priemer = $this->getEntityManager()
                         ->createQuery($dql)->execute(array('teacher' => $teacher, 'season' => $season));
@@ -94,12 +94,12 @@ class AnswerRepository extends EntityRepository {
     }
 
     public function getAverageEvaluationForSubject($subject, $season) {
-        $dql = 'SELECT AVG(a.evaluation), COUNT(a.evaluation)  FROM ' .
-                'AnketaBundle\Entity\Answer a, AnketaBundle\Entity\Question q ' .
+        $dql = 'SELECT AVG(o.evaluation), COUNT(a.option) FROM ' .
+                'AnketaBundle\Entity\Answer a, AnketaBundle\Entity\Question q, AnketaBundle\Entity\Option o ' .
                 'WHERE ' .
                 'a.subject = :subject ' .
                 'AND a.question = q.id AND q.isSubjectEvaluation = 1 ' .
-                'AND a.option is not null ' .
+                'AND a.option = o.id ' .
                 'AND a.season = :season ';
         $priemer = $this->getEntityManager()
                         ->createQuery($dql)->execute(array('subject' => $subject, 'season' => $season));
@@ -112,13 +112,13 @@ class AnswerRepository extends EntityRepository {
         // pre kazdy predmet zistime priemer celkoveho hodnotenia
         // z najnovsej sezony v ktorej sa vyskytol, vysledky su public
         // a ma aspon jedno celkove ohodnotenie
-        $sql = 'SELECT su.id, su.code, su.slug as subject_slug, AVG(a.evaluation) as average, '.
-               'COUNT(a.evaluation) as votes, s.slug as season_slug '.
-               'FROM Answer a, Question q, Season s, Subject su '.
+        $sql = 'SELECT su.id, su.code, su.slug as subject_slug, AVG(o.evaluation) as average, '.
+               'COUNT(a.id) as votes, s.slug as season_slug '.
+               'FROM Answer a, Choice o, Question q, Season s, Subject su '.
                'WHERE su.code IN ('.$codes.') '.
                'AND a.subject_id = su.id '.
                'AND a.question_id = q.id AND q.isSubjectEvaluation = 1 '.
-               'AND a.option_id IS NOT NULL '.
+               'AND a.option_id = o.id '.
                'AND a.season_id = s.id '.
                'AND s.ordering = ( '.
                 // tento subselect vyberie najnovsiu sezonu s verejnymi vysledkami
