@@ -75,6 +75,7 @@ class DemoUserSource implements UserSourceInterface
             $userSubject->setSubject($subject);
             $studyProgram = $studyPrograms[$index % count($studyPrograms)];
             $userSubject->setStudyProgram($studyProgram);
+            $userSubject->setStudyYear(rand(1,5));
 
             $this->em->persist($userSubject);
         }

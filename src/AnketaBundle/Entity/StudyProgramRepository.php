@@ -34,6 +34,46 @@ class StudyProgramRepository extends EntityRepository {
         return $query->getResult();
     }
 
+    public function getStudyYearForUser(User $user, Season $season, $slug) {
+        $em = $this->getEntityManager();
+        if($slug == -1){
+          $query = $em->createQuery("SELECT us.studyYear
+                           FROM AnketaBundle\\Entity\\UsersSubjects us,
+                           AnketaBundle\\Entity\\StudyProgram sp
+                           WHERE us.user = :user
+                           AND us.studyProgram = sp
+                           AND us.season = :season
+                           ORDER BY sp.code ASC LIMIT 1");
+          $query->setParameter('user', $user);
+          $query->setParameter('season', $season);
+
+          $result = $query->getResult();
+          if(count($result) == 0){
+            $msg = $this->get('translator')->trans('question.controller.ziadne_programy');
+            throw new \RuntimeException($msg);
+          }
+          return $result;
+        }
+
+        $query = $em->createQuery("SELECT us.studyYear
+                           FROM AnketaBundle\\Entity\\UsersSubjects us,
+                           AnketaBundle\\Entity\\StudyProgram sp
+                           WHERE us.user = :user
+                           AND us.studyProgram = sp
+                           AND sp.slug = :slug
+                           AND us.season = :season
+                           ORDER BY sp.code ASC LIMIT 1");
+        $query->setParameter('user', $user);
+        $query->setParameter('season', $season);
+        $query->setParameter('slug', $slug);
+
+        if(count($result) == 0){
+            $msg = $this->get('translator')->trans('question.controller.ziadne_programy');
+            throw new \RuntimeException($msg);
+        }
+        return $result;
+    }
+
     public function getFirstStudyProgrammeForUser(User $user, Season $season) {
         $result = $this->getStudyProgrammesForUser($user, $season);
         if (!empty($result[0])) return $result[0];

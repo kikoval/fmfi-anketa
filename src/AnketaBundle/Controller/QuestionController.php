@@ -289,13 +289,16 @@ class QuestionController extends Controller implements SubjectImportController {
 
         $request = $this->get('request');
         $user = $this->get('security.context')->getToken()->getUser();
+        $season = $em->getRepository('AnketaBundle:Season')->getActiveSeason();
         $em = $this->get('doctrine.orm.entity_manager');
         try {
             $studyProgramme = $this->getAttendedStudyProgrammeBySlug($user, $slug);
+            $studyYear = $em->getRepository('AnketaBundle:StudyProgram')
+                            ->getStudyYearForUser($user, $season, $slug);
         } catch (\RuntimeException $e) {
             throw new NotFoundHttpException($e->getMessage());
         }
-        $season = $em->getRepository('AnketaBundle:Season')->getActiveSeason();
+        
         $questions = $em->getRepository('AnketaBundle\Entity\Question')
                         ->getOrderedQuestionsByCategoryType(CategoryType::STUDY_PROGRAMME, $season);
         $answers = $em->getRepository('AnketaBundle\Entity\Answer')
@@ -304,6 +307,7 @@ class QuestionController extends Controller implements SubjectImportController {
         if ('POST' == $request->getMethod()) {
             $this->processForm($request, $user, $questions, $answers, $season, array(
                 'setStudyProgram' => $studyProgramme,
+                'setStudyYear' => $studyYear,
                 'setSubject' => null,
                 'setTeacher' => null,
                 // aktualne sa daju vyplnat iba predmety ktore sme navstevovali
@@ -374,8 +378,16 @@ class QuestionController extends Controller implements SubjectImportController {
             $studyProgram = $em->getRepository('AnketaBundle\Entity\StudyProgram')->
                 getFirstStudyProgrammeForUser($user, $season);
 
+            try {
+                //$slug -1 znamena vrat prvy vysledok
+                $studyYear = $em->getRepository('AnketaBundle:StudyProgram')
+                            ->getStudyYearForUser($user, $season, -1);
+            } catch (\RuntimeException $e) {
+                throw new NotFoundHttpException($e->getMessage());
+            }
             $this->processForm($request, $user, $questions, $answers, $season, array(
                 'setStudyProgram' => $studyProgram,
+                'setStudyYear' => $studyYear,
             ));
 
             $em->flush();
