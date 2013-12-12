@@ -209,6 +209,9 @@ class QuestionController extends Controller implements SubjectImportController {
         $studyProgram = $em->getRepository('AnketaBundle:StudyProgram')
                            ->getStudyProgrammeForUserSubject($user, $subject, $season);
 
+        $studyYear = $em->getRepository('AnketaBundle:StudyProgram')
+                           ->getStudyYearForUserSubject($user, $subject, $season);
+
         $answers = $em->getRepository('AnketaBundle\Entity\Answer')
                       ->getAnswersByCriteria($questions, $user, $season, $subject, $teacher);
 
@@ -217,6 +220,7 @@ class QuestionController extends Controller implements SubjectImportController {
                 'setSubject' => $subject,
                 'setTeacher' => $teacher,
                 'setStudyProgram' => $studyProgram,
+                'setStudyYear' => $studyYear,
                 'setAttended' => true,
             ));
 
@@ -254,12 +258,15 @@ class QuestionController extends Controller implements SubjectImportController {
                       ->getAnswersByCriteria($questions, $user, $season, $subject);
         $studyProgram = $em->getRepository('AnketaBundle:StudyProgram')
                            ->getStudyProgrammeForUserSubject($user, $subject, $season);
+        $studyYear = $em->getRepository('AnketaBundle:StudyProgram')
+                           ->getStudyYearForUserSubject($user, $subject, $season);
 
         if ('POST' == $request->getMethod()) {
             $this->processForm($request, $user, $questions, $answers, $season, array(
                 'setSubject' => $subject,
                 'setTeacher' => null,
                 'setStudyProgram' => $studyProgram,
+                'setStudyYear' => $studyYear,
                 'setAttended' => true,
             ));
 

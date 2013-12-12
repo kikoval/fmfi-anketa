@@ -48,6 +48,11 @@ class UsersSubjects {
      */
     protected $studyProgram;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    protected $studyYear;
+
     public function getId() {
         return $this->id;
     }
@@ -94,5 +99,19 @@ class UsersSubjects {
      */
     public function getStudyProgram() {
         return $this->studyProgram;
+    }
+
+    /**
+     * @param integer $value
+     */
+    public function setStudyYear($value) {
+        $this->studyYear = $value;
+    }
+
+    /**
+     * @return integer study year
+     */
+    public function getStudyYear() {
+        return $this->studyYear;
     }
 }

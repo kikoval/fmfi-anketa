@@ -51,6 +51,17 @@ class StudyProgramRepository extends EntityRepository {
         return $query->getSingleResult();
     }
 
+    /**
+     * @return integer
+     */
+    public function getStudyYearForUserSubject($user, $subject, $season){
+        $dql = 'SELECT studyYear FROM AnketaBundle\Entity\UsersSubjects us ' .
+                'WHERE us.user = :user AND us.subject = :subject AND us.season = :season';
+        $query = $this->getEntityManager()->createQuery($dql);
+        $query->setParameters(array('user' => $user, 'subject' => $subject, 'season' => $season));
+        return $query->getSingleResult();
+    }
+
     public function findByReportsUser(User $user) {
         $em = $this->getEntityManager();
         $query = $em->createQuery("SELECT sp
