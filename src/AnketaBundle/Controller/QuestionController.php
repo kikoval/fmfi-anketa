@@ -90,6 +90,7 @@ class QuestionController extends AbstractVotingController {
                 $answer->setComment(null);
             }
 
+
             if ($answer->getOption() === null && $answer->getComment() === null) {
                 $em->remove($answer);
             } else {
@@ -205,6 +206,9 @@ class QuestionController extends AbstractVotingController {
         $studyProgram = $em->getRepository('AnketaBundle:StudyProgram')
                            ->getStudyProgrammeForUserSubject($user, $subject, $season);
 
+        $studyYear = $em->getRepository('AnketaBundle:StudyProgram')
+                           ->getStudyYearForUserSubject($user, $subject, $season);
+
         $answers = $em->getRepository('AnketaBundle\Entity\Answer')
                       ->getAnswersByCriteria($questions, $user, $season, $subject, $teacher);
 
@@ -213,6 +217,7 @@ class QuestionController extends AbstractVotingController {
                 'setSubject' => $subject,
                 'setTeacher' => $teacher,
                 'setStudyProgram' => $studyProgram,
+                'setStudyYear' => $studyYear,
                 'setAttended' => true,
             ));
 
@@ -250,12 +255,15 @@ class QuestionController extends AbstractVotingController {
                       ->getAnswersByCriteria($questions, $user, $season, $subject);
         $studyProgram = $em->getRepository('AnketaBundle:StudyProgram')
                            ->getStudyProgrammeForUserSubject($user, $subject, $season);
+        $studyYear = $em->getRepository('AnketaBundle:StudyProgram')
+                           ->getStudyYearForUserSubject($user, $subject, $season);
 
         if ('POST' == $request->getMethod()) {
             $this->processForm($request, $user, $questions, $answers, $season, array(
                 'setSubject' => $subject,
                 'setTeacher' => null,
                 'setStudyProgram' => $studyProgram,
+                'setStudyYear' => $studyYear,
                 'setAttended' => true,
             ));
 
@@ -279,12 +287,15 @@ class QuestionController extends AbstractVotingController {
         $request = $this->get('request');
         $user = $this->get('security.context')->getToken()->getUser();
         $em = $this->get('doctrine.orm.entity_manager');
+        $season = $em->getRepository('AnketaBundle:Season')->getActiveSeason();
         try {
             $studyProgramme = $this->getAttendedStudyProgrammeBySlug($user, $slug);
         } catch (\RuntimeException $e) {
             throw new NotFoundHttpException($e->getMessage());
         }
         $season = $em->getRepository('AnketaBundle:Season')->getActiveSeason();
+        $studyYear = $em->getRepository('AnketaBundle:StudyProgram')
+                        ->getStudyYearForUser($user, $season, $studyProgramme);
         $questions = $em->getRepository('AnketaBundle\Entity\Question')
                         ->getOrderedQuestionsByCategoryType(CategoryType::STUDY_PROGRAMME, $season);
         $answers = $em->getRepository('AnketaBundle\Entity\Answer')
@@ -295,6 +306,7 @@ class QuestionController extends AbstractVotingController {
                 'setStudyProgram' => $studyProgramme,
                 'setSubject' => null,
                 'setTeacher' => null,
+                'setStudyYear' => $studyYear,
                 // aktualne sa daju vyplnat iba predmety ktore sme navstevovali
                 'setAttended' => true,
             ));
@@ -362,9 +374,12 @@ class QuestionController extends AbstractVotingController {
             // k odpovediam na vseobecne otazky dame prvy studijny program, co user ma
             $studyProgram = $em->getRepository('AnketaBundle\Entity\StudyProgram')->
                 getFirstStudyProgrammeForUser($user, $season);
+            $studyYear = $em->getRepository('AnketaBundle:StudyProgram')
+                            ->getStudyYearForUser($user, $season, $studyProgram);
 
             $this->processForm($request, $user, $questions, $answers, $season, array(
                 'setStudyProgram' => $studyProgram,
+                'setStudyYear' => $studyYear,
             ));
 
             $em->flush();

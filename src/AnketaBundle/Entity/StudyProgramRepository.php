@@ -51,6 +51,38 @@ class StudyProgramRepository extends EntityRepository {
         return $query->getSingleResult();
     }
 
+    /**
+     * @return integer
+     */
+    public function getStudyYearForUserSubject($user, $subject, $season){
+        $dql = 'SELECT us.studyYear FROM AnketaBundle\Entity\UsersSubjects us ' .
+                'WHERE us.user = :user AND us.subject = :subject AND us.season = :season';
+        $query = $this->getEntityManager()->createQuery($dql);
+        $query->setParameters(array('user' => $user, 'subject' => $subject, 'season' => $season));
+        $result =  $query->getSingleResult();
+        return $result['studyYear'];
+    }
+
+    public function getStudyYearForUser(User $user, Season $season, StudyProgram $sp) {
+        $em = $this->getEntityManager();
+
+        if($sp === null) return null;
+
+        $query = $em->createQuery("SELECT us.studyYear
+                           FROM AnketaBundle\\Entity\\UsersSubjects us,
+                           AnketaBundle\\Entity\\StudyProgram sp
+                           WHERE us.user = :user
+                           AND us.studyProgram = sp
+                           AND us.season = :season
+                           ORDER BY sp.code ASC")
+                    ->setMaxResults(1);
+        $query->setParameter('user', $user);
+        $query->setParameter('season', $season);
+
+        $result =  $query->getSingleResult();
+        return $result['studyYear'];
+    }
+
     public function findByReportsUser(User $user) {
         $em = $this->getEntityManager();
         $query = $em->createQuery("SELECT sp
