@@ -133,9 +133,8 @@ class UserSeason {
         $this->loadedFromAis = false;
         $this->season = null;
         $this->user = null;
-
-	$this->startTimestamp = new \DateTime();
-	$this->finishTimestamp = new \DateTime();
+        $this->startTimestamp = new \DateTime();
+        $this->finishTimestamp = new \DateTime();
     }
 
     /**
