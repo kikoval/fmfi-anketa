@@ -21,14 +21,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class TeachingAssociationController extends Controller
+class TeachingAssociationController extends AbstractVotingController
 {
-
-    public function preExecute() {
-        if (!$this->get('anketa.access.hlasovanie')->userCanVote()) {
-            throw new AccessDeniedException();
-        }
-    }
 
     public function formAction($subject_slug) {
         $em = $this->get('doctrine.orm.entity_manager');
