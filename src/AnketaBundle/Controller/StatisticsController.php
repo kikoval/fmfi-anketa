@@ -369,6 +369,9 @@ class StatisticsController extends Controller {
                 foreach ($subjects as $subject) {
                     if ($section->getSubject() == $subject) $good = true;
                 }
+                if ($section->getTeacher() !== null && $section->getTeacher() !== $teacher) {
+                    $good = false;
+                }
             }
             if (!$good) {
                 return $this->render('AnketaBundle:Statistics:fafRestriction.html.twig',
