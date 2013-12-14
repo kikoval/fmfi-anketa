@@ -142,7 +142,6 @@ class AnketaUserProvider implements UserProviderInterface
             $userSeason = new UserSeason();
             $userSeason->setUser($user);
             $userSeason->setSeason($activeSeason);
-            $userSeason->setStartTimestamp(new \DateTime('now'));
             $this->em->persist($userSeason);
         }
 
