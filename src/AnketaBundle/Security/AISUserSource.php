@@ -133,13 +133,14 @@ class AISUserSource implements UserSourceInterface
             $studyProgramId = $this->dbConn->lastInsertId();
 
 
-            $stmt = $this->dbConn->prepare("INSERT INTO UsersSubjects (user_id, subject_id, season_id, studyProgram_id)
-                                            VALUES (:user_id, :subject_id, :season_id, :studyProgram_id)
+            $stmt = $this->dbConn->prepare("INSERT INTO UsersSubjects (user_id, subject_id, season_id, studyProgram_id, studyYear)
+                                            VALUES (:user_id, :subject_id, :season_id, :studyProgram_id, :studyYear)
                                             ON DUPLICATE KEY UPDATE subject_id=subject_id");
             $stmt->bindValue('user_id', $userSeason->getUser()->getId());
             $stmt->bindValue('subject_id', $subjectId);
             $stmt->bindValue('season_id', $userSeason->getSeason()->getId());
             $stmt->bindValue('studyProgram_id', $studyProgramId);
+            $stmt->bindValue('studyYear', $aisPredmet['rokStudia']);
             if (!$stmt->execute()) {
                 throw new \Exception("Nepodarilo sa pridať väzbu študent-predmet do DB");
             }
