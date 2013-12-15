@@ -109,7 +109,7 @@ class UserSeason {
     /**
      * Kedy uzivatel zacal vyplnat anketu?
      *
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=true)
      *
      * @var string
      */
@@ -118,7 +118,7 @@ class UserSeason {
     /**
      * Kedy uzivatel skoncil s vyplnanim ankety?
      *
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=true)
      *
      * @var string
      */
