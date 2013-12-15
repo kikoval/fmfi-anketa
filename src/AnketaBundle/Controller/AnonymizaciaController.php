@@ -15,6 +15,7 @@ class AnonymizaciaController extends AbstractVotingController {
             $season = $em->getRepository('AnketaBundle:Season')->getActiveSeason();
             $userSeason = $em->getRepository('AnketaBundle:UserSeason')->findOneBy(array('user' => $user->getId(), 'season' => $season->getId()));
             $userSeason->setFinished(true);
+            $userSeason->setFinishTimestamp(new \DateTime());
             $em->persist($user);
             $em->getRepository('AnketaBundle\Entity\User')
                ->anonymizeAnswersByUser($user, $season);

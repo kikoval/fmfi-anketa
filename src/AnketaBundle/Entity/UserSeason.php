@@ -106,6 +106,24 @@ class UserSeason {
      */
     protected $loadedFromAis;
 
+    /**
+     * Kedy uzivatel zacal vyplnat anketu?
+     *
+     * @ORM\Column(type="datetime")
+     *
+     * @var string
+     */
+    protected $startTimestamp;
+
+    /**
+     * Kedy uzivatel skoncil s vyplnanim ankety?
+     *
+     * @ORM\Column(type="datetime")
+     *
+     * @var string
+     */
+    protected $finishTimestamp;
+
     public function __construct() {
         $this->department = null;
         $this->isStudent = false;
@@ -115,6 +133,8 @@ class UserSeason {
         $this->loadedFromAis = false;
         $this->season = null;
         $this->user = null;
+        $this->startTimestamp = null;
+        $this->finishTimestamp = null;
     }
 
     /**
@@ -191,6 +211,22 @@ class UserSeason {
 
     public function setIsTeacher($isTeacher) {
         $this->isTeacher = $isTeacher;
+    }
+
+    public function setStartTimestamp($startTimestamp) {
+        $this->startTimestamp = $startTimestamp;
+    }
+
+    public function getStartTimestamp($startTimestamp) {
+        return $this->startTimestamp;
+    }
+
+    public function setFinishTimestamp($finishTimestamp) {
+        $this->finishTimestamp = $finishTimestamp;
+    }
+
+    public function getFinishTimestamp($finishTimestamp) {
+        return $this->finishTimestamp;
     }
 
 

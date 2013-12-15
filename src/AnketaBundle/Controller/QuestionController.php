@@ -101,6 +101,7 @@ class QuestionController extends AbstractVotingController {
         if ($savedSomething) {
             $userSeason = $em->getRepository('AnketaBundle:UserSeason')->findOneBy(array('user' => $user->getId(), 'season' => $season->getId()));
             $userSeason->setParticipated(true);
+            $userSeason->setStartTimestamp(new \DateTime());
         }
     }
 
