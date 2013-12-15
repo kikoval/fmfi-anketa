@@ -78,6 +78,11 @@ class Answer {
     protected $studyProgram;
 
     /**
+     * @ORM\Column(type="integer")
+     */
+    protected $studyYear;
+
+    /**
      * @ORM\Column(type="boolean")
      */
     protected $inappropriate = false;
@@ -204,6 +209,17 @@ class Answer {
      */
     public function getStudyProgram() {
         return $this->studyProgram;
+    }
+
+    /**
+     * @return integer study year
+     */
+    public function getStudyYear() {
+        return $this->studyYear;
+    }
+
+    public function setStudyYear($value) {
+        return $this->studyYear = $value;
     }
 
     public function getSeason() {
