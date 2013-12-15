@@ -49,7 +49,7 @@ class UsersSubjects {
     protected $studyProgram;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     protected $studyYear;
 
